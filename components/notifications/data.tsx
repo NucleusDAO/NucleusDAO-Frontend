@@ -17,5 +17,4 @@ export const notificationData: { title: string; read: boolean; time: string; des
     time: '2 hrs',
     description: 'A new DAO has been created. You can join to sh...',
   },
-  
 ];

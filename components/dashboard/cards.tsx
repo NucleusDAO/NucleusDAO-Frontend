@@ -1,4 +1,3 @@
-import { DaoIcon } from '@/assets/svgs';
 import { ReactNode } from 'react';
 
 interface ICards {
