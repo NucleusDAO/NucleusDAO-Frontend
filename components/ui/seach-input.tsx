@@ -1,0 +1,42 @@
+'use client';
+
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useDebouncedCallback } from 'use-debounce';
+import { cn } from '@/libs/utils';
+import { Input } from './input';
+
+export default function SearchInput({ placeholder, classNames, queryKey }: { placeholder: string, classNames?: string, queryKey?: string; }) {
+  const searchParams = useSearchParams();
+  const { replace } = useRouter();
+  const pathname = usePathname();
+
+  const handleSearch = useDebouncedCallback((term) => {
+    console.log(`Searching... ${term}`);
+
+    const params = new URLSearchParams(searchParams);
+
+    if (term) {
+      params.set(queryKey || 'q', term);
+    } else {
+      params.delete(queryKey || 'q');
+    }
+    replace(`${pathname}?${params.toString()}`);
+  }, 300);
+
+  return (
+    <div className="relative flex flex-1 flex-shrink-0">
+      <label htmlFor="search" className="sr-only">
+        Search
+      </label>
+      <Input
+        className={cn("peer block w-full rounded-md border-foreground focus:border-primary focus:border text-sm outline-2 placeholder:text-gray-500", classNames)}
+        placeholder={placeholder}
+        type="search"
+        onChange={(e) => {
+          handleSearch(e.target.value);
+        }}
+        defaultValue={searchParams.get(queryKey || 'q')?.toString()}
+      />
+    </div>
+  );
+}
