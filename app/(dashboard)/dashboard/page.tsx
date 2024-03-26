@@ -81,13 +81,12 @@ const Dashboard = () => {
             <Button>Connect Wallet</Button>
           </div> */}
           <div className='mt-10'>
-            {currentView === 'list' ? (<DataTable columns={columns} data={dashboardTableData(28)} />) : (
-              <div className='grid grid-cols-2 gap-8'>
+            {(currentView === 'list' || currentView !== 'grid')  && <DataTable columns={columns} data={dashboardTableData(28)} />}
+            {currentView === 'grid' && (<div className='grid grid-cols-2 gap-8'>
                         {dashboardTableData(40).map((data) => (
                           <DaoCard key={data.activeMember} {...data} />
                         ))}
-              </div>
-            )}
+              </div>)}
           </div>
 
         </div>
