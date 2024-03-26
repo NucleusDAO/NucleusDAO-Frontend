@@ -1,11 +1,7 @@
 import type { Metadata } from 'next';
 import { Rubik } from 'next/font/google';
 import '@/styles/globals.css';
-import { ThemeProvider } from '@/components/themes/theme.provider';
-import { Suspense } from 'react';
-import { ModeToggle } from '@/components/themes/mode-toggle';
-import { Toaster as Sonner } from '@/components/ui/sonner';
-import Loading from '@/components/loading';
+import RootLayoutsComponent from '@/components/root-layout';
 
 const rubik = Rubik({ subsets: ['latin'] });
 
@@ -48,20 +44,7 @@ export default function RootLayout({
         <meta name="author" content="Nucleus DAO" />
       </head>
       <body className={rubik.className}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <Suspense fallback={<Loading />}>
-            <div className="max-w-[2000px] mx-auto relative">
-              <ModeToggle />
-              {children}
-            </div>
-          </Suspense>
-          <Sonner richColors />
-        </ThemeProvider>
+        <RootLayoutsComponent>{children}</RootLayoutsComponent>
       </body>
     </html>
   );

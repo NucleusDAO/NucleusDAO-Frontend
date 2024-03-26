@@ -1,15 +1,16 @@
+import { Loader } from 'lucide-react';
 
 interface ILoading {
-    description?: string;
+  description?: string;
 }
 
 const Loading = ({ description }: ILoading) => (
-    <div className="w-full flex h-[70vh] items-center">
-      <div className="mx-auto">
-        <img src="/loading.gif" alt="loading" className="w-[150px] h-[150px]" />
-        <p className="text-center -mt-2">{description || 'Loading...'}</p>
-      </div>
+  <div className="w-full flex h-[70vh] items-center">
+    <div className="mx-auto">
+      <Loader className="mr-2 h-8 w-8 animate-spin text-center" />
+      {/* <p className="text-center -mt-2">{description || 'Loading...'}</p> */}
     </div>
-  );
-  
-  export default Loading;
+  </div>
+);
+
+export default Loading;
