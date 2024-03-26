@@ -10,7 +10,7 @@ import { usePathname } from 'next/navigation';
 const Sidebar = () => {
     const pathname = usePathname();
   return (
-    <div className="w-[20%] px-10 py-8 bg-foreground space-y-20 h-screen">
+    <div className="w-[20%] px-10 py-8 bg-foreground space-y-20 h-screen fixed max-w-[400px]">
       <Link href={DASHBOARD_URL}>
         <Image src={Logo} alt="Nucleus Dao Logo" width={150} />
       </Link>

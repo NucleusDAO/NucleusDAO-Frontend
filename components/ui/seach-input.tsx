@@ -4,8 +4,17 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useDebouncedCallback } from 'use-debounce';
 import { cn } from '@/libs/utils';
 import { Input } from './input';
+import { Search } from 'lucide-react';
 
-export default function SearchInput({ placeholder, classNames, queryKey }: { placeholder: string, classNames?: string, queryKey?: string; }) {
+export default function SearchInput({
+  placeholder,
+  classNames,
+  queryKey,
+}: {
+  placeholder: string;
+  classNames?: string;
+  queryKey?: string;
+}) {
   const searchParams = useSearchParams();
   const { replace } = useRouter();
   const pathname = usePathname();
@@ -28,15 +37,25 @@ export default function SearchInput({ placeholder, classNames, queryKey }: { pla
       <label htmlFor="search" className="sr-only">
         Search
       </label>
-      <Input
-        className={cn("peer block w-full rounded-md border-foreground focus:border-primary focus:border text-sm outline-2 placeholder:text-gray-500", classNames)}
-        placeholder={placeholder}
-        type="search"
-        onChange={(e) => {
-          handleSearch(e.target.value);
-        }}
-        defaultValue={searchParams.get(queryKey || 'q')?.toString()}
-      />
+      <div className="relative w-full">
+        <Search
+          className="absolute z-[100] top-3.5 left-3"
+          strokeWidth={1}
+          size={20}
+        />
+        <Input
+          className={cn(
+            'peer block w-full rounded-md border-foreground focus:border-primary focus:border text-sm outline-2 placeholder:text-gray-500',
+            classNames
+          )}
+          placeholder={placeholder}
+          type="search"
+          onChange={(e) => {
+            handleSearch(e.target.value);
+          }}
+          defaultValue={searchParams.get(queryKey || 'q')?.toString()}
+        />
+      </div>
     </div>
   );
 }

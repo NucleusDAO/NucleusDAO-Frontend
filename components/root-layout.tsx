@@ -7,34 +7,33 @@ import Sidebar from '@/components/side-bar/sidebar-links';
 import Navbar from '@/components/nav-bar';
 
 interface IRootLayouts {
-    children: React.ReactNode;
+  children: React.ReactNode;
 }
 
 export const RootLayoutsComponent = ({ children }: IRootLayouts) => {
-    return (
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <Suspense fallback={<Loading />}>
-            <div className="max-w-[2000px] mx-auto relative">
-              <ModeToggle />
-              <div className="flex w-full">
-                <Sidebar />
-                <div className="w-[80%]">
-                  <Navbar />
-                  <div className="m-4 p-4 rounded-lg bg-foreground">
-                    {children}
-                  </div>
-                </div>
+  return (
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="system"
+      enableSystem
+      disableTransitionOnChange
+    >
+      <Suspense fallback={<Loading />}>
+        <div className="max-w-[2000px] mx-auto relative">
+          <div className="flex w-full">
+            <Sidebar />
+            <div className="w-[80%] ml-[20%] h-screen">
+              <Navbar />
+              <div className="mx-6 p-6 rounded-lg bg-foreground mt-24 max-w-[1500px]">
+                {children}
               </div>
             </div>
-          </Suspense>
-          <Sonner richColors />
-        </ThemeProvider>
-    )
+          </div>
+        </div>
+      </Suspense>
+      <Sonner richColors />
+    </ThemeProvider>
+  );
 };
 
 export default RootLayoutsComponent;

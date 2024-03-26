@@ -1,24 +1,20 @@
-import { Search } from 'lucide-react';
 import SearchInput from './ui/seach-input';
 import { Button } from './ui/button';
+import { ModeToggle } from './themes/mode-toggle';
 
 const Navbar = () => {
   return (
-    <nav className="flex bg-foreground py-4 w-full px-8 justify-between items-center">
-      <div className="relative w-[50%]">
-        <Search
-          className="absolute z-[999] top-3.5 left-3"
-          strokeWidth={1}
-          size={20}
-        />
+    <nav className="flex bg-foreground w-[80%] py-4 px-8 justify-between items-center fixed z-[150] max-w-[1500px]">
+      <div className="relative w-[40%]">
         <SearchInput
           placeholder="Search anything here"
           classNames="pl-10"
           queryKey="search"
         />
       </div>
-      <div className='w-[18%]'>
+      <div className='flex space-x-3 items-center'>
         <Button>Connect Wallet</Button>
+        <ModeToggle />
       </div>
     </nav>
   );
