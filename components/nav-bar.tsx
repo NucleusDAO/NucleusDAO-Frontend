@@ -1,4 +1,4 @@
-import SearchInput from './ui/seach-input';
+import SearchInput from './ui/search-input';
 import { Button } from './ui/button';
 import { ModeToggle } from './themes/mode-toggle';
 
@@ -12,7 +12,7 @@ const Navbar = () => {
           queryKey="search"
         />
       </div>
-      <div className='flex space-x-3 items-center'>
+      <div className="flex space-x-3 items-center">
         <Button>Connect Wallet</Button>
         <ModeToggle />
       </div>
