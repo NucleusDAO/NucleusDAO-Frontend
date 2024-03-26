@@ -4,7 +4,7 @@ import { ModeToggle } from './themes/mode-toggle';
 
 const Navbar = () => {
   return (
-    <nav className="flex bg-foreground w-[80%] py-4 px-8 justify-between items-center fixed z-[150] max-w-[1500px]">
+    <nav className="flex bg-foreground w-[82%] py-4 px-8 justify-between items-center fixed z-[150] max-w-[1500px]">
       <div className="relative w-[40%]">
         <SearchInput
           placeholder="Search anything here"

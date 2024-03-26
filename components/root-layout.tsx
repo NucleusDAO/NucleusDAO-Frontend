@@ -22,7 +22,7 @@ export const RootLayoutsComponent = ({ children }: IRootLayouts) => {
         <div className="max-w-[2000px] mx-auto relative">
           <div className="flex w-full">
             <Sidebar />
-            <div className="w-[80%] ml-[20%] h-screen">
+            <div className="w-[82%] ml-[18%] h-screen">
               <Navbar />
               <div className="mx-6 p-6 rounded-lg bg-foreground mt-24 max-w-[1500px]">
                 {children}
