@@ -2,7 +2,7 @@ import { LinkIcon, PeopleIcon, ProposalIcon2 } from "@/assets/svgs";
 import Link from "next/link";
 import { ReactNode } from "react";
 
-interface IDaoCard {
+export interface IDaoCard {
     organisation: string;
     orgIcon: ReactNode;
     description: string;

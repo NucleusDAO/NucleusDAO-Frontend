@@ -1,5 +1,5 @@
 import { DaoIcon, DashboardIcon, ProposalIcon } from '@/assets/svgs';
-import { DASHBOARD_URL } from '@/config/path';
+import { DAO_URL, DASHBOARD_URL } from '@/config/path';
 import { Info, Settings } from 'lucide-react';
 import { ReactNode } from 'react';
 
@@ -10,7 +10,7 @@ const topSidebarNav: { href: string; title: string; icon: ReactNode }[] = [
     icon: <DashboardIcon />,
   },
   {
-    href: '#',
+    href: DAO_URL,
     title: 'DAOs',
     icon: <DaoIcon />,
   },
