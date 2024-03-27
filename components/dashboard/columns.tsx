@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from "../ui/button";
+import { Eye } from "lucide-react";
 
 const columns: {
   accessorKey: string;
@@ -46,6 +46,6 @@ export const OrganisationCell = ({ row }: any) => {
 
 export const ActionCell = () => {
     return (
-        <Button className="bg-[#1E1E1E] text-white" size="sm">Details</Button>
+      <Eye size={18} color="#F5F5F5" role="button" />
     )
 }
