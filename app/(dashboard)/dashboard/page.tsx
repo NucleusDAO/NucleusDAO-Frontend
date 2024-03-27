@@ -6,7 +6,9 @@ import {
   dashboardTableData,
 } from '@/components/dashboard/data';
 import { Button } from '@/components/ui/button';
+import { SELECT_DAO_STYLE_URL } from '@/config/path';
 import { Plus } from 'lucide-react';
+import Link from 'next/link';
 
 const Dashboard = () => {
 
@@ -16,9 +18,11 @@ const Dashboard = () => {
         <h1 role="heading" className="text-white font-medium text-xl">
           Global Feed
         </h1>
-        <Button>
-          <Plus className="mr-2 h-4 w-4" /> Create DAO
-        </Button>
+        <Link href={SELECT_DAO_STYLE_URL}>
+          <Button>
+            <Plus className="mr-2 h-4 w-4" /> Create DAO
+          </Button>
+        </Link>
       </div>
 
       <div className="gap-6 grid-cols-3 grid">

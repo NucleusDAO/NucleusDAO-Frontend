@@ -36,14 +36,14 @@ export const Bell2 = ({ className }: { className?: string; }) => (
 
   )
 
-  export const PeopleIcon = ({ className }: { className?: string; }) => (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
-<path d="M18 7.16C17.94 7.15 17.87 7.15 17.81 7.16C16.43 7.11 15.33 5.98 15.33 4.58C15.33 3.15 16.48 2 17.91 2C19.34 2 20.49 3.16 20.49 4.58C20.48 5.98 19.38 7.11 18 7.16Z" stroke="#444444" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-<path d="M16.9699 14.44C18.3399 14.67 19.8499 14.43 20.9099 13.72C22.3199 12.78 22.3199 11.24 20.9099 10.3C19.8399 9.59004 18.3099 9.35003 16.9399 9.59003" stroke="#444444" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-<path d="M5.96998 7.16C6.02998 7.15 6.09998 7.15 6.15998 7.16C7.53998 7.11 8.63998 5.98 8.63998 4.58C8.63998 3.15 7.48998 2 6.05998 2C4.62998 2 3.47998 3.16 3.47998 4.58C3.48998 5.98 4.58998 7.11 5.96998 7.16Z" stroke="#444444" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-<path d="M6.99994 14.44C5.62994 14.67 4.11994 14.43 3.05994 13.72C1.64994 12.78 1.64994 11.24 3.05994 10.3C4.12994 9.59004 5.65994 9.35003 7.02994 9.59003" stroke="#444444" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-<path d="M12 14.63C11.94 14.62 11.87 14.62 11.81 14.63C10.43 14.58 9.32996 13.45 9.32996 12.05C9.32996 10.62 10.48 9.46997 11.91 9.46997C13.34 9.46997 14.49 10.63 14.49 12.05C14.48 13.45 13.38 14.59 12 14.63Z" stroke="#444444" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-<path d="M9.08997 17.78C7.67997 18.72 7.67997 20.26 9.08997 21.2C10.69 22.27 13.31 22.27 14.91 21.2C16.32 20.26 16.32 18.72 14.91 17.78C13.32 16.72 10.69 16.72 9.08997 17.78Z" stroke="#444444" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+  export const PeopleIcon = ({ className, size }: { className?: string; size?: string; }) => (
+    <svg width={size || "22"} height={size || "22"} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+<path d="M18 7.16C17.94 7.15 17.87 7.15 17.81 7.16C16.43 7.11 15.33 5.98 15.33 4.58C15.33 3.15 16.48 2 17.91 2C19.34 2 20.49 3.16 20.49 4.58C20.48 5.98 19.38 7.11 18 7.16Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+<path d="M16.9699 14.44C18.3399 14.67 19.8499 14.43 20.9099 13.72C22.3199 12.78 22.3199 11.24 20.9099 10.3C19.8399 9.59004 18.3099 9.35003 16.9399 9.59003" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+<path d="M5.96998 7.16C6.02998 7.15 6.09998 7.15 6.15998 7.16C7.53998 7.11 8.63998 5.98 8.63998 4.58C8.63998 3.15 7.48998 2 6.05998 2C4.62998 2 3.47998 3.16 3.47998 4.58C3.48998 5.98 4.58998 7.11 5.96998 7.16Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+<path d="M6.99994 14.44C5.62994 14.67 4.11994 14.43 3.05994 13.72C1.64994 12.78 1.64994 11.24 3.05994 10.3C4.12994 9.59004 5.65994 9.35003 7.02994 9.59003" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+<path d="M12 14.63C11.94 14.62 11.87 14.62 11.81 14.63C10.43 14.58 9.32996 13.45 9.32996 12.05C9.32996 10.62 10.48 9.46997 11.91 9.46997C13.34 9.46997 14.49 10.63 14.49 12.05C14.48 13.45 13.38 14.59 12 14.63Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+<path d="M9.08997 17.78C7.67997 18.72 7.67997 20.26 9.08997 21.2C10.69 22.27 13.31 22.27 14.91 21.2C16.32 20.26 16.32 18.72 14.91 17.78C13.32 16.72 10.69 16.72 9.08997 17.78Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
 </svg>
 
   )
@@ -54,6 +54,14 @@ export const Bell2 = ({ className }: { className?: string; }) => (
 <path d="M3.09998 14.2V17.6L12 22L20.9 17.6V14.2" stroke="#444444" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
 <path d="M12 22V16.4" stroke="#444444" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
 <path d="M12 16.4C14.43 16.4 16.4 14.43 16.4 12C16.4 9.56992 14.43 7.59998 12 7.59998C9.56992 7.59998 7.59998 9.56992 7.59998 12C7.59998 14.43 9.56992 16.4 12 16.4Z" stroke="#444444" strokeWidth="1.5" strokeMiterlimit="10"/>
+</svg>
+
+  )
+
+  export const OpenDaoIcon = ({ className, size }: { className?: string; size?: string }) => (
+<svg width={size || '41'} height={size || '41'} viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+<path d="M8.73333 6H19.1167C20.696 6 21.787 6.40019 22.4876 7.11131C23.1894 7.82381 23.5833 8.93353 23.5833 10.5333V36.6667H15.75V30.9167C15.75 29.9362 14.9551 29.1667 14 29.1667C13.0405 29.1667 12.25 29.9572 12.25 30.9167V36.6667H4.25V10.5333C4.25 8.93478 4.64741 7.82509 5.35323 7.1122C6.05814 6.40022 7.15398 6 8.73333 6ZM9.91667 22.25H18.1667C19.1261 22.25 19.9167 21.4595 19.9167 20.5C19.9167 19.5405 19.1261 18.75 18.1667 18.75H9.91667C8.95719 18.75 8.16667 19.5405 8.16667 20.5C8.16667 21.4595 8.95719 22.25 9.91667 22.25ZM9.91667 16H18.1667C19.1261 16 19.9167 15.2095 19.9167 14.25C19.9167 13.2905 19.1261 12.5 18.1667 12.5H9.91667C8.95719 12.5 8.16667 13.2905 8.16667 14.25C8.16667 15.2095 8.95719 16 9.91667 16Z" fill="white" stroke="white"/>
+<path d="M34.2998 35.9167V36.4167H34.7998H38.5832C38.9904 36.4167 39.3332 36.7595 39.3332 37.1667C39.3332 37.5739 38.9904 37.9167 38.5832 37.9167H33.6332C33.6031 37.9167 33.5753 37.9189 33.5499 37.9225C33.5244 37.9189 33.4966 37.9167 33.4665 37.9167H1.9165C1.50931 37.9167 1.1665 37.5739 1.1665 37.1667C1.1665 36.7595 1.50931 36.4167 1.9165 36.4167H32.2832H32.7832V35.9167V30.9V30.5433L32.4458 30.4272C31.0872 29.9597 30.0998 28.6756 30.0998 27.1667V23.8333C30.0998 21.9261 31.6593 20.3667 33.5665 20.3667C35.4737 20.3667 37.0332 21.9261 37.0332 23.8333V27.1667C37.0332 28.6915 36.0308 29.989 34.6447 30.4413L34.2998 30.5539V30.9167V35.9167Z" fill="white" stroke="white"/>
 </svg>
 
   )

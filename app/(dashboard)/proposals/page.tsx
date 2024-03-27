@@ -1,5 +1,4 @@
 import EachFilterTab from '@/components/proposals/each-filter-tab';
-import SearchInput from '@/components/ui/search-input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const Proposals = () => {
@@ -28,6 +27,18 @@ const Proposals = () => {
           ))}
         </TabsList>
         <TabsContent value="0" className='text-[#777777] text-sm font-light'>
+            <EachFilterTab />
+        </TabsContent>
+        <TabsContent value="1" className='text-[#777777] text-sm font-light'>
+            <EachFilterTab />
+        </TabsContent>
+        <TabsContent value="2" className='text-[#777777] text-sm font-light'>
+            <EachFilterTab />
+        </TabsContent>
+        <TabsContent value="3" className='text-[#777777] text-sm font-light'>
+            <EachFilterTab />
+        </TabsContent>
+        <TabsContent value="4" className='text-[#777777] text-sm font-light'>
             <EachFilterTab />
         </TabsContent>
       </Tabs>
