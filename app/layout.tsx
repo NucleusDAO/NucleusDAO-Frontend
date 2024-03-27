@@ -6,9 +6,9 @@ import RootLayoutsComponent from '@/components/root-layout';
 const rubik = Rubik({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Nucleus DAO',
+  title: 'NucleusDAO',
   description:
-    'A home to hundreds of Decentralized Autonomous Organizations on AETERNITY Protocol. Start earning by contributing your skills or supercharge your own community with the power of web3.',
+    'NucleusDAO is a platform revolutionising decentralised governance on the æternity blockchain, empowering communities to make transparent decisions and shape the future together.',
   icons: {
     icon: [
       {
