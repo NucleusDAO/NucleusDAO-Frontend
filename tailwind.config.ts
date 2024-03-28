@@ -41,7 +41,7 @@ const config = {
         },
         muted: {
           DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
+          foreground: "#888888",
         },
         accent: {
           DEFAULT: "hsl(var(--accent))",
