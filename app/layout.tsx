@@ -8,7 +8,7 @@ const rubik = Rubik({ subsets: ['latin'] });
 export const metadata: Metadata = {
   title: 'NucleusDAO',
   description:
-    'NucleusDAO is a cutting-edge platform revolutionizing decentralized governance on the æternity blockchain, empowering communities to make transparent decisions and shape the future together.',
+    'NucleusDAO is a platform revolutionising decentralised governance on the æternity blockchain, empowering communities to make transparent decisions and shape the future together.',
   icons: {
     icon: [
       {
