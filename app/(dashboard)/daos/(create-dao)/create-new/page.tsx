@@ -11,7 +11,7 @@ const CreateNewDao = () => {
     <div className="space-y-8">
       <div className="space-y-2">
         <h1 className="font-medium text-white text-xl">Select Template</h1>
-        <p className="text-[#888888] text-sm">
+        <p className="text-[#888888] text-sm font-light">
           With our pre-defined templates, this platform enables you to create
           your organization using a customizable template.
         </p>
@@ -35,7 +35,7 @@ const CreateNewDao = () => {
                   {template.title}
                 </h2>
                 {template.status && (
-                  <div className="bg-[#DCBB0C] rounded-md p-2 text-xs font-light text-white">
+                  <div className="bg-[#DCBB0C] rounded-md p-2 text-xs font-light text-white cursor-default" role='button'>
                     {template.status}
                   </div>
                 )}

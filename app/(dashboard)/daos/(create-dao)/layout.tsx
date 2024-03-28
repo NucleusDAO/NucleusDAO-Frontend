@@ -31,7 +31,7 @@ const Layout = ({ children }: ILayout) => {
       </div>
       <div className="flex space-x-6 items-start">
         <Steps />
-        <div className="rounded-lg p-4 bg-[#191919] w-[80%]">{children}</div>
+        <div className="rounded-lg p-4 bg-[#191919] w-[80%] h-[65vh] overflow-auto scrollBar">{children}</div>
       </div>
     </div>
   );

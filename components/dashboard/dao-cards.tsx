@@ -27,7 +27,7 @@ const DaoCard = ({ organisation, orgIcon, description, activeProposal, activeMem
                 </div>
             </div>
             <div className="text-defaultText">
-                <p>{description}</p>
+                <p className="font-light">{description}</p>
             </div>
             <div className="flex justify-between items-center pt-6 border-t border-[#1E1E1E] text-sm">
                 <div className="flex items-center space-x-2">
