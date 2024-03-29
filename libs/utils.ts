@@ -33,3 +33,21 @@ export const handleChangeFormNumberInput = (fieldName: string, value: string, fo
       form.setValue(fieldName, Number(value))
   }
 }
+
+export const encodeURI = (originalURI: string, keyValuePairs: string) => {
+  // Convert key-value pairs to a query string
+  const queryString = Object.entries(keyValuePairs)
+    .map(
+      ([key, value]) =>
+        `${encodeURIComponent(key)}=${encodeURIComponent(value)}`
+    )
+    .join('&');
+
+  // Combine the base URL and the query string
+  const fullUrl = `${originalURI}/${encodeURIComponent(keyValuePairs)}`;
+
+  // Replace %20 and spaces with +, make the string lowercase
+  const modifiedUrl = fullUrl.replace(/(%20|\s)/g, '+');
+
+  return modifiedUrl;
+};

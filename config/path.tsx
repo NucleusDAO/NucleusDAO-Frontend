@@ -9,6 +9,9 @@ export const DEFINE_MEMBERSHIP_URL: string = '/daos/membership';
 export const GOVERNANCE_SETTINGS_URL: string = '/daos/governance-settings';
 export const REVIEW_DAO_URL: string = '/daos/review';
 
+export const VIEW_DAO_URL: string = '/daos/view';
+
 // Create Proposal
 export const CREATE_PROPOSAL_URL: string = '/proposals/create';
 export const REVIEW_PROPOSAL_URL: string = '/proposals/review';
+

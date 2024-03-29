@@ -19,11 +19,6 @@ const Proposals = () => {
         <h1 role="heading" className="text-white font-medium text-xl">
           Proposals
         </h1>
-        <Link href={CREATE_PROPOSAL_URL}>
-          <Button>
-            <Plus className="mr-2 h-4 w-4" /> Create Proposal
-          </Button>
-        </Link>
       </div>
 
       <Tabs defaultValue={tabs[0].value} className="w-full">
