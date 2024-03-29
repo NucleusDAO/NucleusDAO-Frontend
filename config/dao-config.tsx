@@ -37,7 +37,7 @@ const proposalLists: { title: string; }[] = [
     title: 'Propose to add a new member to the group'
   },
   {
-    title: 'Propose to remove member from the group'
+    title: 'Propose to remove a member from the group'
   },
   {
     title: 'Propose to change voting time'
