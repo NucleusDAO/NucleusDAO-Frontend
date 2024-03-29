@@ -40,9 +40,11 @@ import {
   handlePlus,
 } from '@/libs/utils';
 import { Checkbox } from '../ui/checkbox';
+import { useEffect, useState } from 'react';
 
 const CreateNewProposalForm = () => {
   const router = useRouter();
+  const [showEl, setShowEl] = useState<boolean>(false);
   const form = useForm<z.infer<typeof proposalInfoSchema>>({
     resolver: zodResolver(proposalInfoSchema),
     defaultValues: {
@@ -54,6 +56,10 @@ const CreateNewProposalForm = () => {
       quorum: 0,
     },
   });
+  const selectedTitle = form.watch('title');
+  useEffect(() => {
+    setShowEl(!!selectedTitle); // Display the element if watchedInputValue is truthy
+  }, [selectedTitle]);
 
   const onSubmit = async (data: any) => {
     console.log(data);
@@ -105,7 +111,7 @@ const CreateNewProposalForm = () => {
           )}
         />
 
-        {(form.getValues('title') === 'Propose a transfer') && (
+        {(form.getValues('title') === 'Propose a transfer' && showEl) && (
           <>
             <div className="grid grid-cols-2 gap-6">
               <FormField
@@ -189,7 +195,7 @@ const CreateNewProposalForm = () => {
           </>
         )}
 
-        {(form.getValues('title') === 'Propose to add a new member to the group' || form.getValues('title') === 'Propose to remove member from the group') && (
+        {(form.getValues('title') === 'Propose to add a new member to the group' || form.getValues('title') === 'Propose to remove member from the group' && showEl) && (
           <>
             <FormField
               control={form.control}
@@ -253,7 +259,7 @@ const CreateNewProposalForm = () => {
           </>
         )}
 
-        {form.getValues('title') === 'Propose to change voting time' && (
+        {(form.getValues('title') === 'Propose to change voting time' && showEl) && (
             <>
                 <div className="grid grid-cols-2 gap-6">
                 <FormField
@@ -340,7 +346,7 @@ const CreateNewProposalForm = () => {
             </>
         )}
 
-{form.getValues('title') === 'Propose to change the quorum' && (
+{(form.getValues('title') === 'Propose to change the quorum' && showEl) && (
     <>
         <FormField
           control={form.control}
@@ -448,7 +454,7 @@ const CreateNewProposalForm = () => {
     </>
 )}
 
-{form.getValues('title') === 'Other' && (
+{(form.getValues('title') === 'Other' && showEl) && (
                     <FormField
                     control={form.control}
                     name="duration"
