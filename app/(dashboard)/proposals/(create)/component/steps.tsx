@@ -24,12 +24,12 @@ const Steps = () => {
               className={cn(
                 'rounded-full flex items-center justify-center w-8 h-8 text-[#292929] border border-[#292929] trans',
                 pathname.startsWith(step.url) && 'border border-primary text-primary',
-                (currentStepIndex > index || pathname === REVIEW_PROPOSAL_URL) && 'bg-primary'
+                (currentStepIndex > index || pathname === REVIEW_PROPOSAL_URL) && 'bg-primary text-white'
               )}
             >
               {(currentStepIndex > index || pathname === REVIEW_PROPOSAL_URL) ? <Check color="#FFF" size={16} /> : index + 1}
             </div>
-            <p className={cn('trans', pathname.startsWith(step.url) ? 'text-white' : 'text-[#292929]')}>{step.title}</p>
+            <p className={cn('trans', pathname.startsWith(step.url) || pathname === REVIEW_PROPOSAL_URL ? 'text-white' : 'text-[#292929]')}>{step.title}</p>
           </div>
         </Link>
       ))}
