@@ -1,6 +1,9 @@
 'use client';
 
+import { VIEW_DAO_URL } from "@/config/path";
+import { encodeURI } from "@/libs/utils";
 import { Eye } from "lucide-react";
+import Link from "next/link";
 
 const columns: {
   accessorKey: string;
@@ -33,7 +36,7 @@ const columns: {
     accessorKey: 'action',
     header: 'Action',
     key: 'action',
-    cell:  ({ row }: any) => <ActionCell />,
+    cell:  ({ row }: any) => <ActionCell row={row} />,
   },
 ];
 
@@ -44,8 +47,11 @@ export const OrganisationCell = ({ row }: any) => {
   return <div className="flex space-x-2 items-center font-medium">{orgIcon} <p>{organisation}</p></div>;
 };
 
-export const ActionCell = () => {
+export const ActionCell = ({ row }: any) => {
+  const { organisation } = row.original;
     return (
-      <Eye size={18} color="#F5F5F5" role="button" />
+      <Link href={encodeURI(VIEW_DAO_URL, organisation)}>
+        <Eye size={18} color="#F5F5F5" role="button" />
+      </Link>
     )
 }
