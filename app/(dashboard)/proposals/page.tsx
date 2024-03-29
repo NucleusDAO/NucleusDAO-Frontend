@@ -1,9 +1,5 @@
 import EachFilterTab from '@/components/proposals/each-filter-tab';
-import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { CREATE_PROPOSAL_URL } from '@/config/path';
-import { Plus } from 'lucide-react';
-import Link from 'next/link';
 
 const Proposals = () => {
   const tabs: { title: string; value: string }[] = [
