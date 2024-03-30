@@ -65,3 +65,32 @@ export const Bell2 = ({ className }: { className?: string; }) => (
 </svg>
 
   )
+
+  export const CopyIcon = ({ className, size }: { className?: string; size?: string }) => (
+    <svg width={size || "20"} height={size || "21"} viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+<path d="M16 13.0057V17.2057C16 20.7057 14.6 22.1057 11.1 22.1057H6.9C3.4 22.1057 2 20.7057 2 17.2057V13.0057C2 9.50571 3.4 8.10571 6.9 8.10571H11.1C14.6 8.10571 16 9.50571 16 13.0057Z" fill="#444444"/>
+<path d="M17.0998 2.10571H12.8998C9.81668 2.10571 8.37074 3.1998 8.06951 5.84473C8.00649 6.39806 8.46476 6.85571 9.02167 6.85571H11.0998C15.2998 6.85571 17.2498 8.80571 17.2498 13.0057V15.0838C17.2498 15.6407 17.7074 16.099 18.2608 16.036C20.9057 15.7347 21.9998 14.2888 21.9998 11.2057V7.00571C21.9998 3.50571 20.5998 2.10571 17.0998 2.10571Z" fill="#444444"/>
+</svg>
+
+  )
+
+  export const CoinIcon = ({ className, size }: { className?: string; size?: string; }) => (
+    <svg width={size || "20"} height={size || "20"} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+<path d="M18.5 12.65V16.35C18.5 19.47 15.59 22 12 22C8.41 22 5.5 19.47 5.5 16.35V12.65C5.5 15.77 8.41 18 12 18C15.59 18 18.5 15.77 18.5 12.65Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+<path d="M18.5 7.65C18.5 8.56 18.25 9.4 17.81 10.12C16.74 11.88 14.54 13 12 13C9.46 13 7.26 11.88 6.19 10.12C5.75 9.4 5.5 8.56 5.5 7.65C5.5 6.09 6.22999 4.68 7.39999 3.66C8.57999 2.63 10.2 2 12 2C13.8 2 15.42 2.63 16.6 3.65C17.77 4.68 18.5 6.09 18.5 7.65Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+<path d="M18.5 7.65V12.65C18.5 15.77 15.59 18 12 18C8.41 18 5.5 15.77 5.5 12.65V7.65C5.5 4.53 8.41 2 12 2C13.8 2 15.42 2.63 16.6 3.65C17.77 4.68 18.5 6.09 18.5 7.65Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+</svg>
+
+  )
+
+  export const MemebersIcon = ({ className, size }: { className?: string; size?: string }) => (
+    <svg width={size || "20"} height={size || "20"} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+<path d="M18.0001 7.16C17.9401 7.15 17.8701 7.15 17.8101 7.16C16.4301 7.11 15.3301 5.98 15.3301 4.58C15.3301 3.15 16.4801 2 17.9101 2C19.3401 2 20.4901 3.16 20.4901 4.58C20.4801 5.98 19.3801 7.11 18.0001 7.16Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+<path d="M16.9695 14.44C18.3395 14.67 19.8495 14.43 20.9095 13.72C22.3195 12.78 22.3195 11.24 20.9095 10.3C19.8395 9.59004 18.3095 9.35003 16.9395 9.59003" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+<path d="M5.96852 7.16C6.02852 7.15 6.09852 7.15 6.15852 7.16C7.53852 7.11 8.63852 5.98 8.63852 4.58C8.63852 3.15 7.48852 2 6.05852 2C4.62852 2 3.47852 3.16 3.47852 4.58C3.48852 5.98 4.58852 7.11 5.96852 7.16Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+<path d="M6.99945 14.44C5.62945 14.67 4.11945 14.43 3.05945 13.72C1.64945 12.78 1.64945 11.24 3.05945 10.3C4.12945 9.59004 5.65945 9.35003 7.02945 9.59003" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+<path d="M12.0001 14.63C11.9401 14.62 11.8701 14.62 11.8101 14.63C10.4301 14.58 9.33008 13.45 9.33008 12.05C9.33008 10.62 10.4801 9.46997 11.9101 9.46997C13.3401 9.46997 14.4901 10.63 14.4901 12.05C14.4801 13.45 13.3801 14.59 12.0001 14.63Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+<path d="M9.0907 17.78C7.6807 18.72 7.6807 20.26 9.0907 21.2C10.6907 22.27 13.3107 22.27 14.9107 21.2C16.3207 20.26 16.3207 18.72 14.9107 17.78C13.3207 16.72 10.6907 16.72 9.0907 17.78Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+</svg>
+
+  )

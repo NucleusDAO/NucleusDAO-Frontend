@@ -50,7 +50,7 @@ export const OrganisationCell = ({ row }: any) => {
 export const ActionCell = ({ row }: any) => {
   const { organisation } = row.original;
     return (
-      <Link href={encodeURI(VIEW_DAO_URL, organisation)}>
+      <Link href={encodeURI(VIEW_DAO_URL, organisation, 'dashboard')}>
         <Eye size={18} color="#F5F5F5" role="button" />
       </Link>
     )

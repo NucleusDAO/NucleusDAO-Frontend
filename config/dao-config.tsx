@@ -1,6 +1,7 @@
-import { OpenDaoIcon, PeopleIcon } from "@/assets/svgs";
+import { CoinIcon, DashboardIcon, MemebersIcon, OpenDaoIcon, PeopleIcon, ProposalIcon, ProposalIcon2 } from "@/assets/svgs";
 import { ReactNode } from "react";
 import { DAO_INFO_URL } from "./path";
+import { Settings } from "lucide-react";
 
 const DaoTemplateList: {
   title: string;
@@ -75,6 +76,34 @@ const proposalSummary: { title: string; desc: string }[ ]= [
     title: 'Published by',
     desc: '9xfDAO...ntY897'
 },
+];
+
+const eachDaoViews = [
+  {
+    title: 'Dashboard',
+    icon: <DashboardIcon size="18" />,
+    path: 'dashboard'
+  },
+  {
+    title: 'Propoals',
+    icon: <ProposalIcon />,
+    path: 'proposals',
+  },
+  {
+    title: 'Funds',
+    icon: <CoinIcon />,
+    path: 'funds'
+  },
+  {
+    title: 'Members',
+    icon: <MemebersIcon />,
+    path: 'members'
+  },
+  {
+    title: 'Settings',
+    icon: <Settings size={20} />,
+    path: 'settings'
+  },
 ]
 
-export { DaoTemplateList, proposalLists, proposalSummary };
+export { DaoTemplateList, proposalLists, proposalSummary, eachDaoViews };

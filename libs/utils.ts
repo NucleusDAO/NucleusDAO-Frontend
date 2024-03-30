@@ -34,7 +34,7 @@ export const handleChangeFormNumberInput = (fieldName: string, value: string, fo
   }
 }
 
-export const encodeURI = (originalURI: string, keyValuePairs: string) => {
+export const encodeURI = (originalURI: string, keyValuePairs: string, otherKeyPairs?: string) => {
   // Convert key-value pairs to a query string
   const queryString = Object.entries(keyValuePairs)
     .map(
@@ -44,7 +44,7 @@ export const encodeURI = (originalURI: string, keyValuePairs: string) => {
     .join('&');
 
   // Combine the base URL and the query string
-  const fullUrl = `${originalURI}/${encodeURIComponent(keyValuePairs)}`;
+  const fullUrl = `${originalURI}/${encodeURIComponent(keyValuePairs)}${otherKeyPairs ? `/${otherKeyPairs}` : ''}`;
 
   // Replace %20 and spaces with +, make the string lowercase
   const modifiedUrl = fullUrl.replace(/(%20|\s)/g, '+');
