@@ -26,7 +26,7 @@ const Layout = ({ children }: ILayout) => {
   const updatedUrl = urlParts.join('/'); // Join the array back into a string
 
   return (
-    <div className="space-y-8">
+    <div className="">
       <div className="flex justify-between border-b border-b-[#292929] pb-6">
         <div
           className="flex space-x-4 items-center"
@@ -51,8 +51,8 @@ const Layout = ({ children }: ILayout) => {
         )}
       </div>
 
-      <div>
-        <div className="space-y-12">
+      <div className='h-[70vh] overflow-auto pt-6'>
+        <div className="space-y-8">
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <div className="flex space-x-4 items-center">
@@ -82,14 +82,13 @@ const Layout = ({ children }: ILayout) => {
             <h2 className="font-medium text-2xl text-white">Overview</h2>
             <div className="flex space-x-4 bg-[#191919] p-2 rounded-2xl">
               {eachDaoViews.map((view) => (
-                <Link href={encodeURI(updatedUrl, view.path)}>
+                <Link href={encodeURI(updatedUrl, view.path)} key={view.title}>
                   <div
                     role="button"
                     className={cn(
                       'flex space-x-2 text-sm text-[#888888] items-center bg-[#1E1E1E] rounded-lg font-light py-2 px-3',
                       pathname.endsWith(view.path) && 'text-primary'
                     )}
-                    key={view.title}
                   >
                     {view.icon}
                     <p>{view.title}</p>

@@ -1,7 +1,6 @@
 'use client';
 
 import { Eye } from "lucide-react";
-import { Button } from "../ui/button";
 import { EachStatus } from "./data";
 
 const columns: {

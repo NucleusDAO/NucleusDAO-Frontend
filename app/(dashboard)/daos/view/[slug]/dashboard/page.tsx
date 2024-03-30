@@ -1,13 +1,13 @@
 'use client'
 import { ChevronUp } from 'lucide-react';
-import { dashboardTab } from './config';
+import { dashboardTab, tabView } from './config';
 import { useState } from 'react';
 import { cn } from '@/libs/utils';
 
 const EachDaoDashboard = () => {
     const [selectedTab, setSelectTab] = useState<number>(0);
   return (
-    <div className="flex">
+    <div className="flex space-x-8">
       <div className="w-[25%] space-y-4">
         {dashboardTab.map((tab, index) => (
           <div
@@ -48,7 +48,9 @@ const EachDaoDashboard = () => {
           </div>
         ))}
       </div>
-      <div></div>
+      <div className='w-[75%] bg-[#191919] p-4 rounded-lg h-[60vh]'>
+        {tabView[selectedTab]}
+      </div>
     </div>
   );
 };
