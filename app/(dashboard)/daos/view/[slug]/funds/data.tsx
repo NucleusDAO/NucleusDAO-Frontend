@@ -5,7 +5,7 @@ const data = [
         amountInAE: '0.00567 AE',
         amountInUSD: '$254.08',
         from: 'abc123....j7xhsj89',
-        data: '03-04-2023',
+        date: '03-04-2023',
         status: 'Successful'
     },
     {
@@ -13,7 +13,7 @@ const data = [
         amountInAE: '0.00567 AE',
         amountInUSD: '$254.08',
         from: 'abc123....j7xhsj89',
-        data: '03-04-2023',
+        date: '03-04-2023',
         status: 'Pending'
     },
     {
@@ -21,7 +21,7 @@ const data = [
         amountInAE: '0.00567 AE',
         amountInUSD: '$254.08',
         from: 'abc123....j7xhsj89',
-        data: '03-04-2023',
+        date: '03-04-2023',
         status: 'Successful'
     },
     {
@@ -29,7 +29,7 @@ const data = [
         amountInAE: '0.00567 AE',
         amountInUSD: '$254.08',
         from: 'abc123....j7xhsj89',
-        data: '03-04-2023',
+        date: '03-04-2023',
         status: 'Failed'
     },
 ];
