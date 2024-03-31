@@ -76,4 +76,22 @@ export const EachStatus: IEachStatus = {
     ),
   };
 
+  export const EachStatus2: IEachStatus = {
+    Pending: (
+      <div className="bg-[#DCBB0C1A] text-[#DCBB0C] py-1.5 px-4 rounded-lg text-xs font-light">
+        Pending
+      </div>
+    ),
+    Failed: (
+      <div className="bg-[#DD38571A] text-[#DD3857] py-1.5 px-4 rounded-lg text-xs font-light">
+        Failed
+      </div>
+    ),
+    Successful: (
+      <div className="bg-[#16870E1A] text-[#16870E] py-1.5 px-2 rounded-lg text-xs font-light">
+        Successful
+      </div>
+    ),
+  };
+
 export default proposalData

@@ -28,7 +28,7 @@ const EachDaoDashboard = () => {
                   {!tab.value && (
                     <div className="flex items-center space-x-2 text-[#1CA013] ">
                       <ChevronUp size={16} />
-                      <p className="font-medium text-sm">{tab.increase}</p>
+                      <p className="font-medium text-xs">{tab.increase}</p>
                     </div>
                   )}
                 </div>

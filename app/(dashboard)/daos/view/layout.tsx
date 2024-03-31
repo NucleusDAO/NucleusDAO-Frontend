@@ -51,7 +51,7 @@ const Layout = ({ children }: ILayout) => {
         )}
       </div>
 
-      <div className='h-[73vh] overflow-auto pt-6 pr-4'>
+      <div className='h-[72vh] overflow-auto pt-6 pr-4'>
         <div className="space-y-8">
           <div className="space-y-6">
             <div className="flex items-center justify-between">
@@ -86,7 +86,7 @@ const Layout = ({ children }: ILayout) => {
                   <div
                     role="button"
                     className={cn(
-                      'flex space-x-2 text-sm text-[#888888] items-center bg-[#1E1E1E] rounded-lg font-light py-2 px-3',
+                      'flex space-x-2 text-xs text-[#888888] items-center bg-[#1E1E1E] rounded-lg font-light py-2 px-3',
                       (pathname.endsWith(view.path) || pathname.includes(view.path) ) && 'text-primary',
                     )}
                   >
