@@ -6,6 +6,9 @@ import { Separator } from '../ui/separator';
 import { Clock4 } from 'lucide-react';
 import { ReactNode } from 'react';
 import { EachStatus } from './data';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { encodeURI } from '@/libs/utils';
 
 interface IProposalCard {
   description: string;
@@ -14,6 +17,7 @@ interface IProposalCard {
   duration: string;
   status: string;
   type: string;
+  id: string;
 }
 
 const ProposalCard = ({
@@ -23,9 +27,13 @@ const ProposalCard = ({
   duration,
   status,
   type,
+  id,
 }: IProposalCard) => {
+  const pathname = usePathname();
+  console.log(pathname, '-> pathname')
 
   return (
+    <Link href={encodeURI(pathname, id)}>
     <div className="bg-[#191919] rounded-lg">
       <div className="flex rounded-l space-x-2">
         <div className="bg-[#1E1E1E] p-3 rounded-tl-lg rounded-bl-lg">
@@ -73,6 +81,7 @@ const ProposalCard = ({
         </div>
       </div>
     </div>
+    </Link>
   );
 };
 

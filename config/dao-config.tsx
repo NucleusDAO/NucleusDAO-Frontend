@@ -85,7 +85,7 @@ const eachDaoViews = [
     path: 'dashboard'
   },
   {
-    title: 'Propoals',
+    title: 'Proposals',
     icon: <ProposalIcon />,
     path: 'proposals',
   },

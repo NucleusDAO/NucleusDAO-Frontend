@@ -1,6 +1,6 @@
 'use client';
 import { Button } from '@/components/ui/button';
-import { CREATE_PROPOSAL_URL, DAO_URL, VIEW_DAO_URL } from '@/config/path';
+import { CREATE_PROPOSAL_URL, DAO_URL } from '@/config/path';
 import { Globe, MoveLeft, Plus } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
@@ -22,8 +22,8 @@ const Layout = ({ children }: ILayout) => {
   const isJoined: boolean = true;
 
   const urlParts = pathname.split('/'); // Split the URL by "/"
-  urlParts.pop(); // Remove the last element from the array
-  const updatedUrl = urlParts.join('/'); // Join the array back into a string
+  const updatedUrlParts = urlParts.length > 5 ? urlParts.slice(0, -2) : urlParts.slice(0, -1) // Remove the last element from the array
+  const updatedUrl = updatedUrlParts.join('/'); // Join the array back into a string
 
   return (
     <div className="">
@@ -51,7 +51,7 @@ const Layout = ({ children }: ILayout) => {
         )}
       </div>
 
-      <div className='h-[70vh] overflow-auto pt-6'>
+      <div className='h-[73vh] overflow-auto pt-6 pr-4'>
         <div className="space-y-8">
           <div className="space-y-6">
             <div className="flex items-center justify-between">
@@ -87,7 +87,7 @@ const Layout = ({ children }: ILayout) => {
                     role="button"
                     className={cn(
                       'flex space-x-2 text-sm text-[#888888] items-center bg-[#1E1E1E] rounded-lg font-light py-2 px-3',
-                      pathname.endsWith(view.path) && 'text-primary'
+                      (pathname.endsWith(view.path) || pathname.includes(view.path) ) && 'text-primary',
                     )}
                   >
                     {view.icon}
@@ -99,7 +99,7 @@ const Layout = ({ children }: ILayout) => {
           </div>
         </div>
 
-        <div className="py-4">{children}</div>
+        <div className="pt-4">{children}</div>
       </div>
     </div>
   );

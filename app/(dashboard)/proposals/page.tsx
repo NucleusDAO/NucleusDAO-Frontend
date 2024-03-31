@@ -1,4 +1,4 @@
-import EachFilterTab from '@/components/proposals/each-filter-tab';
+import EachFilterTab from '@/components/proposals/each-proposal-tab';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const Proposals = () => {
@@ -11,7 +11,7 @@ const Proposals = () => {
   ];
   return (
     <div className="space-y-8">
-      <div className='justify-between items-center flex'>
+      <div className="justify-between items-center flex">
         <h1 role="heading" className="text-white font-medium text-xl">
           Proposals
         </h1>

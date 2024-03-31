@@ -2,6 +2,10 @@
 
 import { Eye } from "lucide-react";
 import { EachStatus } from "./data";
+import { Button } from "../ui/button";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { encodeURI } from "@/libs/utils";
 
 const columns: {
   accessorKey: string;
@@ -45,7 +49,7 @@ const columns: {
     accessorKey: 'action',
     header: 'Action',
     key: 'action',
-    cell:  ({ row }: any) => <ActionCell />,
+    cell:  ({ row }: any) => <ActionCell row={row} />,
   },
 ];
 
@@ -56,10 +60,14 @@ export const OrganisationCell = ({ row }: any) => {
   return <div className="flex space-x-2 items-center font-medium">{logo} <p>{organisation}</p></div>;
 };
 
-export const ActionCell = () => {
+export const ActionCell = ({ row }: any) => {
+  const { id } = row.original;
+  const pathname = usePathname();
     return (
-        <Eye size={18} color="#F5F5F5" role="button" />
-        // <Button className="bg-[#1E1E1E] text-white" size="sm">Details</Button>
+        // <Eye size={18} color="#F5F5F5" role="button" />
+        <Link href={encodeURI(pathname, id)}>
+          <Button className="bg-[#1E1E1E] text-white" size="sm">Details</Button>
+        </Link>
     )
 }
 
