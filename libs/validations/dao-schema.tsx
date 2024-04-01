@@ -90,4 +90,10 @@ const editNotifications = z.object({
   push_new_updates: z.boolean().optional(),
 });
 
-export { daoInfoSchema, defineMembershipSchema, proposalInfoSchema, editDaoInfoSchema, editDaoInfoLinksSchema, editProfile, editNotifications };
+const editDisplay = z.object({
+  light_mode: z.boolean().optional(),
+  dark_mode: z.boolean().optional(),
+  device_settings: z.boolean().optional().default(true),
+});
+
+export { daoInfoSchema, defineMembershipSchema, proposalInfoSchema, editDaoInfoSchema, editDaoInfoLinksSchema, editProfile, editNotifications, editDisplay };

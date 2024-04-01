@@ -3,7 +3,7 @@ import { Bell2, DisplayIcon, OnePersonicon } from '@/assets/svgs';
 import {
   SETTINGS_DISPLAY_URL,
   SETTINGS_NOTIFICATIONS_URL,
-  SETTINGS_PROFILE_URL,
+  SETTINGS_URL,
 } from '@/config/path';
 import { cn } from '@/libs/utils';
 import Link from 'next/link';
@@ -18,7 +18,7 @@ export const daoSettingsSidebarLinks: {
   {
     title: 'My Profile',
     icon: <OnePersonicon />,
-    href: SETTINGS_PROFILE_URL,
+    href: SETTINGS_URL,
   },
   {
     title: 'Notifications',
@@ -50,7 +50,7 @@ const Layout = ({ children }: ILayout) => {
                 <div
                   className={cn(
                     'py-2 rounded-lg px-3 flex font-light items-center space-x-2 my-4',
-                    pathname.startsWith(link.href) && 'bg-[#1E1E1E] text-white'
+                    pathname === link.href && 'bg-[#1E1E1E] text-white'
                   )}
                 >
                   <div>{link.icon}</div>

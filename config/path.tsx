@@ -16,6 +16,7 @@ export const CREATE_PROPOSAL_URL: string = '/proposals/create';
 export const REVIEW_PROPOSAL_URL: string = '/proposals/review';
 
 // Settings
+export const SETTINGS_URL: string = '/settings';
 export const SETTINGS_PROFILE_URL: string = '/settings/profile';
 export const SETTINGS_NOTIFICATIONS_URL: string = '/settings/notifications';
 export const SETTINGS_DISPLAY_URL: string = '/settings/display';
