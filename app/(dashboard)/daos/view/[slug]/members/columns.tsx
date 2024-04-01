@@ -1,9 +1,18 @@
 'use client';
 import Image from 'next/image';
-import AELogo from '@/assets/logos/ae-logo.png';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 
 import { Button } from '@/components/ui/button';
 import RoundedIcon from '@/assets/icons/roundedIcon.png';
+import Link from 'next/link';
+import { CREATE_PROPOSAL_URL } from '@/config/path';
 
 const columns: {
   accessorKey: string;
@@ -50,8 +59,30 @@ export const WalletAddressCell = ({ row }: any) => {
 export const ActionCell = ({ row }: any) => {
   const { id } = row.original;
   return (
-    <Button className="bg-[#1E1E1E] hover:bg-[#262626] text-white" size="sm">
-      Delete
-    </Button>
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button
+          className="bg-[#1E1E1E] hover:bg-[#262626] text-white"
+          size="sm"
+        >
+          Delete
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="bg-[#191919]">
+        <DialogHeader>
+          <DialogTitle className="text-white font-medium py-3">
+            Remove Member
+          </DialogTitle>
+          <DialogDescription className="font-light py-2">
+            You have to make a proposal before you can remove members from the
+            DAO. Do you want to make a proposal now?
+          </DialogDescription>
+        </DialogHeader>
+
+        <Link href={CREATE_PROPOSAL_URL}>
+          <Button className="w-full">Propose</Button>
+        </Link>
+      </DialogContent>
+    </Dialog>
   );
 };

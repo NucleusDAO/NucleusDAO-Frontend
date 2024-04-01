@@ -1,7 +1,6 @@
 'use client';
-import { DAO_URL } from '@/config/path';
+
 import { MoveLeft } from 'lucide-react';
-import Link from 'next/link';
 import { ReactNode, useState } from 'react';
 import {
   Dialog,
@@ -13,6 +12,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import Steps from './component/steps';
+import { useRouter } from 'next/navigation';
 
 interface ILayout {
   children: ReactNode;
@@ -20,6 +20,7 @@ interface ILayout {
 
 const Layout = ({ children }: ILayout) => {
   const [open, setOpen] = useState<boolean>(false);
+  const router = useRouter();
   return (
     <div className="space-y-8">
       <div className="flex space-x-4 items-start border-b border-b-[#292929] pb-6">
@@ -46,10 +47,10 @@ const Layout = ({ children }: ILayout) => {
               <Button variant="outline" onClick={() => setOpen(false)}>
                 No, stay
               </Button>
-              <Button>
-                <Link href={DAO_URL} className="w-full">
+              <Button onClick={() => router.back()}>
+                {/* <Link href={DAO_URL} className="w-full"> */}
                   Yes, exit
-                </Link>
+                {/* </Link> */}
               </Button>
             </div>
           </DialogContent>

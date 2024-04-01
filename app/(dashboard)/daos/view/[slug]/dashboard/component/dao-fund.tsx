@@ -32,7 +32,7 @@ export const DaoFunds = () => {
           {period.map((each) => (
             <div
               className={cn(
-                'rounded-lg border border-[#444444] px-2 py-1 text-sm',
+                'rounded-lg border border-[#444444] px-2 py-1 text-xs',
                 currentPeriod === each && 'border-primary text-primary'
               )}
               role="button"
