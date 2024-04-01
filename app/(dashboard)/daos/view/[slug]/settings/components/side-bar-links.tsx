@@ -43,7 +43,7 @@ const SidebarLinksComp = ({ activeSidebar }: ISidebarLinksComp) => {
         <div
           key={link.title}
           className={cn(
-            'py-3 rounded-lg px-4 font-light',
+            'py-2 rounded-lg px-4 font-light',
             link.title === 'Exit DAO' && 'text-[#DD3857]',
             activeSidebar === link.title && 'bg-[#1E1E1E] text-white'
           )}

@@ -72,4 +72,28 @@ const defineMembershipSchema = z.object({
   members: z.array(member),
 });
 
-export { daoInfoSchema, defineMembershipSchema, proposalInfoSchema, editDaoInfoSchema, editDaoInfoLinksSchema };
+const editProfile = z.object({
+  name: z
+    .string()
+    .min(2, { message: 'Must be 2 or more characters long' })
+    .max(50, { message: 'Must be 50 or fewer characters long' }),
+  email: z.string().email(),
+  about: z.string(),
+});
+
+const editNotifications = z.object({
+  email_new_dao: z.boolean().optional(),
+  email_new_proposal: z.boolean().optional(),
+  email_new_updates: z.boolean().optional(),
+  push_new_dao: z.boolean().optional(),
+  push_new_proposal: z.boolean().optional(),
+  push_new_updates: z.boolean().optional(),
+});
+
+const editDisplay = z.object({
+  light_mode: z.boolean().optional(),
+  dark_mode: z.boolean().optional(),
+  device_settings: z.boolean().optional().default(true),
+});
+
+export { daoInfoSchema, defineMembershipSchema, proposalInfoSchema, editDaoInfoSchema, editDaoInfoLinksSchema, editProfile, editNotifications, editDisplay };

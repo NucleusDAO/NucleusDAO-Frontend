@@ -15,3 +15,13 @@ export const VIEW_DAO_URL: string = '/daos/view';
 export const CREATE_PROPOSAL_URL: string = '/proposals/create';
 export const REVIEW_PROPOSAL_URL: string = '/proposals/review';
 
+// Settings
+export const SETTINGS_URL: string = '/settings';
+export const SETTINGS_PROFILE_URL: string = '/settings/profile';
+export const SETTINGS_NOTIFICATIONS_URL: string = '/settings/notifications';
+export const SETTINGS_DISPLAY_URL: string = '/settings/display';
+
+// Help Center
+export const HELP_CENTER_URL: string = '/help-center';
+export const HELP_CENTER_REPORT_URL: string = '/help-center/report';
+export const HELP_CENTER_OTHERS_URL: string = '/help-center/others';
