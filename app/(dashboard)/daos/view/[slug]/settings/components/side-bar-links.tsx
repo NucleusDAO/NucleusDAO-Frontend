@@ -47,7 +47,7 @@ const SidebarLinksComp = ({ activeSidebar }: ISidebarLinksComp) => {
             link.title === 'Exit DAO' && 'text-[#DD3857]',
             activeSidebar === link.title && 'bg-[#1E1E1E] text-white'
           )}
-          onClick={() => handleOnClick(link.title)}
+          onClick={() => {link.title === 'Exit DAO' ? null : handleOnClick(link.title)}}
           role='button'
         >
           {link.title}

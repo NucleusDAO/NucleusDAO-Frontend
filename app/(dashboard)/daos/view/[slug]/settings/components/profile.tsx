@@ -1,6 +1,5 @@
 'use client';
-import { Button } from '@/components/ui/button';
-import { Info } from 'lucide-react';
+
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -19,6 +18,7 @@ import FormGroup from '@/components/ui/form-group';
 import Logo from '@/assets/logos/legacy.png';
 import Image from 'next/image';
 import { EditIcon } from '@/assets/svgs';
+import DaoConfigurationWrapper from '@/components/dao-configuraiton-wrapper';
 
 const Profile = () => {
   const form = useForm<z.infer<typeof editDaoInfoSchema>>({
@@ -32,19 +32,7 @@ const Profile = () => {
     console.log(data);
   };
   return (
-    <div className="space-y-5">
-      <div className="flex justify-between items-center">
-        <h2 className="text-white text-xl font-medium">Profile</h2>
-        <Button>Edit Settings</Button>
-      </div>
-      <div className="flex space-x-1 items-center text-xs text-[#888888] font-light">
-        <Info size={14} />
-        <p>
-          To make changes to the settings, create a proposal and put it to vote
-          in your DAO.
-        </p>
-      </div>
-      <div>
+    <DaoConfigurationWrapper>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <FormField
@@ -90,8 +78,7 @@ const Profile = () => {
             />
           </form>
         </Form>
-      </div>
-    </div>
+    </DaoConfigurationWrapper>
   );
 };
 

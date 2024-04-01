@@ -24,6 +24,11 @@ const daoInfoSchema = z.object({
   socialMedia: z.array(socialMediaSchema),
 });
 
+const editDaoInfoLinksSchema = z.object({
+  socialMedia: z.array(socialMediaSchema),
+});
+
+
 const editDaoInfoSchema = z.object({
   daoName: z
     .string()
@@ -67,4 +72,4 @@ const defineMembershipSchema = z.object({
   members: z.array(member),
 });
 
-export { daoInfoSchema, defineMembershipSchema, proposalInfoSchema, editDaoInfoSchema };
+export { daoInfoSchema, defineMembershipSchema, proposalInfoSchema, editDaoInfoSchema, editDaoInfoLinksSchema };
