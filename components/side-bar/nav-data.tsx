@@ -1,5 +1,5 @@
 import { DaoIcon, DashboardIcon, ProposalIcon } from '@/assets/svgs';
-import { DAO_URL, DASHBOARD_URL, PROPOSALS_URL } from '@/config/path';
+import { DAO_URL, DASHBOARD_URL, PROPOSALS_URL, SETTINGS_PROFILE_URL } from '@/config/path';
 import { Info, Settings } from 'lucide-react';
 import { ReactNode } from 'react';
 
@@ -23,7 +23,7 @@ const topSidebarNav: { href: string; title: string; icon: ReactNode }[] = [
 
 const bottomSidebarNav: { href: string; title: string; icon: ReactNode }[] = [
   {
-    href: "#",
+    href: SETTINGS_PROFILE_URL,
     title: 'Settings',
     icon: <Settings size={20} />,
   },

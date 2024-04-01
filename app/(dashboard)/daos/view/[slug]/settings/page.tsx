@@ -21,7 +21,7 @@ const Settings = () => {
             <div className="border-b border-b-[#292929]">
                 <h2 className="border-b-2 pb-3 w-fit border-primary text-white text-sm">Configuration</h2>
             </div>
-            <div className="flex space-x-8 items-start">
+            <div className="flex space-x-4 items-start">
                 <div className="w-[20%] bg-[#191919] rounded-lg p-4">
                     <SidebarLinksComp activeSidebar={activeSidebar} />
                 </div>

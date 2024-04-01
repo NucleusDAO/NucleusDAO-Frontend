@@ -72,4 +72,14 @@ const defineMembershipSchema = z.object({
   members: z.array(member),
 });
 
-export { daoInfoSchema, defineMembershipSchema, proposalInfoSchema, editDaoInfoSchema, editDaoInfoLinksSchema };
+const editProfile = z.object({
+  name: z
+    .string()
+    .min(2, { message: 'Must be 2 or more characters long' })
+    .max(50, { message: 'Must be 50 or fewer characters long' }),
+  email: z.string().email(),
+  about: z.string(),
+
+});
+
+export { daoInfoSchema, defineMembershipSchema, proposalInfoSchema, editDaoInfoSchema, editDaoInfoLinksSchema, editProfile };
