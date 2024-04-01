@@ -1,6 +1,5 @@
 'use client';
 
-import { Eye } from "lucide-react";
 import { EachStatus } from "./data";
 import { Button } from "../ui/button";
 import Link from "next/link";
