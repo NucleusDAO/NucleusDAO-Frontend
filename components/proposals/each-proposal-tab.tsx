@@ -29,8 +29,8 @@ const EachFilterTab = () => {
     replace(`${pathname}?${params.toString()}`);
   }, 300);
   return (
-    <div className="space-y-8">
-      <div className="border-b border-b-[#292929] pb-8 pt-4 mt-4  flex justify-between items-center">
+    <div className="space-y-6">
+      <div className="border-b border-b-[#292929] pb-6 pt-4 mt-4  flex justify-between items-center">
         <div className="relative w-[40%]">
           <SearchInput
             placeholder="Search anything here"

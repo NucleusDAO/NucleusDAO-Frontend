@@ -24,6 +24,19 @@ const daoInfoSchema = z.object({
   socialMedia: z.array(socialMediaSchema),
 });
 
+const editDaoInfoLinksSchema = z.object({
+  socialMedia: z.array(socialMediaSchema),
+});
+
+
+const editDaoInfoSchema = z.object({
+  daoName: z
+    .string()
+    .min(2, { message: 'Must be 2 or more characters long' })
+    .max(50, { message: 'Must be 50 or fewer characters long' }),
+  logo: z.string()
+});
+
 const proposalInfoSchema = z.object({
   title: z
     .string()
@@ -59,4 +72,4 @@ const defineMembershipSchema = z.object({
   members: z.array(member),
 });
 
-export { daoInfoSchema, defineMembershipSchema, proposalInfoSchema };
+export { daoInfoSchema, defineMembershipSchema, proposalInfoSchema, editDaoInfoSchema, editDaoInfoLinksSchema };
