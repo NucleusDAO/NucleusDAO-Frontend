@@ -3,7 +3,7 @@ import { cn } from '@/libs/utils';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ReactNode } from 'react';
-import { settingsSidebarLinks } from './config';
+import { helpCenterLinks } from './config';
 
 interface ILayout {
   children: ReactNode;
@@ -18,7 +18,7 @@ const Layout = ({ children }: ILayout) => {
       <div className="flex justify-between items-start space-x-4">
         <div className="w-[20%] bg-[#191919] rounded-lg p-4">
           <div className="space-y-6 text-[#888888] text-sm">
-            {settingsSidebarLinks.map((link) => (
+            {helpCenterLinks.map((link) => (
               <Link key={link.title} href={link.href}>
                 <div
                   className={cn(
@@ -34,7 +34,7 @@ const Layout = ({ children }: ILayout) => {
           </div>
         </div>
 
-        <div className="w-[80%] bg-[#191919] rounded-lg p-4">{children}</div>
+        <div className="w-[80%] bg-[#191919] rounded-lg p-4 h-[74vh] overflow-auto">{children}</div>
       </div>
     </div>
   );
