@@ -4,7 +4,6 @@ import RoundedIcon from '@/assets/icons/roundedIcon.png';
 import VoteIcon from '@/assets/icons/voteIcon.png';
 import { Separator } from '../ui/separator';
 import { Clock4 } from 'lucide-react';
-import { ReactNode } from 'react';
 import { EachStatus } from './data';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -30,11 +29,10 @@ const ProposalCard = ({
   id,
 }: IProposalCard) => {
   const pathname = usePathname();
-  console.log(pathname, '-> pathname')
 
   return (
     <Link href={encodeURI(pathname, id)}>
-    <div className="bg-[#191919] rounded-lg">
+    <div className="bg-[#191919] rounded-lg cursor-pointer" role="tablist">
       <div className="flex rounded-l space-x-2">
         <div className="bg-[#1E1E1E] p-3 rounded-tl-lg rounded-bl-lg">
           <Image src={LegacyLogo} alt="legacy" width={32} />
