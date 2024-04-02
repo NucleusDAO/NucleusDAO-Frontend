@@ -1,4 +1,4 @@
-import { CoinIcon, DashboardIcon, MemebersIcon, OpenDaoIcon, PeopleIcon, ProposalIcon, ProposalIcon2 } from "@/assets/svgs";
+import { CoinIcon, DashboardIcon, MemebersIcon, OpenDaoIcon, PeopleIcon, ProposalIcon } from "@/assets/svgs";
 import { ReactNode } from "react";
 import { DAO_INFO_URL } from "./path";
 import { Settings } from "lucide-react";

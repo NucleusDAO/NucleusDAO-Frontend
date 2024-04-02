@@ -22,19 +22,19 @@ const DaoCard = ({
   url,
 }: IDaoCard) => {
   return (
-    <div className="bg-[#191919] p-5 rounded-lg space-y-7">
+    <div className="dark:bg-[#191919] bg-white  p-5 rounded-lg space-y-7">
       <div className="flex space-x-4 items-center pb-7">
         <div>{orgIcon}</div>
         <div className="space-y-1">
           <Link href={encodeURI(VIEW_DAO_URL, `${organisation}/dashboard`)}>
-            <h3 className="text-white font-medium text-[22px]">
+            <h3 className="dark:text-white text-dark font-medium text-[22px]">
               {organisation}
             </h3>
           </Link>
           <Link href={url} target="_blank">
             <div className="space-x-1 flex items-center">
               <p className="text-sm font-light text-defaultText">{url}</p>
-              <LinkIcon />
+              <LinkIcon className='text-[#DCC5FD] dark:text-[#292D32]' />
             </div>
           </Link>
         </div>
@@ -44,10 +44,10 @@ const DaoCard = ({
           <div className="text-defaultText">
             <p className="font-light">{description}</p>
           </div>
-          <div className="flex justify-between items-center pt-6 border-t border-[#1E1E1E] text-sm">
+          <div className="flex justify-between items-center pt-6 border-t dark:border-[#1E1E1E] border-[#CCCCCC99] text-sm">
             <div className="flex items-center space-x-2">
               <PeopleIcon />
-              <p className="text-white">
+              <p className="dark:text-white text-dark">
                 {activeMember}
                 <span className="text-defaultText ml-2">Members</span>
               </p>
@@ -56,7 +56,7 @@ const DaoCard = ({
             <div className="flex items-center space-x-2">
                
               <ProposalIcon2 />
-              <p className="text-white">
+              <p className="dark:text-white text-dark">
                 {activeProposal}
                 <span className="text-defaultText ml-2">Proposals</span>
               </p>

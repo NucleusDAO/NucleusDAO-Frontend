@@ -47,7 +47,7 @@ DataTableProps) => {
     <Table>
       <TableHeader className="overflow-hidden whitespace-nowrap text-ellipsis">
         {table.getHeaderGroups().map((headerGroup) => (
-          <TableRow key={headerGroup.id} className='hover:bg-[#191919] border-b-[#292929] border-b w-full'>
+          <TableRow key={headerGroup.id} className='dark:hover:bg-[#191919] hover:bg-white dark:border-b-[#292929] border-b-[#CCCCCC99] border-b w-full'>
             {headerGroup.headers.map((header) => {
               return (
                 <TableHead key={header.id} className={cn(headerClassName, 'py-5 text-[#888888] font-light text-sm')}>
@@ -70,7 +70,7 @@ DataTableProps) => {
               key={row.id}
               data-state={row.getIsSelected() && 'selected'}
               onClick={() => (handleClickRow ? handleClickRow(row) : null)}
-              className={cn('hover:bg-[#191919] text-sm font-light text-white border-none', handleClickRow && 'cursor-pointer')}
+              className={cn('dark:hover:bg-[#191919] hover:bg-white text-sm  dark:text-white text-dark border-none', handleClickRow && 'cursor-pointer')}
             >
               {row.getVisibleCells().map((cell) => (
                 <TableCell key={cell.id} className="capitalize py-5">

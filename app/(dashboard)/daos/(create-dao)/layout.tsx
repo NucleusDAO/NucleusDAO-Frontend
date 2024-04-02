@@ -21,20 +21,20 @@ interface ILayout {
 const Layout = ({ children }: ILayout) => {
   const [open, setOpen] = useState<boolean>(false);
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 min-h-[83vh]">
       <div className="flex space-x-4 items-start border-b border-b-[#292929] pb-6">
         <Dialog onOpenChange={setOpen} open={open}>
           <DialogTrigger asChild>
             <div
-              className="bg-[#1E1E1E] rounded-lg flex items-center justify-center p-2"
+              className="dark:bg-[#1E1E1E] bg-white text-[#444444] dark:text-[#D2D2D2] rounded-lg flex items-center justify-center p-2"
               role="button"
             >
               <MoveLeft />
             </div>
           </DialogTrigger>
-          <DialogContent className="bg-[#191919]">
+          <DialogContent className="dark:bg-[#191919] bg-light">
             <DialogHeader>
-              <DialogTitle className="text-white font-medium py-3">
+              <DialogTitle className="font-medium py-3">
                 Exit DAO Creation
               </DialogTitle>
               <DialogDescription>
@@ -53,7 +53,7 @@ const Layout = ({ children }: ILayout) => {
           </DialogContent>
         </Dialog>
         <div className="space-y-3">
-          <h1 className="text-white font-medium text-2xl">Create a DAO</h1>
+          <h1 className="dark:text-white text-dark font-medium text-2xl">Create a DAO</h1>
           <p className="text-defaultText text-sm">
             Begin with a simple approach and embrace a learning mindset along
             the way. Remember that your DAO can continually evolve and improve
@@ -63,7 +63,7 @@ const Layout = ({ children }: ILayout) => {
       </div>
       <div className="flex space-x-6 items-start">
         <Steps />
-        <div className="rounded-lg p-4 bg-[#191919] w-[80%] h-[65vh] overflow-auto">
+        <div className="rounded-lg p-4 dark:bg-[#191919] bg-white w-[80%] max-h-[65vh] overflow-auto">
           {children}
         </div>
       </div>
