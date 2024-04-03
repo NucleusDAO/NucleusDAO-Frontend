@@ -21,18 +21,18 @@ const ReviewProposal = () => {
   return (
     <div className="space-y-8">
       <div className="space-y-2">
-        <h1 className="font-medium text-white text-xl">Review your Proposal</h1>
+        <h1 className="font-medium text-dark dark:text-white text-xl">Review your Proposal</h1>
         <p className="text-[#888888] text-sm font-light">
           By carefully reviewing these points, you contribute to the quality and
           effectiveness of proposals within our DAO.
         </p>
       </div>
 
-      <div className="bg-[#1E1E1E] rounded-lg px-4 py-6 space-y-6">
-        <h1 className="font-medium text-white text-xl">Proposal Information</h1>
+      <div className="dark:bg-[#1E1E1E] rounded-lg px-4 py-6 space-y-6 bg-light">
+        <h1 className="font-medium text-dark dark:text-white text-xl">Proposal Information</h1>
         {proposalSummary.map((summary, index) => (
           <div className="grid grid-cols-2 text-sm w-4/6" key={summary.title}>
-            <p className="text-white">{summary.title}</p>
+            <p className="dark:text-white text-dark">{summary.title}</p>
             <div className="flex space-x-2 items-center">
               {index === proposalSummary.length - 1 && (
                 <Image src={RoundedIcon} alt="logo" width={20} height={20} />
@@ -41,7 +41,7 @@ const ReviewProposal = () => {
                 className={cn(
                   'text-defaultText',
                   index === proposalSummary.length - 1 &&
-                    'text-white font-light'
+                    'dark:text-white font-light text-dark'
                 )}
               >
                 {summary.desc}
@@ -54,7 +54,7 @@ const ReviewProposal = () => {
       <div className="flex justify-between">
         <Button
           type="button"
-          className="bg-[#1E1E1E] hover:bg-[#262525]"
+          className="dark:bg-[#1E1E1E] dark:hover:bg-[#262525] bg-light dark:text-defaultText text-dark"
           onClick={() => router.back()}
         >
           <MoveLeft size={20} />
@@ -65,10 +65,10 @@ const ReviewProposal = () => {
               Publish Proposal
             </Button>
           </AlertDialogTrigger>
-          <AlertDialogContent className="bg-[#191919]">
+          <AlertDialogContent className="dark:bg-[#191919] bg-light">
             <AlertDialogHeader>
               <AlertDialogDescription className="text-center text-[#888888] text-sm font-light">
-                <p className="font-medium text-white py-2 text-xl">
+                <p className="font-medium dark:text-white py-2 text-xl text-dark">
                   Proposal Created
                 </p>
                 Congratulations! Your proposal has been successfully published

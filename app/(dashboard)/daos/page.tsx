@@ -11,7 +11,7 @@ const Daos = () => {
   return (
     <div className="space-y-2">
       <div className="flex justify-between items-center">
-        <h1 role="heading" className="text-white font-medium text-xl">
+        <h1 role="heading" className="dark:text-white font-medium text-xl text-dark">
           Explore DAOs
         </h1>
         <Link href={SELECT_DAO_STYLE_URL}>

@@ -20,34 +20,34 @@ const ReviewDao = () => {
   return (
     <div className="space-y-8">
       <div className="space-y-2">
-        <h1 className="font-medium text-white text-xl">Review your DAO</h1>
-        <p className="text-[#888888] text-sm font-light">
+        <h1 className="font-medium text-dark dark:text-white text-xl">Review your DAO</h1>
+        <p className="text-[#888888] text-sm">
           By thoroughly reviewing these aspects, you contribute to the
           robustness and transparency of our DAO. Your attention to detail
           ensures a secure and effective decentralized decision-making process.
         </p>
       </div>
 
-      <div className="bg-[#1E1E1E] rounded-lg p-4 space-y-6">
-        <h1 className="font-medium text-white text-xl">DAO Style</h1>
+      <div className="dark:bg-[#1E1E1E] bg-light rounded-lg p-4 space-y-6">
+        <h1 className="font-medium text-dark dark:text-white text-xl">DAO Style</h1>
         <div className="grid grid-cols-2 text-sm w-4/6">
-          <p className="text-white">Type</p>
+          <p className="text-dark dark:text-white">Type</p>
           <p className="text-defaultText">Basic DAO</p>
         </div>
       </div>
 
-      <div className="bg-[#1E1E1E] rounded-lg p-4 space-y-6">
-        <h1 className="font-medium text-white text-xl">DAO Information</h1>
+      <div className="dark:bg-[#1E1E1E] bg-light rounded-lg p-4 space-y-6">
+        <h1 className="font-medium dark:text-white text-dark text-xl">DAO Information</h1>
         <div className="grid grid-cols-2 text-sm w-4/6">
-          <p className="text-white">DAO name</p>
+          <p className="dark:text-white text-dark">DAO name</p>
           <p className="text-defaultText">Legacy</p>
         </div>
         <div className="grid grid-cols-2 text-sm w-4/6">
-          <p className="text-white">DAO address</p>
+          <p className="dark:text-white text-dark">DAO address</p>
           <p className="text-defaultText">Https://www.Legacy.com</p>
         </div>
         <div className="grid grid-cols-2 text-sm w-4/6">
-          <p className="text-white">About</p>
+          <p className="dark:text-white text-dark">About</p>
           <p className="text-defaultText">
             Legacy is a Decentralized Autonomous organization that aims to
             empower people and make the world a better place. Join us on our
@@ -56,7 +56,7 @@ const ReviewDao = () => {
           </p>
         </div>
         <div className="grid grid-cols-2 text-sm w-4/6">
-          <p className="text-white">Links</p>
+          <p className="dark:text-white text-dark">Links</p>
           <Link href="#">
             <div className="flex items-center space-x-2 text-primary">
               <p className="">Twitter</p>
@@ -68,22 +68,22 @@ const ReviewDao = () => {
         </div>
       </div>
 
-      <div className="bg-[#1E1E1E] rounded-lg p-4 space-y-6">
-        <h1 className="font-medium text-white text-xl">Define Membership</h1>
+      <div className="dark:bg-[#1E1E1E] bg-light rounded-lg p-4 space-y-6">
+        <h1 className="font-medium dark:text-white text-dark text-xl">Define Membership</h1>
         <div className="grid grid-cols-2 text-sm w-4/6">
-          <p className="text-white">Members</p>
+          <p className="dark:text-white text-dark">Members</p>
           <p className="text-defaultText">1 wallet address (es)</p>
         </div>
       </div>
 
-      <div className="bg-[#1E1E1E] rounded-lg p-4 space-y-6">
-        <h1 className="font-medium text-white text-xl">Governance Settings</h1>
+      <div className="dark:bg-[#1E1E1E] bg-light rounded-lg p-4 space-y-6">
+        <h1 className="font-medium dark:text-white text-dark text-xl">Governance Settings</h1>
         <div className="grid grid-cols-2 text-sm w-4/6">
-          <p className="text-white">Duration</p>
+          <p className="dark:text-white text-dark">Duration</p>
           <p className="text-defaultText">5 days</p>
         </div>
         <div className="grid grid-cols-2 text-sm w-4/6">
-          <p className="text-white">Voting threshold</p>
+          <p className="dark:text-white text-dark">Voting threshold</p>
           <p className="text-defaultText">50% quorum</p>
         </div>
       </div>
@@ -91,7 +91,7 @@ const ReviewDao = () => {
       <div className="flex justify-between">
         <Button
           type="button"
-          className="bg-[#1E1E1E] hover:bg-[#262525]"
+          className="dark:bg-[#1E1E1E] bg-light dark:hover:bg-[#262525] hover:bg-light text-[#444444] dark:text-defaultText"
           onClick={() => router.back()}
         >
           <MoveLeft size={20} />
@@ -102,10 +102,10 @@ const ReviewDao = () => {
               Create DAO
             </Button>
           </AlertDialogTrigger>
-          <AlertDialogContent className='bg-[#191919]'>
+          <AlertDialogContent className='dark:bg-[#191919] bg-light'>
             <AlertDialogHeader>
-              <AlertDialogDescription className='text-center text-[#888888] text-sm font-light'>
-                <p className='font-medium text-white py-2 text-xl'>Dao Created</p>
+              <AlertDialogDescription className='text-center text-[#888888]'>
+                <p className='font-medium dark:text-white text-dark py-2 text-xl'>Dao Created</p>
               Congratulations! You have successfully created your DAO (Decentralized Autonomous Organization). Your DAO is now ready to embark on its mission, engage community members, and foster decentralized decision-making.
               </AlertDialogDescription>
             </AlertDialogHeader>

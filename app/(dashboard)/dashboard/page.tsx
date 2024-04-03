@@ -15,7 +15,7 @@ const Dashboard = () => {
   return (
     <div className="space-y-8">
       <div className="flex justify-between items-center">
-        <h1 role="heading" className="text-white font-medium text-xl">
+        <h1 role="heading" className="dark:text-white text-[#292929] font-medium text-xl">
           Global Feed
         </h1>
         <Link href={SELECT_DAO_STYLE_URL}>

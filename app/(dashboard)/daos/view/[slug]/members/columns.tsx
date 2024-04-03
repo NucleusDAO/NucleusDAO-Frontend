@@ -68,9 +68,9 @@ export const ActionCell = ({ row }: any) => {
           Delete
         </Button>
       </DialogTrigger>
-      <DialogContent className="bg-[#191919]">
+      <DialogContent className="dark:bg-[#191919] bg-light">
         <DialogHeader>
-          <DialogTitle className="text-white font-medium py-3">
+          <DialogTitle className="dark:text-white font-medium py-3 text-dark">
             Remove Member
           </DialogTitle>
           <DialogDescription className="font-light py-2">

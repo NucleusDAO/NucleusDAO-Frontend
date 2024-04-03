@@ -18,13 +18,13 @@ const EachDaoFunds = () => {
         </div>
       ) : (
         <>
-          <div className="bg-[#191919] p-4 space-y-4 rounded-lg">
+          <div className="dark:bg-[#191919] p-4 space-y-4 rounded-lg bg-white">
             <div className="flex items-center justify-between">
               <div className="space-y-4">
                 <p className="text-xs font-light">Total Balance</p>
                 <div className="space-y-1.5">
                   <div className="flex space-x-2 items-center">
-                    <p className="text-white font-bold text-2xl">$254.08</p>
+                    <p className="dark:text-white text-dark font-bold text-2xl">$254.08</p>
 
                     <div className="flex items-center space-x-2 text-[#1CA013] ">
                       <ChevronUp size={16} />
@@ -39,7 +39,7 @@ const EachDaoFunds = () => {
               <Button>Deposit Token</Button>
             </div>
             <div className="flex space-x-1.5 font-light text-xs">
-              <p className="text-white font-normal">
+              <p className="dark:text-white font-normal text-dark">
                 DAO account name:{' '}
                 <span className="text-[#888888]">legacy.smartdao.eth</span>
               </p>
@@ -47,8 +47,8 @@ const EachDaoFunds = () => {
             </div>
           </div>
 
-          <div className="bg-[#191919] p-4 space-y-4 rounded-lg">
-            <h1 className="text-white font-medium text-xl">
+          <div className="dark:bg-[#191919] p-4 space-y-4 rounded-lg bg-white">
+            <h1 className="dark:text-white font-medium text-xl text-dark">
               Transaction details
             </h1>
 

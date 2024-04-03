@@ -10,18 +10,18 @@ const CreateNewDao = () => {
   return (
     <div className="space-y-8">
       <div className="space-y-2">
-        <h1 className="font-medium text-white text-xl">Select Template</h1>
-        <p className="text-[#888888] text-sm font-light">
+        <h1 className="font-medium dark:text-white text-dark text-xl">Select Template</h1>
+        <p className="text-[#888888] text-sm">
           With our pre-defined templates, this platform enables you to create
           your organization using a customizable template.
         </p>
       </div>
 
-      <div className="grid grid-cols-2 gap-6 pb-4">
+      <div className="grid grid-cols-2 gap-8 pb-4">
         {DaoTemplateList.map((template) => (
           <div
             key={template.title}
-            className="rounded-lg p-4 bg-[#1E1E1E] space-y-5"
+            className="rounded-lg p-4 dark:bg-[#1E1E1E] bg-light space-y-5"
           >
             <div
               className="h-[130px] text-white flex items-center rounded-lg justify-center"
@@ -31,7 +31,7 @@ const CreateNewDao = () => {
             </div>
             <div className="space-y-3">
               <div className="flex items-center space-x-3">
-                <h2 className="text-white font-medium text-lg">
+                <h2 className="dark:text-white text-dark font-medium text-lg">
                   {template.title}
                 </h2>
                 {template.status && (
@@ -47,7 +47,7 @@ const CreateNewDao = () => {
               className={cn(
                 'w-full',
                 template.status === 'Coming Soon' &&
-                  'bg-[#191919] text-[#444444]'
+                  'dark:bg-[#191919] dark:text-[#444444] bg-white text-dark font-normal'
               )}
               disabled={!!template.status}
               onClick={() => router.push(DAO_INFO_URL)}

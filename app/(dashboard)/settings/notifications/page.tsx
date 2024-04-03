@@ -33,14 +33,14 @@ const Notifications = () => {
   };
   return (
     <div className="space-y-6">
-      <h2 className="text-white font-medium text-xl" role="heading">
+      <h2 className="dark:text-white text-dark font-medium text-xl" role="heading">
         Notifications
       </h2>
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-12">
           <div className="space-y-4">
-            <h3 className="text-white font-medium">Email</h3>
+            <h3 className="dark:text-white text-dark font-medium">Email</h3>
             <FormField
               control={form.control}
               name="email_new_dao"
@@ -96,7 +96,7 @@ const Notifications = () => {
           </div>
 
           <div className="space-y-4">
-            <h3 className="text-white font-medium">Push</h3>
+            <h3 className="dark:text-white text-dark font-medium">Push</h3>
             <FormField
               control={form.control}
               name="push_new_dao"

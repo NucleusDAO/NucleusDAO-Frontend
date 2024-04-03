@@ -27,18 +27,18 @@ const Layout = ({ children }: ILayout) => {
 
   return (
     <div className="">
-      <div className="flex justify-between border-b border-b-[#292929] pb-6">
+      <div className="flex justify-between border-b dark:border-b-[#292929] pb-6 border-b-[#CCCCCC99]">
         <div
           className="flex space-x-4 items-center"
-          onClick={() => router.push(DAO_URL)}
         >
           <div
-            className="bg-[#1E1E1E] rounded-lg flex items-center justify-center p-2"
+            className="rounded-lg flex items-center justify-center p-2 dark:bg-[#1E1E1E] bg-white dark:hover:bg-[#262525] hover:bg-white text-[#444444] dark:text-defaultText"
             role="button"
+            onClick={() => router.push(DAO_URL)}
           >
             <MoveLeft />
           </div>
-          <h1 className="text-white font-medium text-2xl">Explore DAOs</h1>
+          <h1 className="dark:text-white text-dark font-medium text-2xl">Explore DAOs</h1>
         </div>
         {isJoined ? (
           <Link href={CREATE_PROPOSAL_URL}>
@@ -58,17 +58,17 @@ const Layout = ({ children }: ILayout) => {
               <div className="flex space-x-4 items-center">
                 <Image src={LegacyLogo} alt="legacy logo" width={60} />
                 <div className="space-y-4">
-                  <h2 className="font-medium text-2xl text-white">Legacy</h2>
+                  <h2 className="font-medium text-2xl text-dark dark:text-white">Legacy</h2>
                   <Link href="legacy.smartdao.eth" target="_blank">
-                    <div className="flex space-x-2 mt-1.5 items-center text-sm text-[#888888] font-light">
+                    <div className="flex space-x-2 mt-1.5 items-center text-sm text-[#888888]">
                       <p>legacy.smartdao.eth</p>
                       <CopyIcon />
                     </div>
                   </Link>
                 </div>
               </div>
-              <div className="bg-[#1E1E1E] p-4 flex items-center justify-center rounded-lg">
-                <Globe />
+              <div className="dark:bg-[#1E1E1E] bg-white p-4 flex items-center justify-center rounded-lg">
+                <Globe className='text-primary dark:text-defaultText' size={22} />
               </div>
             </div>
             <p className="text-[#888888] text-sm">
@@ -78,16 +78,16 @@ const Layout = ({ children }: ILayout) => {
               revolutionize Assets.
             </p>
           </div>
-          <div className="pb-4 border-b border-[#292929] flex justify-between">
-            <h2 className="font-medium text-2xl text-white">Overview</h2>
-            <div className="flex space-x-4 bg-[#191919] p-2 rounded-2xl">
+          <div className="pb-4 border-b dark:border-[#292929] flex justify-between border-[#CCCCCC99]">
+            <h2 className="font-medium text-2xl dark:text-white text-dark">Overview</h2>
+            <div className="flex space-x-4 dark:bg-[#191919] bg-white p-2 rounded-2xl">
               {eachDaoViews.map((view) => (
                 <Link href={encodeURI(updatedUrl, view.path)} key={view.title}>
                   <div
                     role="button"
                     className={cn(
-                      'flex space-x-2 text-xs text-[#888888] items-center bg-[#1E1E1E] rounded-lg font-light py-2 px-3',
-                      (pathname.endsWith(view.path) || pathname.includes(view.path) ) && 'text-primary',
+                      'flex space-x-2 text-xs text-[#888888] items-center bg-white dark:bg-[#1E1E1E] rounded-lg font-light py-2 px-3',
+                      (pathname.endsWith(view.path) || pathname.includes(view.path) ) && 'text-primary bg-light',
                     )}
                   >
                     {view.icon}

@@ -39,7 +39,7 @@ const Display = () => {
   };
   return (
     <div className="space-y-6">
-      <h2 className="text-white font-medium text-xl" role="heading">
+      <h2 className="dark:text-white font-medium text-xl text-dark" role="heading">
         Display
       </h2>
 
@@ -50,7 +50,7 @@ const Display = () => {
             name="light_mode"
             render={({ field }) => (
               <FormItem className="flex justify-between items-center">
-                <FormLabel className="text-white">Light mode</FormLabel>
+                <FormLabel className="dark:text-white text-dark">Light mode</FormLabel>
                 <FormControl>
                   <Switch
                     checked={field.value}
@@ -68,7 +68,7 @@ const Display = () => {
             name="dark_mode"
             render={({ field }) => (
               <FormItem className="flex justify-between items-center">
-                <FormLabel className="text-white">Dark mode</FormLabel>
+                <FormLabel className="dark:text-white text-dark">Dark mode</FormLabel>
                 <FormControl>
                   <Switch
                     checked={field.value}
@@ -86,7 +86,7 @@ const Display = () => {
             name="device_settings"
             render={({ field }) => (
               <FormItem className="flex justify-between items-center">
-                <FormLabel className="text-white">
+                <FormLabel className="dark:text-white text-dark">
                   Use device settings
                 </FormLabel>
                 <FormControl>
