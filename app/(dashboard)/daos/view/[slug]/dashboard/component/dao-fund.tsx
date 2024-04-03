@@ -27,12 +27,12 @@ export const DaoFunds = () => {
   return (
     <div className="p-4 h-full">
       <div className="flex justify-between pb-4">
-        <h2 className="text-white font-medium text-xl">Productivity</h2>
+        <h2 className="dark:text-white text-dark font-medium text-xl">Productivity</h2>
         <div className="flex space-x-4">
           {period.map((each) => (
             <div
               className={cn(
-                'rounded-lg border border-[#444444] px-2 py-1 text-xs',
+                'rounded-lg border dark:border-[#444444] px-2 py-1 text-xs border-[#CCCCCC99]',
                 currentPeriod === each && 'border-primary text-primary'
               )}
               role="button"

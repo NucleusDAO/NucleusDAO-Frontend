@@ -85,7 +85,7 @@ const AddMemberForm = () => {
         </div>
         
         <div className='flex justify-between'>
-          <Button type="button" className='bg-[#1E1E1E] hover:bg-[#262525]' onClick={() => router.back()}><MoveLeft size={20} /></Button>
+          <Button type="button" className='dark:bg-[#1E1E1E] bg-light dark:hover:bg-[#262525] hover:bg-light text-[#444444] dark:text-defaultText' onClick={() => router.back()}><MoveLeft size={20} /></Button>
           <Button type="submit" className='px-12'>Next</Button>
         </div>
       </form>

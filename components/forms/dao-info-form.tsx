@@ -50,7 +50,7 @@ const DaoInfoForm = () => {
           name="daoName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Dao name</FormLabel>
+              <FormLabel>Dao name <span className='text-[#DD3857]'>*</span></FormLabel>
               <FormControl>
                 <Input placeholder="Enter DAO name" {...field} />
               </FormControl>
@@ -79,21 +79,22 @@ const DaoInfoForm = () => {
             <FormItem>
               <FormLabel>
                 Logo{' '}
-                <span className="text-[#888888] text-sm">
+                <span className='text-[#DD3857]'>*</span>
+                <span className="text-[#888888] text-sm">{' '}
                   JPG, PNG, or SVG of not more than 3MB.
                 </span>
               </FormLabel>
               <FormControl>
                 <FormGroup>
                   <div
-                    className="bg-[#1E1E1E] h-[50px] w-[50px] rounded-lg flex items-center justify-center"
+                    className="dark:bg-[#1E1E1E] bg-light text-dark dark:text-defaultText h-[50px] w-[50px] rounded-lg flex items-center justify-center"
                     role="button"
                   >
                     <Plus />
                   </div>
                   <Input
                     type="file"
-                    className="absolute h-full border-b border-0 rounded-none inset-0 cursor-pointer opacity-0"
+                    className="absolute h-full border-b border-0 w-fit rounded-none inset-0 cursor-pointer opacity-0"
                     accept=".jpg, .jpeg, .png"
                     {...field}
                   />
@@ -109,7 +110,7 @@ const DaoInfoForm = () => {
           name="about"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>About</FormLabel>
+              <FormLabel>About <span className='text-[#DD3857]'>*</span></FormLabel>
               <FormControl>
                 <Textarea placeholder="Purpose of the DAO" {...field} />
               </FormControl>
@@ -119,10 +120,10 @@ const DaoInfoForm = () => {
         />
 
         <div className="space-y-4">
-          <h2 className="font-medium text-white">Social Links</h2>
+          <h2 className="font-medium text-dark dark:text-white">Social Links <span className='text-[#888888] font-light'>(Optional)</span></h2>
           <div className="grid grid-cols-2 gap-6">
-            <div className="font-light text-white text-sm">Type</div>
-            <div className="font-light text-white text-sm">Link</div>
+            <div className="font text-dark dark:text-white text-sm">Type</div>
+            <div className="font text-dark dark:text-white text-sm">Link</div>
           </div>
           {fields.map((social: any, index) => (
             <div
@@ -170,7 +171,7 @@ const DaoInfoForm = () => {
             </div>
           ))}
           <div
-            className="flex space-x-2 bg-[#1E1E1E] border border-[#292929] text-white w-fit rounded-lg py-2 px-3 items-center justify-center text-xs"
+            className="flex space-x-2 bg-[#1E1E1E] border border-dark text-white w-fit rounded-lg py-2 px-3 items-center justify-center text-xs"
             role="button"
             onClick={() => append({ type: '', link: '' })}
           >
@@ -179,7 +180,7 @@ const DaoInfoForm = () => {
           </div>
         </div>
         <div className='flex justify-between'>
-          <Button type="button" className='bg-[#1E1E1E] hover:bg-[#262525]' onClick={() => router.back()}><MoveLeft size={20} /></Button>
+          <Button type="button" className='dark:bg-[#1E1E1E] bg-light dark:hover:bg-[#262525] hover:bg-light text-[#444444] dark:text-defaultText' onClick={() => router.back()}><MoveLeft size={20} /></Button>
           <Button type="submit" className='px-12'>Next</Button>
         </div>
       </form>

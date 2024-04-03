@@ -29,23 +29,23 @@ const EachProposal = () => {
 
   return (
     <div>
-      <div className="flex items-center justify-between border-b border-[#292929] pb-4">
+      <div className="flex items-center justify-between border-b dark:border-[#292929] pb-4">
         <div className="flex items-center space-x-4">
           <div
-            className="bg-[#1E1E1E] rounded-lg px-4 py-2"
+            className="dark:bg-[#1E1E1E] rounded-lg px-4 py-2 bg-white text-[#444444] dark:text-[#D2D2D2]"
             role="button"
             onClick={() => router.back()}
           >
-            <MoveLeft size={20} color="#D2D2D2" />
+            <MoveLeft size={20} />
           </div>
-          <h2 className="text-white font-medium text-xl">Overview</h2>
+          <h2 className="dark:text-white text-dark font-medium text-xl">Overview</h2>
         </div>
-        <div className="flex space-x-3 bg-[#191919] rounded-lg p-2 items-center text-sm">
+        <div className="flex space-x-3 dark:bg-[#191919] rounded-lg p-2 items-center text-sm bg-white">
           {tabs.map((tab) => (
             <div
               className={cn(
                 'p-2 px-4',
-                currentTab === tab && 'text-primary rounded-lg bg-[#1E1E1E]'
+                currentTab === tab && 'text-primary rounded-lg dark:bg-[#1E1E1E] bg-light'
               )}
               key={tab}
               onClick={() => handleSwitch(tab)}

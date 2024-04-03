@@ -18,7 +18,7 @@ const EachDaoMembers = () => {
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h1 className="text-white font-medium text-xl">Transaction details</h1>
+        <h1 className="dark:text-white text-dark font-medium text-xl">Transaction details</h1>
         <Dialog>
           <DialogTrigger asChild>
             <Button>Add Member</Button>

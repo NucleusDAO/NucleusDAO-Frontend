@@ -10,10 +10,10 @@ const DaoConfigurationWrapper = ({ children }: IDaoConfigurationWrapper) => {
   return (
     <div className="space-y-5">
       <div className="flex justify-between items-center">
-        <h2 className="text-white text-xl font-medium">Profile</h2>
+        <h2 className="text-dark dark:text-white text-xl font-medium">Profile</h2>
         <Button>Edit Settings</Button>
       </div>
-      <div className="flex space-x-1 items-center text-xs text-[#888888] font-light">
+      <div className="flex space-x-1 items-center text-xs text-[#888888]">
         <Info size={14} />
         <p>
           To make changes to the settings, create a proposal and put it to vote

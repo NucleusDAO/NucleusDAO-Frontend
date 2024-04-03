@@ -22,7 +22,7 @@ const VotingProcess = () => {
   return (
     <div>
       {hasVoted && (
-        <p className="text-white">
+        <p className="dark:text-white text-dark">
           You have casted your vote. The result will be shown if the proposal
           reach its quorum
         </p>
@@ -38,13 +38,13 @@ const VotingProcess = () => {
               role="button"
             >
               <div
-                className="border border-[#292929] p-4 rounded-lg items-center flex justify-between"
+                className="border dark:border-[#292929] p-4 rounded-lg items-center flex justify-between border-[#CCCCCC99]"
                 onClick={() => setSelectedOption(option)}
               >
                 <Label
                   htmlFor={option}
                   id={option}
-                  className="capitalize text-white font-medium"
+                  className="capitalize dark:text-white font-medium text-dark"
                 >
                   {option}
                 </Label>
@@ -62,12 +62,12 @@ const VotingProcess = () => {
                 Vote
               </Button>
             </DialogTrigger>
-            <DialogContent className="bg-[#191919]">
+            <DialogContent className="dark:bg-[#191919] bg-white">
               <DialogHeader>
-                <DialogTitle className="text-white font-medium py-1 text-center">
+                <DialogTitle className="dark:text-white font-medium py-1 text-center text-dark">
                 Vote Casted
                 </DialogTitle>
-                <DialogDescription className="font-light py-2 text-center">
+                <DialogDescription className="py-2 text-center">
                 You have casted your vote. The result will be shown if the proposal reaches its quorum
                 </DialogDescription>
               </DialogHeader>

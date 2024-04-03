@@ -32,9 +32,9 @@ const ProposalCard = ({
 
   return (
     <Link href={encodeURI(pathname, id)}>
-    <div className="bg-[#191919] rounded-lg cursor-pointer" role="tablist">
+    <div className="dark:bg-[#191919] rounded-lg cursor-pointer bg-white" role="tablist">
       <div className="flex rounded-l space-x-2">
-        <div className="bg-[#1E1E1E] p-3 rounded-tl-lg rounded-bl-lg">
+        <div className="dark:bg-[#1E1E1E] bg-[#EEEEEE] p-3 rounded-tl-lg rounded-bl-lg">
           <Image src={LegacyLogo} alt="legacy" width={32} />
         </div>
         <div className="p-4 space-y-6">
@@ -49,7 +49,7 @@ const ProposalCard = ({
                 />
                 <div className="space-y-1">
                   <p className="text-defaultText">Proposal Type</p>
-                  <h3 className="text-white font-medium text-lg">{type}</h3>
+                  <h3 className="dark:text-white text-dark font-medium text-lg">{type}</h3>
                 </div>
               </div>
               <div>{EachStatus[status]}</div>
@@ -57,8 +57,8 @@ const ProposalCard = ({
             <p className="text-defaultText pt-2 text-sm">{description}</p>
           </div>
           <div className="space-y-4">
-            <Separator />
-            <div className="flex items-center justify-between text-xs text-[#CCCCCCBF]">
+            <Separator  />
+            <div className="flex items-center justify-between text-xs dark:text-[#CCCCCCBF] text-defaultText">
               <div className="flex space-x-2 items-center">
                 <Image src={RoundedIcon} alt="legacy" width={22} />
                 <p>{wallet}</p>
@@ -70,7 +70,7 @@ const ProposalCard = ({
                 </div>
                 <div className="flex items-center space-x-2 text-defaultText">
                   <Image src={VoteIcon} alt="legacy" width={16} />
-                  <p className="text-white">{totalVote}</p>
+                  <p className="dark:text-white text-dark">{totalVote}</p>
                   <p>votes</p>
                 </div>
               </div>

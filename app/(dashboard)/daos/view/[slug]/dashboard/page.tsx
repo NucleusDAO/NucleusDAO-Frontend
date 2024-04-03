@@ -12,7 +12,7 @@ const EachDaoDashboard = () => {
         {dashboardTab.map((tab, index) => (
           <div
             key={tab.title}
-            className={cn('p-4 bg-[#191919] rounded-lg flex items-center space-x-4 space-y-4 border trans border-[#191919] hover:border-[#292929]',
+            className={cn('p-4 dark:bg-[#191919] bg-white rounded-lg flex items-center space-x-4 space-y-4 border trans border-white dark:border-[#191919] dark:hover:border-[#292929] hover:border-[#CCCCCC99]',
             selectedTab === index && 'border-primary hover:border-primary')}
             role='button'
             onClick={() => setSelectTab(index)}
@@ -20,11 +20,11 @@ const EachDaoDashboard = () => {
             <div>{tab.icon}</div>
             <div className="space-y-2">
               <div className="space-y-2">
-                <p className="text-defaultText font-light text-sm">
+                <p className="text-defaultText text-sm">
                   {tab.title}
                 </p>
                 <div className='flex space-x-2 items-center'>
-                  <p className="text-white font-bold text-2xl">{tab.amount}</p>
+                  <p className="dark:text-white text-dark font-bold text-2xl">{tab.amount}</p>
                   {!tab.value && (
                     <div className="flex items-center space-x-2 text-[#1CA013] ">
                       <ChevronUp size={16} />
@@ -34,7 +34,7 @@ const EachDaoDashboard = () => {
                 </div>
               </div>
               <div className="flex space-x-2 items-center">
-                <p className="text-xs font-light text-defaultText">
+                <p className="text-xs text-defaultText">
                   {tab.value}
                 </p>
                 {tab.value && (
@@ -48,7 +48,7 @@ const EachDaoDashboard = () => {
           </div>
         ))}
       </div>
-      <div className='w-[75%] bg-[#191919] p-4 rounded-lg h-[60vh]'>
+      <div className='w-[75%] dark:bg-[#191919] bg-white p-4 rounded-lg h-[60vh]'>
         {tabView[selectedTab]}
       </div>
     </div>

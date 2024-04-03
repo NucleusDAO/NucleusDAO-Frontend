@@ -30,7 +30,7 @@ const EachFilterTab = () => {
   }, 300);
   return (
     <div className="space-y-6">
-      <div className="border-b border-b-[#292929] pb-6 pt-4 mt-4  flex justify-between items-center">
+      <div className="border-b dark:border-b-[#292929] pb-6 pt-4 mt-4  flex justify-between items-center border-b-[#CCCCCC99]">
         <div className="relative w-[40%]">
           <SearchInput
             placeholder="Search anything here"
@@ -39,17 +39,17 @@ const EachFilterTab = () => {
           />
         </div>
         <div className="flex space-x-3">
-          <div
-            className="flex space-x-2 border-[#292929] border px-2 py-1.5 rounded-lg items-center text-sm font-light"
+        <div
+            className="flex space-x-2 dark:text-white text-dark border dark:border-[#292929] border-[#CCCCCC] px-2 py-1.5 rounded-lg items-center text-sm font-light"
             role="button"
           >
-            <ListFilter size={20} />
-            <p className="text-white">Filter</p>
+            <ListFilter size={20} className='dark:text-[#B4B4B4] text-[#444444]' />
+            <p className="dark:text-white text-dark">Filter</p>
           </div>
           <div
             className={cn(
-              'border-[#292929] border px-1.5 py-1.5 rounded-lg trans',
-              currentView === 'list' && 'bg-[#1E1E1E]'
+              'dark:text-[#B4B4B4] text-[#444444] border dark:border-[#292929] border-[#CCCCCC] px-1.5 py-1.5 rounded-lg trans',
+              currentView === 'list' && 'dark:bg-[#1E1E1E] bg-white'
             )}
             role="button"
             onClick={() => handleView('list')}
@@ -58,8 +58,8 @@ const EachFilterTab = () => {
           </div>
           <div
             className={cn(
-              'border-[#292929] border px-1.5 py-1.5 rounded-lg trans',
-              (currentView === 'grid' || currentView === '') && 'bg-[#1E1E1E]'
+              'dark:text-[#B4B4B4] text-[#444444] border dark:border-[#292929] border-[#CCCCCC] px-1.5 py-1.5 rounded-lg trans',
+              (currentView === 'grid' || currentView === '') && 'dark:bg-[#1E1E1E] bg-white'
             )}
             role="button"
             onClick={() => handleView('grid')}

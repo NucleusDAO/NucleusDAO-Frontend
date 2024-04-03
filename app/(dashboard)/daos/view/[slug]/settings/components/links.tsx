@@ -35,10 +35,10 @@ const Links = () => {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <div className="space-y-4">
-            <h2 className="font-medium text-white">Social Links</h2>
+            <h2 className="font-medium dark:text-white text-dark">Social Links</h2>
             <div className="grid grid-cols-2 gap-6">
-              <div className="font-light text-white text-sm">Type</div>
-              <div className="font-light text-white text-sm">Link</div>
+              <div className="font-light dark:text-white text-sm text-dark">Type</div>
+              <div className="font-light dark:text-white text-dark text-sm">Link</div>
             </div>
             {fields.map((social: any, index) => (
               <div
@@ -86,7 +86,7 @@ const Links = () => {
               </div>
             ))}
             <div
-              className="flex space-x-2 bg-[#1E1E1E] border border-[#292929] text-white w-fit rounded-lg py-2 px-3 items-center justify-center text-xs"
+              className="flex space-x-2 dark:bg-[#1E1E1E] bg-white border border-[#CCCCCC99] dark:border-[#292929] text-dark dark:text-white w-fit rounded-lg py-2 px-3 items-center justify-center text-xs"
               role="button"
               onClick={() => append({ type: '', link: '' })}
             >

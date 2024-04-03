@@ -21,16 +21,16 @@ const Settings = () => {
   };
   return (
     <div className="space-y-8">
-      <div className="border-b border-b-[#292929]">
-        <h2 className="border-b-2 pb-3 w-fit border-primary text-white text-sm">
+      <div className="border-b dark:border-b-[#292929] border-b-[#CCCCCC99]">
+        <h2 className="border-b-2 pb-3 w-fit border-primary dark:text-white text-sm text-dark">
           Configuration
         </h2>
       </div>
       <div className="flex space-x-4 items-start">
-        <div className="w-[20%] bg-[#191919] rounded-lg p-4">
+        <div className="w-[20%] dark:bg-[#191919] rounded-lg p-4 bg-white">
           <SidebarLinksComp activeSidebar={activeSidebar} />
         </div>
-        <div className="w-[80%] bg-[#191919] rounded-lg p-4">
+        <div className="w-[80%] dark:bg-[#191919] rounded-lg p-4 bg-white">
           {tabs[activeSidebar]}
         </div>
       </div>

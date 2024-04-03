@@ -12,13 +12,13 @@ const Proposals = () => {
   return (
     <div className="space-y-8">
       <div className="justify-between items-center flex">
-        <h1 role="heading" className="text-white font-medium text-xl">
+        <h1 role="heading" className="dark:text-white font-medium text-xl text-dark">
           Proposals
         </h1>
       </div>
 
       <Tabs defaultValue={tabs[0].value} className="w-full">
-        <TabsList className="w-full justify-start space-x-6 border-b-2 border-b-[#292929]">
+        <TabsList className="w-full justify-start space-x-6 border-b-2 dark:border-b-[#292929] border-[#CCCCCC99]">
           {tabs.map((tab) => (
             <TabsTrigger key={tab.title} value={tab.value} className="w-fit">
               {tab.title}

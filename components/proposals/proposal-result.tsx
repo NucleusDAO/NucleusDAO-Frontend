@@ -10,17 +10,17 @@ import {
 
 const ProposalResult = () => {
   return (
-    <div>
-        <div className="rounded-lg bg-[#191919] p-8 space-y-5">
-            <div className="flex justify-between border-b border-[#1E1E1E] pb-4 items-center">
-            <h3 className="font-medium text-xl text-white">Result</h3>
+    <div className='space-y-6'>
+        <div className="rounded-lg dark:bg-[#191919] p-8 space-y-5 bg-white">
+            <div className="flex justify-between border-b dark:border-[#1E1E1E] pb-4 items-center border-[#CCCCCC99]">
+            <h3 className="font-medium text-xl dark:text-white text-dark">Result</h3>
             <p className="text-sm font-light">
-                Approved by: <span className="text-white font-medium">30%</span>
+                Approved by: <span className="dark:text-white text-dark font-medium">30%</span>
             </p>
             </div>
             <div className="space-y-3">
             <div className="flex justify-between">
-                <p className="text-white font-medium text-base">Yes</p>
+                <p className="dark:text-white text-dark font-medium text-base">Yes</p>
                 <p className="text-defaultText font-light text-base">25%</p>
             </div>
             <Slider
@@ -44,31 +44,31 @@ const ProposalResult = () => {
             </div>
         </div>
 
-        <div className="rounded-lg bg-[#191919] p-8 space-y-3">
-        <div className="flex justify-between border-b border-[#1E1E1E] pb-4 items-center">
-          <h3 className="font-medium text-xl text-white">Status</h3>
+        <div className="rounded-lg dark:bg-[#191919] p-8 space-y-3 bg-white">
+        <div className="flex justify-between border-b dark:border-[#1E1E1E] pb-4 items-center border-[#CCCCCC99]">
+          <h3 className="font-medium text-xl text-dark dark:text-white">Status</h3>
           <p className="text-sm font-light flex space-x-2">
             <span>
               <Clock5 size={18} />
             </span>
             <span>Time left:</span>{' '}
-            <span className="text-white font-light">22:30:55 G.M.T</span>
+            <span className="text-dark dark:text-white font-light">22:30:55 G.M.T</span>
           </p>
         </div>
 
         <div className="flex justify-between">
           <p className="text-defaultText font-light text-sm">Start Date</p>
-          <p className="text-white font-medium text-sm">03 Jul 2023 </p>
+          <p className="text-dark dark:text-white font-medium text-sm">03 Jul 2023 </p>
         </div>
 
         <div className="flex justify-between pt-4">
           <p className="text-defaultText font-light text-sm">End Date</p>
-          <p className="text-white font-medium text-sm">08 Jul 2023</p>
+          <p className="dark:text-white text-dark font-medium text-sm">08 Jul 2023</p>
         </div>
 
-        <div className="flex justify-between py-4 border-t border-[#292929] items-center">
+        <div className="flex justify-between py-4 border-t border-[#CCCCCC99] dark:border-[#292929] items-center">
           <div className="flex space-x-2 items-center">
-            <p className="font-light text-sm text-white">Quorum</p>
+            <p className="font-light text-sm text-dark dark:text-white">Quorum</p>
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -80,7 +80,7 @@ const ProposalResult = () => {
               </Tooltip>
             </TooltipProvider>
           </div>
-          <p className="font-light text-sm text-white">50%</p>
+          <p className="font-light text-sm text-dark dark:text-white">50%</p>
         </div>
       </div>
     </div>
