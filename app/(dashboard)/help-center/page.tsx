@@ -35,7 +35,7 @@ const NewFeature = () => {
   return (
     <div className="space-y-6">
       <div className="space-y-2">
-        <h2 className="text-white font-medium text-xl" role="heading">
+        <h2 className="dark:text-white text-dark font-medium text-xl" role="heading">
           New Feature
         </h2>
         <p className="text-defaultText text-sm font-light">
@@ -109,7 +109,7 @@ const NewFeature = () => {
                 <FormControl>
                   <FormGroup>
                     <div
-                      className="bg-[#1E1E1E] py-8 w-full rounded-lg text-center text-white font-light text-sm border-dashed border-[#292929]"
+                      className="bg-light dark:bg-[#1E1E1E] py-8 w-full rounded-lg text-center dark:text-white text-dark text-sm border-dashed dark:border-[#292929] border-[#CCCCCC99]"
                       role="button"
                     >
                       <p>Drag and Drop file</p>

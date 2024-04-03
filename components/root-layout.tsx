@@ -19,7 +19,7 @@ export const RootLayoutsComponent = ({ children }: IRootLayouts) => {
     >
       <Suspense fallback={<Loading />}>
         <div className="max-w-[2000px] mx-auto relative">
-          <div className="flex w-full">
+          <div className="flex w-full items-start">
             <Sidebar />
             <div className="w-[82%] ml-[18%] h-screen">
               <Navbar />

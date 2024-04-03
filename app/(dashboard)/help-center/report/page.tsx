@@ -33,7 +33,7 @@ const Report = () => {
   return (
     <div className="space-y-6">
       <div className="space-y-2">
-        <h2 className="text-white font-medium text-xl" role="heading">
+        <h2 className="text-dark dark:text-white font-medium text-xl" role="heading">
           Report
         </h2>
         <p className="text-defaultText text-sm font-light">

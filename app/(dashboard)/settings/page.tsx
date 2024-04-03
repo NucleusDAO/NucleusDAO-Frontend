@@ -35,13 +35,13 @@ const Profile = () => {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-white font-medium text-xl" role="heading">
+      <h2 className="text-dark dark:text-white font-medium text-xl" role="heading">
         My Profile
       </h2>
       <div className="flex space-x-2 items-center">
         <Image src={WalletIcon} alt="wallet" width={60} />
         <div className="space-y-2">
-          <p className="text-sm text-white font-medium">9xfDAO...ntY897</p>
+          <p className="text-sm text-dark dark:text-white font-medium">9xfDAO...ntY897</p>
           <div className="border border-[#444444] text-[#888888] p-2 rounded-lg flex space-x-2 text-sm">
             <p>9xfDAO...ntY897</p> <CopyIcon />
           </div>
