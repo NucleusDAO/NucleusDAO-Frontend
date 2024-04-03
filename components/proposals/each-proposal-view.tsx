@@ -59,7 +59,7 @@ const EachProposalView = ({ tabs }: IEachProposalView) => {
       <div className="grid grid-cols-2 gap-6">
         <div className="space-y-8">
           {showFullProposal && (
-            <div className="text-sm text-defaultText font-light trans space-y-3">
+            <div className="text-sm text-defaultText trans space-y-3">
               <p>
                 Refreshed Branding: Start by evaluating Legacy's existing brand
                 identity and considering if any updates or refinements are

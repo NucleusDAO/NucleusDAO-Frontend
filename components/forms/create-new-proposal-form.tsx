@@ -80,7 +80,7 @@ const CreateNewProposalForm = () => {
                   <SelectTrigger>
                     <SelectValue
                       placeholder="Choose title"
-                      className="text-white placeholder:text-[#444444]"
+                      className="dark:text-white placeholder:text-[#444444] text-dark"
                     />
                   </SelectTrigger>
                 </FormControl>
@@ -153,40 +153,40 @@ const CreateNewProposalForm = () => {
                 <FormItem>
                   <FormLabel>Proposal Duration</FormLabel>
                   <FormControl>
-                    <FormGroup className="space-x-6">
-                      <div className="border border-[#292929] flex items-center justify-between rounded-lg py-1 px-5 w-[50%]">
-                        <div
-                          className={cn(
-                            'bg-[#1E1E1E] rounded-lg py-2 px-2 hover:bg-[#2a2a2a] trans'
-                          )}
-                          role="button"
-                          onClick={() => handleMinus('duration', form)}
-                        >
-                          <Minus size={18} />
-                        </div>
-                        <Input
-                          placeholder="value"
-                          type="number"
-                          className="border-none bg-[#191919] w-fit text-center"
-                          {...field}
-                          onChange={({ target }) =>
-                            handleChangeFormNumberInput(
-                              'duration',
-                              target.value,
-                              form
-                            )
-                          }
-                        />
-                        <div
-                          className="bg-[#1E1E1E] rounded-lg py-2 px-2 hover:bg-[#2a2a2a] trans"
-                          role="button"
-                          onClick={() => handlePlus('duration', form)}
-                        >
-                          <Plus size={18} />
-                        </div>
-                      </div>
-                      <p className="text-white font-light text-sm">Days</p>
-                    </FormGroup>
+                  <FormGroup className="space-x-6">
+                            <div className="border dark:border-[#292929] flex items-center justify-between rounded-lg py-1 px-5 w-[50%] border-[#CCCCCC99]">
+                              <div
+                                className={cn(
+                                  'dark:bg-[#1E1E1E] rounded-lg py-2 px-2 dark:hover:bg-[#2a2a2a] trans bg-[#D2D2D2] hover:bg-[#D2D2D2]'
+                                )}
+                                role="button"
+                                onClick={() => handleMinus('duration', form)}
+                              >
+                                <Minus size={18} />
+                              </div>
+                              <Input
+                                placeholder="value"
+                                type="number"
+                                className="border-none dark:bg-[#191919] w-fit text-center bg-white"
+                                {...field}
+                                onChange={({ target }) =>
+                                  handleChangeFormNumberInput(
+                                    'duration',
+                                    target.value,
+                                    form
+                                  )
+                                }
+                              />
+                              <div
+                                className="dark:bg-[#1E1E1E] rounded-lg py-2 px-2 dark:hover:bg-[#2a2a2a] trans hover:bg-[#D2D2D2] bg-[#D2D2D2]"
+                                role="button"
+                                onClick={() => handlePlus('duration', form)}
+                              >
+                                <Plus size={18} />
+                              </div>
+                            </div>
+                            <p className="text-white font-light text-sm">Days</p>
+                          </FormGroup>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -217,40 +217,40 @@ const CreateNewProposalForm = () => {
                 <FormItem>
                   <FormLabel>Proposal Duration</FormLabel>
                   <FormControl>
-                    <FormGroup className="space-x-6">
-                      <div className="border border-[#292929] flex items-center justify-between rounded-lg py-1 px-5 w-[50%]">
-                        <div
-                          className={cn(
-                            'bg-[#1E1E1E] rounded-lg py-2 px-2 hover:bg-[#2a2a2a] trans'
-                          )}
-                          role="button"
-                          onClick={() => handleMinus('duration', form)}
-                        >
-                          <Minus size={18} />
-                        </div>
-                        <Input
-                          placeholder="value"
-                          type="number"
-                          className="border-none bg-[#191919] w-fit text-center"
-                          {...field}
-                          onChange={({ target }) =>
-                            handleChangeFormNumberInput(
-                              'duration',
-                              target.value,
-                              form
-                            )
-                          }
-                        />
-                        <div
-                          className="bg-[#1E1E1E] rounded-lg py-2 px-2 hover:bg-[#2a2a2a] trans"
-                          role="button"
-                          onClick={() => handlePlus('duration', form)}
-                        >
-                          <Plus size={18} />
-                        </div>
-                      </div>
-                      <p className="text-white font-light text-sm">Days</p>
-                    </FormGroup>
+                  <FormGroup className="space-x-6">
+                            <div className="border dark:border-[#292929] flex items-center justify-between rounded-lg py-1 px-5 w-[50%] border-[#CCCCCC99]">
+                              <div
+                                className={cn(
+                                  'dark:bg-[#1E1E1E] rounded-lg py-2 px-2 dark:hover:bg-[#2a2a2a] trans bg-[#D2D2D2] hover:bg-[#D2D2D2]'
+                                )}
+                                role="button"
+                                onClick={() => handleMinus('duration', form)}
+                              >
+                                <Minus size={18} />
+                              </div>
+                              <Input
+                                placeholder="value"
+                                type="number"
+                                className="border-none dark:bg-[#191919] w-fit text-center bg-white"
+                                {...field}
+                                onChange={({ target }) =>
+                                  handleChangeFormNumberInput(
+                                    'duration',
+                                    target.value,
+                                    form
+                                  )
+                                }
+                              />
+                              <div
+                                className="dark:bg-[#1E1E1E] rounded-lg py-2 px-2 dark:hover:bg-[#2a2a2a] trans hover:bg-[#D2D2D2] bg-[#D2D2D2]"
+                                role="button"
+                                onClick={() => handlePlus('duration', form)}
+                              >
+                                <Plus size={18} />
+                              </div>
+                            </div>
+                            <p className="text-white font-light text-sm">Days</p>
+                          </FormGroup>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -304,40 +304,40 @@ const CreateNewProposalForm = () => {
                     <FormItem>
                       <FormLabel>Proposal Duration</FormLabel>
                       <FormControl>
-                        <FormGroup className="space-x-6">
-                          <div className="border border-[#292929] flex items-center justify-between rounded-lg py-1 px-5 w-[50%]">
-                            <div
-                              className={cn(
-                                'bg-[#1E1E1E] rounded-lg py-2 px-2 hover:bg-[#2a2a2a] trans'
-                              )}
-                              role="button"
-                              onClick={() => handleMinus('duration', form)}
-                            >
-                              <Minus size={18} />
+                      <FormGroup className="space-x-6">
+                            <div className="border dark:border-[#292929] flex items-center justify-between rounded-lg py-1 px-5 w-[50%] border-[#CCCCCC99]">
+                              <div
+                                className={cn(
+                                  'dark:bg-[#1E1E1E] rounded-lg py-2 px-2 dark:hover:bg-[#2a2a2a] trans bg-[#D2D2D2] hover:bg-[#D2D2D2]'
+                                )}
+                                role="button"
+                                onClick={() => handleMinus('duration', form)}
+                              >
+                                <Minus size={18} />
+                              </div>
+                              <Input
+                                placeholder="value"
+                                type="number"
+                                className="border-none dark:bg-[#191919] w-fit text-center bg-white"
+                                {...field}
+                                onChange={({ target }) =>
+                                  handleChangeFormNumberInput(
+                                    'duration',
+                                    target.value,
+                                    form
+                                  )
+                                }
+                              />
+                              <div
+                                className="dark:bg-[#1E1E1E] rounded-lg py-2 px-2 dark:hover:bg-[#2a2a2a] trans hover:bg-[#D2D2D2] bg-[#D2D2D2]"
+                                role="button"
+                                onClick={() => handlePlus('duration', form)}
+                              >
+                                <Plus size={18} />
+                              </div>
                             </div>
-                            <Input
-                              placeholder="value"
-                              type="number"
-                              className="border-none bg-[#191919] w-fit text-center"
-                              {...field}
-                              onChange={({ target }) =>
-                                handleChangeFormNumberInput(
-                                  'duration',
-                                  target.value,
-                                  form
-                                )
-                              }
-                            />
-                            <div
-                              className="bg-[#1E1E1E] rounded-lg py-2 px-2 hover:bg-[#2a2a2a] trans"
-                              role="button"
-                              onClick={() => handlePlus('duration', form)}
-                            >
-                              <Plus size={18} />
-                            </div>
-                          </div>
-                          <p className="text-white font-light text-sm">Days</p>
-                        </FormGroup>
+                            <p className="text-white font-light text-sm">Days</p>
+                          </FormGroup>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -356,10 +356,10 @@ const CreateNewProposalForm = () => {
               <FormLabel>Proposal Quorum</FormLabel>
               <FormControl>
                 <FormGroup className="space-x-6">
-                  <div className="border border-[#292929] flex items-center justify-between rounded-lg py-1 px-5 w-[50%]">
+                  <div className="border dark:border-[#292929] flex items-center justify-between rounded-lg py-1 px-5 w-[50%] border-[#CCCCCC99]">
                     <div
                       className={cn(
-                        'bg-[#1E1E1E] rounded-lg py-2 px-2 hover:bg-[#2a2a2a] trans'
+                        'dark:bg-[#1E1E1E] rounded-lg py-2 px-2 dark:hover:bg-[#2a2a2a] trans bg-[#D2D2D2]'
                       )}
                       role="button"
                       onClick={() => handleMinus('duration', form)}
@@ -369,7 +369,7 @@ const CreateNewProposalForm = () => {
                     <Input
                       placeholder="value"
                       type="number"
-                      className="border-none bg-[#191919] w-fit text-center"
+                      className="border-none dark:bg-[#191919] w-fit text-center bg-white"
                       {...field}
                       onChange={({ target }) =>
                         handleChangeFormNumberInput(
@@ -380,7 +380,7 @@ const CreateNewProposalForm = () => {
                       }
                     />
                     <div
-                      className="bg-[#1E1E1E] rounded-lg py-2 px-2 hover:bg-[#2a2a2a] trans"
+                      className="dark:bg-[#1E1E1E] rounded-lg py-2 px-2 dark:hover:bg-[#2a2a2a] trans bg-[#D2D2D2]"
                       role="button"
                       onClick={() => handlePlus('quorum', form)}
                     >
@@ -394,7 +394,7 @@ const CreateNewProposalForm = () => {
                     />
                     <label
                       htmlFor="proposalCheck"
-                      className="text-[#FFF] text-sm font-light"
+                      className="dark:text-[#FFF] text-sm text-dark"
                     >
                       Proposal will be approved by many
                     </label>
@@ -412,40 +412,40 @@ const CreateNewProposalForm = () => {
                     <FormItem>
                       <FormLabel>Proposal Duration</FormLabel>
                       <FormControl>
-                        <FormGroup className="space-x-6">
-                          <div className="border border-[#292929] flex items-center justify-between rounded-lg py-1 px-5 w-[50%]">
-                            <div
-                              className={cn(
-                                'bg-[#1E1E1E] rounded-lg py-2 px-2 hover:bg-[#2a2a2a] trans'
-                              )}
-                              role="button"
-                              onClick={() => handleMinus('duration', form)}
-                            >
-                              <Minus size={18} />
+                      <FormGroup className="space-x-6">
+                            <div className="border dark:border-[#292929] flex items-center justify-between rounded-lg py-1 px-5 w-[50%] border-[#CCCCCC99]">
+                              <div
+                                className={cn(
+                                  'dark:bg-[#1E1E1E] rounded-lg py-2 px-2 dark:hover:bg-[#2a2a2a] trans bg-[#D2D2D2] hover:bg-[#D2D2D2]'
+                                )}
+                                role="button"
+                                onClick={() => handleMinus('duration', form)}
+                              >
+                                <Minus size={18} />
+                              </div>
+                              <Input
+                                placeholder="value"
+                                type="number"
+                                className="border-none dark:bg-[#191919] w-fit text-center bg-white"
+                                {...field}
+                                onChange={({ target }) =>
+                                  handleChangeFormNumberInput(
+                                    'duration',
+                                    target.value,
+                                    form
+                                  )
+                                }
+                              />
+                              <div
+                                className="dark:bg-[#1E1E1E] rounded-lg py-2 px-2 dark:hover:bg-[#2a2a2a] trans hover:bg-[#D2D2D2] bg-[#D2D2D2]"
+                                role="button"
+                                onClick={() => handlePlus('duration', form)}
+                              >
+                                <Plus size={18} />
+                              </div>
                             </div>
-                            <Input
-                              placeholder="value"
-                              type="number"
-                              className="border-none bg-[#191919] w-fit text-center"
-                              {...field}
-                              onChange={({ target }) =>
-                                handleChangeFormNumberInput(
-                                  'duration',
-                                  target.value,
-                                  form
-                                )
-                              }
-                            />
-                            <div
-                              className="bg-[#1E1E1E] rounded-lg py-2 px-2 hover:bg-[#2a2a2a] trans"
-                              role="button"
-                              onClick={() => handlePlus('duration', form)}
-                            >
-                              <Plus size={18} />
-                            </div>
-                          </div>
-                          <p className="text-white font-light text-sm">Days</p>
-                        </FormGroup>
+                            <p className="text-white font-light text-sm">Days</p>
+                          </FormGroup>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -462,11 +462,11 @@ const CreateNewProposalForm = () => {
                       <FormItem>
                         <FormLabel>Proposal Duration</FormLabel>
                         <FormControl>
-                          <FormGroup className="space-x-6">
-                            <div className="border border-[#292929] flex items-center justify-between rounded-lg py-1 px-5 w-[50%]">
+                        <FormGroup className="space-x-6">
+                            <div className="border dark:border-[#292929] flex items-center justify-between rounded-lg py-1 px-5 w-[50%] border-[#CCCCCC99]">
                               <div
                                 className={cn(
-                                  'bg-[#1E1E1E] rounded-lg py-2 px-2 hover:bg-[#2a2a2a] trans'
+                                  'dark:bg-[#1E1E1E] rounded-lg py-2 px-2 dark:hover:bg-[#2a2a2a] trans bg-[#D2D2D2] hover:bg-[#D2D2D2]'
                                 )}
                                 role="button"
                                 onClick={() => handleMinus('duration', form)}
@@ -476,7 +476,7 @@ const CreateNewProposalForm = () => {
                               <Input
                                 placeholder="value"
                                 type="number"
-                                className="border-none bg-[#191919] w-fit text-center"
+                                className="border-none dark:bg-[#191919] w-fit text-center bg-white"
                                 {...field}
                                 onChange={({ target }) =>
                                   handleChangeFormNumberInput(
@@ -487,7 +487,7 @@ const CreateNewProposalForm = () => {
                                 }
                               />
                               <div
-                                className="bg-[#1E1E1E] rounded-lg py-2 px-2 hover:bg-[#2a2a2a] trans"
+                                className="dark:bg-[#1E1E1E] rounded-lg py-2 px-2 dark:hover:bg-[#2a2a2a] trans hover:bg-[#D2D2D2] bg-[#D2D2D2]"
                                 role="button"
                                 onClick={() => handlePlus('duration', form)}
                               >
@@ -507,7 +507,7 @@ const CreateNewProposalForm = () => {
           <div className="flex space-x-3 items-center">
             <p className="font-light text-sm text-[#888888]">Published by</p>
             <Image src={RoundedIcon} alt="logo" width={20} height={20} />
-            <p className="font-light text-sm text-white">9xfDAO...ntY897</p>
+            <p className="text-sm dark:text-white text-dark">9xfDAO...ntY897</p>
           </div>
           <Button type="submit" className="px-12">
             Publish

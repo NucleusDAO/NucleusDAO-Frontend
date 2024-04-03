@@ -23,19 +23,19 @@ const Layout = ({ children }: ILayout) => {
   const router = useRouter();
   return (
     <div className="space-y-8">
-      <div className="flex space-x-4 items-start border-b border-b-[#292929] pb-6">
+      <div className="flex space-x-4 items-start border-b dark:border-b-[#292929] pb-6 border-[#CCCCCC99]">
         <Dialog onOpenChange={setOpen} open={open}>
           <DialogTrigger asChild>
             <div
-              className="bg-[#1E1E1E] rounded-lg flex items-center justify-center p-2"
+              className="dark:bg-[#1E1E1E] rounded-lg flex items-center justify-center p-2 bg-white text-[#444444] dark:text-defaultText"
               role="button"
             >
               <MoveLeft />
             </div>
           </DialogTrigger>
-          <DialogContent className="bg-[#191919]">
+          <DialogContent className="dark:bg-[#191919] bg-light">
             <DialogHeader>
-              <DialogTitle className="text-white font-medium py-3">
+              <DialogTitle className="dark:text-white font-medium py-3 text-dark">
                 Exit Proposal Creation
               </DialogTitle>
               <DialogDescription>
@@ -48,15 +48,13 @@ const Layout = ({ children }: ILayout) => {
                 No, stay
               </Button>
               <Button onClick={() => router.back()}>
-                {/* <Link href={DAO_URL} className="w-full"> */}
                   Yes, exit
-                {/* </Link> */}
               </Button>
             </div>
           </DialogContent>
         </Dialog>
         <div className="space-y-3">
-          <h1 className="text-white font-medium text-2xl">Create a Proposal</h1>
+          <h1 className="dark:text-white text-dark font-medium text-2xl">Create a Proposal</h1>
           <p className="text-defaultText text-sm">
             Ensure you provide comprehensive details, data, and any relevant
             supporting materials that will assist voters in making a
@@ -66,7 +64,7 @@ const Layout = ({ children }: ILayout) => {
       </div>
       <div className="flex space-x-6 items-start">
         <Steps />
-        <div className="rounded-lg p-4 bg-[#191919] w-[80%] h-[65vh] overflow-auto">
+        <div className="rounded-lg p-4 dark:bg-[#191919] bg-white w-[80%] h-[65vh] overflow-auto">
           {children}
         </div>
       </div>
