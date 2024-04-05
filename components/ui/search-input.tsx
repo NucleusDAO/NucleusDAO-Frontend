@@ -45,7 +45,7 @@ export default function SearchInput({
         />
         <Input
           className={cn(
-            'peer block w-full text-defaultText rounded-md border-white dark:border-foreground focus:border-primary focus:border text-sm outline-2 placeholder:text-defaultText',
+            'peer block w-full font-light placeholder:font-light text-defaultText rounded-md border-white dark:border-foreground focus:border-primary focus:border text-sm outline-2 placeholder:text-defaultText',
             classNames
           )}
           placeholder={placeholder}

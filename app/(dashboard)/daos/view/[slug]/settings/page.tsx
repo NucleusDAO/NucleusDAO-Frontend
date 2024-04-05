@@ -26,11 +26,11 @@ const Settings = () => {
           Configuration
         </h2>
       </div>
-      <div className="flex space-x-4 items-start">
-        <div className="w-[20%] dark:bg-[#191919] rounded-lg p-4 bg-white">
+      <div className="md:flex md:space-x-4 items-start space-y-4 md:space-y-0">
+        <div className="w-full md:w-[20%] dark:bg-[#191919] rounded-lg p-4 bg-white">
           <SidebarLinksComp activeSidebar={activeSidebar} />
         </div>
-        <div className="w-[80%] dark:bg-[#191919] rounded-lg p-4 bg-white">
+        <div className="w-full md:w-[80%] dark:bg-[#191919] rounded-lg p-4 bg-white">
           {tabs[activeSidebar]}
         </div>
       </div>

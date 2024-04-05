@@ -7,20 +7,31 @@ import { bottomSidebarNav, topSidebarNav } from './nav-data';
 import { cn } from '@/libs/utils';
 import { usePathname } from 'next/navigation';
 import { BrandLogo } from '@/assets/svgs';
+import { useState } from 'react';
+import { X } from 'lucide-react';
 
-const Sidebar = () => {
-    const pathname = usePathname();   
+interface ISidebar {
+  showNav: boolean;
+  handleShowNav: (arg: boolean) => void;
+}
+
+const Sidebar = ({ showNav, handleShowNav }: ISidebar) => {
+    const pathname = usePathname();  
 
   return (
-    <div className="w-[18%] px-10 py-2 dark:bg-foreground bg-light space-y-20 h-full fixed max-w-[400px]">
-      <Link href={DASHBOARD_URL}>
-        <div className='flex space-x-2 items-center -mb-8'>
-          <Image id="logo" src={LogoIcon} alt="Nucleus Dao Logo" width={35}  />
-          <BrandLogo className='text-[#282828] dark:text-white w-[120px]' />
-        </div>
-      </Link>
+    <div className={cn("w-[75%] md:w-[18%] px-10 py-2 dark:bg-foreground bg-light space-y-20 h-full z-[999] fixed max-w-[400px] ease-in-out duration-300",
+    !showNav && '-translate-x-full md:translate-x-0'
+    )}>
+      <div className='flex justify-between items-center -mb-8 relative'>
+        <Link href={DASHBOARD_URL}>
+          <div className='flex space-x-2 items-center'>
+            <Image id="logo" src={LogoIcon} alt="Nucleus Dao Logo" width={!showNav ? 35 : 30}  />
+            <BrandLogo className='text-[#282828] dark:text-white w-[100px] md:w-[120px]' />
+          </div>
+        </Link>
+      </div>
 
-    <div className='space-y-36 hidden lg:block'>
+    <div className='space-y-36 block'>
         <div className='space-y-6 text-sm'>
           {topSidebarNav.map((nav) => (
             <Link href={nav.href} className={cn('flex space-x-3 py-4 items-center px-4', pathname.startsWith(nav.href) && 'dark:bg-[#1E1E1E] bg-white text-dark dark:text-white rounded-lg')} key={nav.title}>

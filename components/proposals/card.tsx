@@ -8,6 +8,7 @@ import { EachStatus } from './data';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { encodeURI } from '@/libs/utils';
+import { useMediaQuery } from '@/hooks/use-media-query';
 
 interface IProposalCard {
   description: string;
@@ -29,6 +30,7 @@ const ProposalCard = ({
   id,
 }: IProposalCard) => {
   const pathname = usePathname();
+  const isDesktop = useMediaQuery('(min-width: 768px)');
 
   return (
     <Link href={encodeURI(pathname, id)}>
@@ -48,28 +50,28 @@ const ProposalCard = ({
                   height={40}
                 />
                 <div className="space-y-1">
-                  <p className="text-defaultText">Proposal Type</p>
-                  <h3 className="dark:text-white text-dark font-medium text-lg">{type}</h3>
+                  <p className="text-defaultText text-sm md:text-base">Proposal Type</p>
+                  <h3 className="dark:text-white text-dark font-medium text-base md:text-lg">{type}</h3>
                 </div>
               </div>
               <div>{EachStatus[status]}</div>
             </div>
-            <p className="text-defaultText pt-2 text-sm">{description}</p>
+            <p className="text-defaultText pt-2 text-xs md:text-sm">{description}</p>
           </div>
           <div className="space-y-4">
             <Separator  />
-            <div className="flex items-center justify-between text-xs dark:text-[#CCCCCCBF] text-defaultText">
+            <div className="flex items-center justify-between text-[10px] md:text-xs dark:text-[#CCCCCCBF] text-defaultText">
               <div className="flex space-x-2 items-center">
-                <Image src={RoundedIcon} alt="legacy" width={22} />
+                <Image src={RoundedIcon} alt="legacy" width={isDesktop ? 22 : 14} />
                 <p>{wallet}</p>
               </div>
-              <div className="flex space-x-4">
+              <div className="flex space-x-1 md:space-x-4">
                 <div className="flex items-center space-x-2 text-defaultText">
-                  <Clock4 size={18} color="#444444" />
+                  <Clock4 size={isDesktop ? 18 : 9} color="#444444" />
                   <p>{duration}</p>
                 </div>
                 <div className="flex items-center space-x-2 text-defaultText">
-                  <Image src={VoteIcon} alt="legacy" width={16} />
+                  <Image src={VoteIcon} alt="legacy" width={isDesktop ? 16 : 12} />
                   <p className="dark:text-white text-dark">{totalVote}</p>
                   <p>votes</p>
                 </div>

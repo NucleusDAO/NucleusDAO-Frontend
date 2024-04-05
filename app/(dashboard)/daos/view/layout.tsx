@@ -29,10 +29,10 @@ const Layout = ({ children }: ILayout) => {
     <div className="">
       <div className="flex justify-between border-b dark:border-b-[#292929] pb-6 border-b-[#CCCCCC99]">
         <div
-          className="flex space-x-4 items-center"
+          className="md:flex space-x-4 items-center space-y-5 md:space-y-0"
         >
           <div
-            className="rounded-lg flex items-center justify-center p-2 dark:bg-[#1E1E1E] bg-white dark:hover:bg-[#262525] hover:bg-white text-[#444444] dark:text-defaultText"
+            className="rounded-lg flex w-fit items-center justify-center p-2 dark:bg-[#1E1E1E] bg-white dark:hover:bg-[#262525] hover:bg-white text-[#444444] dark:text-defaultText"
             role="button"
             onClick={() => router.push(DAO_URL)}
           >
@@ -60,7 +60,7 @@ const Layout = ({ children }: ILayout) => {
                 <div className="space-y-4">
                   <h2 className="font-medium text-2xl text-dark dark:text-white">Legacy</h2>
                   <Link href="legacy.smartdao.eth" target="_blank">
-                    <div className="flex space-x-2 mt-1.5 items-center text-sm text-[#888888]">
+                    <div className="flex space-x-2 mt-1.5 items-center font-light text-sm text-[#888888]">
                       <p>legacy.smartdao.eth</p>
                       <CopyIcon />
                     </div>
@@ -78,9 +78,9 @@ const Layout = ({ children }: ILayout) => {
               revolutionize Assets.
             </p>
           </div>
-          <div className="pb-4 border-b dark:border-[#292929] flex justify-between border-[#CCCCCC99]">
+          <div className="pb-4 border-b dark:border-[#292929] md:flex justify-between border-[#CCCCCC99] space-y-4 md:space-y-0">
             <h2 className="font-medium text-2xl dark:text-white text-dark">Overview</h2>
-            <div className="flex space-x-4 dark:bg-[#191919] bg-white p-2 rounded-2xl">
+            <div className="flex space-x-4 dark:bg-[#191919] bg-white p-2 rounded-2xl w-[99%] md:w-fit overflow-x-auto">
               {eachDaoViews.map((view) => (
                 <Link href={encodeURI(updatedUrl, view.path)} key={view.title}>
                   <div

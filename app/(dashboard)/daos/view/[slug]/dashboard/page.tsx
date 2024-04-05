@@ -7,13 +7,13 @@ import { cn } from '@/libs/utils';
 const EachDaoDashboard = () => {
     const [selectedTab, setSelectTab] = useState<number>(0);
   return (
-    <div className="flex space-x-8">
-      <div className="w-[25%] space-y-4">
+    <div className="md:flex space-x-0 md:space-x-8 space-y-4 md:space-y-0">
+      <div className="md:w-[25%] space-y-4">
         {dashboardTab.map((tab, index) => (
           <div
             key={tab.title}
             className={cn('p-4 dark:bg-[#191919] bg-white rounded-lg flex items-center space-x-4 space-y-4 border trans border-white dark:border-[#191919] dark:hover:border-[#292929] hover:border-[#CCCCCC99]',
-            selectedTab === index && 'border-primary hover:border-primary')}
+            selectedTab === index && 'border-primary dark:border-primary dark:hover:border-primary hover:border-primary')}
             role='button'
             onClick={() => setSelectTab(index)}
           >
@@ -48,7 +48,7 @@ const EachDaoDashboard = () => {
           </div>
         ))}
       </div>
-      <div className='w-[75%] dark:bg-[#191919] bg-white p-4 rounded-lg h-[60vh]'>
+      <div className='w-full md:w-[75%] dark:bg-[#191919] bg-white p-4 rounded-lg h-[60vh]'>
         {tabView[selectedTab]}
       </div>
     </div>

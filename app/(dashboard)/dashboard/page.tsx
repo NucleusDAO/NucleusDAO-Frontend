@@ -25,7 +25,7 @@ const Dashboard = () => {
         </Link>
       </div>
 
-      <div className="gap-6 grid-cols-3 grid">
+      <div className="gap-6 md:grid-cols-3 grid">
         {dashboardFeedsData.map((feed) => (
           <Cards key={feed.title} {...feed} />
         ))}

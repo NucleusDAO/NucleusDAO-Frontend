@@ -25,8 +25,8 @@ export const DaoFunds = () => {
   }, 300);
 
   return (
-    <div className="p-4 h-full">
-      <div className="flex justify-between pb-4">
+    <div className="md:p-4 h-full">
+      <div className="md:flex justify-between pb-4 space-y-3 md:space-y-0">
         <h2 className="dark:text-white text-dark font-medium text-xl">Productivity</h2>
         <div className="flex space-x-4">
           {period.map((each) => (

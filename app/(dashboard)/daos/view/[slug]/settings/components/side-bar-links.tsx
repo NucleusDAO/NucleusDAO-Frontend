@@ -38,7 +38,7 @@ const SidebarLinksComp = ({ activeSidebar }: ISidebarLinksComp) => {
   }, 200);
 
   return (
-    <div className="space-y-4 text-[#888888] text-sm ">
+    <div className="md:space-y-4 text-[#888888] text-sm flex md:block">
       {daoSettingsSidebarLinks.map((link) => (
         <div
           key={link.title}
