@@ -39,7 +39,7 @@ export default function SearchInput({
       </label>
       <div className="relative w-full">
         <Search
-          className="absolute z-[100] top-3.5 left-3"
+          className="absolute z-[50] top-3.5 left-3"
           strokeWidth={1}
           size={20}
         />

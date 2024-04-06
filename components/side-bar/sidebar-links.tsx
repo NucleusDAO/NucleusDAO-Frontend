@@ -24,7 +24,7 @@ const Sidebar = ({ showNav, handleShowNav }: ISidebar) => {
     )}>
       <div className='flex justify-between items-center -mb-8 relative'>
         <Link href={DASHBOARD_URL}>
-          <div className='flex space-x-2 items-center'>
+          <div className='flex space-x-2 items-center' onClick={() => handleShowNav(false)}>
             <Image id="logo" src={LogoIcon} alt="Nucleus Dao Logo" width={!showNav ? 35 : 30}  />
             <BrandLogo className='text-[#282828] dark:text-white w-[100px] md:w-[120px]' />
           </div>
@@ -34,7 +34,7 @@ const Sidebar = ({ showNav, handleShowNav }: ISidebar) => {
     <div className='space-y-36 block'>
         <div className='space-y-6 text-sm'>
           {topSidebarNav.map((nav) => (
-            <Link href={nav.href} className={cn('flex space-x-3 py-4 items-center px-4', pathname.startsWith(nav.href) && 'dark:bg-[#1E1E1E] bg-white text-dark dark:text-white rounded-lg')} key={nav.title}>
+            <Link href={nav.href} className={cn('flex space-x-3 py-4 items-center px-4', pathname.startsWith(nav.href) && 'dark:bg-[#1E1E1E] bg-white text-dark dark:text-white rounded-lg')} key={nav.title} onClick={() => handleShowNav(false)}>
               {nav.icon}
               <p>{nav.title}</p>
             </Link>
@@ -44,7 +44,7 @@ const Sidebar = ({ showNav, handleShowNav }: ISidebar) => {
         <div className='border-t pt-10 dark:border-t-[#FFFFFF33] border-t-[#CCCCCC99]'>
               <div className='space-y-6 text-sm'>
                 {bottomSidebarNav.map((nav) => (
-                  <Link href={nav.href} className={cn('flex space-x-3 py-4 items-center px-4', pathname.startsWith(nav.href) && 'dark:bg-[#1E1E1E] bg-white text-dark dark:text-white rounded-lg')} key={nav.title}>
+                  <Link href={nav.href} className={cn('flex space-x-3 py-4 items-center px-4', pathname.startsWith(nav.href) && 'dark:bg-[#1E1E1E] bg-white text-dark dark:text-white rounded-lg')} key={nav.title} onClick={() => handleShowNav(false)}>
                     {nav.icon}
                     <p>{nav.title}</p>
                   </Link>

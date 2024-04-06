@@ -25,7 +25,7 @@ interface INavbar {
 const Navbar = ({ handleShowNav, showNav }: INavbar) => {
   const connected: boolean = true;
   return (
-    <nav className="flex dark:bg-foreground bg-light w-full md:w-[82%] py-4 px-8 md:px-8 justify-between items-center fixed z-[10] max-w-[1500px]">
+    <nav className="flex dark:bg-foreground bg-light w-full md:w-[82%] py-4 px-8 md:px-8 justify-between items-center fixed z-[100] max-w-[1500px]">
       <div className="relative w-[40%] hidden md:flex">
         <SearchInput
           placeholder="Search anything here"
@@ -54,7 +54,7 @@ const Navbar = ({ handleShowNav, showNav }: INavbar) => {
                 </div>
               </PopoverTrigger>
               <PopoverContent
-                className="mt-2 px-6 pt-3 pb-8 w-[450px]"
+                className="mt-2 px-6 pt-3 pb-8 w-[90%] md:w-[450px] max-w-[450px]"
                 style={{ boxShadow: '0px 4px 10px 0px #00000040' }}
               >
                 <div className="flex justify-between items-center text-sm border-b pb-3 dark:border-b-[#292929] border-b-[#CCCCCC99] font-light">

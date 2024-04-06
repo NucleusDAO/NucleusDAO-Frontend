@@ -37,21 +37,21 @@ const ProposalCard = ({
     <div className="dark:bg-[#191919] rounded-lg cursor-pointer bg-white" role="tablist">
       <div className="flex rounded-l space-x-2">
         <div className="dark:bg-[#1E1E1E] bg-[#EEEEEE] p-3 rounded-tl-lg rounded-bl-lg">
-          <Image src={LegacyLogo} alt="legacy" width={32} />
+          <Image src={LegacyLogo} alt="legacy" width={isDesktop ? 32 : 24} />
         </div>
-        <div className="p-4 space-y-6">
+        <div className="p-2 md:p-4 space-y-6">
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex space-x-4 items-center">
                 <Image
                   src={RoundedIcon}
                   alt="proposal title"
-                  width={40}
-                  height={40}
+                  width={isDesktop ? 40 : 20}
+                  height={isDesktop ? 40 : 20}
                 />
                 <div className="space-y-1">
-                  <p className="text-defaultText text-sm md:text-base">Proposal Type</p>
-                  <h3 className="dark:text-white text-dark font-medium text-base md:text-lg">{type}</h3>
+                  <p className="text-defaultText text-xs md:text-base">Proposal Type</p>
+                  <h3 className="dark:text-white text-dark font-medium text-sm md:text-lg">{type}</h3>
                 </div>
               </div>
               <div>{EachStatus[status]}</div>
@@ -70,7 +70,7 @@ const ProposalCard = ({
                   <Clock4 size={isDesktop ? 18 : 9} color="#444444" />
                   <p>{duration}</p>
                 </div>
-                <div className="flex items-center space-x-2 text-defaultText">
+                <div className="flex text-xs md:text-sm items-center space-x-2 text-defaultText">
                   <Image src={VoteIcon} alt="legacy" width={isDesktop ? 16 : 12} />
                   <p className="dark:text-white text-dark">{totalVote}</p>
                   <p>votes</p>

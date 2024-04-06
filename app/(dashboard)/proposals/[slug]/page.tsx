@@ -1,11 +1,13 @@
 'use client';
 import EachProposalView from '@/components/proposals/each-proposal-view';
+import { useMediaQuery } from '@/hooks/use-media-query';
 import { cn } from '@/libs/utils';
 import { MoveLeft } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useDebouncedCallback } from 'use-debounce';
 
 const EachProposal = () => {
+  const isDesktop = useMediaQuery('(min-width: 768px)');
   const router = useRouter();
   const tabs: string[] = ['Result', 'Information'];
   const searchParams = useSearchParams();
@@ -36,16 +38,16 @@ const EachProposal = () => {
             role="button"
             onClick={() => router.back()}
           >
-            <MoveLeft size={20} />
+            <MoveLeft size={isDesktop ? 20 : 16} />
           </div>
-          <h2 className="dark:text-white text-dark font-medium text-xl">Overview</h2>
+          <h2 className="dark:text-white text-dark font-medium text-lg md:text-xl">Overview</h2>
         </div>
         <div className="flex space-x-3 dark:bg-[#191919] rounded-lg p-2 items-center text-sm bg-white">
           {tabs.map((tab) => (
             <div
               className={cn(
                 'p-2 px-4',
-                currentTab === tab && 'text-primary rounded-lg dark:bg-[#1E1E1E] bg-light'
+                currentTab === tab && 'text-primary rounded-lg dark:bg-[#1E1E1E] bg-light md:text-base text-sm'
               )}
               key={tab}
               onClick={() => handleSwitch(tab)}

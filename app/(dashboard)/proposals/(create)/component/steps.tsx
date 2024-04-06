@@ -16,7 +16,7 @@ const Steps = () => {
   const currentStepIndex = steps.findIndex(step => pathname.startsWith(step.url));
   
   return (
-    <div className="dark:bg-[#191919] p-4 rounded-lg w-[20%] bg-white">
+    <div className="dark:bg-[#191919] p-4 rounded-lg w-full md:w-[20%] bg-white">
       {steps.map((step, index) => (
         <Link href={step.url} key={step.title}>
           <div className={cn('flex space-x-3 font-light py-1 items-center text-sm')}>

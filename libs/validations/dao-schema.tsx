@@ -28,20 +28,21 @@ const editDaoInfoLinksSchema = z.object({
   socialMedia: z.array(socialMediaSchema),
 });
 
-
 const editDaoInfoSchema = z.object({
   daoName: z
     .string()
     .min(2, { message: 'Must be 2 or more characters long' })
     .max(50, { message: 'Must be 50 or fewer characters long' }),
-  logo: z.string()
+  logo: z.string(),
 });
 
 const proposalInfoSchema = z.object({
-  title: z
-    .string()
-    .min(2, { message: 'Must be 2 or more characters long' })
-    .max(50, { message: 'Must be 50 or fewer characters long' }),
+  // title: z
+  //   .string()
+  //   .min(2, { message: 'Must be 2 or more characters long' })
+  //   .max(50, { message: 'Must be 50 or fewer characters long' }),
+  type: z
+    .string().min(1, { message: 'Proposal type is required' }).default('0'),
   description: z.string().min(2, { message: 'Description must not be empty' }),
   targetWallet: z.string().optional(),
   value: z.string().optional(),
@@ -50,22 +51,26 @@ const proposalInfoSchema = z.object({
       required_error: 'Duration value is required',
       invalid_type_error: 'Duration value must be a number',
     })
-    .min(1).optional(),
+    .min(1)
+    .optional(),
   minimum: z.coerce
     .number({
       required_error: 'Minimum value is required',
       invalid_type_error: 'Minimum value must be a number',
     })
     .min(1, { message: '1 day is the least expiration days' })
-    .max(3, { message: '3 days is the minimum expiration days' }).optional(),
+    .max(3, { message: '3 days is the minimum expiration days' })
+    .optional(),
   maximum: z.coerce
     .number({
       required_error: 'Maximum value is required',
       invalid_type_error: 'Maximum value must be a number',
     })
     .min(3, { message: '3 days is the least expiration days' })
-    .max(7, { message: '7 days is the maximun expiration days' }).optional(),
+    .max(7, { message: '7 days is the maximun expiration days' })
+    .optional(),
   quorum: z.number().optional(),
+  socialMedia: z.array(socialMediaSchema),
 });
 
 const defineMembershipSchema = z.object({
@@ -96,4 +101,13 @@ const editDisplay = z.object({
   device_settings: z.boolean().optional().default(true),
 });
 
-export { daoInfoSchema, defineMembershipSchema, proposalInfoSchema, editDaoInfoSchema, editDaoInfoLinksSchema, editProfile, editNotifications, editDisplay };
+export {
+  daoInfoSchema,
+  defineMembershipSchema,
+  proposalInfoSchema,
+  editDaoInfoSchema,
+  editDaoInfoLinksSchema,
+  editProfile,
+  editNotifications,
+  editDisplay,
+};
