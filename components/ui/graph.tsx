@@ -63,18 +63,18 @@ const Graph = () => {
     <ResponsiveContainer width="100%" height="100%" className="pb-14">
       <LineChart
         width={500}
-        height={300}
+        height={400}
         data={data}
         margin={{
           top: 5,
           right: 30,
-          left: 20,
+          // left: 20,
           bottom: 5,
         }}
       >
         <CartesianGrid strokeDasharray="7 7" vertical={false} stroke="#292929CC" />
         <CartesianAxis tickSize={20} />
-        <XAxis dataKey="name" axisLine={false} className='py-4' fontWeight={300} fontSize={14} />
+        <XAxis dataKey="name" axisLine={false} className='md:py-4' fontWeight={300} fontSize={14} />
         <YAxis className='text-[#9C9C9C]' axisLine={false} fontWeight={300} fontSize={14}  />
         
         <Tooltip cursor={{ stroke: '#C098F9', strokeWidth: 1.5, strokeDasharray: 5 }} />

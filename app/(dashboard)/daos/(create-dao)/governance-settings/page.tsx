@@ -59,7 +59,7 @@ const GovernanceSettings = () => {
         </div>
       <div className='space-y-3'>
                 <label className='dark:text-white text-dark font-light text-sm mt-4'>Quorum</label>
-        <div className='grid grid-cols-2 gap-12 items-center'>
+        <div className='grid md:grid-cols-2 gap-6 md:gap-12 items-center'>
             <div>
                 <div className='border border-[#CCCCCC99] dark:border-[#292929] flex items-center justify-between rounded-lg py-1 px-5 dark:text-defaultText text-dark'>
                     <div className={cn('bg-[#D2D2D2] hover:bg-[#dddada] dark:bg-[#1E1E1E] rounded-lg py-2 px-2 dark:hover:bg-[#2a2a2a] trans', quorum === 0 && 'cursor-default')} role='button' onClick={() => { quorum === 0 ? null : setQuorum((prev) => Number(prev) - 1) }}><Minus size={18} /></div>

@@ -9,6 +9,7 @@ import { ReactNode, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import ProposalResult from './proposal-result';
 import ProposalInfo from './proposal-info';
+import { useMediaQuery } from '@/hooks/use-media-query';
 
 
 interface IEachTabView {
@@ -20,6 +21,7 @@ interface IEachProposalView {
 }
 
 const EachProposalView = ({ tabs }: IEachProposalView) => {
+  const isDesktop = useMediaQuery('(min-width: 768px)');
   const [showFullProposal, setShowFullProposal] = useState<boolean>(false);
   const voteStatus: string = 'Active';
   const searchParams = useSearchParams();
@@ -33,16 +35,16 @@ const EachProposalView = ({ tabs }: IEachProposalView) => {
 
   return (
     <div className="space-y-6">
-      <h1 className="dark:text-white font-medium text-3xl pt-6 text-dark">
+      <h1 className="dark:text-white font-medium text-xl md:text-3xl pt-6 text-dark">
         Brand Identity Change
       </h1>
       <div className="flex space-x-3 items-center">
         <p className="font-light text-sm text-[#888888]">Published by</p>
-        <Image src={RoundedIcon} alt="logo" width={20} height={20} />
-        <p className="font-light text-sm dark:text-white text-dark">9xfDAO...ntY897</p>
+        <Image src={RoundedIcon} alt="logo" width={isDesktop ? 20 : 16} height={isDesktop ? 20 : 16} />
+        <p className="font-light text-xs md:text-sm dark:text-white text-dark">9xfDAO...ntY897</p>
       </div>
       <div className="space-y-4">
-        <p className="text-sm text-defaultText">
+        <p className="text-xs md:text-sm text-defaultText">
           Making a change of brand identity and UI features that can enhance the
           usability and functionality of Legacy. This features can lead to a
           more engaging user experience, increased user engagement, improved
@@ -56,10 +58,10 @@ const EachProposalView = ({ tabs }: IEachProposalView) => {
         )}
       </div>
 
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid md:grid-cols-2 gap-6">
         <div className="space-y-8">
           {showFullProposal && (
-            <div className="text-sm text-defaultText trans space-y-3">
+            <div className="text-xs md:text-sm text-defaultText trans space-y-3">
               <p>
                 Refreshed Branding: Start by evaluating Legacy's existing brand
                 identity and considering if any updates or refinements are

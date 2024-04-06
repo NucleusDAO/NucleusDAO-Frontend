@@ -29,15 +29,15 @@ const AllDaos = ({ dashboardTableData }: any) => {
   }, 300);
   return (
     <div className="space-y-3">
-      <div className="border-b dark:border-b-[#292929] border-b-[#CCCCCC99] pb-6 pt-4 flex justify-between items-center">
-        <div className="relative w-[40%]">
+      <div className="border-b dark:border-b-[#292929] border-b-[#CCCCCC99] pb-6 pt-4 md:flex justify-between items-center space-y-4 md:space-y-0">
+        <div className="relative md:w-[40%]">
           <SearchInput
             placeholder="Search by organization name"
             classNames="pl-10"
             queryKey="search"
           />
         </div>
-        <div className="flex space-x-3">
+        <div className="flex space-x-3 justify-between md:justify-start">
           <div
             className="flex space-x-2 dark:text-white text-dark border dark:border-[#292929] border-[#CCCCCC] px-2 py-1.5 rounded-lg items-center text-sm font-light"
             role="button"
@@ -45,25 +45,27 @@ const AllDaos = ({ dashboardTableData }: any) => {
             <ListFilter size={20} className='dark:text-[#B4B4B4] text-[#444444]' />
             <p className="dark:text-white text-dark">Filter</p>
           </div>
-          <div
-            className={cn(
-              'dark:text-[#B4B4B4] text-[#444444] border dark:border-[#292929] border-[#CCCCCC] px-1.5 py-1.5 rounded-lg trans',
-              currentView === 'list' && 'dark:bg-[#1E1E1E] bg-white'
-            )}
-            role="button"
-            onClick={() => handleView('list')}
-          >
-            <List size={20} />
-          </div>
-          <div
-            className={cn(
-              'dark:text-[#B4B4B4] text-[#444444] border dark:border-[#292929] border-[#CCCCCC] px-1.5 py-1.5 rounded-lg trans',
-              (currentView === 'grid' || currentView === '') && 'dark:bg-[#1E1E1E] bg-white'
-            )}
-            role="button"
-            onClick={() => handleView('grid')}
-          >
-            <DashboardIcon size="20" />
+          <div className='flex justify-between space-x-4'>
+              <div
+                className={cn(
+                  'dark:text-[#B4B4B4] text-[#444444] border dark:border-[#292929] border-[#CCCCCC] px-1.5 py-1.5 rounded-lg trans',
+                  currentView === 'list' && 'dark:bg-[#1E1E1E] bg-white'
+                )}
+                role="button"
+                onClick={() => handleView('list')}
+              >
+                <List size={20} />
+              </div>
+              <div
+                className={cn(
+                  'dark:text-[#B4B4B4] text-[#444444] border dark:border-[#292929] border-[#CCCCCC] px-1.5 py-1.5 rounded-lg trans',
+                  (currentView === 'grid' || currentView === '') && 'dark:bg-[#1E1E1E] bg-white'
+                )}
+                role="button"
+                onClick={() => handleView('grid')}
+              >
+                <DashboardIcon size="20" />
+              </div>
           </div>
         </div>
       </div>
@@ -80,7 +82,7 @@ const AllDaos = ({ dashboardTableData }: any) => {
             <DataTable columns={columns} data={dashboardTableData(28)} />
           )}
           {(currentView === 'grid' || currentView !== 'list') && (
-            <div className="grid grid-cols-2 gap-8">
+            <div className="grid md:grid-cols-2 gap-8">
               {dashboardTableData(40).map((data: any) => (
                 <DaoCard key={data.activeMember} {...data} />
               ))}

@@ -61,9 +61,9 @@ const Layout = ({ children }: ILayout) => {
           </p>
         </div>
       </div>
-      <div className="flex space-x-6 items-start">
+      <div className="md:flex md:space-x-6 items-start space-y-4 md:space-y-0">
         <Steps />
-        <div className="rounded-lg p-4 dark:bg-[#191919] bg-white w-[80%] max-h-[68vh] overflow-auto">
+        <div className="rounded-lg p-4 dark:bg-[#191919] bg-white w-full md:w-[80%] md:max-h-[68vh] overflow-auto">
           {children}
         </div>
       </div>

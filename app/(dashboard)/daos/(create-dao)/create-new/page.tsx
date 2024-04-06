@@ -17,7 +17,7 @@ const CreateNewDao = () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-2 gap-8 pb-4">
+      <div className="grid md:grid-cols-2 gap-8 pb-4">
         {DaoTemplateList.map((template) => (
           <div
             key={template.title}
