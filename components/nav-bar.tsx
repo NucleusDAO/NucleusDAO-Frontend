@@ -4,7 +4,7 @@ import { ModeToggle } from './themes/mode-toggle';
 import { Bell2 } from '@/assets/svgs';
 import RoundedIcon from '@/assets/icons/roundedIcon.png';
 import Image from 'next/image';
-import { ChevronDown, Menu, UserRound, X } from 'lucide-react';
+import { ChevronDown, LogOut, Menu, UserRound, X } from 'lucide-react';
 
 import {
   Popover,
@@ -16,6 +16,7 @@ import LogoIcon from '@/assets/icons/nucleusdao-purple.svg';
 import Link from 'next/link';
 import { DASHBOARD_URL } from '@/config/path';
 import { BrandLogo } from '@/assets/svgs';
+import { useMediaQuery } from '@/hooks/use-media-query';
 
 interface INavbar {
   handleShowNav: (arg: any) => void;
@@ -23,6 +24,7 @@ interface INavbar {
 }
 
 const Navbar = ({ handleShowNav, showNav }: INavbar) => {
+  const isDesktop = useMediaQuery('(min-width: 768px)');
   const connected: boolean = true;
   return (
     <nav className="flex dark:bg-foreground bg-light w-full md:w-[82%] py-4 px-8 md:px-8 justify-between items-center fixed z-[100] max-w-[1500px]">
@@ -121,14 +123,22 @@ const Navbar = ({ handleShowNav, showNav }: INavbar) => {
                 >
                   <div>
                     {connected ? (
-                      <div
-                        className="dark:bg-[#1E1E1E] bg-white h-11 justify-center rounded-lg flex items-center text-[#888888] p-3 text-[12px] space-x-3"
+                      <>
+                        <div
+                          className="dark:bg-[#1E1E1E] bg-white h-11 rounded-lg flex items-center text-[#888888] p-3 text-[12px] space-x-3"
+                          role="button"
+                        >
+                          <Image src={RoundedIcon} alt="logo" width={28} />
+                          <p>9xfDAO...ntY897</p>
+                        </div>
+                        <div
+                        className="dark:bg-[#1E1E1E] bg-white h-11 rounded-lg flex items-center text-[#888888] p-3 text-[12px] space-x-3"
                         role="button"
                       >
-                        <Image src={RoundedIcon} alt="logo" width={28} />
-                        <p>9xfDAO...ntY897</p>
-                        <ChevronDown size={20} />
+                        <LogOut size={20} />
+                        <p>Disconnect</p>
                       </div>
+                      </>
                     ) : (
                       <Button>Connect Wallet</Button>
                     )}
@@ -158,7 +168,7 @@ const Navbar = ({ handleShowNav, showNav }: INavbar) => {
           <Button className="">Connect Wallet</Button>
         )}
 
-        {/* <ModeToggle /> */}
+{isDesktop && (<ModeToggle />)}
       </div>
     </nav>
   );
