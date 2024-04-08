@@ -5,6 +5,7 @@ import {
   RpcRejectedByUserError,
   AeSdkAepp, Node 
 } from '@aeternity/aepp-sdk';
+import { toast } from 'sonner';
 
 const TESTNET_NODE_URL = 'https://testnet.aeternity.io';
 const MAINNET_NODE_URL = 'https://mainnet.aeternity.io';
@@ -33,7 +34,6 @@ const aeSdk: any = new AeSdkAepp({
     { name: 'testnet', instance: new Node(TESTNET_NODE_URL) },
     { name: 'mainnet', instance: new Node(MAINNET_NODE_URL) },
   ],
-  // compilerUrl: COMPILER_URL,
   onNetworkChange: async ({ networkId }) => {
     const [{ name }] = (await aeSdk.getNodesInPool())
       .filter((node: any) => node.nodeNetworkId === networkId);
@@ -43,6 +43,8 @@ const aeSdk: any = new AeSdkAepp({
   onAddressChange: ({ current }: any) => console.log('setAddress', Object.keys(current)[0]),
   onDisconnect: () => alert('Aepp is disconnected'),
 });
+
+export let showModal = false;
 
 
 export const connectWallet = {
@@ -67,11 +69,9 @@ export const connectWallet = {
     const connection = new BrowserWindowMessageConnection();
     return new Promise<WalletConnection>((resolve, reject) => {
       const stopDetection = walletDetector(connection, async ({ newWallet }: any) => {
-        if (confirm(`Do you want to connect to wallet ${newWallet.info.name} with id ${newWallet.info.id}`)) {
-          stopDetection();
-          resolve(newWallet.getConnection());
-          this.cancelWalletDetection = null;
-        }
+        stopDetection();
+        resolve(newWallet.getConnection());
+        this.cancelWalletDetection = null;
       });
       this.cancelWalletDetection = () => {
         reject(new Error('Wallet detection cancelled'));
@@ -98,9 +98,9 @@ export const connectWallet = {
       }
       this.walletConnected = true;
       const { address: { current } } = await aeSdk.subscribeAddress("subscribe", 'connected');
-      
       return { address: Object.keys(current)[0], isConnected: true }
     } catch (error: any) {
+      toast.error(error.message || 'Cannot connect at the momment');
       if (
         error.message === 'Wallet detection cancelled' ||
         error instanceof RpcConnectionDenyError ||
