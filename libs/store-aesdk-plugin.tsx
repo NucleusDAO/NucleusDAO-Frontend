@@ -98,7 +98,9 @@ export const connectWallet = {
       }
       this.walletConnected = true;
       const { address: { current } } = await aeSdk.subscribeAddress("subscribe", 'connected');
-      return { address: Object.keys(current)[0], isConnected: true }
+      if (Object.keys(current)[0]) {
+        return { address: Object.keys(current)[0], isConnected: true }
+      }
     } catch (error: any) {
       toast.error(error.message || 'Cannot connect at the momment');
       if (

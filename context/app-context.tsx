@@ -33,8 +33,10 @@ export const AppProvider = ({ children }: IAppProvider) => {
     connectWallet
       .connect()
       .then((response: any) => {
-        setUser(response);
-        localStorage.setItem('user', JSON.stringify(response));
+        if (response) {
+          setUser(response);
+          localStorage.setItem('user', JSON.stringify(response));
+        }
       })
       .catch((error: any) => toast.error(error.message || 'Cannot connect to wallet at the moment'))
       .finally(() => setIsConnecting(false));
