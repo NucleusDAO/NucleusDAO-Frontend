@@ -28,7 +28,7 @@ interface WalletSdk {
   disconnectWallet: () => void;
 }
 
-const aeSdk: any = new AeSdkAepp({
+export const aeSdk: any = new AeSdkAepp({
   name: 'NucleusDAO',
   nodes: [
     { name: 'testnet', instance: new Node(TESTNET_NODE_URL) },
@@ -44,8 +44,7 @@ const aeSdk: any = new AeSdkAepp({
   onDisconnect: () => alert('Aepp is disconnected'),
 });
 
-export let showModal = false;
-
+console.log(aeSdk, '->')
 
 export const connectWallet = {
   data() {
@@ -96,13 +95,12 @@ export const connectWallet = {
         if (error instanceof RpcConnectionDenyError) connection.disconnect();
         throw error;
       }
-      this.walletConnected = true;
       const { address: { current } } = await aeSdk.subscribeAddress("subscribe", 'connected');
       if (Object.keys(current)[0]) {
         return { address: Object.keys(current)[0], isConnected: true }
       }
     } catch (error: any) {
-      toast.error(error.message || 'Cannot connect at the momment');
+      toast.error(error.message || 'Cannot connect to wallet at the momment');
       if (
         error.message === 'Wallet detection cancelled' ||
         error instanceof RpcConnectionDenyError ||
@@ -114,7 +112,6 @@ export const connectWallet = {
     }
   },
   async disconnect(this: any) {
-    this.walletConnected = false;
     aeSdk.disconnectWallet();
   },
 };

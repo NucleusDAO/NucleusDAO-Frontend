@@ -15,7 +15,7 @@ interface IConnectWalletPopOver {
 }
 
 const ConnectWalletPopOver = ({ callToAction }: IConnectWalletPopOver) => {
-  const { handleConnectWallet, user, isConnecting, handleDisconnect, isDisConnecting } =
+  const { handleConnectWallet, user, isConnecting, handleDisconnect } =
     useContext<any>(AppContext);
   const connected: boolean = user.isConnected;
   return (
@@ -31,19 +31,19 @@ const ConnectWalletPopOver = ({ callToAction }: IConnectWalletPopOver) => {
           {connected ? (
             <>
               <div
-                className="dark:bg-[#1E1E1E] bg-white h-11 rounded-lg flex items-center text-[#888888] p-3 text-[12px] space-x-3"
+                className="dark:bg-[#1E1E1E] bg-white h-11 rounded-lg flex items-center dark:text-[#888888] p-3 text-[12px] space-x-3 text-dark"
                 role="button"
               >
                 <Image src={RoundedIcon} alt="logo" width={28} />
                 <p className="overflow-hidden text-ellipsis">{user.address}</p>
               </div>
               <div
-                className="dark:bg-[#1E1E1E] bg-white h-11 rounded-lg flex items-center text-[#888888] p-3 text-[12px] space-x-3"
+                className="dark:bg-[#1E1E1E] bg-white h-11 rounded-lg flex items-center dark:text-[#888888] p-3 text-[12px] space-x-3 text-dark"
                 role="button"
                 onClick={handleDisconnect}
               >
                 <LogOut size={20} />
-                <p>{isDisConnecting ? 'Disconnecting' : 'Disconnect'}</p>
+                <p>Disconnect</p>
               </div>
             </>
           ) : (

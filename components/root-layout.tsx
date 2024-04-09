@@ -35,7 +35,7 @@ export const RootLayoutsComponent = ({ children }: IRootLayouts) => {
               <Sidebar showNav={showNav} handleShowNav={setShowNav} />
               <div className="w-full md:w-[82%] md:ml-[18%] h-screen overflow-y-auto">
                 <Navbar handleShowNav={setShowNav} showNav={showNav} />)
-                <div className="md:mx-6 p-6 rounded-lg dark:bg-foreground bg-light mt-24 overflow-auto max-w-[1500px]">
+                <div className="md:mx-6 p-6 rounded-lg dark:bg-foreground bg-light mt-20 overflow-auto max-w-[1500px]">
                   {children}
                 </div>
               </div>

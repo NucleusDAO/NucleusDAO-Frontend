@@ -80,7 +80,7 @@ const Navbar = ({ handleShowNav, showNav }: INavbar) => {
             <ConnectWalletPopOver
               callToAction={
                 <div
-                  className="dark:bg-[#1E1E1E] w-[280px] hidden bg-white h-11 justify-center rounded-lg md:flex items-center relative text-[#888888] p-3 text-[12px] space-x-3"
+                  className="dark:bg-[#1E1E1E] w-[280px] hidden bg-white h-11 justify-center rounded-lg md:flex items-center relative dark:text-[#888888] p-3 text-[12px] space-x-3 text-dark"
                   role="button"
                 >
                   <Image src={RoundedIcon} alt="logo" width={28} />
@@ -93,13 +93,22 @@ const Navbar = ({ handleShowNav, showNav }: INavbar) => {
             />
           </div>
         ) : (
-          <Button
-            onClick={handleConnectWallet}
-            loading={isConnecting}
-            loadingText="Connecting..."
-          >
-            Connect Wallet
-          </Button>
+          <div className='flex space-x-2 items-center'>
+            <Button
+              onClick={handleConnectWallet}
+              loading={isConnecting}
+              loadingText="Connecting..."
+            >
+              Connect Wallet
+            </Button>
+            <div
+                className="dark:bg-[#1E1E1E] bg-white h-11 w-12 justify-center rounded-lg md:hidden flex items-center relative dark:text-white text-[#444444]"
+                role="button"
+                onClick={() => handleShowNav((prev: boolean) => !prev)}
+              >
+                {showNav ? <X /> : <Menu />}
+              </div>
+            </div>
         )}
 
         {isDesktop && <ModeToggle />}
