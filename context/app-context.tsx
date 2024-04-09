@@ -7,6 +7,7 @@ import {
 } from '@/libs/ae-utils';
 import ConfirmWalletDialog from './component/confirm-wallet';
 import ConfirmDisconnectWallet from './component/confirm-disconnect';
+import { useSearchParams } from 'next/navigation';
 
 export const AppContext = createContext({});
 
@@ -34,6 +35,8 @@ export const AppProvider = ({ children }: IAppProvider) => {
   const [isScanningWallet, setIsScanningWallet] = useState<boolean>(false);
   const [userRejected, setUserRejected] = useState<boolean>(false);
   const [showDisconnectModal, setShowDisconnectModal] = useState<boolean>(false);
+  const searchParams = useSearchParams();
+  const address = searchParams.get('address') || '';
 
   const initialized = useRef(false);
 
@@ -57,7 +60,6 @@ export const AppProvider = ({ children }: IAppProvider) => {
         } else {
           setUser(res);
           setOpenModal(false);
-          console.log(res, '-> res');
         }
       })
       .catch((error) => console.log(error, '-> error handle connect'))
@@ -69,17 +71,20 @@ export const AppProvider = ({ children }: IAppProvider) => {
     if (!initialized.current) {
       initialized.current = true;
       if (getUser) {
-        // handleConnectWallet();
+        handleConnect()
       }
     }
   }, []);
 
-  const handleDisconnect = async () => {
+  useEffect(() => {
+    if (address) {
+      setUser({ address, isConnected: true });
+      localStorage.setItem('user', JSON.stringify({ address, isConnected: true }))
+    }
+  }, [address])
+
+  const handleDisconnect = () => {
     setShowDisconnectModal(true);
-    // setIsDisConnecting(true);
-    // await aeSdk.disconnectWallet();
-    // setUser(defaultUser);
-    // localStorage.removeItem('user');
   };
 
   const value: any = {

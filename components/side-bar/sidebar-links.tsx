@@ -32,7 +32,7 @@ const Sidebar = ({ showNav, handleShowNav }: ISidebar) => {
         </Link>
       </div>
 
-    <div className='space-y-36 block'>
+    <div className='space-y-28 md:space-y-32 block'>
         <div className='space-y-6 text-sm'>
           {topSidebarNav.map((nav) => (
             <Link href={nav.href} className={cn('flex space-x-3 py-4 items-center px-4', pathname.startsWith(nav.href) && 'dark:bg-[#1E1E1E] bg-white text-dark dark:text-white rounded-lg')} key={nav.title} onClick={() => handleShowNav(false)}>
@@ -42,7 +42,7 @@ const Sidebar = ({ showNav, handleShowNav }: ISidebar) => {
           ))}
         </div>
 
-        <div className='border-t pt-10 dark:border-t-[#FFFFFF33] border-t-[#CCCCCC99]'>
+        <div className='border-t pt-4 md:pt-10 dark:border-t-[#FFFFFF33] border-t-[#CCCCCC99]'>
               <div className='space-y-6 text-sm'>
                 {bottomSidebarNav.map((nav) => (
                   <Link href={nav.href} className={cn('flex space-x-3 py-4 items-center px-4', pathname.startsWith(nav.href) && 'dark:bg-[#1E1E1E] bg-white text-dark dark:text-white rounded-lg')} key={nav.title} onClick={() => handleShowNav(false)}>
@@ -50,10 +50,10 @@ const Sidebar = ({ showNav, handleShowNav }: ISidebar) => {
                     <p>{nav.title}</p>
                   </Link>
                 ))}
+        {!isDesktop && <div className='pl-4'><ModeToggle /></div>}
               </div>
         </div>
         
-        {!isDesktop && <ModeToggle />}
     </div>
     </div>
   );

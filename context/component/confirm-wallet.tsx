@@ -29,7 +29,6 @@ const ConfirmWalletDialog = ({ ...props }: IConfirmWalletDialog) => {
         'x-cancel': window.location.href.split('?')[0],
       });
       window.location.href = addressDeepLink.toString();
-      // window.location = addressDeepLink;
     }
 
     return (
@@ -57,10 +56,10 @@ const ConfirmWalletDialog = ({ ...props }: IConfirmWalletDialog) => {
                       {(!props.walletInfo.info && !props.isScanningWallet) ? (<p className='font-light text-sm'>You don't have Superhero Wallet. Click <a className='text-primary font-medium' href="chrome-extension://mnhmmkepfddpifjkamaligfeemcbhdne/index.html#/account" target='_blank'>here</a> to install Superhero</p>) : 
                       <div className='flex items-center justify-between space-x-2'>
                           <div className='flex items-center space-x-3 md:w-[40%]'>
-                            <Image src={SuperheroLogo} alt="superhero" width={50} />
-                            <h2 className='text-white font-medilum text-[18px]'>Super Hero Wallet</h2>
+                            <Image src={SuperheroLogo} alt="superhero" width={40} />
+                            <h2 className='text-white md:font-medium text-[12px] md:text-[18px]'>Super Hero Wallet</h2>
                           </div>
-                            <Button className='rounded-lg w-fit h-9 px-10' loading={props.isConnecting} loadingText='Connecting...' onClick={props.handleConnect}>Connect</Button>
+                            <Button className='rounded-lg md:w-[30%] h-9 text-xs md:text-sm' loading={props.isConnecting} loadingText='Connecting...' onClick={props.handleConnect}>Connect</Button>
                         </div>
                       }
                       </>
