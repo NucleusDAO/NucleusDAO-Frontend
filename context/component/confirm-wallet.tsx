@@ -29,7 +29,9 @@ const ConfirmWalletDialog = ({ ...props }: IConfirmWalletDialog) => {
         'x-success': `${window.location.href.split('?')[0]}?address={address}&networkId={networkId}`,
         'x-cancel': window.location.href.split('?')[0],
       });
-      window.location.href = addressDeepLink.toString();
+      if (typeof window !== 'undefined') {
+        window.location.href = addressDeepLink.toString();
+      }
     }
 
     return (

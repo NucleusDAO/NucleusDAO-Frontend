@@ -70,8 +70,8 @@ export const createDeepLinkUrl = ({ type, callbackUrl, ...params }: DeepLinkPara
 };
 
 
-export const IN_FRAME = window.parent !== window;
-export const IS_MOBILE = window.navigator.userAgent.includes('Mobi');
+export const IN_FRAME = typeof window !== 'undefined' && window.parent !== window;
+export const IS_MOBILE = typeof window !== 'undefined' && window.navigator.userAgent.includes('Mobi');
 export const isSafariBrowser = () => navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome');
 
 export const connectWallet = async () => {
@@ -84,7 +84,9 @@ export const connectWallet = async () => {
       'x-success': `${window.location.href.split('?')[0]}?address={address}&networkId={networkId}`,
       'x-cancel': window.location.href.split('?')[0],
     });
-    window.location.href = addressDeepLink.toString();
+    if (typeof window !== 'undefined') {
+      window.location.href = addressDeepLink.toString();
+    }
     // window.location = addressDeepLink;
   }
 
