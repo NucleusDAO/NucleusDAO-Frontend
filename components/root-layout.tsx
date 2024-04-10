@@ -6,6 +6,7 @@ import Loading from '@/components/loading';
 import Sidebar from '@/components/side-bar/sidebar-links';
 import Navbar from '@/components/nav-bar';
 import { AppProvider } from '@/context/app-context';
+import { cn } from '@/libs/utils';
 
 interface IRootLayouts {
   children: React.ReactNode;
@@ -35,7 +36,7 @@ export const RootLayoutsComponent = ({ children }: IRootLayouts) => {
               <Sidebar showNav={showNav} handleShowNav={setShowNav} />
               <div className="w-full md:w-[82%] md:ml-[18%] md:h-screen overflow-y-auto">
                 <Navbar handleShowNav={setShowNav} showNav={showNav} />)
-                <div className="md:mx-6 p-6 rounded-lg dark:bg-foreground bg-light mt-20 overflow-auto max-w-[1500px]">
+                <div className={cn('md:mx-6 p-6 rounded-lg dark:bg-foreground bg-light mt-20 overflow-auto max-w-[1500px]', showNav && 'fixed')}>
                   {children}
                 </div>
               </div>

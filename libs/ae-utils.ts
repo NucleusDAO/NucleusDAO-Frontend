@@ -87,7 +87,6 @@ export const connectWallet = async () => {
     if (typeof window !== 'undefined') {
       window.location.href = addressDeepLink.toString();
     }
-    // window.location = addressDeepLink;
   }
 
   try {
