@@ -24,7 +24,6 @@ export const aeSdk: any = new AeSdkAepp({
       (node: any) => node.nodeNetworkId === networkId
     );
     aeSdk.selectNode(name);
-    console.log('setNetworkId', networkId);
   },
   onAddressChange: ({ current }: any) =>
     console.log('setAddress', Object.keys(current)[0]),
@@ -91,7 +90,6 @@ export const connectWallet = async () => {
 
   try {
     const connection: any = await detectWallets();
-    console.log(connection, '> connect')
     try {
       walletInfo = await aeSdk.connectToWallet(connection);
     } catch (error) {
