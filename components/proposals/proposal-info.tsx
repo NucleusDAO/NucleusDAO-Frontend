@@ -29,14 +29,14 @@ const ProposalInfo = () => {
         <div className="flex justify-between">
           <p className="text-defaultText font-light text-sm">Start Date</p>
           <p className="dark:text-white font-medium text-sm text-dark">
-            03 Jul 2023 22:30:55 G.M.T
+          03 Jul 2023 
           </p>
         </div>
 
         <div className="flex justify-between pt-4">
           <p className="text-defaultText font-light text-sm">End Date</p>
           <p className="dark:text-white font-medium text-sm text-dark">
-            08 Jul 2023 22:30:55 G.M.T
+          08 Jul 2023 
           </p>
         </div>
       </div>

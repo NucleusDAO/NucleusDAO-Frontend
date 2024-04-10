@@ -71,13 +71,27 @@ export const createDeepLinkUrl = ({ type, callbackUrl, ...params }: DeepLinkPara
 };
 
 
+export const IN_FRAME = window.parent !== window;
+export const IS_MOBILE = window.navigator.userAgent.includes('Mobi');
+export const isSafariBrowser = () => navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome');
 
 export const connectWallet = async () => {
   let walletInfo;
   let stopScan: any = null;
+
+  if ((IS_MOBILE || isSafariBrowser()) && !IN_FRAME) {
+    const addressDeepLink = createDeepLinkUrl({
+      type: 'address',
+      'x-success': `${window.location.href.split('?')[0]}?address={address}&networkId={networkId}`,
+      'x-cancel': window.location.href.split('?')[0],
+    });
+    window.location.href = addressDeepLink.toString();
+    // window.location = addressDeepLink;
+  }
+
   try {
     const connection: any = await detectWallets();
-    console.log(connection, '-> connection')
+    console.log(connection, '> connect')
     try {
       walletInfo = await aeSdk.connectToWallet(connection);
     } catch (error) {

@@ -14,29 +14,29 @@ import {
 } from '@/components/ui/form';
 import { editDisplay } from '@/libs/validations/dao-schema';
 import { Switch } from '@/components/ui/switch';
+import { useTheme } from 'next-themes';
 
 const Display = () => {
+  const { setTheme, theme } = useTheme();
   const form = useForm<z.infer<typeof editDisplay>>({
     resolver: zodResolver(editDisplay),
     defaultValues: {
-      light_mode: false,
-      dark_mode: false,
-      device_settings: true,
+      light: theme === 'light',
+      dark: theme === 'dark',
+      system_: theme === 'system',
     },
-  });
+  });  
 
   const handleOnCheck = (value: boolean, type: any) => {
-    form.setValue('light_mode', type === 'light_mode' ? value : false);
-    form.setValue('dark_mode', type === 'dark_mode' ? value : false);
+    form.setValue('light', type === 'light' ? value : false);
+    form.setValue('dark', type === 'dark' ? value : false);
     form.setValue(
-      'device_settings',
-      type === 'device_settings' ? value : false
+      'system_',
+      type === 'system_' ? value : false
     );
+    setTheme(type === 'system_' ? 'system' : type)
   };
 
-  const onSubmit = async (data: any) => {
-    console.log(data);
-  };
   return (
     <div className="space-y-6">
       <h2 className="dark:text-white font-medium text-xl text-dark" role="heading">
@@ -44,10 +44,10 @@ const Display = () => {
       </h2>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <form className="space-y-4">
           <FormField
             control={form.control}
-            name="light_mode"
+            name="light"
             render={({ field }) => (
               <FormItem className="flex justify-between items-center">
                 <FormLabel className="dark:text-white text-dark">Light mode</FormLabel>
@@ -55,7 +55,7 @@ const Display = () => {
                   <Switch
                     checked={field.value}
                     onCheckedChange={(value) =>
-                      handleOnCheck(value, 'light_mode')
+                      handleOnCheck(value, 'light')
                     }
                   />
                 </FormControl>
@@ -65,7 +65,7 @@ const Display = () => {
           />
           <FormField
             control={form.control}
-            name="dark_mode"
+            name="dark"
             render={({ field }) => (
               <FormItem className="flex justify-between items-center">
                 <FormLabel className="dark:text-white text-dark">Dark mode</FormLabel>
@@ -73,7 +73,7 @@ const Display = () => {
                   <Switch
                     checked={field.value}
                     onCheckedChange={(value) =>
-                      handleOnCheck(value, 'dark_mode')
+                      handleOnCheck(value, 'dark')
                     }
                   />
                 </FormControl>
@@ -83,7 +83,7 @@ const Display = () => {
           />
           <FormField
             control={form.control}
-            name="device_settings"
+            name="system_"
             render={({ field }) => (
               <FormItem className="flex justify-between items-center">
                 <FormLabel className="dark:text-white text-dark">
@@ -93,7 +93,7 @@ const Display = () => {
                   <Switch
                     checked={field.value}
                     onCheckedChange={(value) =>
-                      handleOnCheck(value, 'device_settings')
+                      handleOnCheck(value, 'system_')
                     }
                   />
                 </FormControl>

@@ -96,9 +96,9 @@ const editNotifications = z.object({
 });
 
 const editDisplay = z.object({
-  light_mode: z.boolean().optional(),
-  dark_mode: z.boolean().optional(),
-  device_settings: z.boolean().optional().default(true),
+  light: z.boolean().optional(),
+  dark: z.boolean().optional(),
+  system_: z.boolean().optional(),
 });
 
 export {

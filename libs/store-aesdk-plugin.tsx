@@ -38,13 +38,10 @@ export const aeSdk: any = new AeSdkAepp({
     const [{ name }] = (await aeSdk.getNodesInPool())
       .filter((node: any) => node.nodeNetworkId === networkId);
     aeSdk.selectNode(name);
-    console.log('setNetworkId', networkId);
   },
   onAddressChange: ({ current }: any) => console.log('setAddress', Object.keys(current)[0]),
   onDisconnect: () => alert('Aepp is disconnected'),
 });
-
-console.log(aeSdk, '->')
 
 export const connectWallet = {
   data() {

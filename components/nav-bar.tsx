@@ -64,7 +64,7 @@ const Navbar = ({ handleShowNav, showNav }: INavbar) => {
                     className="dark:bg-primary bg-white h-11 w-12 justify-center rounded-lg flex md:hidden items-center relative dark:text-white text-[#444444]"
                     role="button"
                   >
-                    <UserRound />
+                    <UserRound size={20} />
                   </div>
               }
             />
@@ -87,7 +87,7 @@ const Navbar = ({ handleShowNav, showNav }: INavbar) => {
                   <p className="overflow-hidden text-ellipsis">
                     {user.address}
                   </p>
-                  <ChevronDown />
+                  <ChevronDown size={20} />
                 </div>
               }
             />
@@ -102,11 +102,11 @@ const Navbar = ({ handleShowNav, showNav }: INavbar) => {
               Connect Wallet
             </Button>
             <div
-                className="dark:bg-[#1E1E1E] bg-white h-11 w-12 justify-center rounded-lg md:hidden flex items-center relative dark:text-white text-[#444444]"
+                className="dark:bg-[#1E1E1E] bg-white h-11 w-9 justify-center rounded-lg md:hidden flex items-center relative dark:text-white text-[#444444]"
                 role="button"
                 onClick={() => handleShowNav((prev: boolean) => !prev)}
               >
-                {showNav ? <X /> : <Menu />}
+                {showNav ? <X /> : <Menu size={20} />}
               </div>
             </div>
         )}

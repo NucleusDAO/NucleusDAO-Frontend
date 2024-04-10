@@ -28,10 +28,10 @@ const Steps = () => {
   const currentStepIndex = steps.findIndex(step => pathname.startsWith(step.url));
   
   return (
-    <div className="dark:bg-[#191919] bg-white p-4 rounded-lg md:w-[20%] space-x-8 md:space-x-0 flex md:block items-center md:items-start w-full overflow-auto">
+    <div className="dark:bg-[#191919] bg-white p-2 md:p-4 rounded-lg md:w-[20%] space-x-8 md:space-x-0 flex md:block items-center md:items-start w-full overflow-auto">
       {steps.map((step, index) => (
         <Link href={step.url} key={step.title}>
-          <div className={cn('flex space-x-3 py-4 items-center text-sm')}>
+          <div className={cn('flex space-x-3 py-1 md:py-4 items-center text-sm')}>
             <div className='w-fit relative'>
                 <div
                   className={cn(
