@@ -24,7 +24,6 @@ export const aeSdk: any = new AeSdkAepp({
       (node: any) => node.nodeNetworkId === networkId
     );
     aeSdk.selectNode(name);
-    console.log('setNetworkId', networkId);
   },
   onAddressChange: ({ current }: any) =>
     console.log('setAddress', Object.keys(current)[0]),
@@ -71,13 +70,28 @@ export const createDeepLinkUrl = ({ type, callbackUrl, ...params }: DeepLinkPara
 };
 
 
+export const IN_FRAME = typeof window !== 'undefined' && window.parent !== window;
+export const IS_MOBILE = typeof window !== 'undefined' && window.navigator.userAgent.includes('Mobi');
+export const isSafariBrowser = () => navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome');
 
 export const connectWallet = async () => {
   let walletInfo;
   let stopScan: any = null;
+
+  if ((IS_MOBILE || isSafariBrowser()) && !IN_FRAME) {
+    const addressDeepLink = createDeepLinkUrl({
+      type: 'address',
+      'x-success': `${window.location.href.split('?')[0]}?address={address}&networkId={networkId}`,
+      'x-cancel': window.location.href.split('?')[0],
+    });
+    if (typeof window !== 'undefined') {
+      window.location.href = addressDeepLink.toString();
+    }
+    // window.location = addressDeepLink;
+  }
+
   try {
     const connection: any = await detectWallets();
-    console.log(connection, '-> connection')
     try {
       walletInfo = await aeSdk.connectToWallet(connection);
     } catch (error) {
