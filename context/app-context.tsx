@@ -2,6 +2,7 @@
 
 import { ReactNode, createContext, useEffect, useRef, useState } from 'react';
 import {
+  IS_MOBILE,
   connectWallet,
   detectWallets,
 } from '@/libs/ae-utils';
@@ -71,7 +72,7 @@ export const AppProvider = ({ children }: IAppProvider) => {
     if (!initialized.current) {
       initialized.current = true;
       if (getUser) {
-        handleConnect()
+        !IS_MOBILE && handleConnect();
       }
     }
   }, []);
