@@ -5,12 +5,11 @@ import {
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
-  AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { IS_MOBILE, aeSdk } from '@/libs/ae-utils';
+import { aeSdk } from '@/libs/ae-utils';
 
 import { cn } from '@/libs/utils';
 import { useState } from 'react';
@@ -26,20 +25,17 @@ const ConfirmDisconnectWallet = ({
   setOpen,
   open,
   setUser,
-  defaultUser,
 }: IConfirmDisconnectWallet) => {
   const [disconnecting, setDisconnecting] = useState<boolean>(false);
   const handleDisconnect = async () => {
-    setDisconnecting(true);
-    if (IS_MOBILE) {
-      localStorage.removeItem('user');
-      setUser(defaultUser);
-    } else {
-      await aeSdk.disconnectWallet();
-      setUser(defaultUser);
-      localStorage.removeItem('user');
-    }
-    setDisconnecting(false);
+      try {
+        localStorage.removeItem('user');
+        setUser({ address: '', isConnected: false });
+        await aeSdk.disconnectWallet(false);
+      } catch (error) {
+        // TODO
+      }
+      window.location.search = '';
   };
 
   return (

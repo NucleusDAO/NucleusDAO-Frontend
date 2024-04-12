@@ -5,7 +5,7 @@ import { Toaster as Sonner } from '@/components/ui/sonner';
 import Loading from '@/components/loading';
 import Sidebar from '@/components/side-bar/sidebar-links';
 import Navbar from '@/components/nav-bar';
-import { AppProvider } from '@/context/app-context';
+import { ConnectWalletProvider } from '@/context/connect-wallet-context';
 import { cn } from '@/libs/utils';
 
 interface IRootLayouts {
@@ -23,7 +23,7 @@ export const RootLayoutsComponent = ({ children }: IRootLayouts) => {
       disableTransitionOnChange
     >
       <Suspense fallback={<Loading />}>
-        <AppProvider>
+        <ConnectWalletProvider>
           <div className="max-w-[2000px] mx-auto relative">
             {showNav && (
               <div
@@ -36,13 +36,18 @@ export const RootLayoutsComponent = ({ children }: IRootLayouts) => {
               <Sidebar showNav={showNav} handleShowNav={setShowNav} />
               <div className="w-full md:w-[82%] md:ml-[18%] md:h-screen overflow-y-auto">
                 <Navbar handleShowNav={setShowNav} showNav={showNav} />)
-                <div className={cn('md:mx-6 p-6 rounded-lg dark:bg-foreground bg-light mt-20 overflow-auto max-w-[1500px]', showNav && 'fixed')}>
+                <div
+                  className={cn(
+                    'md:mx-6 p-6 rounded-lg dark:bg-foreground bg-light mt-20 overflow-auto max-w-[1500px]',
+                    showNav && 'fixed'
+                  )}
+                >
                   {children}
                 </div>
               </div>
             </div>
           </div>
-        </AppProvider>
+        </ConnectWalletProvider>
       </Suspense>
       <Sonner richColors />
     </ThemeProvider>
