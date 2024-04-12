@@ -3,7 +3,6 @@ import SearchInput from './ui/search-input';
 import { Button } from './ui/button';
 import { ModeToggle } from './themes/mode-toggle';
 import { Bell2 } from '@/assets/svgs';
-import RoundedIcon from '@/assets/icons/roundedIcon.png';
 import Image from 'next/image';
 import { ChevronDown, Menu, UserRound, X } from 'lucide-react';
 
@@ -13,7 +12,7 @@ import { DASHBOARD_URL } from '@/config/path';
 import { BrandLogo } from '@/assets/svgs';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { useContext } from 'react';
-import { AppContext } from '@/context/app-context';
+import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import ConnectWalletPopOver from './connect-popover';
 
 interface INavbar {
@@ -23,7 +22,7 @@ interface INavbar {
 
 const Navbar = ({ handleShowNav, showNav }: INavbar) => {
   const { handleConnectWallet, user, isConnecting } =
-    useContext<any>(AppContext);
+    useContext<any>(ConnectWalletContext);
   const isDesktop = useMediaQuery('(min-width: 768px)');
   const connected: boolean = user.isConnected;
   return (
@@ -48,26 +47,26 @@ const Navbar = ({ handleShowNav, showNav }: INavbar) => {
             <ConnectWalletPopOver
               callToAction={
                 <div
-                className="dark:bg-[#1E1E1E] bg-white h-11 w-12 justify-center rounded-lg flex items-center relative dark:text-white text-[#444444]"
-                role="button"
-              >
-                <div className="w-1.5 h-1.5 top-4 bg-[#DD3857] rounded-full absolute right-4" />
-                <Bell2 />
-              </div>
+                  className="dark:bg-[#1E1E1E] bg-white h-11 w-12 justify-center rounded-lg flex items-center relative dark:text-white text-[#444444]"
+                  role="button"
+                >
+                  <div className="w-1.5 h-1.5 top-4 bg-[#DD3857] rounded-full absolute right-4" />
+                  <Bell2 />
+                </div>
               }
             />
 
             <>
               <ConnectWalletPopOver
-              callToAction={
-                <div
+                callToAction={
+                  <div
                     className="dark:bg-primary bg-white h-11 w-12 justify-center rounded-lg flex md:hidden items-center relative dark:text-white text-[#444444]"
                     role="button"
                   >
                     <UserRound size={20} />
                   </div>
-              }
-            />
+                }
+              />
 
               <div
                 className="dark:bg-[#1E1E1E] bg-white h-11 w-12 justify-center rounded-lg md:hidden flex items-center relative dark:text-white text-[#444444]"
@@ -83,7 +82,11 @@ const Navbar = ({ handleShowNav, showNav }: INavbar) => {
                   className="dark:bg-[#1E1E1E] w-[280px] hidden bg-white h-11 justify-center rounded-lg md:flex items-center relative dark:text-[#888888] p-3 text-[12px] space-x-3 text-dark"
                   role="button"
                 >
-                  <Image src={RoundedIcon} alt="logo" width={28} />
+                  <img
+                    src={`https://avatars.z52da5wt.xyz/${user.address}`}
+                    alt="logo"
+                    width={28}
+                  />
                   <p className="overflow-hidden text-ellipsis">
                     {user.address}
                   </p>
@@ -93,7 +96,7 @@ const Navbar = ({ handleShowNav, showNav }: INavbar) => {
             />
           </div>
         ) : (
-          <div className='flex space-x-2 items-center'>
+          <div className="flex space-x-2 items-center">
             <Button
               onClick={handleConnectWallet}
               loading={isConnecting}
@@ -102,13 +105,13 @@ const Navbar = ({ handleShowNav, showNav }: INavbar) => {
               Connect Wallet
             </Button>
             <div
-                className="dark:bg-[#1E1E1E] bg-white h-11 w-9 justify-center rounded-lg md:hidden flex items-center relative dark:text-white text-[#444444]"
-                role="button"
-                onClick={() => handleShowNav((prev: boolean) => !prev)}
-              >
-                {showNav ? <X /> : <Menu size={20} />}
-              </div>
+              className="dark:bg-[#1E1E1E] bg-white h-11 w-9 justify-center rounded-lg md:hidden flex items-center relative dark:text-white text-[#444444]"
+              role="button"
+              onClick={() => handleShowNav((prev: boolean) => !prev)}
+            >
+              {showNav ? <X /> : <Menu size={20} />}
             </div>
+          </div>
         )}
 
         {isDesktop && <ModeToggle />}
