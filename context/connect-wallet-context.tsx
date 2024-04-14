@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode, createContext, useEffect, useState } from 'react';
+import React, { ReactNode, createContext, useEffect, useState } from 'react';
 import {
   IN_FRAME,
   IS_MOBILE,
@@ -14,9 +14,9 @@ import {
 import ConfirmWalletDialog from './component/confirm-wallet';
 import ConfirmDisconnectWallet from './component/confirm-disconnect';
 import { useSearchParams } from 'next/navigation';
-import { HandleWalletFunction } from '@/libs/types';
+import { HandleWalletFunction, IConnectWalletContext } from '@/libs/types';
 
-export const ConnectWalletContext = createContext({});
+export const ConnectWalletContext = createContext<IConnectWalletContext>({ user: { address: '', isConnected: false }, isConnecting: false });
 
 interface IAppProvider {
   children: ReactNode;
@@ -154,7 +154,7 @@ export const ConnectWalletProvider = ({ children }: IAppProvider) => {
     setShowDisconnectModal(true);
   };
 
-  const value: any = {
+  const value = {
     handleConnectWallet,
     user,
     isConnecting,
@@ -164,7 +164,7 @@ export const ConnectWalletProvider = ({ children }: IAppProvider) => {
   return (
     <ConnectWalletContext.Provider value={value}>
       {isClient && (
-        <>
+        <React.Fragment>
           <ConfirmWalletDialog
             isScanningWallet={scanningForWallets}
             isConnecting={isConnecting}
@@ -182,7 +182,7 @@ export const ConnectWalletProvider = ({ children }: IAppProvider) => {
             defaultUser={defaultUser}
           />
           {children}
-        </>
+        </React.Fragment>
       )}
     </ConnectWalletContext.Provider>
   );

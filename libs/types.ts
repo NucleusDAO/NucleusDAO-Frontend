@@ -43,3 +43,16 @@ export type WalletScanningParams = {
   setWallets: React.Dispatch<React.SetStateAction<any[]>>;
   addDefaultWallet: () => void;
 };
+
+export interface IConnectWalletContext {
+  handleConnectWallet?: () => void;
+  user: {  address: string;
+    isConnected: boolean;}
+  isConnecting: boolean
+  handleDisconnect?: () => void;
+}
+
+export interface IUser {
+  address: string;
+  isConnected: boolean;
+}

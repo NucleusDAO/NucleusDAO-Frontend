@@ -9,4 +9,13 @@ const newFeatureSchema = z.object({
   image: z.string().optional(),
 });
 
-export { newFeatureSchema };
+const reportSchema = z.object({
+  email: z.string().email({ message: 'Enter a valid email' }),
+  bug: z.string().min(2, { message: 'Share your bug' }),
+  further_details: z
+    .string()
+    .min(2, { message: 'Further details is required' }),
+  image: z.string().optional(),
+});
+
+export { newFeatureSchema, reportSchema };
