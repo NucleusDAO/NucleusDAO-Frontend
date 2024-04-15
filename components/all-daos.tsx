@@ -8,17 +8,20 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useDebouncedCallback } from 'use-debounce';
 import { columns } from './dashboard/columns';
 import DaoCard from './dashboard/dao-cards';
-import { useContext } from 'react';
-import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import ConnectWalletCallToAction from './connect-wallet-cta';
+import { ReactNode } from 'react';
 
-const AllDaos = ({ dashboardTableData }: any) => {
+interface IAllDaos {
+  showDAO: boolean;
+  connectWalletDescription?: string;
+  dashboardTableData: (arg: number) => { organisation: string; orgIcon: ReactNode; description: string; votes: string; url: string; activeMember: string; activeProposal: string }[]
+}
+
+const AllDaos = ({ dashboardTableData, connectWalletDescription, showDAO }: IAllDaos) => {
   const searchParams = useSearchParams();
   const { replace } = useRouter();
   const pathname = usePathname();
   const currentView = searchParams.get('v') || '';
-  const { user } = useContext<any>(ConnectWalletContext);
-  const connected: boolean = user.isConnected;
 
   const handleView = useDebouncedCallback((term) => {
     console.log(`Searching... ${term}`);
@@ -80,7 +83,7 @@ const AllDaos = ({ dashboardTableData }: any) => {
       </div>
 
       <div className="min-h-[60vh] flex items-center justify-center">
-        {connected ? (
+        {showDAO ? (
           <div className="">
             {currentView === 'list' && (
               <DataTable columns={columns} data={dashboardTableData(28)} />
@@ -94,7 +97,7 @@ const AllDaos = ({ dashboardTableData }: any) => {
             )}
           </div>
         ) : (
-          <ConnectWalletCallToAction description="Connect your wallet to be able to see your DAOs" />
+          <ConnectWalletCallToAction description={connectWalletDescription || 'Connect your wallet to be able to see your DAOs'} />
         )}
       </div>
     </div>

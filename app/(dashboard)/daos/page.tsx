@@ -35,7 +35,7 @@ const Daos = () => {
           </Button>
         )}
       </div>
-      <AllDaos dashboardTableData={dashboardTableData} />
+      <AllDaos dashboardTableData={dashboardTableData} showDAO={true} />
     </div>
   );
 };
