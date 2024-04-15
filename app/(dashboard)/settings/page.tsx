@@ -1,10 +1,9 @@
-'use client'
-import Image from 'next/image';
-import WalletIcon from '@/assets/icons/roundedIcon.png';
+'use client';
 import { CopyIcon } from '@/assets/svgs';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import {CopyToClipboard} from 'react-copy-to-clipboard';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -18,8 +17,16 @@ import {
 import { Input } from '@/components/ui/input';
 import { editProfile } from '@/libs/validations/dao-schema';
 import { Textarea } from '@/components/ui/textarea';
+import { useContext } from 'react';
+import { ConnectWalletContext } from '@/context/connect-wallet-context';
+import { IConnectWalletContext } from '@/libs/types';
+import { toast } from 'sonner';
 
 const Profile = () => {
+  const {
+    user: { address, isConnected },
+  } = useContext<IConnectWalletContext>(ConnectWalletContext);
+
   const form = useForm<z.infer<typeof editProfile>>({
     resolver: zodResolver(editProfile),
     defaultValues: {
@@ -35,16 +42,28 @@ const Profile = () => {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-dark dark:text-white font-medium text-xl" role="heading">
+      <h2
+        className="text-dark dark:text-white font-medium text-xl"
+        role="heading"
+      >
         My Profile
       </h2>
       <div className="flex space-x-2 items-center">
-        <Image src={WalletIcon} alt="wallet" width={60} />
+        <img
+          src={`https://avatars.z52da5wt.xyz/${address}`}
+          alt="logo"
+          width={60}
+          className='rounded-full'
+        />
         <div className="space-y-2">
-          <p className="text-sm text-dark dark:text-white font-medium">9xfDAO...ntY897</p>
-          <div className="border border-[#444444] text-[#888888] p-2 rounded-lg flex space-x-2 text-sm">
-            <p>9xfDAO...ntY897</p> <CopyIcon />
-          </div>
+          <p className="text-sm text-dark dark:text-white font-medium">
+            9xfDAO...ntY897
+          </p>
+          <CopyToClipboard text={address} onCopy={() => toast.info('Address copied to clipboard!')}>
+            <div className="border border-[#444444] text-[#888888] p-2 rounded-lg flex space-x-2 text-sm">
+              <p>{address.slice(0, 12)}...</p> <CopyIcon className='cursor-pointer' />
+            </div>
+          </CopyToClipboard>
         </div>
       </div>
 

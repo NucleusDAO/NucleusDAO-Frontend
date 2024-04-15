@@ -46,7 +46,7 @@ const Steps = () => {
                 <div className={cn('h-8 w-[1px] md:block hidden bg-[#CCCCCC] dark:bg-[#444444] absolute left-4', (currentStepIndex > index || pathname === REVIEW_DAO_URL) && 'bg-primary')} />
                 )}
             </div>
-            <p className={cn('trans text-sm md:text-base', pathname.startsWith(step.url) ? 'dark:text-white text-[#292929]' : 'dark:text-[#444444] text-[#CCCCCC]')}>{step.title}</p>
+            <p className={cn('trans text-sm', pathname.startsWith(step.url) ? 'dark:text-white text-[#292929]' : 'dark:text-[#444444] text-[#CCCCCC]')}>{step.title}</p>
           </div>
         </Link>
       ))}
