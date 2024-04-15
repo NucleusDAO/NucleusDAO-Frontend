@@ -8,12 +8,17 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useDebouncedCallback } from 'use-debounce';
 import { columns } from './dashboard/columns';
 import DaoCard from './dashboard/dao-cards';
+import { useContext } from 'react';
+import { ConnectWalletContext } from '@/context/connect-wallet-context';
+import ConnectWalletCallToAction from './connect-wallet-cta';
 
 const AllDaos = ({ dashboardTableData }: any) => {
   const searchParams = useSearchParams();
   const { replace } = useRouter();
   const pathname = usePathname();
   const currentView = searchParams.get('v') || '';
+  const { user } = useContext<any>(ConnectWalletContext);
+  const connected: boolean = user.isConnected;
 
   const handleView = useDebouncedCallback((term) => {
     console.log(`Searching... ${term}`);
@@ -42,53 +47,55 @@ const AllDaos = ({ dashboardTableData }: any) => {
             className="flex space-x-2 dark:text-white text-dark border dark:border-[#292929] border-[#CCCCCC] px-2 py-1.5 rounded-lg items-center text-sm font-light"
             role="button"
           >
-            <ListFilter size={20} className='dark:text-[#B4B4B4] text-[#444444]' />
+            <ListFilter
+              size={20}
+              className="dark:text-[#B4B4B4] text-[#444444]"
+            />
             <p className="dark:text-white text-dark">Filter</p>
           </div>
-          <div className='flex justify-between space-x-4'>
-              <div
-                className={cn(
-                  'dark:text-[#B4B4B4] text-[#444444] border dark:border-[#292929] border-[#CCCCCC] px-1.5 py-1.5 rounded-lg trans',
-                  currentView === 'list' && 'dark:bg-[#1E1E1E] bg-white'
-                )}
-                role="button"
-                onClick={() => handleView('list')}
-              >
-                <List size={20} />
-              </div>
-              <div
-                className={cn(
-                  'dark:text-[#B4B4B4] text-[#444444] border dark:border-[#292929] border-[#CCCCCC] px-1.5 py-1.5 rounded-lg trans',
-                  (currentView === 'grid' || currentView === '') && 'dark:bg-[#1E1E1E] bg-white'
-                )}
-                role="button"
-                onClick={() => handleView('grid')}
-              >
-                <DashboardIcon size="20" />
-              </div>
+          <div className="flex justify-between space-x-4">
+            <div
+              className={cn(
+                'dark:text-[#B4B4B4] text-[#444444] border dark:border-[#292929] border-[#CCCCCC] px-1.5 py-1.5 rounded-lg trans',
+                currentView === 'list' && 'dark:bg-[#1E1E1E] bg-white'
+              )}
+              role="button"
+              onClick={() => handleView('list')}
+            >
+              <List size={20} />
+            </div>
+            <div
+              className={cn(
+                'dark:text-[#B4B4B4] text-[#444444] border dark:border-[#292929] border-[#CCCCCC] px-1.5 py-1.5 rounded-lg trans',
+                (currentView === 'grid' || currentView === '') &&
+                  'dark:bg-[#1E1E1E] bg-white'
+              )}
+              role="button"
+              onClick={() => handleView('grid')}
+            >
+              <DashboardIcon size="20" />
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="">
-        {/* <div className="text-center space-y-4">
-            <p className="text-sm font-light">
-              Connect your wallet to be able to see your DAOs
-            </p>
-            <Button>Connect Wallet</Button>
-          </div> */}
-        <div className="">
-          {currentView === 'list' && (
-            <DataTable columns={columns} data={dashboardTableData(28)} />
-          )}
-          {(currentView === 'grid' || currentView !== 'list') && (
-            <div className="grid md:grid-cols-2 gap-8">
-              {dashboardTableData(40).map((data: any) => (
-                <DaoCard key={data.activeMember} {...data} />
-              ))}
-            </div>
-          )}
-        </div>
+      <div className="min-h-[60vh] flex items-center justify-center">
+        {connected ? (
+          <div className="">
+            {currentView === 'list' && (
+              <DataTable columns={columns} data={dashboardTableData(28)} />
+            )}
+            {(currentView === 'grid' || currentView !== 'list') && (
+              <div className="grid md:grid-cols-2 gap-8">
+                {dashboardTableData(40).map((data: any) => (
+                  <DaoCard key={data.activeMember} {...data} />
+                ))}
+              </div>
+            )}
+          </div>
+        ) : (
+          <ConnectWalletCallToAction description="Connect your wallet to be able to see your DAOs" />
+        )}
       </div>
     </div>
   );

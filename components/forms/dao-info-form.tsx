@@ -20,13 +20,17 @@ import FormGroup from '../ui/form-group';
 import { useRouter } from 'next/navigation';
 import { DEFINE_MEMBERSHIP_URL } from '@/config/path';
 
-const DaoInfoForm = () => {
+interface IDaoInfoForm {
+  address: string;
+}
+
+const DaoInfoForm = ({ address }: IDaoInfoForm) => {
   const router = useRouter();
   const form = useForm<z.infer<typeof daoInfoSchema>>({
     resolver: zodResolver(daoInfoSchema),
     defaultValues: {
       daoName: '',
-      daoAddress: '0x9b16d8285b2ca2b8341a728a874bdeedc9383e92ecd91011964a4a40dea58099',
+      daoAddress: address,
       logo: '',
       about: '',
       socialMedia: [{ type: '', link: '' }],

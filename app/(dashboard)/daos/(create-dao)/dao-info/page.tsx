@@ -1,6 +1,12 @@
+'use client';
 import DaoInfoForm from "@/components/forms/dao-info-form";
+import { ConnectWalletContext } from "@/context/connect-wallet-context";
+import { IConnectWalletContext } from "@/libs/types";
+import { useContext } from "react";
 
 const DaoInfo = () => {
+  const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
+  const { address } = user;
   return (
     <div className="space-y-8">
       <div className="space-y-2">
@@ -11,7 +17,7 @@ const DaoInfo = () => {
           through a voting process.
         </p>
       </div>
-      <DaoInfoForm />
+      <DaoInfoForm address={address} />
     </div>
   );
 };

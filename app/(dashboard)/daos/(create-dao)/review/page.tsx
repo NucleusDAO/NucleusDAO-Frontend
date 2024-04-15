@@ -14,9 +14,14 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { DAO_URL } from '@/config/path';
+import { useContext } from 'react';
+import { ConnectWalletContext } from '@/context/connect-wallet-context';
+import { IConnectWalletContext } from '@/libs/types';
 
 const ReviewDao = () => {
   const router = useRouter();
+  const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
+  const { address } = user;
   return (
     <div className="space-y-8">
       <div className="space-y-2">
@@ -44,11 +49,11 @@ const ReviewDao = () => {
         </div>
         <div className="grid grid-cols-2 text-xs md:text-sm md:w-4/6">
           <p className="dark:text-white text-dark">DAO address</p>
-          <p className="text-defaultText">Https://www.Legacy.com</p>
+          <p className="text-defaultText">{address}</p>
         </div>
         <div className="grid grid-cols-2 text-xs md:text-sm md:w-4/6">
           <p className="dark:text-white text-dark">About</p>
-          <p className="text-defaultText">
+          <p className="text-defaultText w-[200%]">
             Legacy is a Decentralized Autonomous organization that aims to
             empower people and make the world a better place. Join us on our
             journey to a more decentralized future. Vote to contribute and

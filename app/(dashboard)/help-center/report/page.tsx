@@ -14,15 +14,17 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { newFeatureSchema } from '@/libs/validations/help-center-schema';
+import { newFeatureSchema, reportSchema } from '@/libs/validations/help-center-schema';
+import FormGroup from '@/components/ui/form-group';
 
 const Report = () => {
-  const form = useForm<z.infer<typeof newFeatureSchema>>({
-    resolver: zodResolver(newFeatureSchema),
+  const form = useForm<z.infer<typeof reportSchema>>({
+    resolver: zodResolver(reportSchema),
     defaultValues: {
       email: '',
-      idea: '',
+      bug: '',
       further_details: '',
+      image: ''
     },
   });
 
@@ -64,7 +66,7 @@ const Report = () => {
           />
           <FormField
             control={form.control}
-            name="idea"
+            name="bug"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>
@@ -90,6 +92,37 @@ const Report = () => {
                 </FormLabel>
                 <FormControl>
                   <Textarea placeholder="Explain bug" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+<FormField
+            control={form.control}
+            name="image"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  Feel free to include a drawing or image illustrating your idea
+                </FormLabel>
+                <FormControl>
+                  <FormGroup>
+                  <div
+                      className="bg-light dark:bg-[#1E1E1E] py-8 w-full rounded-lg text-center dark:text-white text-dark text-sm border-dashed dark:border-[#292929] border-[#CCCCCC99]"
+                      role="button"
+                    >
+                      <p>Drag and Drop file</p>
+                      <p>or</p>
+                      <p className='text-primary'>Browse</p>
+                    </div>
+                    <Input
+                      type="file"
+                      className="absolute h-full border-b border-0 rounded-none inset-0 cursor-pointer opacity-0"
+                      accept=".jpg, .jpeg, .png"
+                      {...field}
+                    />
+                  </FormGroup>
                 </FormControl>
                 <FormMessage />
               </FormItem>

@@ -50,7 +50,8 @@ const ConfirmWalletDialog = ({ ...props }: IConfirmWalletDialog) => {
           <DialogTitle className={cn('font-medium')}>
             {props.connectionError.type === 'denied' ? 'Connection Failed' : props.connectionError.type === 'timeout' ? 'Connection Timeout' :  'Connect Wallet'}
           </DialogTitle>
-          <DialogDescription className="font-light my-4 w-full text-dark dark:text-defaultText py-4">
+          <DialogDescription className="font-light my-4 w-full text-dark dark:text-defaultText py-4 space-y-3">
+            <p className='dark:text-defaultText text-dark'>Start by installing the Superhero Wallet browser extension on your preferred web browser.</p>
             {props.connectionError.type === 'denied' || props.connectionError.type === 'timeout' ? (
               <div className="text-center space-y-4">
                 <Image
@@ -67,7 +68,7 @@ const ConfirmWalletDialog = ({ ...props }: IConfirmWalletDialog) => {
                 </Button>
               </div>
             ) : (
-              <div className="p-2 border dark:border-[#292929] dark:bg-[#191919] rounded-lg w-full bg-white border-white">
+              <div className="p-2 border dark:border-[#292929] dark:bg-[#1E1E1E] rounded-lg w-full bg-white border-white">
                 {props.isScanningWallet ? (
                   <div className="flex items-center space-x-2 h-9">
                     <p>Scanning for wallet...</p>
@@ -80,13 +81,15 @@ const ConfirmWalletDialog = ({ ...props }: IConfirmWalletDialog) => {
                         key={wallet.info.id}
                         className="flex items-center justify-between space-x-2"
                       >
-                        <div className="flex items-center space-x-3 md:w-[40%]">
+                        <div className="flex items-center space-x-3 md:w-[60%]">
+                          <div className='p-2 dark:bg-white bg-light rounded-lg'>
                           <Image
                             src={SuperheroLogo}
                             alt={wallet.info.name}
-                            width={40}
+                            width={30}
                           />
-                          <h2 className="dark:text-white font-medium text-dark text-[14px] md:text-[18px]">
+                            </div>
+                          <h2 className="dark:text-white text-dark text-[14px] md:text-[18px]">
                             {wallet.info.name}
                             {wallet.info.name.includes('Wallet')
                               ? ''
