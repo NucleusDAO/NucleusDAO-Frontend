@@ -6,21 +6,21 @@ import KrypLogo from '@/assets/logos/kryp.png';
 import CocacolaLogo from '@/assets/logos/cocacola.png';
 import CreativesLogo from '@/assets/logos/creatives-dao.png';
 
-const dashboardFeedsData: { title: string; value: number; icon: ReactNode }[] =
+const dashboardFeedsData = (connected: boolean): { title: string; value: number; icon: ReactNode }[] =>
   [
     {
       title: 'DAOs Joined',
-      value: 10,
+      value: connected ? 10 : 0,
       icon: <DaoIcon size="34" />,
     },
     {
       title: 'Total Votes',
-      value: 223,
+      value: connected ? 223 : 0,
       icon: <DaoIcon size="34" />,
     },
     {
       title: 'Total Proposals',
-      value: 50,
+      value: connected ? 50 : 0,
       icon: <DaoIcon size="34" />,
     },
   ];

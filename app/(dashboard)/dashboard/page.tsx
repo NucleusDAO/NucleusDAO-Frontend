@@ -7,11 +7,14 @@ import {
 } from '@/components/dashboard/data';
 import { Button } from '@/components/ui/button';
 import { SELECT_DAO_STYLE_URL } from '@/config/path';
+import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
+import { useContext } from 'react';
 
 const Dashboard = () => {
-
+  const { user } = useContext<any>(ConnectWalletContext);
+  const connected: boolean = user.isConnected;
   return (
     <div className="space-y-8">
       <div className="flex justify-between items-center">
@@ -29,12 +32,12 @@ const Dashboard = () => {
       </div>
 
       <div className="gap-6 md:grid-cols-3 grid">
-        {dashboardFeedsData.map((feed) => (
+        {dashboardFeedsData(connected).map((feed) => (
           <Cards key={feed.title} {...feed} />
         ))}
       </div>
 
-      <AllDaos dashboardTableData={dashboardTableData} />
+      <AllDaos dashboardTableData={dashboardTableData} connectWalletDescription="Connect your wallet to be able to see your dashboard" showDAO={false} />
     </div>
   );
 };
