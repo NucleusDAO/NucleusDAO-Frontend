@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Button } from '../ui/button';
 import {
   Dialog,
@@ -11,13 +11,26 @@ import {
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { ConnectWalletContext } from '@/context/connect-wallet-context';
+import { IConnectWalletContext } from '@/libs/types';
+import { toast } from 'sonner';
 
 const VotingProcess = () => {
   const [selectedOption, setSelectedOption] = useState<string>('');
   const [showModal, setShowModal] = useState<boolean>(false);
+  const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
+  const connected: boolean = user.isConnected;
   const hasVoted: boolean = false;
 
   const votingOptions = ['yes', 'no'];
+
+  const handleOptionChange = (option: string) => {
+    if (connected) {
+      setSelectedOption(option)
+    } else {
+      toast.error('Connect to you wallet!')
+    }
+  }
 
   return (
     <div>
@@ -34,12 +47,12 @@ const VotingProcess = () => {
               defaultValue={selectedOption}
               value={selectedOption}
               key={option}
-              onValueChange={setSelectedOption}
+              onValueChange={() => handleOptionChange(option)}
               role="button"
             >
               <div
                 className="border dark:border-[#292929] p-4 rounded-lg items-center flex justify-between border-[#CCCCCC99]"
-                onClick={() => setSelectedOption(option)}
+                onClick={() => handleOptionChange(option)}
               >
                 <Label
                   htmlFor={option}

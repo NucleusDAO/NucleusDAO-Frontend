@@ -1,12 +1,12 @@
 'use client';
-import ConnectWalletCallToAction from '@/components/connect-wallet-cta';
 import EachFilterTab from '@/components/proposals/each-proposal-tab';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
+import { IConnectWalletContext } from '@/libs/types';
 import { useContext } from 'react';
 
 const Proposals = () => {
-  const { user } = useContext<any>(ConnectWalletContext);
+  const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const connected: boolean = user.isConnected;
   const tabs: { title: string; value: string }[] = [
     { title: 'All', value: '0' },
@@ -34,44 +34,23 @@ const Proposals = () => {
             </TabsTrigger>
           ))}
         </TabsList>
-        {connected ? (
-          <>
-            <TabsContent
-              value="0"
-              className="text-[#777777] text-sm font-light"
-            >
-              <EachFilterTab />
-            </TabsContent>
-            <TabsContent
-              value="1"
-              className="text-[#777777] text-sm font-light"
-            >
-              <EachFilterTab />
-            </TabsContent>
-            <TabsContent
-              value="2"
-              className="text-[#777777] text-sm font-light"
-            >
-              <EachFilterTab />
-            </TabsContent>
-            <TabsContent
-              value="3"
-              className="text-[#777777] text-sm font-light"
-            >
-              <EachFilterTab />
-            </TabsContent>
-            <TabsContent
-              value="4"
-              className="text-[#777777] text-sm font-light"
-            >
-              <EachFilterTab />
-            </TabsContent>
-          </>
-        ) : (
-          <div className='h-[65vh] flex items-center justify-center'>
-            <ConnectWalletCallToAction description="Connect your wallet to be able to see proposals" />
-          </div>
-        )}
+        <>
+          <TabsContent value="0" className="text-[#777777] text-sm font-light">
+            <EachFilterTab />
+          </TabsContent>
+          <TabsContent value="1" className="text-[#777777] text-sm font-light">
+            <EachFilterTab />
+          </TabsContent>
+          <TabsContent value="2" className="text-[#777777] text-sm font-light">
+            <EachFilterTab />
+          </TabsContent>
+          <TabsContent value="3" className="text-[#777777] text-sm font-light">
+            <EachFilterTab />
+          </TabsContent>
+          <TabsContent value="4" className="text-[#777777] text-sm font-light">
+            <EachFilterTab />
+          </TabsContent>
+        </>
       </Tabs>
     </div>
   );

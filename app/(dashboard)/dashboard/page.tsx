@@ -8,12 +8,13 @@ import {
 import { Button } from '@/components/ui/button';
 import { SELECT_DAO_STYLE_URL } from '@/config/path';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
+import { IConnectWalletContext } from '@/libs/types';
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
 import { useContext } from 'react';
 
 const Dashboard = () => {
-  const { user } = useContext<any>(ConnectWalletContext);
+  const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const connected: boolean = user.isConnected;
   return (
     <div className="space-y-8">

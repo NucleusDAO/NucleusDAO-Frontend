@@ -5,7 +5,6 @@ import { ModeToggle } from './themes/mode-toggle';
 import { Bell2 } from '@/assets/svgs';
 import Image from 'next/image';
 import { ChevronDown, Menu, UserRound, X } from 'lucide-react';
-
 import LogoIcon from '@/assets/icons/nucleusdao-purple.svg';
 import Link from 'next/link';
 import { DASHBOARD_URL } from '@/config/path';
@@ -14,6 +13,7 @@ import { useMediaQuery } from '@/hooks/use-media-query';
 import { useContext } from 'react';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import ConnectWalletPopOver from './connect-popover';
+import ViewNotificationPopover from './notification-popover';
 
 interface INavbar {
   handleShowNav: (arg: any) => void;
@@ -44,18 +44,7 @@ const Navbar = ({ handleShowNav, showNav }: INavbar) => {
 
         {connected ? (
           <div className="flex space-x-3 items-center">
-            <ConnectWalletPopOver
-              callToAction={
-                <div
-                  className="dark:bg-[#1E1E1E] bg-white h-11 w-12 justify-center rounded-lg flex items-center relative dark:text-white text-[#444444]"
-                  role="button"
-                >
-                  <div className="w-1.5 h-1.5 top-4 bg-[#DD3857] rounded-full absolute right-4" />
-                  <Bell2 />
-                </div>
-              }
-            />
-
+            <ViewNotificationPopover />
             <>
               <ConnectWalletPopOver
                 callToAction={
