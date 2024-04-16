@@ -38,7 +38,7 @@ const Dashboard = () => {
         ))}
       </div>
 
-      <AllDaos dashboardTableData={dashboardTableData} connectWalletDescription="Connect your wallet to be able to see your dashboard" showDAO={false} />
+      <AllDaos dashboardTableData={dashboardTableData} connectWalletDescription="Connect your wallet to be able to see your dashboard" showDAO={connected} />
     </div>
   );
 };
