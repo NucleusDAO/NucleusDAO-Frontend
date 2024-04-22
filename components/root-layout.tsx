@@ -5,8 +5,8 @@ import { Toaster as Sonner } from '@/components/ui/sonner';
 import Loading from '@/components/loading';
 import Sidebar from '@/components/side-bar/sidebar-links';
 import Navbar from '@/components/nav-bar';
-import { ConnectWalletProvider } from '@/context/connect-wallet-context';
 import { cn } from '@/libs/utils';
+import { AppContextProvider } from '@/context/app-context';
 
 interface IRootLayouts {
   children: React.ReactNode;
@@ -23,7 +23,7 @@ export const RootLayoutsComponent = ({ children }: IRootLayouts) => {
       disableTransitionOnChange
     >
       <Suspense fallback={<Loading />}>
-        <ConnectWalletProvider>
+        <AppContextProvider>
           <div className="max-w-[2000px] mx-auto relative">
             {showNav && (
               <div
@@ -47,7 +47,7 @@ export const RootLayoutsComponent = ({ children }: IRootLayouts) => {
               </div>
             </div>
           </div>
-        </ConnectWalletProvider>
+        </AppContextProvider>
       </Suspense>
       <Sonner richColors />
     </ThemeProvider>
