@@ -16,39 +16,39 @@ const Proposals = () => {
     { title: 'Failed', value: '4' },
   ];
   return (
-    <div className="space-y-8">
-      <div className="justify-between items-center flex">
+    <div className='space-y-8'>
+      <div className='justify-between items-center flex'>
         <h1
-          role="heading"
-          className="dark:text-white font-medium text-xl text-dark"
+          role='heading'
+          className='dark:text-white font-medium text-xl text-dark'
         >
           Proposals
         </h1>
       </div>
 
-      <Tabs defaultValue={tabs[0].value} className="w-full">
-        <TabsList className="w-full justify-start space-x-6 border-b-2 dark:border-b-[#292929] border-[#CCCCCC99]">
+      <Tabs defaultValue={tabs[0].value} className='w-full'>
+        <TabsList className='w-full justify-start space-x-6 border-b-2 dark:border-b-[#292929] border-[#CCCCCC99]'>
           {tabs.map((tab) => (
-            <TabsTrigger key={tab.title} value={tab.value} className="w-fit">
+            <TabsTrigger key={tab.title} value={tab.value} className='w-fit'>
               {tab.title}
             </TabsTrigger>
           ))}
         </TabsList>
         <>
-          <TabsContent value="0" className="text-[#777777] text-sm font-light">
-            <EachFilterTab />
+          <TabsContent value='0' className='text-[#777777] text-sm font-light'>
+            <EachFilterTab proposalData={[]} />
           </TabsContent>
-          <TabsContent value="1" className="text-[#777777] text-sm font-light">
-            <EachFilterTab />
+          <TabsContent value='1' className='text-[#777777] text-sm font-light'>
+            <EachFilterTab proposalData={[]} />
           </TabsContent>
-          <TabsContent value="2" className="text-[#777777] text-sm font-light">
-            <EachFilterTab />
+          <TabsContent value='2' className='text-[#777777] text-sm font-light'>
+            <EachFilterTab proposalData={[]} />
           </TabsContent>
-          <TabsContent value="3" className="text-[#777777] text-sm font-light">
-            <EachFilterTab />
+          <TabsContent value='3' className='text-[#777777] text-sm font-light'>
+            <EachFilterTab proposalData={[]} />
           </TabsContent>
-          <TabsContent value="4" className="text-[#777777] text-sm font-light">
-            <EachFilterTab />
+          <TabsContent value='4' className='text-[#777777] text-sm font-light'>
+            <EachFilterTab proposalData={[]} />
           </TabsContent>
         </>
       </Tabs>
