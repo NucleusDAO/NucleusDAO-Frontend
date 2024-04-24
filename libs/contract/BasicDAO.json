@@ -1,0 +1,150 @@
+[
+  { "namespace": { "name": "ListInternal", "typedefs": [] } },
+  { "namespace": { "name": "List", "typedefs": [] } },
+  { "namespace": { "name": "String", "typedefs": [] } },
+  { "namespace": { "name": "Pair", "typedefs": [] } },
+  {
+    "contract": {
+      "functions": [
+        {
+          "arguments": [
+            { "name": "_name", "type": "string" },
+            { "name": "_description", "type": "string" },
+            { "name": "_image", "type": "string" },
+            { "name": "_socials", "type": { "list": ["string"] } },
+            { "name": "_creator", "type": "address" },
+            { "name": "_initialMembers", "type": { "list": ["address"] } }
+          ],
+          "name": "init",
+          "payable": false,
+          "returns": "DAO.state",
+          "stateful": true
+        },
+        {
+          "arguments": [],
+          "name": "getInfo",
+          "payable": false,
+          "returns": "DAO.info",
+          "stateful": false
+        },
+        {
+          "arguments": [],
+          "name": "getProposals",
+          "payable": false,
+          "returns": { "list": ["DAO.proposal"] },
+          "stateful": false
+        },
+        {
+          "arguments": [],
+          "name": "getActiveProposals",
+          "payable": false,
+          "returns": { "list": ["DAO.proposal"] },
+          "stateful": false
+        },
+        {
+          "arguments": [{ "name": "id", "type": "int" }],
+          "name": "getProposal",
+          "payable": false,
+          "returns": "DAO.proposal",
+          "stateful": false
+        },
+        {
+          "arguments": [{ "name": "account", "type": "address" }],
+          "name": "isMember",
+          "payable": false,
+          "returns": "bool",
+          "stateful": false
+        },
+        {
+          "arguments": [
+            { "name": "_proposalType", "type": "string" },
+            { "name": "_description", "type": "string" },
+            { "name": "_value", "type": "int" },
+            { "name": "_target", "type": "address" }
+          ],
+          "name": "createProposal",
+          "payable": false,
+          "returns": "int",
+          "stateful": true
+        },
+        {
+          "arguments": [{ "name": "proposalId", "type": "int" }],
+          "name": "voteFor",
+          "payable": false,
+          "returns": { "tuple": [] },
+          "stateful": true
+        },
+        {
+          "arguments": [{ "name": "proposalId", "type": "int" }],
+          "name": "voteAgainst",
+          "payable": false,
+          "returns": { "tuple": [] },
+          "stateful": true
+        },
+        {
+          "arguments": [{ "name": "proposalId", "type": "int" }],
+          "name": "executeProposal",
+          "payable": false,
+          "returns": { "tuple": [] },
+          "stateful": true
+        }
+      ],
+      "kind": "contract_main",
+      "name": "DAO",
+      "payable": false,
+      "state": {
+        "record": [
+          { "name": "name", "type": "string" },
+          { "name": "description", "type": "string" },
+          { "name": "image", "type": "string" },
+          { "name": "socials", "type": { "list": ["string"] } },
+          { "name": "votingTime", "type": "int" },
+          { "name": "quorum", "type": "int" },
+          { "name": "proposals", "type": { "map": ["int", "DAO.proposal"] } },
+          { "name": "totalProposals", "type": "int" },
+          { "name": "members", "type": { "list": ["address"] } }
+        ]
+      },
+      "typedefs": [
+        {
+          "name": "proposal",
+          "typedef": {
+            "record": [
+              { "name": "id", "type": "int" },
+              { "name": "proposer", "type": "address" },
+              { "name": "proposalType", "type": "string" },
+              { "name": "description", "type": "string" },
+              { "name": "value", "type": "int" },
+              { "name": "target", "type": "address" },
+              { "name": "endTime", "type": "int" },
+              { "name": "votesFor", "type": "int" },
+              { "name": "votesAgainst", "type": "int" },
+              { "name": "isExecuted", "type": "bool" },
+              { "name": "hasVoted", "type": { "map": ["address", "bool"] } }
+            ]
+          },
+          "vars": []
+        },
+        {
+          "name": "info",
+          "typedef": {
+            "record": [
+              { "name": "name", "type": "string" },
+              { "name": "description", "type": "string" },
+              { "name": "contractAddress", "type": "DAO" },
+              { "name": "account", "type": "address" },
+              { "name": "image", "type": "string" },
+              { "name": "socials", "type": { "list": ["string"] } },
+              { "name": "quorum", "type": "int" },
+              { "name": "votingTime", "type": "int" },
+              { "name": "members", "type": { "list": ["address"] } },
+              { "name": "proposals", "type": "int" },
+              { "name": "activeProposals", "type": "int" }
+            ]
+          },
+          "vars": []
+        }
+      ]
+    }
+  }
+]
