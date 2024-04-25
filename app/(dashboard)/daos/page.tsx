@@ -1,6 +1,7 @@
 'use client';
 
 import AllDaos from '@/components/all-daos';
+import DaoLoading from '@/components/loading/dao-loading';
 import { Button } from '@/components/ui/button';
 import { SELECT_DAO_STYLE_URL } from '@/config/path';
 import { AppContext } from '@/context/app-context';
@@ -8,16 +9,13 @@ import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { IConnectWalletContext } from '@/libs/types';
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import { toast } from 'sonner';
-import Loading from './loading';
 
 const Daos = () => {
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
-  const { DAOs } = useContext(AppContext);
-  const [DAOsData, setDAOsData] = useState([]);
+  const { DAOsData, daoLoading } = useContext(AppContext);
   const connected: boolean = user.isConnected;
-  const [loading, setLoading] = useState<boolean>(true);
 
   const getDAOsData = (width: number) => {
     return DAOsData?.map((dao: any) => {
@@ -34,28 +32,7 @@ const Daos = () => {
     });
   };
 
-  useEffect(() => {
-    if (DAOs) {
-      setDAOsData(
-        DAOs.map((dao: any) => {
-          return {
-            organisation: dao.name,
-            image: dao.image,
-            activeMember: dao.members.length.toString(),
-            activeProposal: `${dao.proposals}(${dao.activeProposals})`,
-            description: dao.description,
-            votes: '',
-            url: `https://nucleusdao.com/dao/${dao.name
-              .toLowerCase()
-              .replace(/\s/g, '-')}`,
-          };
-        })
-      );
-      setLoading(false);
-    }
-  }, [DAOs]);
-
-  if (loading) return <Loading />;
+  if (daoLoading) return <DaoLoading />;
 
   return (
     <div className="space-y-2 min-h-[80vh]">
