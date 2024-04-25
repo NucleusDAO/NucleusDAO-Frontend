@@ -11,11 +11,15 @@ import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { IConnectWalletContext } from '@/libs/types';
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
+import Loading from './loading';
 
 const Dashboard = () => {
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const connected: boolean = user.isConnected;
+  const [loading, setLoading] = useState<boolean>(false);
+
+  if (loading) return <Loading />;
   return (
     <div className="space-y-8">
       <div className="flex justify-between items-center">

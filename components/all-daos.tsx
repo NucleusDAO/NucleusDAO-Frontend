@@ -94,7 +94,7 @@ const AllDaos: any = ({
         </div>
       </div>
 
-      <div className="min-h-[60vh]">
+      <div className="">
         {showDAO ? (
           <div className="w-full">
             {currentView === 'list' && (
@@ -109,7 +109,7 @@ const AllDaos: any = ({
             )}
           </div>
         ) : (
-          <div className=" flex items-center justify-center">
+          <div className=" flex items-center justify-center min-h-[40vh]">
             <ConnectWalletCallToAction
               description={
                 connectWalletDescription ||

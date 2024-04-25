@@ -49,7 +49,7 @@ const DaoCard = ({
               <PeopleIcon />
               <p className="dark:text-white text-dark">
                 {activeMember}
-                <span className="text-defaultText ml-2 text-sm">Members</span>
+                <span className="text-defaultText ml-2 text-sm">{Number(activeMember) > 1 ? 'Members' : 'Member'}</span>
               </p>
             </div>
 

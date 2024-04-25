@@ -58,7 +58,7 @@ const Daos = () => {
   if (loading) return <Loading />;
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 min-h-[80vh]">
       <div className="flex justify-between items-center">
         <h1
           role="heading"
