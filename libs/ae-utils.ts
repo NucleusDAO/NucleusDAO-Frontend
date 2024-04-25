@@ -7,6 +7,12 @@ import {
 } from '@aeternity/aepp-sdk';
 import { ConnectWalletParams, WalletConnection } from './types';
 
+import nucleusDAOAci from './contract/NucleusDAO.json';
+import basicDAOAci from './contract/BasicDAO.json';
+
+const nucleusDAOContractAddress =
+  'ct_2nKgdeCv9dnLBHCEscVduQzRc8CLjJhh8uJb98az5hhQ8SJS5q';
+
 const TESTNET_NODE_URL = 'https://testnet.aeternity.io';
 const MAINNET_NODE_URL = 'https://mainnet.aeternity.io';
 const COMPILER_URL = 'https://compiler.aepps.com';
@@ -28,16 +34,18 @@ export const aeSdk: any = new AeSdkAepp({
   onDisconnect: () => console.log('Aepp is disconnected'),
 });
 
-
 export const detectWallets = async () => {
-    const connection = new BrowserWindowMessageConnection();
-    return new Promise<WalletConnection>((resolve, reject) => {
-      const stopDetection = walletDetector(connection, async ({ newWallet }: any) => {
+  const connection = new BrowserWindowMessageConnection();
+  return new Promise<WalletConnection>((resolve, reject) => {
+    const stopDetection = walletDetector(
+      connection,
+      async ({ newWallet }: any) => {
         stopDetection();
         resolve(newWallet.getConnection());
-      });
-    });
-}
+      }
+    );
+  });
+};
 
 interface DeepLinkParams {
   type: string;
@@ -45,7 +53,11 @@ interface DeepLinkParams {
   [key: string]: string | undefined; // Allow any additional parameters as strings
 }
 
-export const createDeepLinkUrl = ({ type, callbackUrl, ...params }: DeepLinkParams): URL => {
+export const createDeepLinkUrl = ({
+  type,
+  callbackUrl,
+  ...params
+}: DeepLinkParams): URL => {
   const url = new URL(`${process.env.NEXT_PUBLIC_WALLET_URL}/${type}`);
 
   if (callbackUrl) {
@@ -60,19 +72,33 @@ export const createDeepLinkUrl = ({ type, callbackUrl, ...params }: DeepLinkPara
   return url;
 };
 
+export const IN_FRAME =
+  typeof window !== 'undefined' && window.parent !== window;
+export const IS_MOBILE =
+  typeof window !== 'undefined' && window.navigator.userAgent.includes('Mobi');
+export const isSafariBrowser = () =>
+  navigator.userAgent.includes('Safari') &&
+  !navigator.userAgent.includes('Chrome');
 
-export const IN_FRAME = typeof window !== 'undefined' && window.parent !== window;
-export const IS_MOBILE = typeof window !== 'undefined' && window.navigator.userAgent.includes('Mobi');
-export const isSafariBrowser = () => navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome');
+export const resolveWithTimeout = (timeout: number, callback: any) =>
+  Promise.race([
+    callback(),
+    new Promise((resolve, reject) =>
+      setTimeout(() => {
+        reject(new Error(`Promise TIMEOUT after ${timeout} ms`));
+      }, timeout)
+    ),
+  ]);
 
-export const resolveWithTimeout = (timeout: number, callback: any) => Promise.race([
-  callback(),
-  new Promise((resolve, reject) => setTimeout(() => {
-    reject(new Error(`Promise TIMEOUT after ${timeout} ms`));
-  }, timeout)),
-]);
-
-export const connectWallet = async ({setConnectingToWallet, setEnableIFrameWallet,  setUser, address, setConnectionError, setOpenModal, walletObj = { info: { name: '', type: '' } }}: ConnectWalletParams) => {
+export const connectWallet = async ({
+  setConnectingToWallet,
+  setEnableIFrameWallet,
+  setUser,
+  address,
+  setConnectionError,
+  setOpenModal,
+  walletObj = { info: { name: '', type: '' } },
+}: ConnectWalletParams) => {
   setConnectingToWallet(true);
 
   if ((IS_MOBILE || isSafariBrowser()) && !IN_FRAME) {
@@ -82,7 +108,9 @@ export const connectWallet = async ({setConnectingToWallet, setEnableIFrameWalle
     }
     const addressDeepLink = createDeepLinkUrl({
       type: 'address',
-      'x-success': `${window.location.href.split('?')[0]}?address={address}&networkId={networkId}`,
+      'x-success': `${
+        window.location.href.split('?')[0]
+      }?address={address}&networkId={networkId}`,
       'x-cancel': window.location.href.split('?')[0],
     });
     if (typeof window !== 'undefined') {
@@ -91,8 +119,9 @@ export const connectWallet = async ({setConnectingToWallet, setEnableIFrameWalle
   } else {
     try {
       await resolveWithTimeout(30000, async () => {
-        const webWalletTimeout = IS_MOBILE ? 0
-        : setTimeout(() => setEnableIFrameWallet(true), 15000);
+        const webWalletTimeout = IS_MOBILE
+          ? 0
+          : setTimeout(() => setEnableIFrameWallet(true), 15000);
 
         let resolve: any = null;
         let rejected = (e: any) => {
@@ -102,20 +131,24 @@ export const connectWallet = async ({setConnectingToWallet, setEnableIFrameWalle
 
         const connectWallet = async (wallet: any) => {
           try {
-            const { networkId } = await aeSdk.connectToWallet(wallet.getConnection());
+            const { networkId } = await aeSdk.connectToWallet(
+              wallet.getConnection()
+            );
             const ret = await aeSdk.subscribeAddress('subscribe', 'connected');
-            const { address: { current } } = ret;
+            const {
+              address: { current },
+            } = ret;
             const currentAccountAddress = Object.keys(current)[0];
             if (!currentAccountAddress) return;
             stopScan?.();
-            const user = { address: currentAccountAddress, isConnected: true }
+            const user = { address: currentAccountAddress, isConnected: true };
             setUser(user);
             localStorage.setItem('user', JSON.stringify(user));
             resolve?.(currentAccountAddress);
-            setOpenModal(false)
+            setOpenModal(false);
           } catch (e) {
             if (!(e instanceof RpcRejectedByUserError)) {
-              alert('error occured')
+              alert('error occured');
             }
             rejected(e);
           }
@@ -125,7 +158,7 @@ export const connectWallet = async ({setConnectingToWallet, setEnableIFrameWalle
         } else {
           const handleWallet = async ({ wallets }: any) => {
             const detectedWalletObject = Object.values(wallets).find(
-              (wallet: any) => wallet.info.name === walletObj.info.name,
+              (wallet: any) => wallet.info.name === walletObj.info.name
             );
             if (!detectedWalletObject) return;
             clearInterval(webWalletTimeout);
@@ -142,10 +175,32 @@ export const connectWallet = async ({setConnectingToWallet, setEnableIFrameWalle
       });
     } catch (error) {
       if (walletObj.info.name === 'Superhero') {
-        setConnectionError({ type: 'denied', message: 'Login with your wallet has failed. Please make sure that you are logged into your wallet.' });
+        setConnectionError({
+          type: 'denied',
+          message:
+            'Login with your wallet has failed. Please make sure that you are logged into your wallet.',
+        });
       } else {
-        setConnectionError({ type: 'timeout', message: `Connection to ${walletObj.info.name} has been timeout, please try again later.` });
+        setConnectionError({
+          type: 'timeout',
+          message: `Connection to ${walletObj.info.name} has been timeout, please try again later.`,
+        });
       }
     }
   }
-}
+};
+
+export const getNucleusDAO = async () => {
+  const contract = await aeSdk.initializeContract({
+    aci: nucleusDAOAci,
+    address: nucleusDAOContractAddress,
+  });
+  return contract;
+};
+
+export const getBasicDAO = async (DAOAddress: string) => {
+  return await aeSdk.initializeContract({
+    aci: basicDAOAci,
+    address: DAOAddress,
+  });
+};
