@@ -11,7 +11,7 @@ import { useState } from 'react';
 
 const GovernanceSettings = () => {
     const [days, setDays] = useState<number|string>();
-    const [quorum, setQuorum] = useState<number|string>();
+    const [quorum, setQuorum] = useState<number|string>(50);
 
     const router = useRouter();
 
@@ -33,7 +33,7 @@ const GovernanceSettings = () => {
             Any wallet can create proposals
           </label>
         </div>
-        <Checkbox className="rounded-full" id="any-wallet" />
+        <Checkbox className="rounded-full" defaultChecked id="any-wallet" />
       </div>
 
       <div>
@@ -58,7 +58,7 @@ const GovernanceSettings = () => {
             <p className='text-defaultText text-sm'>Proposal approval requires a majority ‘Yes’ votes from participating wallets, surpassing a predefined threshold.</p>
         </div>
       <div className='space-y-3'>
-                <label className='dark:text-white text-dark font-light text-sm mt-4'>Quorum</label>
+                <label className='dark:text-white text-dark font-light text-sm mt-4'>Quorum (%)</label>
         <div className='grid md:grid-cols-2 gap-6 md:gap-12 items-center'>
             <div>
                 <div className='border border-[#CCCCCC99] dark:border-[#292929] flex items-center justify-between rounded-lg py-1 px-5 dark:text-defaultText text-dark'>
@@ -68,7 +68,7 @@ const GovernanceSettings = () => {
                 </div>
             </div>
             <div className='flex space-x-3'>
-                <Checkbox id="proposalCheck" className='rounded-full border-[#5BE950] data-[state=checked]:bg-[#5BE950]' /> 
+                <Checkbox id="proposalCheck" checked={Number(quorum) > 50} className='rounded-full border-[#5BE950] data-[state=checked]:bg-[#5BE950]' /> 
                 <label htmlFor='proposalCheck' className='text-dark dark:text-[#FFF] text-sm font-light'>Proposal will be approved by many</label>
             </div>
         </div>
