@@ -24,7 +24,7 @@ const DaoCard = ({
   return (
     <div className="dark:bg-[#191919] bg-white p-5 rounded-lg space-y-7">
       <div className="flex space-x-4 items-center pb-7">
-        <div>{orgIcon}</div>
+        <div className=''>{orgIcon}</div>
         <div className="space-y-1">
           <Link href={encodeURI(VIEW_DAO_URL, organisation, 'dashboard')}>
             <h3 className="dark:text-white text-dark font-medium text-[22px]">

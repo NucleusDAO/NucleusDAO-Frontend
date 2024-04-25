@@ -47,7 +47,7 @@ export const encodeURI = (originalURI: string, keyValuePairs: string, otherKeyPa
   const fullUrl = `${originalURI}/${encodeURIComponent(keyValuePairs)}${otherKeyPairs ? `/${otherKeyPairs}` : ''}`;
 
   // Replace %20 and spaces with +, make the string lowercase
-  const modifiedUrl = fullUrl.replace(/(%20|\s)/g, '+');
+  const modifiedUrl = fullUrl.replace(/(%20|\s)/g, '-');
 
   return modifiedUrl;
 };
