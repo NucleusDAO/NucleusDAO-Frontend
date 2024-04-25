@@ -1,6 +1,6 @@
 import { Skeleton } from '@/components/ui/skeleton';
 
-const Loading = () => {
+const DaoLoading = () => {
   return (
     <div>
       <div className="flex items-center justify-between mb-8">
@@ -31,4 +31,4 @@ const Loading = () => {
   );
 };
 
-export default Loading;
+export default DaoLoading;

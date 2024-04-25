@@ -94,6 +94,12 @@ const AllDaos: any = ({
         </div>
       </div>
 
+      {dashboardTableData(0).length === 0 && showDAO && (
+        <div className="h-[40vh] flex items-center justify-center">
+          <p>You do not have an active DAO currently</p>
+        </div>
+      )}
+
       <div className="">
         {showDAO ? (
           <div className="w-full">
