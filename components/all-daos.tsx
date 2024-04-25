@@ -14,9 +14,7 @@ import { ReactNode } from 'react';
 interface IAllDaos {
   showDAO: boolean;
   connectWalletDescription?: string;
-  dashboardTableData: (
-    arg: number
-  ) => {
+  dashboardTableData: (arg: number) => {
     organisation: string;
     orgIcon: ReactNode;
     description: string;
@@ -27,7 +25,7 @@ interface IAllDaos {
   }[];
 }
 
-const AllDaos = ({
+const AllDaos: any = ({
   dashboardTableData,
   connectWalletDescription,
   showDAO,
@@ -50,33 +48,33 @@ const AllDaos = ({
     replace(`${pathname}?${params.toString()}`);
   }, 300);
   return (
-    <div className='space-y-3'>
-      <div className='border-b dark:border-b-[#292929] border-b-[#CCCCCC99] pb-6 pt-4 md:flex justify-between items-center space-y-4 md:space-y-0'>
-        <div className='relative md:w-[40%]'>
+    <div className="space-y-3">
+      <div className="border-b dark:border-b-[#292929] border-b-[#CCCCCC99] pb-6 pt-4 md:flex justify-between items-center space-y-4 md:space-y-0">
+        <div className="relative md:w-[40%]">
           <SearchInput
-            placeholder='Search by organization name'
-            classNames='pl-10'
-            queryKey='search'
+            placeholder="Search by organization name"
+            classNames="pl-10"
+            queryKey="search"
           />
         </div>
-        <div className='flex space-x-3 justify-between md:justify-start'>
+        <div className="flex space-x-3 justify-between md:justify-start">
           <div
-            className='flex space-x-2 dark:text-white text-dark border dark:border-[#292929] border-[#CCCCCC] px-2 py-1.5 rounded-lg items-center text-sm font-light'
-            role='button'
+            className="flex space-x-2 dark:text-white text-dark border dark:border-[#292929] border-[#CCCCCC] px-2 py-1.5 rounded-lg items-center text-sm font-light"
+            role="button"
           >
             <ListFilter
               size={20}
-              className='dark:text-[#B4B4B4] text-[#444444]'
+              className="dark:text-[#B4B4B4] text-[#444444]"
             />
-            <p className='dark:text-white text-dark'>Filter</p>
+            <p className="dark:text-white text-dark">Filter</p>
           </div>
-          <div className='flex justify-between space-x-4'>
+          <div className="flex justify-between space-x-4">
             <div
               className={cn(
                 'dark:text-[#B4B4B4] text-[#444444] border dark:border-[#292929] border-[#CCCCCC] px-1.5 py-1.5 rounded-lg trans',
                 currentView === 'list' && 'dark:bg-[#1E1E1E] bg-white'
               )}
-              role='button'
+              role="button"
               onClick={() => handleView('list')}
             >
               <List size={20} />
@@ -87,23 +85,23 @@ const AllDaos = ({
                 (currentView === 'grid' || currentView === '') &&
                   'dark:bg-[#1E1E1E] bg-white'
               )}
-              role='button'
+              role="button"
               onClick={() => handleView('grid')}
             >
-              <DashboardIcon size='20' />
+              <DashboardIcon size="20" />
             </div>
           </div>
         </div>
       </div>
 
-      <div className='min-h-[60vh] flex items-center justify-center'>
+      <div className="">
         {showDAO ? (
-          <div className=''>
+          <div className="w-full">
             {currentView === 'list' && (
               <DataTable columns={columns} data={dashboardTableData(28)} />
             )}
             {(currentView === 'grid' || currentView !== 'list') && (
-              <div className='grid md:grid-cols-2 gap-8'>
+              <div className="grid md:grid-cols-2 gap-8">
                 {dashboardTableData(40).map((data: any) => (
                   <DaoCard key={data.activeMember} {...data} />
                 ))}
@@ -111,12 +109,14 @@ const AllDaos = ({
             )}
           </div>
         ) : (
-          <ConnectWalletCallToAction
-            description={
-              connectWalletDescription ||
-              'Connect your wallet to be able to see your DAOs'
-            }
-          />
+          <div className=" flex items-center justify-center min-h-[40vh]">
+            <ConnectWalletCallToAction
+              description={
+                connectWalletDescription ||
+                'Connect your wallet to be able to see your DAOs'
+              }
+            />
+          </div>
         )}
       </div>
     </div>
