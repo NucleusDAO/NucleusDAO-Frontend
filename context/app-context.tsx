@@ -41,7 +41,6 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const [allDAOs, setAllDAOs] = useState<any[]>();
   const [currentDAO, setCurrentDAO] = useState<IDAO | null>(null);
-  const [currentDAOId, setCurrentDAOId] = useState<string | null>(null);
   const [daoLoading, setDaoLoading] = useState<boolean>(true);
   const [DAOsData, setDAOsData] = useState<any[]>([]);
   const [newDaoInfo, setNewDaoInfo] = useState<InewDaoInfo>(defaultDaoCreation);
@@ -54,15 +53,6 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
       setNewDaoInfo(JSON.parse(getNewDaoInfo));
     }
   }, []);
-
-  useEffect(() => {
-    console.log('Current dao id updated', currentDAOId);
-    if (currentDAOId) {
-      getDAO(currentDAOId).then((dao: IDAO) => {
-        setCurrentDAO(dao);
-      });
-    }
-  }, [currentDAOId]);
 
   const getAllDaos = async () => {
     return getDAOs().then((res: any) => {
@@ -167,7 +157,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     return daos;
   };
 
-  const getDAO = async (id: string) => {
+  const getEachDAO = async (id: string) => {
     const contract = await getNucleusDAO();
     const res = await contract.getDAO(id);
     const dao = res.decodedResult;
@@ -177,14 +167,15 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
   const value = {
     // DAOs,
     createDAO,
-    setCurrentDAOId,
     currentDAO,
+    setCurrentDAO,
     createProposal,
     getProposals,
     daoLoading,
     DAOsData,
     updateNewDaoInfo,
-    newDaoInfo
+    newDaoInfo,
+    getEachDAO
   };
 
   return (

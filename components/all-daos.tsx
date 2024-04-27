@@ -34,6 +34,7 @@ const AllDaos: any = ({
   const { replace } = useRouter();
   const pathname = usePathname();
   const currentView = searchParams.get('v') || '';
+  const currentSearch = searchParams.get('search');
 
   const handleView = useDebouncedCallback((term) => {
     console.log(`Searching... ${term}`);
@@ -47,6 +48,7 @@ const AllDaos: any = ({
     }
     replace(`${pathname}?${params.toString()}`);
   }, 300);
+
   return (
     <div className="space-y-3">
       <div className="border-b dark:border-b-[#292929] border-b-[#CCCCCC99] pb-6 pt-4 md:flex justify-between items-center space-y-4 md:space-y-0">
@@ -94,12 +96,6 @@ const AllDaos: any = ({
         </div>
       </div>
 
-      {dashboardTableData(0).length === 0 && showDAO && (
-        <div className="h-[40vh] flex items-center justify-center">
-          <p>You do not have an active DAO currently</p>
-        </div>
-      )}
-
       <div className="">
         {showDAO ? (
           <div className="w-full">
@@ -107,11 +103,18 @@ const AllDaos: any = ({
               <DataTable columns={columns} data={dashboardTableData(28)} />
             )}
             {(currentView === 'grid' || currentView !== 'list') && (
+              <>
+              {dashboardTableData(0).length === 0 && showDAO && (
+                <div className="h-[40vh] flex items-center justify-center">
+                  <p>{currentSearch ? 'Search could not found' : 'You do not have an active DAO currently'}</p>
+                </div>
+              )}
               <div className="grid md:grid-cols-2 gap-8">
                 {dashboardTableData(40).map((data: any) => (
                   <DaoCard key={data.activeMember} {...data} />
                 ))}
               </div>
+              </>
             )}
           </div>
         ) : (
