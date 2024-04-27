@@ -13,6 +13,9 @@ import { Button } from '@/components/ui/button';
 import RoundedIcon from '@/assets/icons/roundedIcon.png';
 import Link from 'next/link';
 import { CREATE_PROPOSAL_URL } from '@/config/path';
+import { useContext } from 'react';
+import { ConnectWalletContext } from '@/context/connect-wallet-context';
+import { IConnectWalletContext } from '@/libs/types';
 
 const columns: {
   accessorKey: string;
@@ -57,32 +60,37 @@ export const WalletAddressCell = ({ row }: any) => {
 };
 
 export const ActionCell = ({ row }: any) => {
+  const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
+  const { isConnected } = user;
   const { id } = row.original;
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button
-          className="bg-[#1E1E1E] hover:bg-[#262626] text-white"
-          size="sm"
-        >
-          Delete
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="dark:bg-[#191919] bg-light">
-        <DialogHeader>
-          <DialogTitle className="dark:text-white font-medium py-3 text-dark">
-            Remove Member
-          </DialogTitle>
-          <DialogDescription className="font-light py-2">
-            You have to make a proposal before you can remove members from the
-            DAO. Do you want to make a proposal now?
-          </DialogDescription>
-        </DialogHeader>
+    <>
+    {isConnected ?       <Dialog>
+        <DialogTrigger asChild>
 
-        <Link href={CREATE_PROPOSAL_URL}>
-          <Button className="w-full">Propose</Button>
-        </Link>
-      </DialogContent>
-    </Dialog>
+            <Button
+              className="bg-[#1E1E1E] hover:bg-[#262626] text-white"
+              size="sm"
+            >
+              Delete
+            </Button>
+        </DialogTrigger>
+        <DialogContent className="dark:bg-[#191919] bg-light">
+          <DialogHeader>
+            <DialogTitle className="dark:text-white font-medium py-3 text-dark">
+              Remove Member
+            </DialogTitle>
+            <DialogDescription className="font-light py-2">
+              You have to make a proposal before you can remove members from the
+              DAO. Do you want to make a proposal now?
+            </DialogDescription>
+          </DialogHeader>
+
+          <Link href={CREATE_PROPOSAL_URL}>
+            <Button className="w-full">Propose</Button>
+          </Link>
+        </DialogContent>
+      </Dialog> : '-'}
+    </>
   );
 };

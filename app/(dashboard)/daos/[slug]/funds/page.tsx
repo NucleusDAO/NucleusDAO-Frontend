@@ -1,11 +1,17 @@
+'use client'
 import { CopyIcon } from '@/assets/svgs';
 import DataTable from '@/components/data-table';
 import { Button } from '@/components/ui/button';
 import { ChevronUp } from 'lucide-react';
 import { columns } from './columns';
 import { data } from './data';
+import { IConnectWalletContext } from '@/libs/types';
+import { ConnectWalletContext } from '@/context/connect-wallet-context';
+import { useContext } from 'react';
 
 const EachDaoFunds = () => {
+  const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
+  const { isConnected } = user;
   return (
     <div className="space-y-4">
       {data.length === 0 ? (
@@ -14,7 +20,7 @@ const EachDaoFunds = () => {
             Currently, there are no funds in the treasury. You can initiate a
             proposal to make deposit.
           </p>
-          <Button>Deposit Token</Button>
+          {isConnected && <Button>Deposit Token</Button>}
         </div>
       ) : (
         <>
@@ -36,7 +42,7 @@ const EachDaoFunds = () => {
                   </p>
                 </div>
               </div>
-              <Button>Deposit Token</Button>
+              {isConnected && <Button>Deposit Token</Button>}
             </div>
             <div className="flex space-x-1.5 font-light text-xs">
               <p className="dark:text-white font-normal text-dark">

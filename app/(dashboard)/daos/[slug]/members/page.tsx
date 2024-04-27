@@ -16,6 +16,8 @@ import Link from 'next/link';
 import { CREATE_PROPOSAL_URL } from '@/config/path';
 import { useContext, useEffect, useState } from 'react';
 import { AppContext } from '@/context/app-context';
+import { ConnectWalletContext } from '@/context/connect-wallet-context';
+import { IConnectWalletContext } from '@/libs/types';
 
 interface IData {
   wallet: string;
@@ -25,6 +27,8 @@ interface IData {
 
 const EachDaoMembers = () => {
   const { currentDAO } = useContext(AppContext);
+  const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
+  const { isConnected } = user;
   const [data, setData] = useState<IData[]>([]);
 
   useEffect(() => {
@@ -49,7 +53,7 @@ const EachDaoMembers = () => {
         </h1>
         <Dialog>
           <DialogTrigger asChild>
-            <Button>Add Member</Button>
+            {isConnected && <Button>Add Member</Button>}
           </DialogTrigger>
           <DialogContent className='bg-[#191919]'>
             <DialogHeader>
