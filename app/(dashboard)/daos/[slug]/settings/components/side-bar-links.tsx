@@ -1,6 +1,9 @@
 'use client';
+import { ConnectWalletContext } from '@/context/connect-wallet-context';
+import { IConnectWalletContext } from '@/libs/types';
 import { cn } from '@/libs/utils';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useContext } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 
 export const daoSettingsSidebarLinks: { title: string }[] = [
@@ -20,6 +23,8 @@ interface ISidebarLinksComp {
 }
 
 const SidebarLinksComp = ({ activeSidebar }: ISidebarLinksComp) => {
+  const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
+  const { isConnected } = user;
   const searchParams = useSearchParams();
   const { replace } = useRouter();
   const pathname = usePathname();
@@ -39,7 +44,7 @@ const SidebarLinksComp = ({ activeSidebar }: ISidebarLinksComp) => {
 
   return (
     <div className="md:space-y-4 text-[#888888] text-sm flex md:block">
-      {daoSettingsSidebarLinks.map((link) => (
+      {daoSettingsSidebarLinks.slice(0, isConnected ? 3 : 2).map((link) => (
         <div
           key={link.title}
           className={cn(

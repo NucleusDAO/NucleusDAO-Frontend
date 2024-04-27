@@ -80,7 +80,7 @@ const Links = () => {
                     )}
                   />
                 </div>
-                {fields.length > 1 && (
+                {/* {fields.length > 1 && (
                   <div
                     className="w-[3%]"
                     role="button"
@@ -88,17 +88,17 @@ const Links = () => {
                   >
                     <Trash2 color="#F998A9" size={20} />
                   </div>
-                )}
+                )} */}
               </div>
             ))}
-            <div
+            {/* <div
               className="flex space-x-2 dark:bg-[#1E1E1E] bg-white border border-[#CCCCCC99] dark:border-[#292929] text-dark dark:text-white w-fit rounded-lg py-2 px-3 items-center justify-center text-xs"
               role="button"
               onClick={() => append({ type: '', link: '' })}
             >
               <Plus className="mr-2 h-4 w-4" />
               Add Link
-            </div>
+            </div> */}
           </div>
         </form>
       </Form>

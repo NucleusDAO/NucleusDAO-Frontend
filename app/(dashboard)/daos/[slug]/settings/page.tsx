@@ -15,7 +15,7 @@ interface ITabView {
 const Settings = () => {
   const { currentDAO } = useContext(AppContext);
   const { name, image } = currentDAO;
-  console.log(currentDAO, '-> currentDAO')
+
   const searchParams = useSearchParams();
   const activeSidebar =
     searchParams.get('q') || daoSettingsSidebarLinks[0].title;

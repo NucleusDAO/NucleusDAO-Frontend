@@ -1,6 +1,6 @@
 import { Info } from 'lucide-react';
 import { Button } from './ui/button';
-import { ReactNode } from 'react';
+import { ReactNode, useContext } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -11,12 +11,16 @@ import {
 } from '@/components/ui/dialog';
 import Link from 'next/link';
 import { CREATE_PROPOSAL_URL } from '@/config/path';
+import { ConnectWalletContext } from '@/context/connect-wallet-context';
+import { IConnectWalletContext } from '@/libs/types';
 
 interface IDaoConfigurationWrapper {
   children: ReactNode;
 }
 
 const DaoConfigurationWrapper = ({ children }: IDaoConfigurationWrapper) => {
+  const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
+  const { isConnected } = user;
   return (
     <div className="space-y-5">
       <div className="flex justify-between items-center">
@@ -25,7 +29,7 @@ const DaoConfigurationWrapper = ({ children }: IDaoConfigurationWrapper) => {
         </h2>
         <Dialog>
           <DialogTrigger asChild>
-            <Button>Edit Settings</Button>
+            {isConnected && <Button>Edit Settings</Button>}
           </DialogTrigger>
           <DialogContent className="bg-[#191919]">
             <DialogHeader>
