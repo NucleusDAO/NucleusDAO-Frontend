@@ -11,6 +11,7 @@ import { eachDaoViews } from '@/config/dao-config';
 import { cn, encodeURI, getStatus } from '@/libs/utils';
 import { toast } from 'sonner';
 import EachDaoLoading from '@/components/loading/each-dao-loading';
+import { getDaoInfo } from './get-dao-info';
 
 interface ILayout {
   children: ReactNode;
@@ -27,7 +28,6 @@ const Layout = ({ children }: ILayout) => {
     setCurrentDAO,
     getEachDAO,
     setEachDAOProposal,
-    eachDAOProposal
   } = useContext(AppContext);
 
   const urlParts = pathname.split('/'); // Split the URL by "/"
@@ -43,7 +43,6 @@ const Layout = ({ children }: ILayout) => {
         if (daoId) {
           const dao = await getEachDAO(daoId);
           setCurrentDAO(dao);
-          console.log(dao, '-> dao')
           await getProposals(dao.contractAddress).then((proposals: IProposal[]) => {
             console.log(proposals, '-> proposal')
             setEachDAOProposal(
