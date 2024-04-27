@@ -5,10 +5,10 @@ import { Globe, MoveLeft, Plus } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { ReactNode, useContext, useEffect, useState } from 'react';
-import { AppContext } from '@/context/app-context';
+import { AppContext, IProposal } from '@/context/app-context';
 import { CopyIcon } from '@/assets/svgs';
 import { eachDaoViews } from '@/config/dao-config';
-import { cn, encodeURI } from '@/libs/utils';
+import { cn, encodeURI, getStatus } from '@/libs/utils';
 import { toast } from 'sonner';
 import EachDaoLoading from '@/components/loading/each-dao-loading';
 
@@ -21,13 +21,20 @@ const Layout = ({ children }: ILayout) => {
   const router = useRouter();
   const pathname = usePathname();
   const isJoined: boolean = true;
-  const { currentDAO, setCurrentDAO, getEachDAO } = useContext(AppContext);
+  const {
+    currentDAO,
+    getProposals,
+    setCurrentDAO,
+    getEachDAO,
+    setEachDAOProposal,
+    eachDAOProposal
+  } = useContext(AppContext);
 
   const urlParts = pathname.split('/'); // Split the URL by "/"
   const secondParts = urlParts[2];
 
-    const lastIndex = pathname.lastIndexOf("/");
-const updatedUrl = pathname.substring(0, lastIndex);
+  const lastIndex = pathname.lastIndexOf('/');
+  const updatedUrl = pathname.substring(0, lastIndex);
 
   useEffect(() => {
     (async () => {
@@ -36,19 +43,42 @@ const updatedUrl = pathname.substring(0, lastIndex);
         if (daoId) {
           const dao = await getEachDAO(daoId);
           setCurrentDAO(dao);
+          console.log(dao, '-> dao')
+          await getProposals(dao.contractAddress).then((proposals: IProposal[]) => {
+            console.log(proposals, '-> proposal')
+            setEachDAOProposal(
+              proposals.map((proposal: IProposal) => {
+                return {
+                  type: proposal.proposalType,
+                  status: getStatus(proposal),
+                  description: proposal.description,
+                  wallet:
+                    proposal.target.slice(0, 6) +
+                    '...' +
+                    proposal.target.slice(-4),
+                  duration: new Date().toLocaleDateString('en-Gb', {
+                    day: 'numeric',
+                  }),
+                  totalVote: `${proposal.votesFor} + ${proposal.votesAgainst}`,
+                  organisation: dao.name,
+                  id: proposal.id.toString(),
+                };
+              })
+            );
+          });
         } else {
           router.back();
         }
         setIsLoading(false);
       } catch (error: any) {
-        setIsLoading(false)
+        setIsLoading(false);
         toast.error(error.message);
         console.error('Error fetching DAO:', error);
       }
     })();
   }, []);
 
-  if (isLoading) return <EachDaoLoading />
+  if (isLoading) return <EachDaoLoading />;
 
   return (
     <div className="">
@@ -76,48 +106,48 @@ const updatedUrl = pathname.substring(0, lastIndex);
         )}
       </div>
 
-      <div className='h-[72vh] overflow-auto pt-6 pr-4'>
-        <div className='space-y-8'>
-          <div className='space-y-6'>
-            <div className='flex items-center justify-between'>
-              <div className='flex space-x-4 items-center'>
+      <div className="h-[72vh] overflow-auto pt-6 pr-4">
+        <div className="space-y-8">
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div className="flex space-x-4 items-center">
                 <img
                   src={currentDAO.image}
-                  alt='legacy logo'
+                  alt="legacy logo"
                   width={50}
                   height={50}
-                  className='rounded-lg'
+                  className="rounded-lg"
                 />
-                <div className='space-y-4'>
-                  <h2 className='font-medium text-2xl text-dark dark:text-white'>
+                <div className="space-y-4">
+                  <h2 className="font-medium text-2xl text-dark dark:text-white">
                     {currentDAO.name}
                   </h2>
-                  <Link href='legacy.smartdao.eth' target='_blank'>
-                    <div className='flex space-x-2 mt-1.5 items-center font-light text-sm text-[#888888]'>
+                  <Link href="legacy.smartdao.eth" target="_blank">
+                    <div className="flex space-x-2 mt-1.5 items-center font-light text-sm text-[#888888]">
                       <p>{currentDAO.domain ?? currentDAO.account}</p>
                       <CopyIcon />
                     </div>
                   </Link>
                 </div>
               </div>
-              <div className='dark:bg-[#1E1E1E] bg-white p-4 flex items-center justify-center rounded-lg'>
+              <div className="dark:bg-[#1E1E1E] bg-white p-4 flex items-center justify-center rounded-lg">
                 <Globe
-                  className='text-primary dark:text-defaultText'
+                  className="text-primary dark:text-defaultText"
                   size={22}
                 />
               </div>
             </div>
-            <p className='text-[#888888] text-sm'>{currentDAO.description}</p>
+            <p className="text-[#888888] text-sm">{currentDAO.description}</p>
           </div>
-          <div className='pb-4 border-b dark:border-[#292929] md:flex justify-between border-[#CCCCCC99] space-y-4 md:space-y-0'>
-            <h2 className='font-medium text-2xl dark:text-white text-dark'>
+          <div className="pb-4 border-b dark:border-[#292929] md:flex justify-between border-[#CCCCCC99] space-y-4 md:space-y-0">
+            <h2 className="font-medium text-2xl dark:text-white text-dark">
               Overview
             </h2>
-            <div className='flex space-x-4 dark:bg-[#191919] bg-white p-2 rounded-2xl w-[99%] md:w-fit overflow-x-auto'>
+            <div className="flex space-x-4 dark:bg-[#191919] bg-white p-2 rounded-2xl w-[99%] md:w-fit overflow-x-auto">
               {eachDaoViews.map((view) => (
                 <Link href={encodeURI(updatedUrl, view.path)} key={view.title}>
                   <div
-                    role='button'
+                    role="button"
                     className={cn(
                       'flex space-x-2 text-xs text-[#888888] items-center bg-white dark:bg-[#1E1E1E] rounded-lg font-light py-2 px-3',
                       (pathname.endsWith(view.path) ||
@@ -134,7 +164,7 @@ const updatedUrl = pathname.substring(0, lastIndex);
           </div>
         </div>
 
-        <div className='pt-4'>{children}</div>
+        <div className="pt-4">{children}</div>
       </div>
     </div>
   );

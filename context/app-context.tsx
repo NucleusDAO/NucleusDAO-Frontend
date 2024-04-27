@@ -41,6 +41,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const [allDAOs, setAllDAOs] = useState<any[]>();
   const [currentDAO, setCurrentDAO] = useState<IDAO | null>(null);
+  const [eachDAOProposal, setEachDAOProposal] = useState<IDAO | null>(null);
   const [daoLoading, setDaoLoading] = useState<boolean>(true);
   const [DAOsData, setDAOsData] = useState<any[]>([]);
   const [newDaoInfo, setNewDaoInfo] = useState<InewDaoInfo>(defaultDaoCreation);
@@ -175,7 +176,9 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     DAOsData,
     updateNewDaoInfo,
     newDaoInfo,
-    getEachDAO
+    getEachDAO,
+    eachDAOProposal,
+    setEachDAOProposal
   };
 
   return (
