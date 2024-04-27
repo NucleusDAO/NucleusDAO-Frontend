@@ -94,15 +94,15 @@ export const defaultDaoCreation = { style: '', info: { daoName: '', daoUrl: '', 
 
 export const getStatus = (_proposal: IProposal) => {
   if (_proposal.isExecuted) {
-    return 'SUCCESS';
+    return 'Succeeded';
   }
   if (new Date(Number(_proposal.endTime)).valueOf() > Date.now().valueOf()) {
-    return 'ACTIVE';
+    return 'Active';
   } else {
     if (_proposal.votesFor > _proposal.votesAgainst) {
-      return 'PENDING';
+      return 'Pending';
     } else {
-      return 'FAILED';
+      return 'Failed';
     }
   }
 };
