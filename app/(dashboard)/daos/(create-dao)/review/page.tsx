@@ -11,34 +11,42 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { DAO_URL } from '@/config/path';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { IConnectWalletContext } from '@/libs/types';
 import { AppContext } from '@/context/app-context';
+import { uploadFile } from '@/config/apis';
+import { toast } from 'sonner';
+import { defaultDaoCreation } from '@/libs/utils';
 
 const ReviewDao = () => {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
-  const { address } = user;
-  const { createDAO } = useContext(AppContext);
+  const { createDAO, updateNewDaoInfo, newDaoInfo } = useContext(AppContext);
 
   const handleCreateDAO = async () => {
+    setIsLoading(true);
     try {
-      // [{"twitter": "https://twitter.com/legacy"}, {"twitter": "https://twitter.com/legacy"}]
+      const fileUpload = await uploadFile(newDaoInfo.info.logo);
+      const logoURL = fileUpload.data.url;
+      // user newDaoInfo to get other info
       await createDAO(
         'Legacy DAO',
         'This is a sample DAO',
-        'https://st3.depositphotos.com/1006009/15365/i/450/depositphotos_153654740-stock-photo-legacy-word-in-letterpress-metal.jpg',
+        logoURL,
         ['https://twitter.com/legacy'],
         ['ak_F7ZzN6kMcst2rFo7s3QEPjD5Frgy36NPeL32Wf9Cx4SnC8oPn'],
         0
       );
-    } catch (error) {
-      // Toaster to show error
-      console.error({ error });
+      setIsLoading(false);
+      setOpen(true)
+    } catch (error: any) {
+      setIsLoading(false);
+      toast.error(error.message);
     }
   };
   return (
@@ -60,7 +68,7 @@ const ReviewDao = () => {
         </h1>
         <div className='grid grid-cols-2 text-xs md:text-sm w-4/6'>
           <p className='text-dark dark:text-white'>Type</p>
-          <p className='text-defaultText'>Basic DAO</p>
+          <p className='text-defaultText'>{newDaoInfo.style}</p>
         </div>
       </div>
 
@@ -69,32 +77,32 @@ const ReviewDao = () => {
           DAO Information
         </h1>
         <div className='grid grid-cols-2 text-xs md:text-sm md:w-4/6'>
-          <p className='dark:text-white text-dark'>DAO name</p>
-          <p className='text-defaultText'>Legacy</p>
+          <p className='dark:text-white text-dark'>DAO Name</p>
+          <p className='text-defaultText'>{newDaoInfo.info.daoName}</p>
         </div>
         <div className='grid grid-cols-2 text-xs md:text-sm md:w-4/6'>
-          <p className='dark:text-white text-dark'>DAO address</p>
-          <p className='text-defaultText'>{address}</p>
+          <p className='dark:text-white text-dark'>DAO Url</p>
+          <p className='text-defaultText'>{newDaoInfo.info.daoUrl}</p>
         </div>
         <div className='grid grid-cols-2 text-xs md:text-sm md:w-4/6'>
           <p className='dark:text-white text-dark'>About</p>
           <p className='text-defaultText w-[200%]'>
-            Legacy is a Decentralized Autonomous organization that aims to
-            empower people and make the world a better place. Join us on our
-            journey to a more decentralized future. Vote to contribute and
-            revolutionize Assets.
+            {newDaoInfo.info.about}
           </p>
         </div>
         <div className='grid grid-cols-2 text-xs md:text-sm md:w-4/6'>
           <p className='dark:text-white text-dark'>Links</p>
-          <Link href='#'>
-            <div className='flex items-center space-x-2 text-primary'>
-              <p className=''>Twitter</p>
-              <div className='border border-primary rounded-sm p-0.5'>
-                <MoveUpRight size={10} />
+          {!newDaoInfo.info.socialMedia[0].type && 'None'}
+          {newDaoInfo.info.socialMedia.map((socialMedia: { link: string; type: string; }) => (
+            <Link href={socialMedia.link} key={socialMedia.type} target='_blank'>
+              <div className='flex items-center space-x-2 text-primary'>
+                <p className=''>{socialMedia.type}</p>
+                <div className='border border-primary rounded-sm p-0.5'>
+                  <MoveUpRight size={10} />
+                </div>
               </div>
-            </div>
-          </Link>
+            </Link>
+          ))}
         </div>
       </div>
 
@@ -104,7 +112,7 @@ const ReviewDao = () => {
         </h1>
         <div className='grid grid-cols-2 text-xs md:text-sm md:w-4/6'>
           <p className='dark:text-white text-dark'>Members</p>
-          <p className='text-defaultText'>1 wallet address (es)</p>
+          <p className='text-defaultText'>{`${newDaoInfo.members[0].address ? newDaoInfo.members.length : '0'} wallet address (es`}</p>
         </div>
       </div>
 
@@ -114,11 +122,11 @@ const ReviewDao = () => {
         </h1>
         <div className='grid grid-cols-2 text-xs md:text-sm md:w-4/6'>
           <p className='dark:text-white text-dark'>Duration</p>
-          <p className='text-defaultText'>5 days</p>
+          <p className='text-defaultText'>{`${newDaoInfo.duration} day(s)`}</p>
         </div>
         <div className='grid grid-cols-2 text-xs md:text-sm md:w-4/6'>
           <p className='dark:text-white text-dark'>Voting threshold</p>
-          <p className='text-defaultText'>50% quorum</p>
+          <p className='text-defaultText'>{`${newDaoInfo.quorum}% quorum`}</p>
         </div>
       </div>
 
@@ -130,8 +138,8 @@ const ReviewDao = () => {
         >
           <MoveLeft size={20} />
         </Button>
-        <AlertDialog>
-          <Button type='submit' className='px-12' onClick={handleCreateDAO}>
+        <AlertDialog onOpenChange={setOpen} open={open}>
+          <Button type='submit' className='px-12' onClick={handleCreateDAO} loading={isLoading} loadingText='Creating...'>
             Create DAO
           </Button>
           <AlertDialogContent className='dark:bg-[#191919] bg-light'>
@@ -147,7 +155,7 @@ const ReviewDao = () => {
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter className='w-full'>
-              <Button className='w-full' onClick={() => router.push(DAO_URL)}>
+              <Button className='w-full' onClick={() => { localStorage.removeItem('new_dao'); updateNewDaoInfo(defaultDaoCreation); router.push(DAO_URL); }}>
                 Back home
               </Button>
             </AlertDialogFooter>

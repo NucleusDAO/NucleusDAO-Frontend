@@ -11,6 +11,7 @@ import Link from 'next/link';
 import { useContext } from 'react';
 import { AppContext } from '@/context/app-context';
 import DashboadLoading from '@/components/loading/dashboard-loading';
+import { toast } from 'sonner';
 
 const Dashboard = () => {
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
@@ -46,11 +47,17 @@ const Dashboard = () => {
         >
           Global Feed
         </h1>
-        <Link href={SELECT_DAO_STYLE_URL}>
-          <Button>
+        {connected ? (
+          <Link href={SELECT_DAO_STYLE_URL}>
+            <Button>
+              <Plus className="mr-2 h-4 w-4" /> Create DAO
+            </Button>
+          </Link>
+        ) : (
+          <Button onClick={() => toast.error('Please connect your wallet!')}>
             <Plus className="mr-2 h-4 w-4" /> Create DAO
           </Button>
-        </Link>
+        )}
       </div>
 
       <div className="gap-6 md:grid-cols-3 grid">

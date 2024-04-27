@@ -33,10 +33,8 @@ export interface IContext {
 }
 
 export const ConnectWalletProvider = ({ children }: IAppProvider) => {
-  const getUser = typeof window !== 'undefined' && localStorage.getItem('user');
-  const defaultUser = getUser
-    ? JSON.parse(getUser)
-    : { address: '', isConnected: false };
+  // const getUser = typeof window !== 'undefined' && localStorage.getItem('user');
+  const defaultUser = { address: '', isConnected: false };
 
   const [isConnecting, setIsConnecting] = useState<boolean>(false);
   const [user, setUser] = useState<IUser>(defaultUser);

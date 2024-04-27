@@ -3,7 +3,8 @@ import { ConnectWalletContext, ConnectWalletProvider } from './connect-wallet-co
 import { getNucleusDAO, getBasicDAO } from '@/libs/ae-utils';
 import { toast } from 'sonner';
 import AllDaos from '@/components/all-daos';
-import { IConnectWalletContext } from '@/libs/types';
+import { IConnectWalletContext, InewDaoInfo } from '@/libs/types';
+import { defaultDaoCreation } from '@/libs/utils';
 
 export const AppContext = createContext<any>({});
 
@@ -39,13 +40,20 @@ export interface IDAO {
 export const AppContextProvider = ({ children }: IAppProvider) => {
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const [allDAOs, setAllDAOs] = useState<any[]>();
-  // const [DAOs, setDAOs] = useState<any[]>([]);
   const [currentDAO, setCurrentDAO] = useState<IDAO | null>(null);
   const [currentDAOId, setCurrentDAOId] = useState<string | null>(null);
   const [daoLoading, setDaoLoading] = useState<boolean>(true);
   const [DAOsData, setDAOsData] = useState<any[]>([]);
+  const [newDaoInfo, setNewDaoInfo] = useState<InewDaoInfo>(defaultDaoCreation);
+  const getNewDaoInfo = typeof window !== 'undefined' && localStorage.getItem('new_dao');
 
-  console.log(allDAOs, '-> allDAOs')
+  console.log(!!getNewDaoInfo, '->')
+
+  useEffect(() => {
+    if (getNewDaoInfo) {
+      setNewDaoInfo(JSON.parse(getNewDaoInfo));
+    }
+  }, []);
 
   useEffect(() => {
     console.log('Current dao id updated', currentDAOId);
@@ -67,18 +75,18 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
         }
       }
       setAllDAOs(res);
-      // setDAOs(res);
       return res;
     });
   };
 
-  console.log(DAOsData, '-> data')
+  const updateNewDaoInfo = (data: any) => {
+    setNewDaoInfo(data)
+  }
 
   useEffect(() => {
     const fetchDAOs = async () => {
       try {
         const allDAOs: any = await getAllDaos();
-        console.log(allDAOs, '-> all daos')
         if (allDAOs) {
           setDAOsData(
             allDAOs.map((dao: any) => {
@@ -175,6 +183,8 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     getProposals,
     daoLoading,
     DAOsData,
+    updateNewDaoInfo,
+    newDaoInfo
   };
 
   return (
