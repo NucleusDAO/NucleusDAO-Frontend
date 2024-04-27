@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { CREATE_PROPOSAL_URL, DAO_URL } from '@/config/path';
 import { Globe, MoveLeft, Plus } from 'lucide-react';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { ReactNode, useContext, useEffect, useState } from 'react';
 import { AppContext, IProposal } from '@/context/app-context';
 import { CopyIcon } from '@/assets/svgs';
@@ -29,7 +29,7 @@ const Layout = ({ children }: ILayout) => {
     getEachDAO,
     setEachDAOProposal,
   } = useContext(AppContext);
-
+  
   const urlParts = pathname.split('/'); // Split the URL by "/"
   const secondParts = urlParts[2];
 
