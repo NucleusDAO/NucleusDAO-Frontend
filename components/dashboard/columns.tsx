@@ -1,9 +1,11 @@
 'use client';
 
 import { VIEW_DAO_URL } from "@/config/path";
+import { AppContext } from "@/context/app-context";
 import { encodeURI } from "@/libs/utils";
 import { Eye } from "lucide-react";
 import Link from "next/link";
+import { useContext } from "react";
 
 const columns: {
   accessorKey: string;
@@ -49,8 +51,9 @@ export const OrganisationCell = ({ row }: any) => {
 
 export const ActionCell = ({ row }: any) => {
   const { organisation } = row.original;
+  const { setCurrentDAOId } = useContext(AppContext);
     return (
-      <Link href={encodeURI(VIEW_DAO_URL, organisation, 'dashboard')}>
+      <Link href={encodeURI(VIEW_DAO_URL, organisation.toLowerCase(), 'dashboard')}>
         <Eye size={18} className="dark:text-[#F5F5F5]" role="button" />
       </Link>
     )

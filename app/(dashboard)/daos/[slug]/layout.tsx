@@ -4,56 +4,71 @@ import { CREATE_PROPOSAL_URL, DAO_URL } from '@/config/path';
 import { Globe, MoveLeft, Plus } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { ReactNode, useContext, useEffect } from 'react';
+import { ReactNode, useContext, useEffect, useState } from 'react';
 import { AppContext } from '@/context/app-context';
-
-import LegacyLogo from '@/assets/logos/legacy.png';
 import { CopyIcon } from '@/assets/svgs';
-import Image from 'next/image';
 import { eachDaoViews } from '@/config/dao-config';
 import { cn, encodeURI } from '@/libs/utils';
+import { toast } from 'sonner';
+import EachDaoLoading from '@/components/loading/each-dao-loading';
 
 interface ILayout {
   children: ReactNode;
 }
 
 const Layout = ({ children }: ILayout) => {
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const router = useRouter();
   const pathname = usePathname();
   const isJoined: boolean = true;
-  const { currentDAO, setCurrentDAOId } = useContext(AppContext);
+  const { currentDAO, setCurrentDAO, getEachDAO } = useContext(AppContext);
 
   const urlParts = pathname.split('/'); // Split the URL by "/"
-  const updatedUrlParts =
-    urlParts.length > 5 ? urlParts.slice(0, -2) : urlParts.slice(0, -1); // Remove the last element from the array
-  const updatedUrl = updatedUrlParts.join('/'); // Join the array back into a string
+  const secondParts = urlParts[2];
+
+    const lastIndex = pathname.lastIndexOf("/");
+const updatedUrl = pathname.substring(0, lastIndex);
 
   useEffect(() => {
-    const daoId = urlParts[3].replace(/\+/g, ' ');
-    setCurrentDAOId(daoId);
+    (async () => {
+      try {
+        const daoId = 'Hexdee DAO' || secondParts;
+        if (daoId) {
+          const dao = await getEachDAO(daoId);
+          setCurrentDAO(dao);
+        } else {
+          router.back();
+        }
+        setIsLoading(false);
+      } catch (error: any) {
+        setIsLoading(false)
+        toast.error(error.message);
+        console.error('Error fetching DAO:', error);
+      }
+    })();
   }, []);
 
-  return !currentDAO ? (
-    <>Loading...</>
-  ) : (
-    <div className=''>
-      <div className='flex justify-between border-b dark:border-b-[#292929] pb-6 border-b-[#CCCCCC99]'>
-        <div className='md:flex space-x-4 items-center space-y-5 md:space-y-0'>
+  if (isLoading) return <EachDaoLoading />
+
+  return (
+    <div className="">
+      <div className="flex justify-between border-b dark:border-b-[#292929] pb-6 border-b-[#CCCCCC99]">
+        <div className="md:flex space-x-4 items-center space-y-5 md:space-y-0">
           <div
-            className='rounded-lg flex w-fit items-center justify-center p-2 dark:bg-[#1E1E1E] bg-white dark:hover:bg-[#262525] hover:bg-white text-[#444444] dark:text-defaultText'
-            role='button'
+            className="rounded-lg flex w-fit items-center justify-center p-2 dark:bg-[#1E1E1E] bg-white dark:hover:bg-[#262525] hover:bg-white text-[#444444] dark:text-defaultText"
+            role="button"
             onClick={() => router.push(DAO_URL)}
           >
             <MoveLeft />
           </div>
-          <h1 className='dark:text-white text-dark font-medium text-2xl'>
+          <h1 className="dark:text-white text-dark font-medium text-2xl">
             Explore DAOs
           </h1>
         </div>
         {isJoined ? (
           <Link href={CREATE_PROPOSAL_URL}>
             <Button>
-              <Plus className='mr-2 h-4 w-4' /> Create Proposal
+              <Plus className="mr-2 h-4 w-4" /> Create Proposal
             </Button>
           </Link>
         ) : (
@@ -69,8 +84,9 @@ const Layout = ({ children }: ILayout) => {
                 <img
                   src={currentDAO.image}
                   alt='legacy logo'
-                  width={60}
-                  height={60}
+                  width={50}
+                  height={50}
+                  className='rounded-lg'
                 />
                 <div className='space-y-4'>
                   <h2 className='font-medium text-2xl text-dark dark:text-white'>

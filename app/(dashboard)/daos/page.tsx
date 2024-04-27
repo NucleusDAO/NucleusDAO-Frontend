@@ -9,6 +9,7 @@ import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { IConnectWalletContext } from '@/libs/types';
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { useContext } from 'react';
 import { toast } from 'sonner';
 
@@ -16,9 +17,17 @@ const Daos = () => {
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { DAOsData, daoLoading } = useContext(AppContext);
   const connected: boolean = user.isConnected;
+  const searchParams = useSearchParams();
+  const currentSearch = searchParams.get('search');
 
   const getDAOsData = (width: number) => {
-    return DAOsData?.map((dao: any) => {
+    let allDAO;
+    if (currentSearch) {
+      allDAO = DAOsData?.filter((item: { organisation: string; }) =>  item?.organisation?.toLowerCase().includes(currentSearch));
+    } else {
+      allDAO = DAOsData;
+    }
+    return allDAO?.map((dao: any) => {
       dao.orgIcon = (
         <img
           src={dao.image}
@@ -56,11 +65,6 @@ const Daos = () => {
         )}
       </div>
 
-      {DAOsData?.length === 0 && (
-        <div className="min-h-[70vh] flex items-center justify-center">
-          <p>There is no active DAO currently</p>
-        </div>
-      )}
       {DAOsData?.length > 0 && (
         <AllDaos dashboardTableData={getDAOsData} showDAO={true} />
       )}
