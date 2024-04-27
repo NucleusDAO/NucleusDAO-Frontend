@@ -42,7 +42,7 @@ const EachDaoMembers = () => {
   }, [currentDAO]);
 
   return (
-    <div className='space-y-4'>
+    <div className='space-y-4 bg-[#1E1E1E] p-4 rounded-lg'>
       <div className='flex justify-between items-center'>
         <h1 className='dark:text-white text-dark font-medium text-xl'>
           Transaction details
