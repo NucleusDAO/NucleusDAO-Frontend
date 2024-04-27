@@ -1,5 +1,5 @@
 'use client';
-import DaoConfigurationWrapper from '@/components/dao-configuraiton-wrapper';
+import DaoConfigurationWrapper from '@/components/dao-configuration-wrapper';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useFieldArray, useForm } from 'react-hook-form';
@@ -35,10 +35,16 @@ const Links = () => {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <div className="space-y-4">
-            <h2 className="font-medium dark:text-white text-dark">Social Links</h2>
+            <h2 className="font-medium dark:text-white text-dark">
+              Social Links
+            </h2>
             <div className="grid grid-cols-2 gap-6">
-              <div className="font-light dark:text-white text-sm text-dark">Type</div>
-              <div className="font-light dark:text-white text-dark text-sm">Link</div>
+              <div className="font-light dark:text-white text-sm text-dark">
+                Type
+              </div>
+              <div className="font-light dark:text-white text-dark text-sm">
+                Link
+              </div>
             </div>
             {fields.map((social: any, index) => (
               <div
