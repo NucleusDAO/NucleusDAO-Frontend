@@ -143,7 +143,7 @@ export const connectWallet = async ({
             stopScan?.();
             const user = { address: currentAccountAddress, isConnected: true };
             setUser(user);
-            localStorage.setItem('user', JSON.stringify(user));
+            // localStorage.setItem('user', JSON.stringify(user));
             resolve?.(currentAccountAddress);
             setOpenModal(false);
           } catch (e) {

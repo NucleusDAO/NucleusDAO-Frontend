@@ -10,19 +10,59 @@ const member = z.object({
   address: z.string(),
 });
 
-const daoInfoSchema = z.object({
-  daoName: z
-    .string()
-    .min(2, { message: 'Must be 2 or more characters long' })
-    .max(50, { message: 'Must be 50 or fewer characters long' }),
-  daoAddress: z
-    .string()
-    .min(20, { message: 'Must be 20 or more characters long' }),
-  // .max(51, { message: 'Must be 51 or fewer characters long' }),
-  logo: z.string(),
-  about: z.string(),
-  socialMedia: z.array(socialMediaSchema),
-});
+const daoInfoSchema = z
+  .object({
+    daoName: z
+      .string()
+      .min(2, { message: 'Must be 2 or more characters long' })
+      .max(50, { message: 'Must be 50 or fewer characters long' }),
+    daoUrl: z.string(),
+    // .max(51, { message: 'Must be 51 or fewer characters long' }),
+    logo: z.any(),
+    about: z.string(),
+    socialMedia: z.array(socialMediaSchema).optional(),
+  })
+  .refine((data: any) => {
+    const messages: Record<string, string> = {
+      daoName: 'Dao Name is compulsory',
+      daoUrl: 'Dao URL is compulsory',
+      logo: 'Logo field is compulsory',
+      about: 'About Dao is compulsory',
+    };
+    for (const key of Object.keys(messages)) {
+      if (!data[key as keyof typeof messages]) {
+        throw new z.ZodError([
+          { code: 'custom', path: [key], message: messages[key] },
+        ]);
+      }
+    }
+    // // Validate each social media entry
+    // for (const item of data.socialMedia) {
+    //   if (item.type || item.link) {
+    //     if (!item.type || !item.link) {
+    //       throw new z.ZodError([{ code: 'custom', path: ['socialMedia'], message: 'Type and link are both required for social media' }]);
+    //     }
+    //   }
+    // }
+
+    // Validate each social media entry
+    if (data.socialMedia) {
+      for (const [index, item] of data.socialMedia.entries()) {
+        if (item.type || item.link) {
+          if (!item.type || !item.link) {
+            throw new z.ZodError([
+              {
+                code: 'custom',
+                path: ['socialMedia', index],
+                message: 'Type and link are both required for social media',
+              },
+            ]);
+          }
+        }
+      }
+    }
+    return true;
+  });
 
 const editDaoInfoLinksSchema = z.object({
   socialMedia: z.array(socialMediaSchema),
@@ -42,7 +82,9 @@ const proposalInfoSchema = z.object({
   //   .min(2, { message: 'Must be 2 or more characters long' })
   //   .max(50, { message: 'Must be 50 or fewer characters long' }),
   type: z
-    .string().min(1, { message: 'Proposal type is required' }).default('0'),
+    .string()
+    .min(1, { message: 'Proposal type is required' })
+    .default('0'),
   description: z.string().min(2, { message: 'Description must not be empty' }),
   targetWallet: z.string().optional(),
   value: z.string().optional(),
@@ -74,8 +116,39 @@ const proposalInfoSchema = z.object({
 });
 
 const defineMembershipSchema = z.object({
-  members: z.array(member),
+  members: z.array(member)
+  .refine((data: any) => {
+    // for (const str of value) {
+    //   if (str.address === '' || /^\s+$/.test(str.address)) {
+    //     throw new z.ZodError([{ code: 'custom', path: ['members', index], message: 'Membership should not contain empty or whitespace strings' }]);
+    //   }
+    // }
+console.log(data, '-. data')
+for (const [index, item] of data.entries()) {
+  if (item.address === '' || /^\s+$/.test(item.address)) {
+      throw new z.ZodError([
+          {
+              code: 'custom',
+              path: ['members', index], // Pass the index here
+              message: 'Type and link are both required for social media',
+          },
+      ]);
+  }
+}
+
+    return true;
+  }),
 });
+// const defineMembershipSchema = z
+//   .array(z.string().nonempty().trim())
+// .refine((value) => {
+//   for (const str of value) {
+//     if (str === '' || /^\s+$/.test(str)) {
+//       throw new Error('Array should not contain empty or whitespace strings');
+//     }
+//   }
+//   return true;
+//   });
 
 const editProfile = z.object({
   name: z

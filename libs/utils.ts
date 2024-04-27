@@ -51,3 +51,42 @@ export const encodeURI = (originalURI: string, keyValuePairs: string, otherKeyPa
 
   return modifiedUrl;
 };
+
+export const validateMembership = (membershipArray: { address: string }[]) => {
+  return !membershipArray.some(item => item.address === '')
+}
+
+export const validateDaoInfo = (obj: any) => {
+  // Check if the object is empty
+  if (Object.keys(obj).length === 0) {
+    return true;
+  }
+
+  // Validate the 'style' key
+  if (!obj.style) {
+    return true;
+  }
+
+  // Validate the 'info' key
+  if (!obj.info || !obj.info.daoName || !obj.info.daoUrl || !obj.info.about) {
+    return true;
+  }
+
+  // Validate the 'socialMedia' key
+  if (obj.info.socialMedia) {
+    if (!Array.isArray(obj.info.socialMedia) || obj.info.socialMedia.length === 0) {
+      // 'socialMedia' is not an array or it's an empty array
+      return true;
+    }
+
+    // Check if all items in 'socialMedia' have a 'key' and 'value'
+    // if (obj.info.socialMedia.some((item) => !item.key || !item.value)) {
+    //   return true;
+    // }
+  }
+
+  // All keys are filled, return true
+  return false;
+};
+
+export const defaultDaoCreation = { style: '', info: { daoName: '', daoUrl: '', about: '', socialMedia: [{ type: '', link: '' }], logo: null, logoUrl: '' }, members: [{ address: '' }], duration: 0, quorum: 50 }

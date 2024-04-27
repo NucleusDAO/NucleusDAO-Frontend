@@ -56,3 +56,11 @@ export interface IUser {
   address: string;
   isConnected: boolean;
 }
+
+export interface InewDaoInfo {
+  style: string;
+  info: { daoName: string; daoUrl: string; about: string; socialMedia?: { link: string; type: string }[]; logo: File|null; logoUrl: string; },
+  members: { address: string; }[],
+  quorum: number;
+  duration: number;
+}

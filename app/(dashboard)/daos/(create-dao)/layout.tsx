@@ -2,7 +2,7 @@
 import { DAO_URL } from '@/config/path';
 import { MoveLeft } from 'lucide-react';
 import Link from 'next/link';
-import { ReactNode, useState } from 'react';
+import { ReactNode, useContext, useState } from 'react';
 import Steps from './create-new/component/steps';
 import {
   Dialog,
@@ -13,12 +13,17 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { useRouter } from 'next/navigation';
+import { AppContext } from '@/context/app-context';
+import { defaultDaoCreation } from '@/libs/utils';
 
 interface ILayout {
   children: ReactNode;
 }
 
 const Layout = ({ children }: ILayout) => {
+  const { updateNewDaoInfo } = useContext(AppContext);
+  const router = useRouter();
   const [open, setOpen] = useState<boolean>(false);
   return (
     <div className="space-y-8 min-h-[83vh]">
@@ -45,7 +50,7 @@ const Layout = ({ children }: ILayout) => {
           <div className='grid grid-cols-2 gap-4'>
             <Button variant="outline" onClick={() => setOpen(false)}>No, stay</Button>
              <Button>
-            <Link href={DAO_URL} className='w-full'>
+            <Link href={DAO_URL} className='w-full' onClick={() => {localStorage.removeItem('new_dao'); updateNewDaoInfo(defaultDaoCreation); router.push(DAO_URL)}}>
               Yes, exit
             </Link>
             </Button>

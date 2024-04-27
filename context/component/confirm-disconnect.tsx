@@ -13,6 +13,7 @@ import { aeSdk } from '@/libs/ae-utils';
 
 import { cn } from '@/libs/utils';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 interface IConfirmDisconnectWallet {
   setOpen: (arg: boolean) => void;
@@ -26,14 +27,14 @@ const ConfirmDisconnectWallet = ({
   open,
   setUser,
 }: IConfirmDisconnectWallet) => {
-  const [disconnecting, setDisconnecting] = useState<boolean>(false);
+  const [disconnecting, _] = useState<boolean>(false);
   const handleDisconnect = async () => {
       try {
         localStorage.removeItem('user');
         setUser({ address: '', isConnected: false });
         await aeSdk.disconnectWallet(false);
       } catch (error) {
-        // TODO
+        console.error(error)
       }
       window.location.search = '';
   };

@@ -2,15 +2,28 @@
 import { Button } from '@/components/ui/button';
 import { DaoTemplateList } from '@/config/dao-config';
 import { DAO_INFO_URL } from '@/config/path';
+import { AppContext } from '@/context/app-context';
 import { cn } from '@/libs/utils';
 import { useRouter } from 'next/navigation';
+import { useContext } from 'react';
 
 const CreateNewDao = () => {
   const router = useRouter();
+  const { updateNewDaoInfo, newDaoInfo } = useContext(AppContext);
+
+  const handleProceed = (template: string) => {
+    const updatedDaoInfo = { ...newDaoInfo, style: template };
+    updateNewDaoInfo(updatedDaoInfo);
+    localStorage.setItem('new_dao', JSON.stringify(updatedDaoInfo));
+    router.push(DAO_INFO_URL);
+  };
+
   return (
     <div className="space-y-8">
       <div className="space-y-2">
-        <h1 className="font-medium dark:text-white text-dark text-xl">Select Template</h1>
+        <h1 className="font-medium dark:text-white text-dark text-xl">
+          Select Template
+        </h1>
         <p className="text-[#888888] text-sm">
           With our pre-defined templates, this platform enables you to create
           your organization using a customizable template.
@@ -35,7 +48,10 @@ const CreateNewDao = () => {
                   {template.title}
                 </h2>
                 {template.status && (
-                  <div className="bg-[#DCBB0C] rounded-md p-2 text-xs font-light text-white cursor-default" role='button'>
+                  <div
+                    className="bg-[#DCBB0C] rounded-md p-2 text-xs font-light text-white cursor-default"
+                    role="button"
+                  >
                     {template.status}
                   </div>
                 )}
@@ -43,14 +59,14 @@ const CreateNewDao = () => {
               <p className="text-defaultText text-sm">{template.description}</p>
             </div>
             <Button
-            type="button"
+              type="button"
               className={cn(
                 'w-full',
                 template.status === 'Coming Soon' &&
                   'dark:bg-[#191919] dark:text-[#444444] bg-white text-dark font-normal'
               )}
               disabled={!!template.status}
-              onClick={() => router.push(DAO_INFO_URL)}
+              onClick={() => handleProceed(template.title)}
             >
               Proceed
             </Button>
