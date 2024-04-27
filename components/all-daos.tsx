@@ -96,12 +96,6 @@ const AllDaos: any = ({
         </div>
       </div>
 
-      {dashboardTableData(0).length === 0 && showDAO && (
-        <div className="h-[40vh] flex items-center justify-center">
-          <p>{currentSearch ? 'Search could not found' : 'You do not have an active DAO currently'}</p>
-        </div>
-      )}
-
       <div className="">
         {showDAO ? (
           <div className="w-full">
@@ -109,11 +103,18 @@ const AllDaos: any = ({
               <DataTable columns={columns} data={dashboardTableData(28)} />
             )}
             {(currentView === 'grid' || currentView !== 'list') && (
+              <>
+              {dashboardTableData(0).length === 0 && showDAO && (
+                <div className="h-[40vh] flex items-center justify-center">
+                  <p>{currentSearch ? 'Search could not found' : 'You do not have an active DAO currently'}</p>
+                </div>
+              )}
               <div className="grid md:grid-cols-2 gap-8">
                 {dashboardTableData(40).map((data: any) => (
                   <DaoCard key={data.activeMember} {...data} />
                 ))}
               </div>
+              </>
             )}
           </div>
         ) : (

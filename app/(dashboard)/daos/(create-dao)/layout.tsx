@@ -13,18 +13,26 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { useRouter } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 import { AppContext } from '@/context/app-context';
 import { defaultDaoCreation } from '@/libs/utils';
+import { ConnectWalletContext } from '@/context/connect-wallet-context';
+import { IConnectWalletContext } from '@/libs/types';
 
 interface ILayout {
   children: ReactNode;
 }
 
 const Layout = ({ children }: ILayout) => {
+  const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
+  const { isConnected } = user;
   const { updateNewDaoInfo } = useContext(AppContext);
   const router = useRouter();
   const [open, setOpen] = useState<boolean>(false);
+
+  if (!isConnected) {
+    redirect(DAO_URL);
+  }
   return (
     <div className="space-y-8 min-h-[83vh]">
       <div className="flex space-x-4 items-start border-b border-b-[#292929] pb-6">
@@ -47,18 +55,30 @@ const Layout = ({ children }: ILayout) => {
                 be lost. Are you sure you want to proceed with exiting?
               </DialogDescription>
             </DialogHeader>
-          <div className='grid grid-cols-2 gap-4'>
-            <Button variant="outline" onClick={() => setOpen(false)}>No, stay</Button>
-             <Button>
-            <Link href={DAO_URL} className='w-full' onClick={() => {localStorage.removeItem('new_dao'); updateNewDaoInfo(defaultDaoCreation); router.push(DAO_URL)}}>
-              Yes, exit
-            </Link>
-            </Button>
-          </div>
+            <div className="grid grid-cols-2 gap-4">
+              <Button variant="outline" onClick={() => setOpen(false)}>
+                No, stay
+              </Button>
+              <Button>
+                <Link
+                  href={DAO_URL}
+                  className="w-full"
+                  onClick={() => {
+                    localStorage.removeItem('new_dao');
+                    updateNewDaoInfo(defaultDaoCreation);
+                    router.push(DAO_URL);
+                  }}
+                >
+                  Yes, exit
+                </Link>
+              </Button>
+            </div>
           </DialogContent>
         </Dialog>
         <div className="space-y-3">
-          <h1 className="dark:text-white text-dark font-medium text-2xl">Create a DAO</h1>
+          <h1 className="dark:text-white text-dark font-medium text-2xl">
+            Create a DAO
+          </h1>
           <p className="text-defaultText text-sm">
             Begin with a simple approach and embrace a learning mindset along
             the way. Remember that your DAO can continually evolve and improve
