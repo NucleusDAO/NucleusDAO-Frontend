@@ -1,3 +1,4 @@
+import { IProposal } from "@/context/app-context"
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -90,3 +91,18 @@ export const validateDaoInfo = (obj: any) => {
 };
 
 export const defaultDaoCreation = { style: '', info: { daoName: '', daoUrl: '', about: '', socialMedia: [{ type: '', link: '' }], logo: null, logoUrl: '' }, members: [{ address: '' }], duration: 0, quorum: 50 }
+
+export const getStatus = (_proposal: IProposal) => {
+  if (_proposal.isExecuted) {
+    return 'SUCCESS';
+  }
+  if (new Date(Number(_proposal.endTime)).valueOf() > Date.now().valueOf()) {
+    return 'ACTIVE';
+  } else {
+    if (_proposal.votesFor > _proposal.votesAgainst) {
+      return 'PENDING';
+    } else {
+      return 'FAILED';
+    }
+  }
+};

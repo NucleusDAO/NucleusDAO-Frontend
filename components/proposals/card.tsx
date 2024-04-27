@@ -9,6 +9,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { encodeURI } from '@/libs/utils';
 import { useMediaQuery } from '@/hooks/use-media-query';
+import { ConnectWalletContext } from '@/context/connect-wallet-context';
+import { useContext } from 'react';
 
 interface IProposalCard {
   description: string;
@@ -29,6 +31,8 @@ const ProposalCard = ({
   type,
   id,
 }: IProposalCard) => {
+  const { user} = useContext<any>(ConnectWalletContext);
+  const { address } = user;
   const pathname = usePathname();
   const isDesktop = useMediaQuery('(min-width: 768px)');
 
@@ -39,7 +43,7 @@ const ProposalCard = ({
         <div className="dark:bg-[#1E1E1E] bg-[#EEEEEE] p-3 rounded-tl-lg rounded-bl-lg">
           <Image src={LegacyLogo} alt="legacy" width={isDesktop ? 32 : 24} />
         </div>
-        <div className="p-2 md:p-4 space-y-6">
+        <div className="p-2 md:p-4 space-y-6 w-full">
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex space-x-4 items-center">
@@ -51,7 +55,7 @@ const ProposalCard = ({
                 />
                 <div className="space-y-1">
                   <p className="text-defaultText text-xs md:text-base">Proposal Type</p>
-                  <h3 className="dark:text-white text-dark font-medium text-sm md:text-lg">{type}</h3>
+                  <h3 className="dark:text-white capitalize text-dark font-medium text-sm md:text-lg">{type}</h3>
                 </div>
               </div>
               <div>{EachStatus[status]}</div>
@@ -62,7 +66,7 @@ const ProposalCard = ({
             <Separator  />
             <div className="flex items-center justify-between text-[10px] md:text-xs dark:text-[#CCCCCCBF] text-defaultText">
               <div className="flex space-x-2 items-center">
-                <Image src={RoundedIcon} alt="legacy" width={isDesktop ? 22 : 14} />
+                <Image src={address ? `https://avatars.z52da5wt.xyz/${address}` : RoundedIcon} alt="legacy" width={isDesktop ? 22 : 14} />
                 <p>{wallet}</p>
               </div>
               <div className="flex space-x-1 md:space-x-4">

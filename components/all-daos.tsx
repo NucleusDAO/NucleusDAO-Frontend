@@ -9,7 +9,14 @@ import { useDebouncedCallback } from 'use-debounce';
 import { columns } from './dashboard/columns';
 import DaoCard from './dashboard/dao-cards';
 import ConnectWalletCallToAction from './connect-wallet-cta';
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { Separator } from './ui/separator';
+import { toast } from 'sonner';
 
 interface IAllDaos {
   showDAO: boolean;
@@ -30,6 +37,7 @@ const AllDaos: any = ({
   connectWalletDescription,
   showDAO,
 }: IAllDaos) => {
+  const [openPopover, setOpenPopover] = useState<boolean>(false);
   const searchParams = useSearchParams();
   const { replace } = useRouter();
   const pathname = usePathname();
@@ -60,16 +68,25 @@ const AllDaos: any = ({
           />
         </div>
         <div className="flex space-x-3 justify-between md:justify-start">
-          <div
-            className="flex space-x-2 dark:text-white text-dark border dark:border-[#292929] border-[#CCCCCC] px-2 py-1.5 rounded-lg items-center text-sm font-light"
-            role="button"
-          >
-            <ListFilter
-              size={20}
-              className="dark:text-[#B4B4B4] text-[#444444]"
-            />
-            <p className="dark:text-white text-dark">Filter</p>
-          </div>
+          <Popover onOpenChange={setOpenPopover} open={openPopover}>
+            <PopoverTrigger>
+              <div
+                className="flex space-x-2 dark:text-white text-dark border dark:border-[#292929] border-[#CCCCCC] px-2 py-1.5 rounded-lg items-center text-sm font-light"
+                role="button"
+              >
+                <ListFilter
+                  size={20}
+                  className="dark:text-[#B4B4B4] text-[#444444]"
+                />
+                <p className="dark:text-white text-dark">Filter</p>
+              </div>
+            </PopoverTrigger>
+            <PopoverContent className='dark:text-[#888888] text-dark border dark:border-[#292929] border-[#CCCCCC] w-[150px] py-2 text-sm space-y-3 font-light'>
+              <div role='button' className='hover:bg-[#1E1E1E] py-2 px-2 rounded-md' onClick={() => setOpenPopover(false)}>Basic DAO</div>
+              <Separator />
+              <div role='button' className='hover:bg-[#1E1E1E] py-2 px-2 rounded-md' onClick={() => { toast.info('Coming soon'); setOpenPopover(false) }}>Open DAO</div>
+            </PopoverContent>
+          </Popover>
           <div className="flex justify-between space-x-4">
             <div
               className={cn(
@@ -104,16 +121,20 @@ const AllDaos: any = ({
             )}
             {(currentView === 'grid' || currentView !== 'list') && (
               <>
-              {dashboardTableData(0).length === 0 && showDAO && (
-                <div className="h-[40vh] flex items-center justify-center">
-                  <p>{currentSearch ? 'Search could not found' : 'You do not have an active DAO currently'}</p>
+                {dashboardTableData(0).length === 0 && showDAO && (
+                  <div className="h-[40vh] flex items-center justify-center">
+                    <p>
+                      {currentSearch
+                        ? 'Search could not found'
+                        : 'You do not have an active DAO currently'}
+                    </p>
+                  </div>
+                )}
+                <div className="grid md:grid-cols-2 gap-8">
+                  {dashboardTableData(40).map((data: any) => (
+                    <DaoCard key={data.activeMember} {...data} />
+                  ))}
                 </div>
-              )}
-              <div className="grid md:grid-cols-2 gap-8">
-                {dashboardTableData(40).map((data: any) => (
-                  <DaoCard key={data.activeMember} {...data} />
-                ))}
-              </div>
               </>
             )}
           </div>
