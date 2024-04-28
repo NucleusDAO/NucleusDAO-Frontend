@@ -66,7 +66,7 @@ const ProposalCard = ({
             <Separator  />
             <div className="flex items-center justify-between text-[10px] md:text-xs dark:text-[#CCCCCCBF] text-defaultText">
               <div className="flex space-x-2 items-center">
-                <Image src={address ? `https://avatars.z52da5wt.xyz/${address}` : RoundedIcon} alt="legacy" width={isDesktop ? 22 : 14} />
+                <img src={address ? `https://avatars.z52da5wt.xyz/${address}` : RoundedIcon} alt="legacy" width={isDesktop ? 22 : 14}  height={isDesktop ? 22 : 14} />
                 <p>{wallet}</p>
               </div>
               <div className="flex space-x-1 md:space-x-4">

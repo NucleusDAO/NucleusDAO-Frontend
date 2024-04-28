@@ -41,6 +41,7 @@ const Layout = ({ children }: ILayout) => {
         const daoId = 'Hexdee DAO' || secondParts;
         if (daoId) {
           const dao = await getEachDAO(daoId);
+          console.log(dao, '-> proposal')
           setCurrentDAO(dao);
           await getProposals(dao.contractAddress).then((proposals: IProposal[]) => {
             console.log(proposals, '-> proposal')
@@ -64,6 +65,7 @@ const Layout = ({ children }: ILayout) => {
               })
             );
           });
+        setIsLoading(false);
         } else {
           router.back();
         }
@@ -75,6 +77,8 @@ const Layout = ({ children }: ILayout) => {
       }
     })();
   }, []);
+
+  console.log(isLoading, '-> is loading')
 
   if (isLoading) return <EachDaoLoading />;
 
