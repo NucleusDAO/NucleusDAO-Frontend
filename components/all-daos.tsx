@@ -3,7 +3,7 @@ import { DashboardIcon } from '@/assets/svgs';
 import DataTable from '@/components/data-table';
 import SearchInput from '@/components/ui/search-input';
 import { cn } from '@/libs/utils';
-import { List, ListFilter } from 'lucide-react';
+import { List, ListFilter, Plus } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useDebouncedCallback } from 'use-debounce';
 import { columns } from './dashboard/columns';
@@ -17,25 +17,18 @@ import {
 } from '@/components/ui/popover';
 import { Separator } from './ui/separator';
 import { toast } from 'sonner';
-
-interface IAllDaos {
-  showDAO: boolean;
-  connectWalletDescription?: string;
-  dashboardTableData: (arg: number) => {
-    organisation: string;
-    orgIcon: ReactNode;
-    description: string;
-    votes: string;
-    url: string;
-    activeMember: string;
-    activeProposal: string;
-  }[];
-}
+import { Button } from './ui/button';
+import Link from 'next/link';
+import { SELECT_DAO_STYLE_URL } from '@/config/path';
+import Image from 'next/image';
+import EmptyDAO from '@/assets/icons/empty-icon.png';
+import { IAllDaos } from '@/libs/types';
 
 const AllDaos: any = ({
   dashboardTableData,
   connectWalletDescription,
   showDAO,
+  isConnected,
 }: IAllDaos) => {
   const [openPopover, setOpenPopover] = useState<boolean>(false);
   const searchParams = useSearchParams();
@@ -81,10 +74,25 @@ const AllDaos: any = ({
                 <p className="dark:text-white text-dark">Filter</p>
               </div>
             </PopoverTrigger>
-            <PopoverContent className='dark:text-[#888888] text-dark border dark:border-[#292929] border-[#CCCCCC] w-[150px] py-2 text-sm space-y-3 font-light'>
-              <div role='button' className='hover:bg-[#1E1E1E] py-2 px-2 rounded-md' onClick={() => setOpenPopover(false)}>Basic DAO</div>
+            <PopoverContent className="dark:text-[#888888] text-dark border dark:border-[#292929] border-[#CCCCCC] w-[150px] py-2 text-sm space-y-3 font-light">
+              <div
+                role="button"
+                className="hover:bg-[#1E1E1E] py-2 px-2 rounded-md"
+                onClick={() => setOpenPopover(false)}
+              >
+                Basic DAO
+              </div>
               <Separator />
-              <div role='button' className='hover:bg-[#1E1E1E] py-2 px-2 rounded-md' onClick={() => { toast.info('Coming soon'); setOpenPopover(false) }}>Open DAO</div>
+              <div
+                role="button"
+                className="hover:bg-[#1E1E1E] py-2 px-2 rounded-md"
+                onClick={() => {
+                  toast.info('Coming soon');
+                  setOpenPopover(false);
+                }}
+              >
+                Open DAO
+              </div>
             </PopoverContent>
           </Popover>
           <div className="flex justify-between space-x-4">
@@ -122,12 +130,31 @@ const AllDaos: any = ({
             {(currentView === 'grid' || currentView !== 'list') && (
               <>
                 {dashboardTableData(0).length === 0 && showDAO && (
-                  <div className="h-[40vh] flex items-center justify-center">
-                    <p>
-                      {currentSearch
-                        ? 'Search could not found'
-                        : 'You do not have an active DAO currently'}
-                    </p>
+                  <div className="h-[40vh] w-full space-y-4 pt-20">
+                    <div className="text-center w-full">
+                      <Image src={EmptyDAO} alt="DAO empty" width={100} className='mx-auto' />
+                    </div>
+                    <div className="flex items-center justify-center">
+                      {currentSearch ? (
+                        <p className="text-center w-2/5">
+                          DAO could not be found
+                        </p>
+                      ) : (
+                        <div className="text-center w-2/5">
+                          <p className="pb-3 font-light text-sm">
+                            Begin by setting up governance mechanisms, defining
+                            roles and responsibilities, and establishing rules
+                            for participation.
+                          </p>
+                            <Link href={SELECT_DAO_STYLE_URL}>
+                              <Button>
+                                <Plus className="mr-2 h-4 w-4" /> Create
+                                DAO
+                              </Button>
+                            </Link>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 )}
                 <div className="grid md:grid-cols-2 gap-8">

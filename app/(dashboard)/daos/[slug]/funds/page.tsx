@@ -34,8 +34,7 @@ const EachDaoFunds = () => {
             Currently, there are no funds in the treasury. You can initiate a
             proposal to make deposit.
           </p>
-          {/* {isConnected && <DepositToken />} */}
-          <DepositToken />
+          {isConnected && <DepositToken />}
         </div>
       ) : (
         <>
@@ -57,8 +56,7 @@ const EachDaoFunds = () => {
                   </p>
                 </div>
               </div>
-              {/* {isConnected && <DepositToken />} */}
-          <DepositToken />
+              {isConnected && <DepositToken />}
 
             </div>
             <CopyToClipboard text={userURL} onCopy={() => toast.info('URL copied to clipboard!')}>

@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export type WalletInfo = {
   name: string;
   type: string;
@@ -63,4 +65,19 @@ export interface InewDaoInfo {
   members: { address: string; }[],
   quorum: number;
   duration: number;
+}
+
+export interface IAllDaos {
+  showDAO: boolean;
+  isConnected: boolean;
+  connectWalletDescription?: string;
+  dashboardTableData: (arg: number) => {
+    organisation: string;
+    orgIcon: ReactNode;
+    description: string;
+    votes: string;
+    url: string;
+    activeMember: string;
+    activeProposal: string;
+  }[];
 }

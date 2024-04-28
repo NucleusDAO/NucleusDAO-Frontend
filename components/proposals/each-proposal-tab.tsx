@@ -8,6 +8,7 @@ import { useDebouncedCallback } from 'use-debounce';
 import ProposalCard from './card';
 import DataTable from '../data-table';
 import { columns } from './columns';
+import Lottie from 'react-lottie';
 import {
   Popover,
   PopoverContent,
@@ -19,6 +20,7 @@ import { CREATE_PROPOSAL_URL } from '@/config/path';
 import { Button } from '../ui/button';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { IConnectWalletContext } from '@/libs/types';
+import { defaultProposalOption } from '../animation-options';
 
 const EachFilterTab = ({
   proposalData,
@@ -141,27 +143,36 @@ const EachFilterTab = ({
         {(currentView === 'grid' || currentView !== 'list') && (
           <>
             {proposalData.length === 0 && (
-              <div className="h-[40vh] flex items-center justify-center">
-                {search || filter ? (
-                  <p className="text-center w-2/5">
-                    Proposal could not be found
-                  </p>
-                ) : (
-                  <div className="text-center w-2/5">
-                    <p className="pb-3">
-                      Engage with the community, address any questions or
-                      concerns, and monitor the progress of your proposal as it
-                      moves through the decision-making process.
+              <div className='h-[40vh] w-full space-y-2'>
+                <div className="text-center mx-auto">
+                  <Lottie
+                    options={defaultProposalOption}
+                    height={150}
+                    width={150}
+                  />
+                </div>
+                <div className="flex items-center justify-center">
+                  {search || filter ? (
+                    <p className="text-center w-2/5">
+                      Proposal could not be found
                     </p>
-                    {isConnected && (
-                      <Link href={CREATE_PROPOSAL_URL}>
-                        <Button>
-                          <Plus className="mr-2 h-4 w-4" /> Create Proposal
-                        </Button>
-                      </Link>
-                    )}
-                  </div>
-                )}
+                  ) : (
+                    <div className="text-center w-2/5">
+                      <p className="pb-3">
+                        Engage with the community, address any questions or
+                        concerns, and monitor the progress of your proposal as
+                        it moves through the decision-making process.
+                      </p>
+                      {isConnected && (
+                        <Link href={CREATE_PROPOSAL_URL}>
+                          <Button>
+                            <Plus className="mr-2 h-4 w-4" /> Create Proposal
+                          </Button>
+                        </Link>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
             )}
             <div className="grid md:grid-cols-2 gap-6">
