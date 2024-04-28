@@ -12,6 +12,7 @@ import { usePathname } from 'next/navigation';
 import { EachDaoContext } from '@/context/each-dao-context';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { toast } from 'sonner';
+import DepositToken from '@/components/deposit-token';
 
 const EachDaoFunds = () => {
   const pathname = usePathname();
@@ -33,7 +34,8 @@ const EachDaoFunds = () => {
             Currently, there are no funds in the treasury. You can initiate a
             proposal to make deposit.
           </p>
-          {isConnected && <Button>Deposit Token</Button>}
+          {/* {isConnected && <DepositToken />} */}
+          <DepositToken />
         </div>
       ) : (
         <>
@@ -55,7 +57,9 @@ const EachDaoFunds = () => {
                   </p>
                 </div>
               </div>
-              {isConnected && <Button>Deposit Token</Button>}
+              {/* {isConnected && <DepositToken />} */}
+          <DepositToken />
+
             </div>
             <CopyToClipboard text={userURL} onCopy={() => toast.info('URL copied to clipboard!')}>
               <div className="flex space-x-1.5 font-light text-xs">

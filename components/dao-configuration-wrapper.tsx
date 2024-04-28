@@ -34,9 +34,9 @@ const DaoConfigurationWrapper = ({ children }: IDaoConfigurationWrapper) => {
           <DialogTrigger asChild>
             {isConnected && <Button>Edit Settings</Button>}
           </DialogTrigger>
-          <DialogContent className="bg-[#191919]">
+          <DialogContent className="">
             <DialogHeader>
-              <DialogTitle className="text-white font-medium py-3">
+              <DialogTitle className="text-[#292929] dark:text-white font-medium py-3">
                 Add Member
               </DialogTitle>
               <DialogDescription className="font-light py-2">
