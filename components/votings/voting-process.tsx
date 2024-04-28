@@ -14,6 +14,8 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { IConnectWalletContext } from '@/libs/types';
 import { toast } from 'sonner';
+import Lottie from 'react-lottie';
+import { defaultSuccessOption } from '../animation-options';
 
 const VotingProcess = () => {
   const [selectedOption, setSelectedOption] = useState<string>('');
@@ -26,11 +28,11 @@ const VotingProcess = () => {
 
   const handleOptionChange = (option: string) => {
     if (connected) {
-      setSelectedOption(option)
+      setSelectedOption(option);
     } else {
-      toast.error('Connect to you wallet!')
+      toast.error('Connect to you wallet!');
     }
-  }
+  };
 
   return (
     <div>
@@ -77,14 +79,22 @@ const VotingProcess = () => {
             </DialogTrigger>
             <DialogContent className="dark:bg-[#191919] bg-white">
               <DialogHeader>
-                <DialogTitle className="dark:text-white font-medium py-1 text-center text-dark">
-                Vote Casted
+                <DialogTitle className="dark:text-white font-medium py-1 text-center text-dark ">
+                  <Lottie
+                    options={defaultSuccessOption}
+                    height={150}
+                    width={150}
+                  />
+                  <p className='-mt-2'>Vote Casted</p>
                 </DialogTitle>
                 <DialogDescription className="py-2 text-center">
-                You have casted your vote. The result will be shown if the proposal reaches its quorum
+                  You have casted your vote. The result will be shown if the
+                  proposal reaches its quorum
                 </DialogDescription>
               </DialogHeader>
-              <Button className="w-full" onClick={() => setShowModal(false)}>Done</Button>
+              <Button className="w-full" onClick={() => setShowModal(false)}>
+                Done
+              </Button>
             </DialogContent>
           </Dialog>
         </div>

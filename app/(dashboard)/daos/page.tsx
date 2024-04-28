@@ -66,7 +66,7 @@ const Daos = () => {
       </div>
 
       {DAOsData?.length > 0 && (
-        <AllDaos dashboardTableData={getDAOsData} showDAO={true} />
+        <AllDaos dashboardTableData={getDAOsData} showDAO={true} isConnected={connected} />
       )}
     </div>
   );
