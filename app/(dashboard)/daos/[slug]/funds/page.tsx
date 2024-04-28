@@ -8,18 +8,21 @@ import { data } from './data';
 import { IConnectWalletContext } from '@/libs/types';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { useContext } from 'react';
-import { AppContext } from '@/context/app-context';
 import { usePathname } from 'next/navigation';
+import { EachDaoContext } from '@/context/each-dao-context';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { toast } from 'sonner';
 
 const EachDaoFunds = () => {
   const pathname = usePathname();
   const domainName = typeof window !== 'undefined' && window.location.origin;
-  const { currentDAO } = useContext(AppContext);
+  const { currentDAO } = useContext(EachDaoContext);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { isConnected } = user;
 
   const lastIndex = pathname.lastIndexOf('/');
   const updatedUrl = pathname.substring(0, lastIndex);
+  const userURL: string = `${domainName}${updatedUrl}`
   console.log(`${domainName}${updatedUrl}`, '->');
   
   return (
@@ -54,13 +57,15 @@ const EachDaoFunds = () => {
               </div>
               {isConnected && <Button>Deposit Token</Button>}
             </div>
-            <div className="flex space-x-1.5 font-light text-xs">
-              <p className="dark:text-white font-normal text-dark">
-                DAO account name:{' '}
-                <span className="text-[#888888]">{`${domainName}${updatedUrl}`}</span>
-              </p>
-              <CopyIcon size="18" className="cursor-pointer" />
-            </div>
+            <CopyToClipboard text={userURL} onCopy={() => toast.info('URL copied to clipboard!')}>
+              <div className="flex space-x-1.5 font-light text-xs">
+                <p className="dark:text-white font-normal text-dark">
+                  DAO account name:{' '}
+                  <span className="text-[#888888]">{userURL}</span>
+                </p>
+                <CopyIcon size="18" className="cursor-pointer" />
+              </div>
+            </CopyToClipboard>
           </div>
 
           <div className="dark:bg-[#191919] p-4 space-y-4 rounded-lg bg-white">

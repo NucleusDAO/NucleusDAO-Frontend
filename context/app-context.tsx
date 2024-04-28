@@ -2,7 +2,6 @@ import { ReactNode, createContext, useContext, useEffect, useState } from 'react
 import { ConnectWalletContext, ConnectWalletProvider } from './connect-wallet-context';
 import { getNucleusDAO, getBasicDAO } from '@/libs/ae-utils';
 import { toast } from 'sonner';
-import AllDaos from '@/components/all-daos';
 import { IConnectWalletContext, InewDaoInfo } from '@/libs/types';
 import { defaultDaoCreation } from '@/libs/utils';
 
@@ -40,8 +39,6 @@ export interface IDAO {
 export const AppContextProvider = ({ children }: IAppProvider) => {
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const [allDAOs, setAllDAOs] = useState<any[]>();
-  const [currentDAO, setCurrentDAO] = useState<IDAO | null>(null);
-  const [eachDAOProposal, setEachDAOProposal] = useState<IDAO | null>(null);
   const [daoLoading, setDaoLoading] = useState<boolean>(true);
   const [DAOsData, setDAOsData] = useState<any[]>([]);
   const [newDaoInfo, setNewDaoInfo] = useState<InewDaoInfo>(defaultDaoCreation);
@@ -101,6 +98,8 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     };
     fetchDAOs();
   }, [user.isConnected]);
+
+  console.log(daoLoading, '-> dao loading')
 
   const createDAO = async (
     name: string,
@@ -164,10 +163,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
   };
 
   const value = {
-    // DAOs,
     createDAO,
-    currentDAO,
-    setCurrentDAO,
     createProposal,
     getProposals,
     daoLoading,
@@ -175,8 +171,6 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     updateNewDaoInfo,
     newDaoInfo,
     getEachDAO,
-    eachDAOProposal,
-    setEachDAOProposal
   };
 
   return (

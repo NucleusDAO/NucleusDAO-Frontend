@@ -4,81 +4,35 @@ import { CREATE_PROPOSAL_URL, DAO_URL } from '@/config/path';
 import { Globe, MoveLeft, Plus } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { ReactNode, useContext, useEffect, useState } from 'react';
-import { AppContext, IProposal } from '@/context/app-context';
+import { ReactNode, useContext } from 'react';
 import { CopyIcon } from '@/assets/svgs';
 import { eachDaoViews } from '@/config/dao-config';
-import { cn, encodeURI, getStatus } from '@/libs/utils';
-import { toast } from 'sonner';
+import { cn, encodeURI } from '@/libs/utils';
 import EachDaoLoading from '@/components/loading/each-dao-loading';
+import { EachDaoContext } from '@/context/each-dao-context';
+import { ConnectWalletContext } from '@/context/connect-wallet-context';
+import { IConnectWalletContext } from '@/libs/types';
 
 interface ILayout {
   children: ReactNode;
 }
 
 const Layout = ({ children }: ILayout) => {
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   const router = useRouter();
   const pathname = usePathname();
-  const isJoined: boolean = true;
+  const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
+  const { isConnected } = user;
   const {
+    isLoading,
     currentDAO,
-    getProposals,
-    setCurrentDAO,
-    getEachDAO,
-    setEachDAOProposal,
-  } = useContext(AppContext);
-  
-  const urlParts = pathname.split('/'); // Split the URL by "/"
-  const secondParts = urlParts[2];
+  } = useContext(EachDaoContext);
+
+  console.log(currentDAO, '-> jfkjd')
 
   const lastIndex = pathname.lastIndexOf('/');
   const updatedUrl = pathname.substring(0, lastIndex);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const daoId = 'Hexdee DAO' || secondParts;
-        if (daoId) {
-          const dao = await getEachDAO(daoId);
-          console.log(dao, '-> proposal')
-          setCurrentDAO(dao);
-          await getProposals(dao.contractAddress).then((proposals: IProposal[]) => {
-            console.log(proposals, '-> proposal')
-            setEachDAOProposal(
-              proposals.map((proposal: IProposal) => {
-                return {
-                  type: proposal.proposalType,
-                  status: getStatus(proposal),
-                  description: proposal.description,
-                  wallet:
-                    proposal.target.slice(0, 6) +
-                    '...' +
-                    proposal.target.slice(-4),
-                  duration: new Date().toLocaleDateString('en-Gb', {
-                    day: 'numeric',
-                  }),
-                  totalVote: `${proposal.votesFor} + ${proposal.votesAgainst}`,
-                  organisation: dao.name,
-                  id: proposal.id.toString(),
-                };
-              })
-            );
-          });
-        setIsLoading(false);
-        } else {
-          router.back();
-        }
-        setIsLoading(false);
-      } catch (error: any) {
-        setIsLoading(false);
-        toast.error(error.message);
-        console.error('Error fetching DAO:', error);
-      }
-    })();
-  }, []);
-
-  console.log(isLoading, '-> is loading')
+  console.log(isLoading, '-> is loading');
 
   if (isLoading) return <EachDaoLoading />;
 
@@ -97,7 +51,7 @@ const Layout = ({ children }: ILayout) => {
             Explore DAOs
           </h1>
         </div>
-        {isJoined ? (
+        {isConnected ? (
           <Link href={CREATE_PROPOSAL_URL}>
             <Button>
               <Plus className="mr-2 h-4 w-4" /> Create Proposal
