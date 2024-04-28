@@ -23,7 +23,7 @@ const Daos = () => {
   const getDAOsData = (width: number) => {
     let allDAO;
     if (currentSearch) {
-      allDAO = DAOsData?.filter((item: { organisation: string; }) =>  item?.organisation?.toLowerCase().includes(currentSearch));
+      allDAO = DAOsData?.filter((item: { organisation: string; }) =>  item?.organisation?.toLowerCase().includes(currentSearch.toLowerCase()));
     } else {
       allDAO = DAOsData;
     }

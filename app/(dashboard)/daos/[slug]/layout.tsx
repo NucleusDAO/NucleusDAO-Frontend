@@ -27,9 +27,8 @@ const Layout = ({ children }: ILayout) => {
     setCurrentDAO,
     getEachDAO,
     setEachDAOProposal,
-    eachDAOProposal
   } = useContext(AppContext);
-
+  
   const urlParts = pathname.split('/'); // Split the URL by "/"
   const secondParts = urlParts[2];
 
@@ -43,7 +42,6 @@ const Layout = ({ children }: ILayout) => {
         if (daoId) {
           const dao = await getEachDAO(daoId);
           setCurrentDAO(dao);
-          console.log(dao, '-> dao')
           await getProposals(dao.contractAddress).then((proposals: IProposal[]) => {
             console.log(proposals, '-> proposal')
             setEachDAOProposal(

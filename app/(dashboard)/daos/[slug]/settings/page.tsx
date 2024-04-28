@@ -4,19 +4,23 @@ import SidebarLinksComp, {
   daoSettingsSidebarLinks,
 } from './components/side-bar-links';
 import Profile from './components/profile';
-import { ReactNode } from 'react';
+import { ReactNode, useContext } from 'react';
 import Links from './components/links';
+import { AppContext } from '@/context/app-context';
 
 interface ITabView {
   [key: string]: ReactNode;
 }
 
 const Settings = () => {
+  const { currentDAO } = useContext(AppContext);
+  const { name, image } = currentDAO;
+
   const searchParams = useSearchParams();
   const activeSidebar =
     searchParams.get('q') || daoSettingsSidebarLinks[0].title;
   const tabs: ITabView = {
-    Profile: <Profile />,
+    Profile: <Profile name={name} image={image} />,
     Links: <Links />,
   };
   return (

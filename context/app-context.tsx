@@ -47,8 +47,6 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
   const [newDaoInfo, setNewDaoInfo] = useState<InewDaoInfo>(defaultDaoCreation);
   const getNewDaoInfo = typeof window !== 'undefined' && localStorage.getItem('new_dao');
 
-  console.log(!!getNewDaoInfo, '->')
-
   useEffect(() => {
     if (getNewDaoInfo) {
       setNewDaoInfo(JSON.parse(getNewDaoInfo));

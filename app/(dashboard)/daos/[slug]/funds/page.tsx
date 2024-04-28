@@ -1,11 +1,27 @@
+'use client'
 import { CopyIcon } from '@/assets/svgs';
 import DataTable from '@/components/data-table';
 import { Button } from '@/components/ui/button';
 import { ChevronUp } from 'lucide-react';
 import { columns } from './columns';
 import { data } from './data';
+import { IConnectWalletContext } from '@/libs/types';
+import { ConnectWalletContext } from '@/context/connect-wallet-context';
+import { useContext } from 'react';
+import { AppContext } from '@/context/app-context';
+import { usePathname } from 'next/navigation';
 
 const EachDaoFunds = () => {
+  const pathname = usePathname();
+  const domainName = typeof window !== 'undefined' && window.location.origin;
+  const { currentDAO } = useContext(AppContext);
+  const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
+  const { isConnected } = user;
+
+  const lastIndex = pathname.lastIndexOf('/');
+  const updatedUrl = pathname.substring(0, lastIndex);
+  console.log(`${domainName}${updatedUrl}`, '->');
+  
   return (
     <div className="space-y-4">
       {data.length === 0 ? (
@@ -14,7 +30,7 @@ const EachDaoFunds = () => {
             Currently, there are no funds in the treasury. You can initiate a
             proposal to make deposit.
           </p>
-          <Button>Deposit Token</Button>
+          {isConnected && <Button>Deposit Token</Button>}
         </div>
       ) : (
         <>
@@ -36,12 +52,12 @@ const EachDaoFunds = () => {
                   </p>
                 </div>
               </div>
-              <Button>Deposit Token</Button>
+              {isConnected && <Button>Deposit Token</Button>}
             </div>
             <div className="flex space-x-1.5 font-light text-xs">
               <p className="dark:text-white font-normal text-dark">
                 DAO account name:{' '}
-                <span className="text-[#888888]">legacy.smartdao.eth</span>
+                <span className="text-[#888888]">{`${domainName}${updatedUrl}`}</span>
               </p>
               <CopyIcon size="18" className="cursor-pointer" />
             </div>

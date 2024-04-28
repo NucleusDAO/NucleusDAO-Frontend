@@ -79,11 +79,6 @@ export const validateDaoInfo = (obj: any) => {
       // 'socialMedia' is not an array or it's an empty array
       return true;
     }
-
-    // Check if all items in 'socialMedia' have a 'key' and 'value'
-    // if (obj.info.socialMedia.some((item) => !item.key || !item.value)) {
-    //   return true;
-    // }
   }
 
   // All keys are filled, return true
