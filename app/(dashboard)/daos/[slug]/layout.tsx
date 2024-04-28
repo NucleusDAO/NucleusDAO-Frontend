@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { CREATE_PROPOSAL_URL, DAO_URL } from '@/config/path';
 import { Globe, MoveLeft, Plus } from 'lucide-react';
 import Link from 'next/link';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { ReactNode, useContext, useEffect, useState } from 'react';
 import { AppContext, IProposal } from '@/context/app-context';
 import { CopyIcon } from '@/assets/svgs';
@@ -11,7 +11,6 @@ import { eachDaoViews } from '@/config/dao-config';
 import { cn, encodeURI, getStatus } from '@/libs/utils';
 import { toast } from 'sonner';
 import EachDaoLoading from '@/components/loading/each-dao-loading';
-import { getDaoInfo } from './get-dao-info';
 
 interface ILayout {
   children: ReactNode;

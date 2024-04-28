@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/popover';
 import { useState } from 'react';
 
-const EachFilterTab = ({ proposalData, search, filter }: { proposalData: any[]; search: string; filter: string; }) => {
+const EachFilterTab = ({ proposalData, search, filter }: { proposalData: any[]; search?: string; filter?: string; }) => {
   const [openPopover, setOpenPopover] = useState<boolean>(false);
   const searchParams = useSearchParams();
   const { replace } = useRouter();

@@ -8,10 +8,20 @@ import { data } from './data';
 import { IConnectWalletContext } from '@/libs/types';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { useContext } from 'react';
+import { AppContext } from '@/context/app-context';
+import { usePathname } from 'next/navigation';
 
 const EachDaoFunds = () => {
+  const pathname = usePathname();
+  const domainName = typeof window !== 'undefined' && window.location.origin;
+  const { currentDAO } = useContext(AppContext);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { isConnected } = user;
+
+  const lastIndex = pathname.lastIndexOf('/');
+  const updatedUrl = pathname.substring(0, lastIndex);
+  console.log(`${domainName}${updatedUrl}`, '->');
+  
   return (
     <div className="space-y-4">
       {data.length === 0 ? (
@@ -47,7 +57,7 @@ const EachDaoFunds = () => {
             <div className="flex space-x-1.5 font-light text-xs">
               <p className="dark:text-white font-normal text-dark">
                 DAO account name:{' '}
-                <span className="text-[#888888]">legacy.smartdao.eth</span>
+                <span className="text-[#888888]">{`${domainName}${updatedUrl}`}</span>
               </p>
               <CopyIcon size="18" className="cursor-pointer" />
             </div>
