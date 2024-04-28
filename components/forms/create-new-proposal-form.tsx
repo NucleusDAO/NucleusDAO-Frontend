@@ -29,7 +29,7 @@ import { EachProposalType } from '@/config/proposal-config';
 
 const CreateNewProposalForm = () => {
   const searchParams = useSearchParams();
-  const enums = searchParams.get('enums') || '0'
+  const enums: string = searchParams.get('enums') || '0'
   const router = useRouter();
   const [showEl, setShowEl] = useState<boolean>(false);
   const form = useForm<z.infer<typeof proposalInfoSchema>>({
