@@ -43,7 +43,7 @@ const Layout = ({ children }: ILayout) => {
           <div
             className="rounded-lg flex w-fit items-center justify-center p-2 dark:bg-[#1E1E1E] bg-white dark:hover:bg-[#262525] hover:bg-white text-[#444444] dark:text-defaultText"
             role="button"
-            onClick={() => router.push(DAO_URL)}
+            onClick={() => router.back()}
           >
             <MoveLeft />
           </div>
