@@ -6,14 +6,14 @@ import SidebarLinksComp, {
 import Profile from './components/profile';
 import { ReactNode, useContext } from 'react';
 import Links from './components/links';
-import { AppContext } from '@/context/app-context';
+import { EachDaoContext } from '@/context/each-dao-context';
 
 interface ITabView {
   [key: string]: ReactNode;
 }
 
 const Settings = () => {
-  const { currentDAO } = useContext(AppContext);
+  const { currentDAO } = useContext(EachDaoContext);
   const { name, image } = currentDAO;
 
   const searchParams = useSearchParams();

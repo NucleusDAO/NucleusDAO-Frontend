@@ -1,11 +1,12 @@
 'use client';
 import EachFilterTab from '@/components/proposals/each-proposal-tab';
 import { AppContext } from '@/context/app-context';
+import { EachDaoContext } from '@/context/each-dao-context';
 import { useSearchParams } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
 
 const EachDaoProposals = () => {
-  const { eachDAOProposal } = useContext(AppContext);
+  const { eachDAOProposal } = useContext(EachDaoContext);
   const searchParams = useSearchParams();
   const search = searchParams.get('search') || '';
   const filter = searchParams.get('filter') || '';

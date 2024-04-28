@@ -15,9 +15,9 @@ import {
 import Link from 'next/link';
 import { CREATE_PROPOSAL_URL } from '@/config/path';
 import { useContext, useEffect, useState } from 'react';
-import { AppContext } from '@/context/app-context';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { IConnectWalletContext } from '@/libs/types';
+import { EachDaoContext } from '@/context/each-dao-context';
 
 interface IData {
   wallet: string;
@@ -26,7 +26,7 @@ interface IData {
 }
 
 const EachDaoMembers = () => {
-  const { currentDAO } = useContext(AppContext);
+  const { currentDAO } = useContext(EachDaoContext);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { isConnected } = user;
   const [data, setData] = useState<IData[]>([]);
@@ -66,7 +66,7 @@ const EachDaoMembers = () => {
               </DialogDescription>
             </DialogHeader>
 
-            <Link href={CREATE_PROPOSAL_URL}>
+            <Link href={`${CREATE_PROPOSAL_URL}?enums=1`}>
               <Button className='w-full'>Propose</Button>
             </Link>
           </DialogContent>
@@ -77,5 +77,6 @@ const EachDaoMembers = () => {
     </div>
   );
 };
+
 
 export default EachDaoMembers;
