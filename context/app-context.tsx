@@ -99,8 +99,6 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     fetchDAOs();
   }, [user.isConnected]);
 
-  console.log(daoLoading, '-> dao loading')
-
   const createDAO = async (
     name: string,
     description: string,

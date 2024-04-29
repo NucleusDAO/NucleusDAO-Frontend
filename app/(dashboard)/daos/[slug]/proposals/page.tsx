@@ -12,8 +12,6 @@ const EachDaoProposals = () => {
   const filter = searchParams.get('filter') || '';
   const [proposals, setProposals] = useState(eachDAOProposal);
 
-  console.log(eachDAOProposal, '->')
-// setEachDAOProposal
   useEffect(() => {
     if (search) {
       setProposals(eachDAOProposal?.filter((item: { wallet: string; type: string; }) =>  item?.wallet?.toLowerCase().includes(search.toLowerCase()) || item?.type?.toLocaleLowerCase()?.includes(search.toLowerCase())))

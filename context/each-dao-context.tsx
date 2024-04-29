@@ -44,19 +44,15 @@ export const EachDaoContextProvider = ({ children }: IAppProvider) => {
   const urlParts = pathname.split('/'); // Split the URL by "/"
   const secondParts = urlParts[2];
 
-  console.log(currentDAO, '-> currentDao')
-
   useEffect(() => {
     (async () => {
       try {
         const daoId = 'Hexdee DAO' || secondParts;
         if (daoId) {
           const dao = await getEachDAO(daoId);
-          console.log(dao, '-> proposal');
           setCurrentDAO(dao);
           await getProposals(dao.contractAddress).then(
             (proposals: IProposal[]) => {
-              console.log(proposals, '-> proposal');
               setEachDAOProposal(
                 proposals.map((proposal: IProposal) => {
                   return {

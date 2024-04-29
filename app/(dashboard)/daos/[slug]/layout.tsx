@@ -27,12 +27,8 @@ const Layout = ({ children }: ILayout) => {
     currentDAO,
   } = useContext(EachDaoContext);
 
-  console.log(currentDAO, '-> jfkjd')
-
   const lastIndex = pathname.lastIndexOf('/');
   const updatedUrl = pathname.substring(0, lastIndex);
-
-  console.log(isLoading, '-> is loading');
 
   if (isLoading) return <EachDaoLoading />;
 

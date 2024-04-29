@@ -36,15 +36,6 @@ const daoInfoSchema = z
         ]);
       }
     }
-    // // Validate each social media entry
-    // for (const item of data.socialMedia) {
-    //   if (item.type || item.link) {
-    //     if (!item.type || !item.link) {
-    //       throw new z.ZodError([{ code: 'custom', path: ['socialMedia'], message: 'Type and link are both required for social media' }]);
-    //     }
-    //   }
-    // }
-
     // Validate each social media entry
     if (data.socialMedia) {
       for (const [index, item] of data.socialMedia.entries()) {
@@ -116,39 +107,22 @@ const proposalInfoSchema = z.object({
 });
 
 const defineMembershipSchema = z.object({
-  members: z.array(member)
-  .refine((data: any) => {
-    // for (const str of value) {
-    //   if (str.address === '' || /^\s+$/.test(str.address)) {
-    //     throw new z.ZodError([{ code: 'custom', path: ['members', index], message: 'Membership should not contain empty or whitespace strings' }]);
-    //   }
-    // }
-console.log(data, '-. data')
-for (const [index, item] of data.entries()) {
-  if (item.address === '' || /^\s+$/.test(item.address)) {
-      throw new z.ZodError([
+  members: z.array(member).refine((data: any) => {
+    for (const [index, item] of data.entries()) {
+      if (item.address === '' || /^\s+$/.test(item.address)) {
+        throw new z.ZodError([
           {
-              code: 'custom',
-              path: ['members', index], // Pass the index here
-              message: 'Type and link are both required for social media',
+            code: 'custom',
+            path: ['members', index], // Pass the index here
+            message: 'Type and link are both required for social media',
           },
-      ]);
-  }
-}
+        ]);
+      }
+    }
 
     return true;
   }),
 });
-// const defineMembershipSchema = z
-//   .array(z.string().nonempty().trim())
-// .refine((value) => {
-//   for (const str of value) {
-//     if (str === '' || /^\s+$/.test(str)) {
-//       throw new Error('Array should not contain empty or whitespace strings');
-//     }
-//   }
-//   return true;
-//   });
 
 const editProfile = z.object({
   name: z
