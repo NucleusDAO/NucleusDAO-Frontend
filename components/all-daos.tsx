@@ -137,7 +137,7 @@ const AllDaos: any = ({
                     <div className="flex items-center justify-center">
                       {currentSearch ? (
                         <p className="text-center w-2/5">
-                          DAO could not be found
+                          The DAO you are looking for could not be found
                         </p>
                       ) : (
                         <div className="text-center w-2/5">

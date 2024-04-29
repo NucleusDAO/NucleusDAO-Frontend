@@ -24,7 +24,6 @@ const EachDaoFunds = () => {
   const lastIndex = pathname.lastIndexOf('/');
   const updatedUrl = pathname.substring(0, lastIndex);
   const userURL: string = `${domainName}${updatedUrl}`
-  console.log(`${domainName}${updatedUrl}`, '->');
   
   return (
     <div className="space-y-4">
