@@ -3,12 +3,13 @@ import NavComp from '@/components/home-component/nav-comp';
 import Background from '@/assets/images/main-bg.png';
 import SectionTwoBackground from '@/assets/images/section-2-bg.png';
 import { Button } from '@/components/ui/button';
-import { PlayIcon } from '@/assets/svgs';
+import { FeaturesIcon, PlayIcon } from '@/assets/svgs';
 import AEAnimation from '@/assets/animations/ae-animation';
 import Lottie from 'react-lottie';
 import { defaultProposalOption } from '@/components/animation-options';
 import NucleusDAOSample from '@/assets/images/nucleus-dao-sample.png'
 import Image from 'next/image';
+import FeaturesComp from '@/components/home-component/features-comp';
 
 export default function Home() {
   return (
@@ -52,13 +53,13 @@ export default function Home() {
         </div>
       </main>
       <section
-        className="bg-cover bg-no-repeat w-full min-h-[140vh] p-24 space-y-8"
+        className="bg-cover bg-no-repeat w-full min-h-[160vh] p-24 space-y-8"
         style={{
           // background: 'round',
           backgroundImage: `url(${SectionTwoBackground.src})`,
         }}
       >
-        <div className="border border-[#5E5F62B9] bg-gradient-to-r from-[#44444433] to-[#65656533] px-6 py-2 rounded-[20px] w-fit text-[#9050E9]" role='heading'>
+        <div className="border border-[#5E5F62B9] text-sm bg-gradient-to-r from-[#44444433] to-[#65656533] px-6 py-2 rounded-[20px] w-fit text-[#9050E9]" role='heading'>
         <h2>About NucleusDAO</h2>
         </div>
         <div className='w-[65%] space-y-2 pb-4'>
@@ -75,6 +76,19 @@ export default function Home() {
           </div>
           <Image src={NucleusDAOSample} alt="Nucleus DAO Template" width={450} />
         </div>
+      </section>
+      <section className='w-full -mt-32 space-y-6'>
+        <div className="border border-[#5E5F62B9] mx-auto bg-gradient-to-r text-sm from-[#44444433] to-[#65656533] px-6 py-2 rounded-[20px] w-fit text-[#9050E9]" role='heading'>
+        <h2 className=''>Features</h2>
+        </div>
+        <div className='w-[45%] mx-auto text-center space-y-2'>
+          <h1 className='text-white text-[40px] text-center font-medium leading-[1.3]'>Innovation Unleashed: Explore the Features of NucleusDAO</h1>
+          <p className='font-light text-normal'>NucleusDAO offers a range of innovative features designed to facilitate seamless collaboration and decision-making.</p>
+        </div>
+      </section>
+
+      <section className='px-24 py-20 w-full'>
+<FeaturesComp />
       </section>
     </div>
   );
