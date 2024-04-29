@@ -27,7 +27,7 @@ const NavComp = () => {
     },
   ];
   return (
-    <nav className="px-20 items-center flex py-6 justify-between">
+    <nav className="px-24 items-center flex py-6 justify-between">
         <Link href={HOME_URL} className="flex">
           <div className="flex space-x-2 items-center">
             <Image id="logo" src={LogoIcon} alt="Nucleus Dao Logo" width={40} />
@@ -43,7 +43,7 @@ const NavComp = () => {
       </div>
       <Button>Connect Wallet</Button>
 
-<AEAnimation />
+<AEAnimation className='top-24' />
     </nav>
   );
 };
