@@ -2,7 +2,6 @@
 import SearchInput from './ui/search-input';
 import { Button } from './ui/button';
 import { ModeToggle } from './themes/mode-toggle';
-import { Bell2 } from '@/assets/svgs';
 import Image from 'next/image';
 import { ChevronDown, Menu, UserRound, X } from 'lucide-react';
 import LogoIcon from '@/assets/icons/nucleusdao-purple.svg';

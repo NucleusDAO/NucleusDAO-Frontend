@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Rubik } from 'next/font/google';
 import '@/styles/globals.css';
-import RootLayoutsComponent from '@/components/root-layout';
+import { ConnectWalletProvider } from '@/context/connect-wallet-context';
 
 const rubik = Rubik({ subsets: ['latin'] });
 
@@ -44,7 +44,7 @@ export default function RootLayout({
         <meta name="author" content="Nucleus DAO" />
       </head>
       <body className={rubik.className}>
-        <RootLayoutsComponent>{children}</RootLayoutsComponent>
+        <ConnectWalletProvider>{children}</ConnectWalletProvider>
       </body>
     </html>
   );
