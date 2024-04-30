@@ -1,6 +1,7 @@
 import { FeaturesIcon } from "@/assets/svgs";
 import ProposalCreationChain from '@/assets/icons/feature-chain.png';
 import Image from "next/image";
+import EachFeaturesBackground from '@/assets/images/each-feature-bg.png';
 
 const FeaturesComp = () => {
     return (
@@ -36,6 +37,7 @@ const FeaturesComp = () => {
                 <p className='text-[#888888] text-sm font-light'>DAO has its own Treasury.</p>
                 </div>
             </div>
+
             <Image src={ProposalCreationChain} alt="Proposal creation chain" className="w-[90%] mx-auto mt-24" />
         </div>
     )

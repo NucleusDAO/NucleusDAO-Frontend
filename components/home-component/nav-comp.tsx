@@ -46,7 +46,7 @@ const NavComp = () => {
 {/* <AEAnimation className='top-24' /> */}
 <div
       className={
-        'bg-gradient-to-t from-[#1E1E1E] to-[#1E1E1E80] absolute h-[56px] w-[56px] top-36 right-[400px]'
+        'bg-gradient-to-t from-[#1E1E1E] to-[#1E1E1E80] absolute h-[52px] w-[52px] top-28 right-[400px]'
         
       }
     >
