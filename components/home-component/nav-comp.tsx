@@ -41,12 +41,12 @@ const NavComp = () => {
 )}
 <div
       className={
-        'bg-gradient-to-t from-[#1E1E1E] to-[#1E1E1E80] absolute h-[52px] w-[52px] top-28 right-[100px] lg:right-[400px]'
+        'bg-gradient-to-t from-[#1E1E1E] to-[#1E1E1E80] absolute lg:h-[52px] h-[40px] w-[40px] lg:w-[52px] top-16 lg:top-28 right-[40px] lg:right-[400px]'
         
       }
     >
       <div className="bg-gradient-to-r h-full w-full from-primary via-primary flex items-center justify-center to-primary shadow-[inset_0px_0px_6px_6px_rgba(0,0,0,0.3)] animate-fade-in-out">
-        <Image width={32} height={32} src={AELogo} alt="aelogo" />
+        <Image width={isDesktop ? 32 : 22} height={isDesktop ? 32 : 22} src={AELogo} alt="aelogo" />
       </div>
     </div>
     </nav>

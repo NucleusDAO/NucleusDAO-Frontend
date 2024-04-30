@@ -42,13 +42,13 @@ const MainSection = () => {
   }, []);
 
   return (
-    <div className="mx-auto w-3/5 text-center space-y-4 mt-14 relative">
+    <div className="mx-auto w-full lg:w-3/5 text-center space-y-4 lg:mt-14 pt-32 lg:pt-0 relative">
         <div className='w-full min-h-[38px] main-animate-fade-in-out space-y-4'>
             <Heading
             title={mainContent[contentIndex].title}
-            className={cn('px-24 text-center', contentIndex === 1 && 'px-10')}
+            className={cn('px-6 lg:px-24 text-center', contentIndex === 1 && 'px-6 lg:px-10')}
             />
-            <h3 className="font-light text-normal px-10">
+            <h3 className="font-light text-sm lg:text-normal px-6 lg:px-10">
             {mainContent[contentIndex].description}
             </h3>
         </div>

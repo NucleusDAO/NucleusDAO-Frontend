@@ -18,8 +18,10 @@ import WhyAeternity from '@/components/home-component/why-aeternity';
 import JoinCommunityForm from '@/components/forms/join-community-form';
 import Footer from '@/components/footer';
 import MainSection from '@/components/home-component/main-section';
+import { useMediaQuery } from '@/hooks/use-media-query';
 
 export default function Home() {
+  const isDesktop = useMediaQuery('(min-width: 768px)');
   return (
     <div className="min-h-screen bg-[#0A0A0A]">
       <main
@@ -30,8 +32,8 @@ export default function Home() {
         }}
       >
         <NavComp />
-{/* <MainSection />
-        <div className="text-center mx-auto">
+<MainSection />
+        {/* <div className="text-center mx-auto">
           <Lottie options={defaultProposalOption} height={320} width={420} />
         </div> */}
       </main>
