@@ -2,8 +2,6 @@ import { PlayIcon } from "@/assets/svgs";
 import { cn } from "@/libs/utils";
 import React from 'react'
 import ReactPlayer from 'react-player';
-import VideoLayer from '@/assets/images/video-layer.png';
-import Image from "next/image";
 
 const HowItWorks = () => {
     const activities: { title: string; color: string }[] = [
@@ -27,8 +25,8 @@ const HowItWorks = () => {
   <div className='flex w-full space-x-16'>
     <div className='w-[12%] space-y-6 text-sm'>
       {activities.map((each) => (
-        <div role="button" className="border hover:border-primary hover:text-primary text-[#888888] font-light trans border-[#656565B2] flex items-center space-x-3 bg-gradient-to-r from-[#444444] via-[#292929B2] to-[#44444433] p-2 rounded-[25px]" key={each.title}>
-            <div className={cn(each.color, 'w-[23px] h-[23px] rounded-full')}></div>
+        <div role="button" className="border hover:border-primary hover:text-primary text-[#888888] font-light trans border-[#656565B2] flex items-center space-x-3 bg-gradient-to-r from-[#444444] via-[#292929B2] to-[#44444433] py-1.5 px-2 rounded-[25px]" key={each.title}>
+            <div className={cn(each.color, 'w-[20px] h-[20px] rounded-full')}></div>
             <p className="">{each.title}</p>
         </div>
       ))}

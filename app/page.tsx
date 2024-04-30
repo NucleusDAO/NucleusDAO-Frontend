@@ -12,16 +12,19 @@ import Image from 'next/image';
 import FeaturesComp from '@/components/home-component/features-comp';
 import EachFeaturesBackground from '@/assets/images/each-feature-bg.png';
 import HowItWorksBackground from '@/assets/images/section-3-bg.png';
-import VideoBackground from '@/assets/images/video-bg.png';
-import VideoElementBackground from '@/assets/images/video-bg-element-1.png';
+import SectionFourBackground from '@/assets/images/section-4-bg.png';
+import FooterSectionBackground from '@/assets/images/footer-section-bg.png';
 import { Heading } from '@/components/headings/heading';
 import HowItWorks from '@/components/home-component/how-it-works';
+import WhyAeternity from '@/components/home-component/why-aeternity';
+import JoinCommunityForm from '@/components/forms/join-community-form';
+import Footer from '@/components/footer';
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-[#0A0A0A]">
       <main
-        className="bg-contain bg-no-repeat w-full h-[105vh]"
+        className="bg-contain bg-no-repeat w-full min-h-[105vh]"
         style={{
           background: 'round',
           backgroundImage: `url(${Background.src})`,
@@ -119,13 +122,54 @@ export default function Home() {
         <div className="border border-[#5E5F62B9] mx-auto text-sm bg-gradient-to-r from-[#44444433] to-[#65656533] px-6 py-2 rounded-[20px] w-fit text-[#9050E9]" role='heading'>
         <h2>How it Works</h2>
         </div>
-        <div className='space-y-4 w-[65%] text-center mx-auto pb-20'>
+        <div className='space-y-4 w-[65%] text-center mx-auto pb-16'>
           <Heading title='Navigating Decentralized Governance: A Step-by-Step Guide' className='text-center' />
           <p className='font-light text-normal'>Discover how NucleusDAO simplifies decentralized governance through our intuitive step-by-step guide. Watch short animations to see how you can create, manage, and participate in DAOs with ease.</p>
         </div>
 
         <HowItWorks />
       </section>
+
+      <section
+                     style={{
+                      background: 'round',
+                      backgroundImage: `url(${SectionFourBackground.src})`,
+                    }}
+                    className='px-24 bg-contain bg-no-repeat w-full py-16  space-y-16'
+      >
+        <div className='space-y-8 w-[65%]'>
+                <div className="border border-[#5E5F62B9] text-sm bg-gradient-to-r from-[#44444433] to-[#65656533] px-6 py-2 rounded-[20px] w-fit text-[#9050E9]" role='heading'>
+        <h2>Blockchain</h2>
+        </div>
+        <Heading title='The Smart Choice for Next-Level Decentralized Decision-Making' />
+        </div>
+
+        <WhyAeternity />
+        </section>    
+
+        <div className="flex flex-col min-h-[90vh] bg-contain bg-no-repeat w-full px-24 pb-5"                       style={{
+                        background: 'round',
+                        backgroundImage: `url(${FooterSectionBackground.src})`,
+                      }}>
+          <section
+                      className='space-y-8 flex-grow'
+        >
+          <div className="border border-[#5E5F62B9] mx-auto text-sm bg-gradient-to-r from-[#44444433] to-[#65656533] px-6 py-2 rounded-[20px] w-fit text-[#9050E9]" role='heading'>
+          <h2>Subscribe to our newsletter</h2>
+          </div>
+          <div className='space-y-8 w-[65%] text-center mx-auto'>
+            <Heading title='Join the Early Community' className='text-center' />
+            <p className='font-light text-normal'>Be among the first to shape the future of decentralized governance. Sign up now for exclusive access to updates, insights, and a chance to participate in our launch.</p>
+            <div className='w-[60%] mx-auto relative'>
+  <JoinCommunityForm />
+            </div>
+          </div>
+
+        </section>
+  <div className='mt-auto'>
+    <Footer />
+  </div>
+        </div>
     </div>
   );
 }
