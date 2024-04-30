@@ -3,8 +3,6 @@ import NavComp from '@/components/home-component/nav-comp';
 import Background from '@/assets/images/main-bg.png';
 import SectionTwoBackground from '@/assets/images/section-2-bg.png';
 import { Button } from '@/components/ui/button';
-import { PlayIcon } from '@/assets/svgs';
-import AEAnimation from '@/assets/animations/ae-animation';
 import Lottie from 'react-lottie';
 import { defaultProposalOption } from '@/components/animation-options';
 import NucleusDAOSample from '@/assets/images/nucleus-dao-sample.png'
@@ -19,6 +17,7 @@ import HowItWorks from '@/components/home-component/how-it-works';
 import WhyAeternity from '@/components/home-component/why-aeternity';
 import JoinCommunityForm from '@/components/forms/join-community-form';
 import Footer from '@/components/footer';
+import MainSection from '@/components/home-component/main-section';
 
 export default function Home() {
   return (
@@ -31,36 +30,12 @@ export default function Home() {
         }}
       >
         <NavComp />
-        <div className="mx-auto w-3/5 text-center space-y-4 mt-14">
-
-          <Heading title='Unlocking the Potential of Decentralization' className='px-24 text-center' />
-          <h3 className="font-light text-normal px-10">
-            Step into a world where decisions are made collaboratively,
-            transparently, and securely. We're revolutionizing governance on the
-            Aeternity blockchain. Join us as we pave the way for decentralized
-            decision-making.
-          </h3>
-
-          <div className="flex items-center space-x-8 justify-center relative pt-2">
-            <Button className="px-6">Create DAO</Button>
-            <div className="flex items-center space-x-2">
-              <div
-                role="button"
-                className="rounded-full w-[40px] h-[40px] flex justify-center items-center border trans border-[#5E5F62B9] bg-[#1E1E1E] hover:border-l-primary hover:border-l"
-              >
-                <PlayIcon />
-              </div>
-              <p className="text-sm font-light text-white">How it works</p>
-            </div>
-
-            <AEAnimation className="left-0 top-20" />
-          </div>
-        </div>
+{/* <MainSection />
         <div className="text-center mx-auto">
           <Lottie options={defaultProposalOption} height={320} width={420} />
-        </div>
+        </div> */}
       </main>
-      <section
+      {/* <section
         className="bg-cover bg-no-repeat w-full min-h-[160vh] p-24 space-y-8"
         style={{
           backgroundImage: `url(${SectionTwoBackground.src})`,
@@ -94,22 +69,6 @@ export default function Home() {
 
       <section className='px-24 pt-16 w-full'>
 <FeaturesComp />
-<div
-                   style={{
-                    // background: 'round',
-                    backgroundImage: `url(${EachFeaturesBackground.src})`,
-                  }}
-                  className="w-[350px] mx-auto h-[400px] bg-contain bg-no-repeat relative mt-4"
-            >
-              <div className='absolute bottom-20 px-6 text-center space-y-2'>
-                <div className='flex bg-gradient-to-r from-[#1E1E1E] to-[#252525] w-fit px-8 py-4 mx-auto rounded-lg items-center space-x-2'>
-                  <div className='border border-primary rounded-full w-5 h-5 flex justify-center items-center text-sm text-primary p-2'>1</div>
-                  <p className='text-white'>New Proposal</p>
-                </div>
-                  <h3 className='text-white'>Proposal Creation</h3>
-                  <p className='text-sm px-4'>Members can propose initiatives, changes, or actions within the DAO, initiating the decision-making process.</p>
-              </div>
-              </div>
       </section>
 
       <section
@@ -169,7 +128,7 @@ export default function Home() {
   <div className='mt-auto'>
     <Footer />
   </div>
-        </div>
+        </div> */}
     </div>
   );
 }

@@ -1,45 +1,50 @@
 import { FeaturesIcon } from "@/assets/svgs";
-import ProposalCreationChain from '@/assets/icons/feature-chain.png';
 import Image from "next/image";
-import EachFeaturesBackground from '@/assets/images/each-feature-bg.png';
+
+import React, { useState } from "react";
+import { cn } from "@/libs/utils";
+import { content, contentChain } from "@/config/home-config";
 
 const FeaturesComp = () => {
+    const [currentIndex, setCurrentIndex] = useState<number>(0);
+
+    const handleMosueEnter = (id: number) => {
+        setCurrentIndex(id);
+    }
+    
     return (
-        <div className=" w-[65%] mx-auto relative">
-            <div className='absolute -top-20 min-w-[350px] border border-[#6565651A] p-4 bg-gradient-to-r from-[#9747FF0D] via-[#0803101A] to-[#1E1E1E1A] flex items-center space-x-6 rounded-lg'>
-                <FeaturesIcon />
-                <div className="space-y-1"> 
-                <p className='text-white'>Proposal Creation</p>
-                <p className='text-[#888888] text-sm font-light'>It enables members to propose initiatives.</p>
-                </div>
-            </div>
+        <React.Fragment>
+            <div className=" w-[70%] mx-auto relative">
+                {contentChain.map((each, index) => (
+                    <div key={`${each.title}-${index}`} role="button" className={cn('absolute flex items-center  space-x-6 rounded-lg min-w-[350px] border border-[#6565651A] p-4 bg-gradient-to-r from-[#9747FF0D] via-[#0803101A] to-[#1E1E1E1A]', each.classNames)} onMouseEnter={() => handleMosueEnter(index)}>
+                        <FeaturesIcon />
+                        <div className="space-y-1"> 
+                        <p className='text-white'>{each.title}</p>
+                        <p className='text-[#888888] text-sm font-light'>{each.description}</p>
+                        </div>
+                    </div>
+                ))}
 
-            <div className='absolute -top-10 min-w-[350px] -right-[192px] border border-[#6565651A] p-4 bg-gradient-to-r from-[#9747FF0D] via-[#0803101A] to-[#1E1E1E1A] flex items-center space-x-6 rounded-lg'>
-                <FeaturesIcon />
-                <div className="space-y-1">
-                <p className='text-white'>Voting Mechanism</p>
-                <p className='text-[#888888] text-sm font-light'>Easily cast votes securely.</p>
-                </div>
+                <Image src={contentChain[currentIndex].chain} alt="Proposal creation chain" className="w-[90%] mx-auto mt-24 trans" />
             </div>
-
-            <div className='absolute bottom-1 min-w-[350px] -left-[230px] border border-[#6565651A] p-4 bg-gradient-to-r from-[#9747FF0D] via-[#0803101A] to-[#1E1E1E1A] flex items-center space-x-6 rounded-lg'>
-                <FeaturesIcon />
-                <div className="space-y-1">
-                <p className='text-white'>DAO Creation</p>
-                <p className='text-[#888888] text-sm font-light'>Customize and deploy DAOs</p>
-                </div>
-            </div>
-
-            <div className='absolute bottom-1 min-w-[350px] -right-[230px] border border-[#6565651A] p-4 bg-gradient-to-r from-[#9747FF0D] via-[#0803101A] to-[#1E1E1E1A] flex items-center space-x-6 rounded-lg'>
-                <FeaturesIcon />
-                <div className="space-y-1">
-                <p className='text-white'>DAO Treasury</p>
-                <p className='text-[#888888] text-sm font-light'>DAO has its own Treasury.</p>
-                </div>
-            </div>
-
-            <Image src={ProposalCreationChain} alt="Proposal creation chain" className="w-[90%] mx-auto mt-24" />
-        </div>
+            <div
+                   style={{
+                    backgroundImage: `url(${content[currentIndex].background.src})`,
+                  }}
+                  className="w-[350px] mx-auto h-[400px] bg-contain bg-no-repeat relative mt-2 trans"
+            >
+              <div className='absolute bottom-20 px-6 space-y-2'>
+                {content[currentIndex].heading && (
+                    <div className='flex bg-gradient-to-r from-[#1E1E1E] to-[#252525] w-fit px-8 py-4 mx-auto rounded-lg items-center space-x-2'>
+                    <div className='border border-primary rounded-full w-5 h-5 flex justify-center items-center text-sm text-primary p-2'>{currentIndex + 1}</div>
+                    <p className='text-white'>{content[currentIndex].heading}</p>
+                    </div>
+                )}
+                  <h3 className='text-white px-4'>{content[currentIndex].title}</h3>
+                  <p className='text-sm px-4 font-light'>{content[currentIndex].description}</p>
+              </div>
+              </div>
+        </React.Fragment>
     )
 };
 
