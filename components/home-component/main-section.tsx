@@ -3,37 +3,38 @@ import { PlayIcon } from '@/assets/svgs';
 import { Heading } from '../headings/heading';
 import { Button } from '../ui/button';
 import AEAnimation from '@/assets/animations/ae-animation';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { cn } from '@/libs/utils';
 import { useRouter } from 'next/navigation';
 import { DASHBOARD_URL } from '@/config/path';
+import { ConnectWalletContext } from '@/context/connect-wallet-context';
+import { IConnectWalletContext } from '@/libs/types';
 
 
 const MainSection = () => {
+  const { handleConnectWallet, user } =
+  useContext<IConnectWalletContext>(ConnectWalletContext);
   const router = useRouter();
   const [contentIndex, setContentIndex] = useState<number>(0);
-  const mainContent: { title: string; description: string; cta: string; action: () => void }[] = [
+  const mainContent: { title: string; description: string; cta: string; }[] = [
     {
       title: 'Unlocking the Potential of Decentralization',
       description:
         "Step into a world where decisions are made collaboratively, transparently, and securely.  We're revolutionizing governance on the Aeternity blockchain. Join us as we pave the way for decentralized decision-making.",
       cta: 'Create DAO',
-      action: () => router.push(DASHBOARD_URL),
     },
     {
       title:
         'Experience decentralized governance reimagined with NucleusDAO on the Æternity blockchain',
       description:
         'Step into a world where decisions are made collaboratively, transparently, and securely. were revolutionizing governance on the Aeternity blockchain. Join us as we pave the way for decentralized decision-making.',
-      cta: 'Launch your DAO',
-      action: () => router.push(DASHBOARD_URL)
+      cta: 'Launch your DAO'
     },
     {
       title: 'Welcome to the Future of Governance Driving Change',
       description:
         'Join us as we pave the way for decentralized decision-making that empowers every voice in our community. Explore, participate, and shape the future with us.',
-      cta: 'Build DAO',
-      action: () => router.push(DASHBOARD_URL)
+      cta: 'Build DAO'
     },
   ];
 
@@ -60,7 +61,7 @@ const MainSection = () => {
         </div>
 
       <div className="flex items-center space-x-8 justify-center relative pt-2 main-animate-fade-in-out">
-        <Button className="px-6" onClick={mainContent[contentIndex].action}>{mainContent[contentIndex].cta}</Button>
+        <Button className="px-6" onClick={handleConnectWallet}>{mainContent[contentIndex].cta}</Button>
         <div className="flex items-center space-x-2">
           <div
             role="button"
