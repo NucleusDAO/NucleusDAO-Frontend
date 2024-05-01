@@ -9,7 +9,7 @@ import { useDebouncedCallback } from 'use-debounce';
 import { columns } from './dashboard/columns';
 import DaoCard from './dashboard/dao-cards';
 import ConnectWalletCallToAction from './connect-wallet-cta';
-import { ReactNode, useState } from 'react';
+import { useState } from 'react';
 import {
   Popover,
   PopoverContent,

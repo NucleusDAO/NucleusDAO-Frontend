@@ -9,6 +9,7 @@ import { ConnectWalletParams, WalletConnection } from './types';
 
 import nucleusDAOAci from './contract/NucleusDAO.json';
 import basicDAOAci from './contract/BasicDAO.json';
+import { DASHBOARD_URL } from '@/config/path';
 
 const nucleusDAOContractAddress =
   'ct_2nKgdeCv9dnLBHCEscVduQzRc8CLjJhh8uJb98az5hhQ8SJS5q';
@@ -97,22 +98,36 @@ export const connectWallet = async ({
   address,
   setConnectionError,
   setOpenModal,
+  isHome,
   walletObj = { info: { name: '', type: '' } },
 }: ConnectWalletParams) => {
   setConnectingToWallet(true);
+  let addressDeepLink: any;
 
   if ((IS_MOBILE || isSafariBrowser()) && !IN_FRAME) {
     if (address) {
       setConnectingToWallet(false);
       return;
     }
-    const addressDeepLink = createDeepLinkUrl({
-      type: 'address',
-      'x-success': `${
-        window.location.href.split('?')[0]
-      }?address={address}&networkId={networkId}`,
-      'x-cancel': window.location.href.split('?')[0],
-    });
+    if (isHome) {
+      const domainName = typeof window !== 'undefined' && window.location.origin;
+      const dashboardURL = `${domainName}/${DASHBOARD_URL}/`;
+      addressDeepLink = createDeepLinkUrl({
+        type: 'address',
+        'x-success': `${
+          dashboardURL.split('?')[0]
+        }?address={address}&networkId={networkId}`,
+        'x-cancel': dashboardURL.split('?')[0],
+      });
+    } else {
+      addressDeepLink = createDeepLinkUrl({
+        type: 'address',
+        'x-success': `${
+          window.location.href.split('?')[0]
+        }?address={address}&networkId={networkId}`,
+        'x-cancel': window.location.href.split('?')[0],
+      });
+    }
     if (typeof window !== 'undefined') {
       window.location.replace(addressDeepLink);
     }

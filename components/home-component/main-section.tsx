@@ -3,18 +3,13 @@ import { PlayIcon } from '@/assets/svgs';
 import { Heading } from '../headings/heading';
 import { Button } from '../ui/button';
 import AEAnimation from '@/assets/animations/ae-animation';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { cn } from '@/libs/utils';
-import { useRouter } from 'next/navigation';
 import { DASHBOARD_URL } from '@/config/path';
-import { ConnectWalletContext } from '@/context/connect-wallet-context';
-import { IConnectWalletContext } from '@/libs/types';
+import Link from 'next/link';
 
 
 const MainSection = () => {
-  const { handleConnectWallet, user } =
-  useContext<IConnectWalletContext>(ConnectWalletContext);
-  const router = useRouter();
   const [contentIndex, setContentIndex] = useState<number>(0);
   const mainContent: { title: string; description: string; cta: string; }[] = [
     {
@@ -61,7 +56,9 @@ const MainSection = () => {
         </div>
 
       <div className="flex items-center space-x-8 justify-center relative pt-2 main-animate-fade-in-out">
-        <Button className="px-6" onClick={handleConnectWallet}>{mainContent[contentIndex].cta}</Button>
+        <Link href={DASHBOARD_URL}>
+          <Button className="px-6">{mainContent[contentIndex].cta}</Button>
+        </Link>
         <div className="flex items-center space-x-2">
           <div
             role="button"

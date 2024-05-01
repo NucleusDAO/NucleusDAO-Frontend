@@ -15,7 +15,7 @@ import { Loader2 } from 'lucide-react';
 import ErrorIcon from '@/assets/icons/error-icon-1.png';
 import { createDeepLinkUrl } from '@/libs/ae-utils';
 import { usePathname } from 'next/navigation';
-import { HOME_URL } from '@/config/path';
+import { DASHBOARD_URL, HOME_URL } from '@/config/path';
 
 interface IConfirmWalletDialog {
   isScanningWallet: boolean;
@@ -23,24 +23,35 @@ interface IConfirmWalletDialog {
   walletInfo: { info: any };
   open: boolean;
   setOpen: (arg: boolean) => void;
-
   handleConnect: (arg: any) => void;
   wallets: any[];
   connectionError: { type: string; message: string; };
 }
 
 const ConfirmWalletDialog = ({ ...props }: IConfirmWalletDialog) => {
+  const domainName = typeof window !== 'undefined' && window.location.origin;
+  const dashboardURL = `${domainName}/${DASHBOARD_URL}/`;
   const pathname = usePathname();
   const isHome = pathname === HOME_URL;
   const handleConnectAgain = () => {
-  
-    const addressDeepLink = createDeepLinkUrl({
-      type: 'address',
-      'x-success': `${
-        window.location.href.split('?')[0]
-      }?address={address}&networkId={networkId}`,
-      'x-cancel': window.location.href.split('?')[0],
-    });
+    let addressDeepLink: any;
+    if (isHome) {
+      addressDeepLink = createDeepLinkUrl({
+        type: 'address',
+        'x-success': `${
+          dashboardURL.split('?')[0]
+        }?address={address}&networkId={networkId}`,
+        'x-cancel': dashboardURL.split('?')[0],
+      });
+    } else {
+      addressDeepLink = createDeepLinkUrl({
+        type: 'address',
+        'x-success': `${
+          window.location.href.split('?')[0]
+        }?address={address}&networkId={networkId}`,
+        'x-cancel': window.location.href.split('?')[0],
+      });
+    }
     if (typeof window !== 'undefined') {
       window.location.replace(addressDeepLink)
     }

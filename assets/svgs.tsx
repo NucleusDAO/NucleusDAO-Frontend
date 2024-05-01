@@ -198,7 +198,7 @@ export const FeaturesIcon = () => (
 <stop offset="1" stopColor="#9747FF" stopOpacity="0.5"/>
 </linearGradient>
 <linearGradient id="paint1_linear_1860_22448" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
-<stop stopColor="#656565" stop-opacity="0.2"/>
+<stop stopColor="#656565" stopOpacity="0.2"/>
 <stop offset="1" stopColor="#656565"/>
 </linearGradient>
 </defs>

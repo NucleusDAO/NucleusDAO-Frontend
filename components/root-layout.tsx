@@ -1,8 +1,6 @@
 'use client';
-import { ThemeProvider } from '@/components/themes/theme.provider';
-import React, { Suspense, useState } from 'react';
-import { Toaster as Sonner } from '@/components/ui/sonner';
-import Loading from '@/components/loading';
+
+import React, { useState } from 'react';
 import Sidebar from '@/components/side-bar/sidebar-links';
 import Navbar from '@/components/nav-bar';
 import { cn } from '@/libs/utils';
@@ -17,13 +15,7 @@ export const RootLayoutsComponent = ({ children }: IRootLayouts) => {
   const [showNav, setShowNav] = useState<boolean>(false);
 
   return (
-    <ThemeProvider
-      attribute="class"
-      defaultTheme="system"
-      enableSystem
-      disableTransitionOnChange
-    >
-      <Suspense fallback={<Loading />}>
+
         <AppContextProvider>
           <EachDaoContextProvider>
             <div className="max-w-[2000px] mx-auto relative">
@@ -51,9 +43,7 @@ export const RootLayoutsComponent = ({ children }: IRootLayouts) => {
             </div>
           </EachDaoContextProvider>
         </AppContextProvider>
-      </Suspense>
-      <Sonner richColors />
-    </ThemeProvider>
+
   );
 };
 

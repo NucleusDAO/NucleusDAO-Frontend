@@ -21,6 +21,7 @@ import { useMediaQuery } from '@/hooks/use-media-query';
 
 export default function Home() {
   const isDesktop = useMediaQuery('(min-width: 768px)');
+  console.log(window.location, '->f')
   return (
     <div className="min-h-screen bg-[#0A0A0A]">
       <main
