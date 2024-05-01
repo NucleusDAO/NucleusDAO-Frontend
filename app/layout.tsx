@@ -1,7 +1,11 @@
 import type { Metadata } from 'next';
 import { Rubik } from 'next/font/google';
 import '@/styles/globals.css';
-import RootLayoutsComponent from '@/components/root-layout';
+import { ConnectWalletProvider } from '@/context/connect-wallet-context';
+import { Suspense } from 'react';
+import Loading from '@/components/loading';
+import { ThemeProvider } from '@/components/themes/theme.provider';
+import { Toaster as Sonner } from '@/components/ui/sonner';
 
 const rubik = Rubik({ subsets: ['latin'] });
 
@@ -44,7 +48,17 @@ export default function RootLayout({
         <meta name="author" content="Nucleus DAO" />
       </head>
       <body className={rubik.className}>
-        <RootLayoutsComponent>{children}</RootLayoutsComponent>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Suspense fallback={<Loading />}>
+            <ConnectWalletProvider>{children}</ConnectWalletProvider>
+          </Suspense>
+          <Sonner richColors />
+        </ThemeProvider>
       </body>
     </html>
   );

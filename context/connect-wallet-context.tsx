@@ -13,8 +13,9 @@ import {
 } from '@aeternity/aepp-sdk';
 import ConfirmWalletDialog from './component/confirm-wallet';
 import ConfirmDisconnectWallet from './component/confirm-disconnect';
-import { useSearchParams } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { HandleWalletFunction, IConnectWalletContext } from '@/libs/types';
+import { HOME_URL } from '@/config/path';
 
 export const ConnectWalletContext = createContext<IConnectWalletContext>({ user: { address: '', isConnected: false }, isConnecting: false });
 
@@ -34,6 +35,7 @@ export interface IContext {
 
 export const ConnectWalletProvider = ({ children }: IAppProvider) => {
   // const getUser = typeof window !== 'undefined' && localStorage.getItem('user');
+  const pathname = usePathname();
   const defaultUser = { address: '', isConnected: false };
 
   const [isConnecting, setIsConnecting] = useState<boolean>(false);
@@ -69,6 +71,8 @@ export const ConnectWalletProvider = ({ children }: IAppProvider) => {
       },
     ]);
   };
+
+  const isHome = pathname === HOME_URL;
 
   const handleConnectWallet = async () => {
     setOpenModal(true);
@@ -126,6 +130,7 @@ export const ConnectWalletProvider = ({ children }: IAppProvider) => {
       setConnectionError,
       setOpenModal,
       walletObj,
+      isHome
     });
 
     setIsConnecting(false);

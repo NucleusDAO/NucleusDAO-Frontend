@@ -18,6 +18,8 @@ const Dashboard = () => {
   const { DAOsData, daoLoading } = useContext(AppContext);
   const connected: boolean = user.isConnected;
 
+  console.log(user, '->')
+
   const getDAOsData = (width: number) => {
     const individualDAOs = DAOsData?.filter((dao: any) => {
       if (dao.members.includes(user.address)) {

@@ -10,6 +10,8 @@ const member = z.object({
   address: z.string(),
 });
 
+const joinCommunitySchema = z.object({ email: z.string().email({ message: 'Enter a valid email' }) })
+
 const daoInfoSchema = z
   .object({
     daoName: z
@@ -157,4 +159,5 @@ export {
   editProfile,
   editNotifications,
   editDisplay,
+  joinCommunitySchema,
 };
