@@ -23,7 +23,9 @@ const Daos = () => {
   const getDAOsData = (width: number) => {
     let allDAO;
     if (currentSearch) {
-      allDAO = DAOsData?.filter((item: { organisation: string; }) =>  item?.organisation?.toLowerCase().includes(currentSearch.toLowerCase()));
+      allDAO = DAOsData?.filter((item: { organisation: string }) =>
+        item?.organisation?.toLowerCase().includes(currentSearch.toLowerCase())
+      );
     } else {
       allDAO = DAOsData;
     }
@@ -31,70 +33,46 @@ const Daos = () => {
       dao.orgIcon = (
         <img
           src={dao.image}
-          alt="dao logo"
+          alt='dao logo'
           width={width}
           height={width}
-          className="border border-red w-8 h-8 md:w-10 md:h-10 rounded-md"
+          className='border border-red w-8 h-8 md:w-10 md:h-10 rounded-md'
         />
       );
       return dao;
     });
   };
 
-<<<<<<< HEAD
-  useEffect(() => {
-    console.log({ DAOs });
-    if (DAOs) {
-      setDAOsData(
-        DAOs.map((dao: any) => {
-          return {
-            organisation: dao.name,
-            image: dao.image,
-            activeMember: dao.members.length.toString(),
-            activeProposal: `${dao.totalProposals}(${dao.activeProposals})`,
-            description: dao.description,
-            votes: dao.totalVotes.toString(),
-            url: encodeURI(
-              window.location.origin +
-                VIEW_DAO_URL +
-                '/' +
-                dao.id +
-                '/dashboard'
-            ),
-          };
-        })
-      );
-      setLoading(false);
-    }
-  }, [DAOs]);
-=======
   if (daoLoading) return <DaoLoading />;
 
->>>>>>> 2deebcdcfc1f3acfd24e76d242f07081e5ef0390
   return (
-    <div className="space-y-2 min-h-[80vh]">
-      <div className="flex justify-between items-center">
+    <div className='space-y-2 min-h-[80vh]'>
+      <div className='flex justify-between items-center'>
         <h1
-          role="heading"
-          className="dark:text-white font-medium text-xl text-dark"
+          role='heading'
+          className='dark:text-white font-medium text-xl text-dark'
         >
           Explore DAOs
         </h1>
         {connected ? (
           <Link href={SELECT_DAO_STYLE_URL}>
             <Button>
-              <Plus className="mr-2 h-4 w-4" /> Create DAO
+              <Plus className='mr-2 h-4 w-4' /> Create DAO
             </Button>
           </Link>
         ) : (
           <Button onClick={() => toast.error('Please connect your wallet!')}>
-            <Plus className="mr-2 h-4 w-4" /> Create DAO
+            <Plus className='mr-2 h-4 w-4' /> Create DAO
           </Button>
         )}
       </div>
 
       {DAOsData?.length > 0 && (
-        <AllDaos dashboardTableData={getDAOsData} showDAO={true} isConnected={connected} />
+        <AllDaos
+          dashboardTableData={getDAOsData}
+          showDAO={true}
+          isConnected={connected}
+        />
       )}
     </div>
   );
