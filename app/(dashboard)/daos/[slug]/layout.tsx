@@ -1,6 +1,6 @@
 'use client';
 import { Button } from '@/components/ui/button';
-import { CREATE_PROPOSAL_URL, DAO_URL } from '@/config/path';
+import { CREATE_PROPOSAL_URL } from '@/config/path';
 import { Globe, MoveLeft, Plus } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
