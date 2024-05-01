@@ -113,7 +113,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
       }
     };
     fetchDAOs();
-  }, [user.isConnected]);
+  }, [user]);
 
   const createDAO = async (
     name: string,

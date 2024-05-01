@@ -1,6 +1,6 @@
 import { LinkIcon, PeopleIcon, ProposalIcon2 } from '@/assets/svgs';
 import Link from 'next/link';
-import { ReactNode, useContext } from 'react';
+import { ReactNode } from 'react';
 
 export interface IDaoCard {
   organisation: string;
@@ -29,7 +29,7 @@ const DaoCard = ({
               {organisation}
             </h3>
           </Link>
-          <Link href={url} target='_blank'>
+          <Link href={url}>
             <div className='space-x-1 flex items-center'>
               <p className='text-xs font-light text-defaultText'>{url}</p>
               <LinkIcon className='text-[#DCC5FD] dark:text-[#292D32]' />

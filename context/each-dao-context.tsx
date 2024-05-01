@@ -41,50 +41,51 @@ export const EachDaoContextProvider = ({ children }: IAppProvider) => {
     useContext(AppContext);
 
   const urlParts = pathname.split('/'); // Split the URL by "/"
-  const secondParts = urlParts[2];
+  const daoId = urlParts[2];
 
+  // console.log(isLoading, '-> new is loading')
+
+  // console.log(urlParts, '->')
+
+  
   useEffect(() => {
-    (async () => {
-      try {
-        const daoId = secondParts;
-        if (daoId) {
-          const dao = await getEachDAO(daoId);
-          setCurrentDAO(dao);
-          const proposals: IProposal[] = await getProposals(
-            dao.contractAddress
-          );
-          setEachDAOProposal(
-            proposals.map((proposal: IProposal) => {
-              return {
-                type: proposal.proposalType,
-                status: getStatus(proposal),
-                description: proposal.description,
-                wallet:
-                  proposal.target.slice(0, 6) +
-                  '...' +
-                  proposal.target.slice(-4),
-                duration: getDuration(proposal.startTime, proposal.endTime),
-                totalVote: `${proposal.votesFor + proposal.votesAgainst}`,
-                organisation: dao.name,
-                id: proposal.id.toString(),
-              };
-            })
-          );
-          const members = await getUsersActivities(dao.contractAddress);
-          console.log({ members });
-          setMembersActivities(members);
+    if (urlParts.length >= 4) {
+      (async () => {
+        try {
+            const dao = await getEachDAO(daoId);
+            setCurrentDAO(dao);
+            const proposals: IProposal[] = await getProposals(
+              dao.contractAddress
+            );
+            setEachDAOProposal(
+              proposals.map((proposal: IProposal) => {
+                return {
+                  type: proposal.proposalType,
+                  status: getStatus(proposal),
+                  description: proposal.description,
+                  wallet:
+                    proposal.target.slice(0, 6) +
+                    '...' +
+                    proposal.target.slice(-4),
+                  duration: getDuration(proposal.startTime, proposal.endTime),
+                  totalVote: `${proposal.votesFor + proposal.votesAgainst}`,
+                  organisation: dao.name,
+                  id: proposal.id.toString(),
+                };
+              })
+            );
+            const members = await getUsersActivities(dao.contractAddress);
+            // console.log({ members });
+            setMembersActivities(members);
           setIsLoading(false);
-        } else {
-          router.back();
+        } catch (error: any) {
+          setIsLoading(false);
+          toast.error(error.message);
+          console.error('Error fetching DAO:', error);
         }
-        setIsLoading(false);
-      } catch (error: any) {
-        setIsLoading(false);
-        toast.error(error.message);
-        console.error('Error fetching DAO:', error);
-      }
-    })();
-  }, [secondParts]);
+      })();
+    }
+  }, [urlParts.length]);
 
   function getDuration(startTime: number, endTime: number) {
     const diff = endTime - startTime;
