@@ -29,7 +29,7 @@ const Layout = ({ children }: ILayout) => {
   const updatedUrl = updatedUrlParts.join('/'); // Join the array back into a string
 
   useEffect(() => {
-    const daoId = urlParts[3].replace(/\+/g, ' ');
+    const daoId = urlParts[3];
     setCurrentDAOId(daoId);
   }, []);
 

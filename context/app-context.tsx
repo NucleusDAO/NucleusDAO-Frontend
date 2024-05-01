@@ -15,6 +15,7 @@ export interface IProposal {
   description: string;
   value: number;
   target: string;
+  startTime: number;
   endTime: number;
   votesFor: number;
   votesAgainst: number;
@@ -47,6 +48,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
   useEffect(() => {
     console.log('Current dao id updated', currentDAOId);
     if (currentDAOId) {
+      console.log('Getting dao');
       getDAO(currentDAOId).then((dao: IDAO) => {
         setCurrentDAO(dao);
       });
@@ -70,20 +72,26 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
 
   const createDAO = async (
     name: string,
+    id: string,
     description: string,
     image: string,
     socials: string[],
     initialMembers: string[],
-    startingBalance: number
+    startingBalance: number,
+    votingTime: number,
+    quorum: number
   ) => {
     const contract = await getNucleusDAO();
     const res = await contract.createDAO(
       name,
+      id,
       description,
       image,
       socials,
       initialMembers,
-      startingBalance
+      startingBalance,
+      votingTime,
+      quorum
     );
     console.log({ res });
     const dao = res.decodedResult;
@@ -104,7 +112,6 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
       value,
       target
     );
-    console.log({ res });
     const proposal = res.decodedResult;
     return proposal;
   };
@@ -116,11 +123,34 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     return daos;
   };
 
+  const getUsersActivities = async (daoContractAddress: string) => {
+    const contract = await getBasicDAO(daoContractAddress);
+    const res = await contract.getUsersActivities();
+    const proposals = res.decodedResult;
+    for (let i = 0; i < proposals.length; i++) {
+      let proposal = proposals[i];
+      for (let key in proposal) {
+        if (typeof proposal[key] == 'bigint') {
+          proposal[key] = Number(proposal[key]);
+        }
+      }
+    }
+    return proposals;
+  };
+
   const getProposals = async (daoContractAddress: string) => {
     const contract = await getBasicDAO(daoContractAddress);
     const res = await contract.getProposals();
-    const daos = res.decodedResult;
-    return daos;
+    const proposals = res.decodedResult;
+    for (let i = 0; i < proposals.length; i++) {
+      let proposal = proposals[i];
+      for (let key in proposal) {
+        if (typeof proposal[key] == 'bigint') {
+          proposal[key] = Number(proposal[key]);
+        }
+      }
+    }
+    return proposals;
   };
 
   const getDAO = async (id: string) => {

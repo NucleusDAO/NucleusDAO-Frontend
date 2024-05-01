@@ -3,7 +3,7 @@
 import AllDaos from '@/components/all-daos';
 import { dashboardTableData } from '@/components/dashboard/data';
 import { Button } from '@/components/ui/button';
-import { SELECT_DAO_STYLE_URL } from '@/config/path';
+import { SELECT_DAO_STYLE_URL, VIEW_DAO_URL } from '@/config/path';
 import { AppContext } from '@/context/app-context';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { IConnectWalletContext } from '@/libs/types';
@@ -38,12 +38,16 @@ const Daos = () => {
             organisation: dao.name,
             image: dao.image,
             activeMember: dao.members.length.toString(),
-            activeProposal: `${dao.proposals}(${dao.activeProposals})`,
+            activeProposal: `${dao.totalProposals}(${dao.activeProposals})`,
             description: dao.description,
-            votes: '',
-            url: `https://nucleusdao.com/dao/${dao.name
-              .toLowerCase()
-              .replace(/\s/g, '-')}`,
+            votes: dao.totalVotes.toString(),
+            url: encodeURI(
+              window.location.origin +
+                VIEW_DAO_URL +
+                '/' +
+                dao.id +
+                '/dashboard'
+            ),
           };
         })
       );
