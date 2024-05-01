@@ -44,7 +44,10 @@ export default function RootLayout({
         <meta name="author" content="Nucleus DAO" />
       </head>
       <body className={rubik.className}>
-        <ConnectWalletProvider>{children}</ConnectWalletProvider>
+        
+        <ConnectWalletProvider>
+          {children}
+          </ConnectWalletProvider>
       </body>
     </html>
   );

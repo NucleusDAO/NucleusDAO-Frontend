@@ -63,7 +63,7 @@ export default function Home() {
         <h2 className=''>Features</h2>
         </div>
         <div className='w-full lg:w-[45%] mx-auto text-center space-y-2 lg:space-y-4'>
-          <Heading title='Innovation Unleashed: Explore the Features of NucleusDAO' className='ltext-center' />
+          <Heading title='Innovation Unleashed: Explore the Features of NucleusDAO' className='lg:text-center' />
           <p className='font-light text-sm lg:text-normal'>NucleusDAO offers a range of innovative features designed to facilitate seamless collaboration and decision-making.</p>
         </div>
       </section>

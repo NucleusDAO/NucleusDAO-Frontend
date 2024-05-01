@@ -5,31 +5,37 @@ import { Button } from '../ui/button';
 import AEAnimation from '@/assets/animations/ae-animation';
 import { useEffect, useState } from 'react';
 import { cn } from '@/libs/utils';
+import { useRouter } from 'next/navigation';
+import { DASHBOARD_URL } from '@/config/path';
 
-const mainContent = [
-  {
-    title: 'Unlocking the Potential of Decentralization',
-    description:
-      "Step into a world where decisions are made collaboratively, transparently, and securely.  We're revolutionizing governance on the Aeternity blockchain. Join us as we pave the way for decentralized decision-making.",
-    cta: 'Create DAO',
-  },
-  {
-    title:
-      'Experience decentralized governance reimagined with NucleusDAO on the Æternity blockchain',
-    description:
-      'Step into a world where decisions are made collaboratively, transparently, and securely. were revolutionizing governance on the Aeternity blockchain. Join us as we pave the way for decentralized decision-making.',
-    cta: 'Launch your DAO',
-  },
-  {
-    title: 'Welcome to the Future of Governance Driving Change',
-    description:
-      'Join us as we pave the way for decentralized decision-making that empowers every voice in our community. Explore, participate, and shape the future with us.',
-    cta: 'Build DAO',
-  },
-];
 
 const MainSection = () => {
+  const router = useRouter();
   const [contentIndex, setContentIndex] = useState<number>(0);
+  const mainContent: { title: string; description: string; cta: string; action: () => void }[] = [
+    {
+      title: 'Unlocking the Potential of Decentralization',
+      description:
+        "Step into a world where decisions are made collaboratively, transparently, and securely.  We're revolutionizing governance on the Aeternity blockchain. Join us as we pave the way for decentralized decision-making.",
+      cta: 'Create DAO',
+      action: () => router.push(DASHBOARD_URL),
+    },
+    {
+      title:
+        'Experience decentralized governance reimagined with NucleusDAO on the Æternity blockchain',
+      description:
+        'Step into a world where decisions are made collaboratively, transparently, and securely. were revolutionizing governance on the Aeternity blockchain. Join us as we pave the way for decentralized decision-making.',
+      cta: 'Launch your DAO',
+      action: () => router.push(DASHBOARD_URL)
+    },
+    {
+      title: 'Welcome to the Future of Governance Driving Change',
+      description:
+        'Join us as we pave the way for decentralized decision-making that empowers every voice in our community. Explore, participate, and shape the future with us.',
+      cta: 'Build DAO',
+      action: () => router.push(DASHBOARD_URL)
+    },
+  ];
 
   useEffect(() => {
     // Set up an interval to change content every 5 seconds
@@ -46,7 +52,7 @@ const MainSection = () => {
         <div className='w-full min-h-[38px] main-animate-fade-in-out space-y-4'>
             <Heading
             title={mainContent[contentIndex].title}
-            className={cn('px-6 lg:px-24 text-center', contentIndex === 1 && 'px-6 lg:px-10')}
+            className={cn('px-6 lg:px-24 lg:text-center', contentIndex === 1 && 'px-6 lg:px-10')}
             />
             <h3 className="font-light text-sm lg:text-normal px-6 lg:px-10">
             {mainContent[contentIndex].description}
@@ -54,7 +60,7 @@ const MainSection = () => {
         </div>
 
       <div className="flex items-center space-x-8 justify-center relative pt-2 main-animate-fade-in-out">
-        <Button className="px-6">{mainContent[contentIndex].cta}</Button>
+        <Button className="px-6" onClick={mainContent[contentIndex].action}>{mainContent[contentIndex].cta}</Button>
         <div className="flex items-center space-x-2">
           <div
             role="button"
