@@ -13,6 +13,7 @@ import { getNucleusDAO, getBasicDAO } from '@/libs/ae-utils';
 import { toast } from 'sonner';
 import { IConnectWalletContext, InewDaoInfo } from '@/libs/types';
 import { defaultDaoCreation } from '@/libs/utils';
+import { VIEW_DAO_URL } from '@/config/path';
 
 export const AppContext = createContext<any>({});
 
@@ -91,13 +92,17 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
                 organisation: dao.name,
                 image: dao.image,
                 activeMember: dao.members.length.toString(),
-                activeProposal: `${dao.proposals}(${dao.activeProposals})`,
+                activeProposal: `${dao.totalProposals}(${dao.activeProposals})`,
                 description: dao.description,
                 members: dao.members,
-                votes: '',
-                url: `https://nucleusdao.com/dao/${dao.name
-                  .toLowerCase()
-                  .replace(/\s/g, '-')}`,
+                votes: dao.totalVotes,
+                url: encodeURI(
+                  window.location.origin +
+                    VIEW_DAO_URL +
+                    '/' +
+                    dao.id +
+                    '/dashboard'
+                ),
               };
             })
           );
@@ -165,17 +170,17 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
 
   const getUsersActivities = async (daoContractAddress: string) => {
     const contract = await getBasicDAO(daoContractAddress);
-    const res = await contract.getUsersActivities();
-    const proposals = res.decodedResult;
-    for (let i = 0; i < proposals.length; i++) {
-      let proposal = proposals[i];
-      for (let key in proposal) {
-        if (typeof proposal[key] == 'bigint') {
-          proposal[key] = Number(proposal[key]);
+    const res = await contract.getAllMembersActivities();
+    const activities = res.decodedResult;
+    for (let i = 0; i < activities.length; i++) {
+      let activity = activities[i];
+      for (let key in activity) {
+        if (typeof activity[key] == 'bigint') {
+          activity[key] = Number(activity[key]);
         }
       }
     }
-    return proposals;
+    return activities;
   };
 
   const getProposals = async (daoContractAddress: string) => {
@@ -209,6 +214,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     updateNewDaoInfo,
     newDaoInfo,
     getEachDAO,
+    getUsersActivities,
   };
 
   return (

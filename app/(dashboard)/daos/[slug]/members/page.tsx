@@ -26,24 +26,24 @@ interface IData {
 }
 
 const EachDaoMembers = () => {
-  const { currentDAO } = useContext(EachDaoContext);
+  const { membersActivities, isLoading } = useContext(EachDaoContext);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { isConnected } = user;
   const [data, setData] = useState<IData[]>([]);
 
   useEffect(() => {
-    if (currentDAO) {
+    if (membersActivities) {
       setData(
-        currentDAO.members.map((member: string) => {
+        membersActivities.map((member: any) => {
           return {
-            wallet: member.slice(0, 6) + '...' + member.slice(-4),
-            proposals: '0',
-            votes: '0',
+            wallet: member.address,
+            proposals: member.proposalsCreated.toString(),
+            votes: member.voteCasted.toString(),
           };
         })
       );
     }
-  }, [currentDAO]);
+  }, [membersActivities]);
 
   return (
     <div className='space-y-4 bg-[#1E1E1E] p-4 rounded-lg'>
@@ -77,6 +77,5 @@ const EachDaoMembers = () => {
     </div>
   );
 };
-
 
 export default EachDaoMembers;
