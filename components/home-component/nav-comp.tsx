@@ -8,21 +8,15 @@ import LogoIcon from '@/assets/icons/nucleusdao-purple.svg';
 import { Button } from '../ui/button';
 import { navLinks } from '@/config/home-config';
 import { Menu, X } from 'lucide-react';
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import Background from '@/assets/images/main-bg.png';
-import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { useRouter } from 'next/navigation';
-import { IConnectWalletContext } from '@/libs/types';
 
 const NavComp = () => {
   const router = useRouter();
   const isDesktop = useMediaQuery('(min-width: 768px)');
   const [open, setOpen] = useState<boolean>(false);
-  const { handleConnectWallet, user } =
-    useContext<IConnectWalletContext>(ConnectWalletContext);
-  const { isConnected } = user;
-
   return (
     <nav className="lg:px-16 items-center block lg:flex lg:py-6 justify-between">
       <div className="flex justify-between items-center lg:backdrop-blur-none backdrop-filter backdrop-blur-md w-full lg:w-fit fixed lg:relative z-10 px-6 lg:px-0">
@@ -61,15 +55,9 @@ const NavComp = () => {
             ))}
           </div>
           <div className="px-6 lg:px-0">
-            {isConnected ? (
-              <Button className="lg:w-fit w-full" onClick={() => router.push(DASHBOARD_URL)}>
-                Launch DAO
+              <Button className="lg:w-fit w-full px-8" onClick={() => router.push(DASHBOARD_URL)}>
+                Join DAO
               </Button>
-            ) : (
-              <Button className="lg:w-fit w-full" onClick={handleConnectWallet}>
-                Connect Wallet
-              </Button>
-            )}
           </div>
         </div>
       )}
