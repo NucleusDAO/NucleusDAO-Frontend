@@ -14,9 +14,9 @@ const FeaturesComp = () => {
     
     return (
         <React.Fragment>
-            <div className=" w-[70%] mx-auto relative">
+            <div className="lg:w-[70%] mx-auto relative space-y-2 lg:space-y-0">
                 {contentChain.map((each, index) => (
-                    <div key={`${each.title}-${index}`} role="button" className={cn('absolute flex items-center  space-x-6 rounded-lg min-w-[350px] border border-[#6565651A] p-4 bg-gradient-to-r from-[#9747FF0D] via-[#0803101A] to-[#1E1E1E1A]', each.classNames)} onMouseEnter={() => handleMosueEnter(index)}>
+                    <div key={`${each.title}-${index}`} role="button" className={cn('lg:absolute flex items-center space-x-6 rounded-lg min-w-[350px] border border-[#6565651A] p-4 bg-gradient-to-r from-[#9747FF0D] via-[#0803101A] to-[#1E1E1E1A]', each.classNames)} onMouseEnter={() => handleMosueEnter(index)}>
                         <FeaturesIcon />
                         <div className="space-y-1"> 
                         <p className='text-white'>{each.title}</p>
@@ -25,7 +25,7 @@ const FeaturesComp = () => {
                     </div>
                 ))}
 
-                <Image src={contentChain[currentIndex].chain} alt="Proposal creation chain" className="w-[90%] mx-auto mt-24 trans" />
+                <Image src={contentChain[currentIndex].chain} alt="Proposal creation chain" className="w-[90%] mx-auto lg:mt-24 trans" />
             </div>
             <div
                    style={{
