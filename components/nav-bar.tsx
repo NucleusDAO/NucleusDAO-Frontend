@@ -2,7 +2,6 @@
 import SearchInput from './ui/search-input';
 import { Button } from './ui/button';
 import { ModeToggle } from './themes/mode-toggle';
-import { Bell2 } from '@/assets/svgs';
 import Image from 'next/image';
 import { ChevronDown, Menu, UserRound, X } from 'lucide-react';
 import LogoIcon from '@/assets/icons/nucleusdao-purple.svg';
@@ -28,11 +27,10 @@ const Navbar = ({ handleShowNav, showNav }: INavbar) => {
   return (
     <nav className="flex dark:bg-foreground bg-light w-full md:w-[82%] py-4 px-4 md:px-8 justify-between items-center fixed z-[100] max-w-[1500px]">
       <div className="relative w-[40%] hidden md:flex">
-        <SearchInput
+        {/* <SearchInput
           placeholder="Search anything here"
           classNames="pl-10"
-          queryKey="search"
-        />
+        /> */}
       </div>
       <div className="flex space-x-3 items-center w-full md:w-fit justify-between lg:justify-between">
         <Link href={DASHBOARD_URL} className="flex md:hidden">

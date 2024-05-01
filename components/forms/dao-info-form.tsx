@@ -19,21 +19,25 @@ import { MoveLeft, Plus, Trash2 } from 'lucide-react';
 import FormGroup from '../ui/form-group';
 import { useRouter } from 'next/navigation';
 import { DEFINE_MEMBERSHIP_URL } from '@/config/path';
+import { ChangeEvent, useContext, useEffect, useState } from 'react';
+import { AppContext } from '@/context/app-context';
+import { toast } from 'sonner';
 
-interface IDaoInfoForm {
-  address: string;
-}
-
-const DaoInfoForm = ({ address }: IDaoInfoForm) => {
+const DaoInfoForm = () => {
+  const { updateNewDaoInfo, newDaoInfo } = useContext(AppContext);
+  const [logoFormData, setLogoFormData] = useState<FormData|null>(null);
+  const [onUploadUrl, setOnUploadUrl] = useState<string>(newDaoInfo.info.logoUrl || '');
   const router = useRouter();
+  const domainName = typeof window !== 'undefined' && window.location.origin;
+
   const form = useForm<z.infer<typeof daoInfoSchema>>({
     resolver: zodResolver(daoInfoSchema),
     defaultValues: {
-      daoName: '',
-      daoAddress: address,
-      logo: '',
-      about: '',
-      socialMedia: [{ type: '', link: '' }],
+      daoName: newDaoInfo.info.daoName,
+      daoUrl: newDaoInfo.info.daoUrl,
+      logo: newDaoInfo.info.logoUrl,
+      about: newDaoInfo.info.about,
+      socialMedia: newDaoInfo.info.socialMedia,
     },
   });
   const { fields, append, remove } = useFieldArray({
@@ -41,8 +45,56 @@ const DaoInfoForm = ({ address }: IDaoInfoForm) => {
     name: 'socialMedia',
   });
 
+  useEffect(() => {
+    const subscription = form.watch((value, { name, type }) => {
+      const updatedData = { ...newDaoInfo, info: { ...newDaoInfo.info, ...value, logo: logoFormData, logoUrl: onUploadUrl } }
+      localStorage.setItem('new_dao', JSON.stringify(updatedData));
+      updateNewDaoInfo(updatedData);
+    });
+    return () => subscription.unsubscribe();
+  }, [form.watch, onUploadUrl]);
+
+  const watchDaoName = form.watch('daoName');
+
+  useEffect(() => {
+    if (watchDaoName.length > 0) {
+      const getDaoName = form.getValues('daoName').toLowerCase();
+      const formatDaoName = getDaoName.replace(/\s+/g, '-');
+      form.setValue('daoUrl', `${domainName}/dao/${formatDaoName}`);
+    }
+  }, [watchDaoName]);
+
+  const handleUpload = async (e: ChangeEvent<HTMLInputElement>) => {
+    const maxSize: number = 3 * 1024 * 1024;
+    const file: any = e.target.files?.[0];
+    if (file.size >= maxSize) {
+      toast.error('File is too large. Max size of 3mb')
+    } else {
+      let formData = new FormData();
+      formData.append('file', file);
+      formData.append(
+        'upload_preset',
+        process.env.NEXT_PUBLIC_CLOUDINARY_PRESET || ''
+      );
+      setLogoFormData(formData);
+  
+      if (file) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const result = reader.result as string;
+          setOnUploadUrl(result);
+          form.setValue('logo', file);
+          form.setError('logo', { message: '' });
+          const updatedData = { ...newDaoInfo, info: { ...newDaoInfo.info, logo: formData, logoUrl: result } }
+          updateNewDaoInfo(updatedData)
+          localStorage.setItem('new_dao', JSON.stringify(updatedData));
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+  };
+
   const onSubmit = async (data: any) => {
-    console.log(data);
     router.push(DEFINE_MEMBERSHIP_URL);
   };
 
@@ -54,7 +106,9 @@ const DaoInfoForm = ({ address }: IDaoInfoForm) => {
           name="daoName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Dao name <span className='text-[#DD3857]'>*</span></FormLabel>
+              <FormLabel>
+                Dao name <span className="text-[#DD3857]">*</span>
+              </FormLabel>
               <FormControl>
                 <Input placeholder="Enter DAO name" {...field} />
               </FormControl>
@@ -62,12 +116,13 @@ const DaoInfoForm = ({ address }: IDaoInfoForm) => {
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
-          name="daoAddress"
+          name="daoUrl"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Dao address (auto filled)</FormLabel>
+              <FormLabel>Dao URL (auto filled)</FormLabel>
               <FormControl>
                 <Input placeholder="dao.ae" {...field} readOnly />
               </FormControl>
@@ -82,25 +137,37 @@ const DaoInfoForm = ({ address }: IDaoInfoForm) => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                Logo{' '}
-                <span className='text-[#DD3857]'>*</span>
-                <span className="text-[#888888] text-sm">{' '}
+                Logo <span className="text-[#DD3857]">*</span>
+                <span className="text-[#888888] text-sm">
+                  {' '}
                   JPG, PNG, or SVG of not more than 3MB.
                 </span>
               </FormLabel>
               <FormControl>
                 <FormGroup>
-                  <div
-                    className="dark:bg-[#1E1E1E] bg-light text-dark dark:text-defaultText h-[50px] w-[50px] rounded-lg flex items-center justify-center"
-                    role="button"
-                  >
-                    <Plus />
-                  </div>
+                  {onUploadUrl && (
+                    <div className="flex space-x-2 items-end">
+                      <img
+                        src={onUploadUrl}
+                        alt="logo"
+                        className="rounded-lg h-[50px] w-[50px] object-cover"
+                      />
+                      <p className="text-[10px]">Change</p>
+                    </div>
+                  )}
+                  {!onUploadUrl && (
+                    <div
+                      className="dark:bg-[#1E1E1E] bg-light text-dark dark:text-defaultText h-[50px] w-[50px] rounded-lg flex items-center justify-center"
+                      role="button"
+                    >
+                      <Plus />
+                    </div>
+                  )}
                   <Input
                     type="file"
                     className="absolute h-full border-b border-0 w-fit rounded-none inset-0 cursor-pointer opacity-0"
                     accept=".jpg, .jpeg, .png"
-                    {...field}
+                    onChange={handleUpload}
                   />
                 </FormGroup>
               </FormControl>
@@ -114,7 +181,9 @@ const DaoInfoForm = ({ address }: IDaoInfoForm) => {
           name="about"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>About <span className='text-[#DD3857]'>*</span></FormLabel>
+              <FormLabel>
+                About <span className="text-[#DD3857]">*</span>
+              </FormLabel>
               <FormControl>
                 <Textarea placeholder="Purpose of the DAO" {...field} />
               </FormControl>
@@ -124,7 +193,10 @@ const DaoInfoForm = ({ address }: IDaoInfoForm) => {
         />
 
         <div className="space-y-4">
-          <h2 className="font-medium text-dark dark:text-white">Social Links <span className='text-[#888888] font-light'>(Optional)</span></h2>
+          <h2 className="font-medium text-dark dark:text-white">
+            Social Links{' '}
+            <span className="text-[#888888] font-light">(Optional)</span>
+          </h2>
           <div className="grid grid-cols-2 gap-6">
             <div className="font text-dark dark:text-white text-sm">Type</div>
             <div className="font text-dark dark:text-white text-sm">Link</div>
@@ -143,10 +215,16 @@ const DaoInfoForm = ({ address }: IDaoInfoForm) => {
                       <FormControl>
                         <Input
                           placeholder="Website, Twitter, Instagram"
+                          onInput={() =>
+                            form.setError('socialMedia', { message: '' })
+                          }
                           {...field}
                         />
                       </FormControl>
-                      <FormMessage />
+                      <FormMessage>
+                        {form.formState.errors.socialMedia?.[index]?.root
+                          ?.message || ''}
+                      </FormMessage>
                     </FormItem>
                   )}
                 />
@@ -156,9 +234,18 @@ const DaoInfoForm = ({ address }: IDaoInfoForm) => {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <Input placeholder="https://" {...field} />
+                        <Input
+                          placeholder="https://"
+                          {...field}
+                          onInput={() =>
+                            form.setError('socialMedia', { message: '' })
+                          }
+                        />
                       </FormControl>
-                      <FormMessage />
+                      <FormMessage>
+                        {form.formState.errors.socialMedia?.[index]?.root
+                          ?.message || ''}
+                      </FormMessage>
                     </FormItem>
                   )}
                 />
@@ -183,9 +270,17 @@ const DaoInfoForm = ({ address }: IDaoInfoForm) => {
             Add Link
           </div>
         </div>
-        <div className='flex justify-between'>
-          <Button type="button" className='dark:bg-[#1E1E1E] bg-light dark:hover:bg-[#262525] hover:bg-light text-[#444444] dark:text-defaultText' onClick={() => router.back()}><MoveLeft size={20} /></Button>
-          <Button type="submit" className='px-12'>Next</Button>
+        <div className="flex justify-between">
+          <Button
+            type="button"
+            className="dark:bg-[#1E1E1E] bg-light dark:hover:bg-[#262525] hover:bg-light text-[#444444] dark:text-defaultText"
+            onClick={() => router.back()}
+          >
+            <MoveLeft size={20} />
+          </Button>
+          <Button type="submit" className="px-12">
+            Next
+          </Button>
         </div>
       </form>
     </Form>

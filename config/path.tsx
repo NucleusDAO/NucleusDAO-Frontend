@@ -1,3 +1,5 @@
+export const HOME_URL: string = '/';
+
 export const DASHBOARD_URL: string = '/dashboard';
 export const DAO_URL: string = '/daos';
 export const PROPOSALS_URL: string = '/proposals';
@@ -9,7 +11,7 @@ export const DEFINE_MEMBERSHIP_URL: string = '/daos/membership';
 export const GOVERNANCE_SETTINGS_URL: string = '/daos/governance-settings';
 export const REVIEW_DAO_URL: string = '/daos/review';
 
-export const VIEW_DAO_URL: string = '/daos/view';
+export const VIEW_DAO_URL: string = '/daos';
 
 // Create Proposal
 export const CREATE_PROPOSAL_URL: string = '/proposals/create';

@@ -1,8 +1,6 @@
 import { LinkIcon, PeopleIcon, ProposalIcon2 } from '@/assets/svgs';
-import { VIEW_DAO_URL } from '@/config/path';
-import { encodeURI } from '@/libs/utils';
 import Link from 'next/link';
-import { ReactNode } from 'react';
+import { ReactNode, useContext } from 'react';
 
 export interface IDaoCard {
   organisation: string;
@@ -24,9 +22,9 @@ const DaoCard = ({
   return (
     <div className='dark:bg-[#191919] bg-white p-5 rounded-lg space-y-7'>
       <div className='flex space-x-4 items-center pb-7'>
-        <div>{orgIcon}</div>
+        <div className=''>{orgIcon}</div>
         <div className='space-y-1'>
-          <Link href={encodeURI(VIEW_DAO_URL, organisation, 'dashboard')}>
+          <Link href={url}>
             <h3 className='dark:text-white text-dark font-medium text-[22px]'>
               {organisation}
             </h3>
@@ -49,12 +47,13 @@ const DaoCard = ({
               <PeopleIcon />
               <p className='dark:text-white text-dark'>
                 {activeMember}
-                <span className='text-defaultText ml-2 text-sm'>Members</span>
+                <span className='text-defaultText ml-2 text-sm'>
+                  {Number(activeMember) > 1 ? 'Members' : 'Member'}
+                </span>
               </p>
             </div>
 
             <div className='flex items-center space-x-2'>
-               
               <ProposalIcon2 />
               <p className='dark:text-white text-dark'>
                 {activeProposal}

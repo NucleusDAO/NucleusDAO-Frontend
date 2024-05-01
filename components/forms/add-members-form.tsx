@@ -17,19 +17,32 @@ import { defineMembershipSchema } from '@/libs/validations/dao-schema';
 import { MoveLeft, Plus, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { GOVERNANCE_SETTINGS_URL } from '@/config/path';
+import { useContext, useEffect } from 'react';
+import { AppContext } from '@/context/app-context';
 
 const AddMemberForm = () => {
+  const { updateNewDaoInfo, newDaoInfo } = useContext(AppContext);
   const router = useRouter();
   const form = useForm<z.infer<typeof defineMembershipSchema>>({
     resolver: zodResolver(defineMembershipSchema),
     defaultValues: {
-      members: [{ address: '' }],
+      members: newDaoInfo.members,
     },
   });
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: 'members',
   });
+
+  useEffect(() => {
+    const subscription = form.watch((value, { name, type }) => {
+      console.log(value.members, '-> value');
+      const updatedData = { ...newDaoInfo, members: value.members };
+      localStorage.setItem('new_dao', JSON.stringify(updatedData));
+      updateNewDaoInfo(updatedData)
+    });
+    return () => subscription.unsubscribe();
+  }, [form.watch]);
 
   const onSubmit = async (data: any) => {
     console.log(data);
@@ -46,23 +59,25 @@ const AddMemberForm = () => {
               className="flex items-center w-full space-x-4 justify-between"
               key={member.id}
             >
-              <div className='w-[96%]'>
+              <div className="w-[96%]">
                 <FormField
                   control={form.control}
                   name={`members.${index}.address`}
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <Input
-                          placeholder="Enter wallet address"
-                          {...field}
-                        />
+                        <Input placeholder="Enter wallet address" {...field}   onInput={() =>
+                            form.setError('members', { message: '' })
+                          } />
                       </FormControl>
-                      <FormMessage />
+                      <FormMessage>
+                        {form.formState.errors.members?.[index]?.root
+                          ?.message || ''}
+                      </FormMessage>
                     </FormItem>
                   )}
                 />
-                </div>
+              </div>
               {fields.length > 1 && (
                 <div
                   className="w-[3%]"
@@ -83,10 +98,18 @@ const AddMemberForm = () => {
             Add Member
           </div>
         </div>
-        
-        <div className='flex justify-between'>
-          <Button type="button" className='dark:bg-[#1E1E1E] bg-light dark:hover:bg-[#262525] hover:bg-light text-[#444444] dark:text-defaultText' onClick={() => router.back()}><MoveLeft size={20} /></Button>
-          <Button type="submit" className='px-12'>Next</Button>
+
+        <div className="flex justify-between">
+          <Button
+            type="button"
+            className="dark:bg-[#1E1E1E] bg-light dark:hover:bg-[#262525] hover:bg-light text-[#444444] dark:text-defaultText"
+            onClick={() => router.back()}
+          >
+            <MoveLeft size={20} />
+          </Button>
+          <Button type="submit" className="px-12">
+            Next
+          </Button>
         </div>
       </form>
     </Form>

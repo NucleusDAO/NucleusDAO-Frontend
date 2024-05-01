@@ -21,6 +21,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "components/storeAeSdkPlugin.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "components/storeAeSdkPlugin.js", "components/forms/join-community-form.tsx"],
   "exclude": ["node_modules"]
 }

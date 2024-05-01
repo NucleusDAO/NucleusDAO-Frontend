@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export type WalletInfo = {
   name: string;
   type: string;
@@ -30,6 +32,7 @@ export type ConnectWalletParams = {
   setConnectionError: (error: ConnectionError) => void;
   address?: string;
   setOpenModal: (arg: boolean) => void;
+  isHome: boolean;
   walletObj?: {
     info: WalletInfo;
     getConnection?: () => Promise<any>|any; // Adjust any to the actual return type of getConnection
@@ -55,4 +58,27 @@ export interface IConnectWalletContext {
 export interface IUser {
   address: string;
   isConnected: boolean;
+}
+
+export interface InewDaoInfo {
+  style: string;
+  info: { daoName: string; daoUrl: string; about: string; socialMedia?: { link: string; type: string }[]; logo: File|null; logoUrl: string; },
+  members: { address: string; }[],
+  quorum: number;
+  duration: number;
+}
+
+export interface IAllDaos {
+  showDAO: boolean;
+  isConnected: boolean;
+  connectWalletDescription?: string;
+  dashboardTableData: (arg: number) => {
+    organisation: string;
+    orgIcon: ReactNode;
+    description: string;
+    votes: string;
+    url: string;
+    activeMember: string;
+    activeProposal: string;
+  }[];
 }

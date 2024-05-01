@@ -68,7 +68,7 @@
   }
   
   .trans {
-    transition: all 0.3s ease;
+    transition: all 0.5s ease;
   }
 
   input[type="number"]::-webkit-inner-spin-button,
@@ -101,7 +101,6 @@ input[type="number"]::-webkit-outer-spin-button {
   
 }
 
- 
 @layer base {
   * {
     @apply border-border;
@@ -110,3 +109,24 @@ input[type="number"]::-webkit-outer-spin-button {
     @apply dark:bg-background text-defaultText bg-white;
   }
 }
+
+@keyframes fadeInOut {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.animate-fade-in-out {
+  animation: fadeInOut 5s infinite;
+}
+
+@keyframes mainFadeInOut {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.main-animate-fade-in-out {
+  animation: mainFadeInOut 15s infinite;
+}
+

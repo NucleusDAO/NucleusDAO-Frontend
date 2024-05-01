@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/form';
 import { proposalInfoSchema } from '@/libs/validations/dao-schema';
 import { Textarea } from '../ui/textarea';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { REVIEW_PROPOSAL_URL } from '@/config/path';
 import { proposalLists } from '@/config/dao-config';
 import { useEffect, useState } from 'react';
@@ -28,13 +28,15 @@ import ElementBlock from '../proposals/element-block';
 import { EachProposalType } from '@/config/proposal-config';
 
 const CreateNewProposalForm = () => {
+  const searchParams = useSearchParams();
+  const enums: string = searchParams.get('enums') || '0'
   const router = useRouter();
   const [showEl, setShowEl] = useState<boolean>(false);
   const form = useForm<z.infer<typeof proposalInfoSchema>>({
     resolver: zodResolver(proposalInfoSchema),
     defaultValues: {
       // title: '',
-      type: '0',
+      type: enums,
       description: '',
       targetWallet: '',
       value: '0.000067 AE',
