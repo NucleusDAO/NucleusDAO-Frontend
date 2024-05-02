@@ -34,21 +34,21 @@
           "arguments": [],
           "name": "getProposals",
           "payable": false,
-          "returns": { "list": ["DAO.formattedProposal"] },
+          "returns": { "list": ["DAO.proposal"] },
           "stateful": false
         },
         {
           "arguments": [],
           "name": "getActiveProposals",
           "payable": false,
-          "returns": { "list": ["DAO.formattedProposal"] },
+          "returns": { "list": ["DAO.proposal"] },
           "stateful": false
         },
         {
           "arguments": [{ "name": "id", "type": "int" }],
           "name": "getProposal",
           "payable": false,
-          "returns": "DAO.formattedProposal",
+          "returns": "DAO.proposal",
           "stateful": false
         },
         {
@@ -77,7 +77,8 @@
             { "name": "_proposalType", "type": "string" },
             { "name": "_description", "type": "string" },
             { "name": "_value", "type": "int" },
-            { "name": "_target", "type": "address" }
+            { "name": "_target", "type": "address" },
+            { "name": "_info", "type": "DAO.infoPayload" }
           ],
           "name": "createProposal",
           "payable": false,
@@ -99,16 +100,23 @@
           "stateful": true
         },
         {
-          "arguments": [{ "name": "proposalId", "type": "int" }],
+          "arguments": [{ "name": "_proposalId", "type": "int" }],
           "name": "executeProposal",
           "payable": false,
-          "returns": "DAO.proposal",
+          "returns": { "tuple": [] },
+          "stateful": true
+        },
+        {
+          "arguments": [],
+          "name": "deposit",
+          "payable": true,
+          "returns": { "tuple": [] },
           "stateful": true
         }
       ],
       "kind": "contract_child",
       "name": "DAO",
-      "payable": false,
+      "payable": true,
       "state": {
         "record": [
           { "name": "name", "type": "string" },
@@ -139,44 +147,16 @@
               { "name": "description", "type": "string" },
               { "name": "value", "type": "int" },
               { "name": "target", "type": "address" },
+              { "name": "info", "type": "DAO.infoPayload" },
               { "name": "startTime", "type": "int" },
               { "name": "endTime", "type": "int" },
               { "name": "votesFor", "type": "int" },
               { "name": "votesAgainst", "type": "int" },
               { "name": "isExecuted", "type": "bool" },
-              { "name": "hasVoted", "type": { "map": ["address", "bool"] } }
-            ]
-          },
-          "vars": []
-        },
-        {
-          "name": "formattedProposal",
-          "typedef": {
-            "record": [
-              { "name": "id", "type": "int" },
+              { "name": "votes", "type": { "list": ["DAO.vote"] } },
               { "name": "daoName", "type": "string" },
               { "name": "daoId", "type": "string" },
-              { "name": "proposer", "type": "address" },
-              { "name": "proposalType", "type": "string" },
-              { "name": "description", "type": "string" },
-              { "name": "value", "type": "int" },
-              { "name": "target", "type": "address" },
-              { "name": "startTime", "type": "int" },
-              { "name": "endTime", "type": "int" },
-              { "name": "votesFor", "type": "int" },
-              { "name": "votesAgainst", "type": "int" },
-              { "name": "isExecuted", "type": "bool" },
-              { "name": "voters", "type": { "list": ["address"] } }
-            ]
-          },
-          "vars": []
-        },
-        {
-          "name": "socialUrl",
-          "typedef": {
-            "record": [
-              { "name": "name", "type": "string" },
-              { "name": "url", "type": "string" }
+              { "name": "hasVoted", "type": { "map": ["address", "bool"] } }
             ]
           },
           "vars": []
@@ -210,6 +190,37 @@
               { "name": "totalProposals", "type": "int" },
               { "name": "totalVotes", "type": "int" },
               { "name": "activeProposals", "type": "int" }
+            ]
+          },
+          "vars": []
+        },
+        {
+          "name": "socialUrl",
+          "typedef": {
+            "record": [
+              { "name": "name", "type": "string" },
+              { "name": "url", "type": "string" }
+            ]
+          },
+          "vars": []
+        },
+        {
+          "name": "vote",
+          "typedef": {
+            "record": [
+              { "name": "account", "type": "address" },
+              { "name": "support", "type": "bool" }
+            ]
+          },
+          "vars": []
+        },
+        {
+          "name": "infoPayload",
+          "typedef": {
+            "record": [
+              { "name": "name", "type": "string" },
+              { "name": "socials", "type": { "list": ["DAO.socialUrl"] } },
+              { "name": "image", "type": "string" }
             ]
           },
           "vars": []

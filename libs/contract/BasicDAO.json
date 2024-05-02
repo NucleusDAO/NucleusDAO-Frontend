@@ -77,7 +77,8 @@
             { "name": "_proposalType", "type": "string" },
             { "name": "_description", "type": "string" },
             { "name": "_value", "type": "int" },
-            { "name": "_target", "type": "address" }
+            { "name": "_target", "type": "address" },
+            { "name": "_info", "type": "DAO.infoPayload" }
           ],
           "name": "createProposal",
           "payable": false,
@@ -99,16 +100,23 @@
           "stateful": true
         },
         {
-          "arguments": [{ "name": "proposalId", "type": "int" }],
+          "arguments": [{ "name": "_proposalId", "type": "int" }],
           "name": "executeProposal",
           "payable": false,
-          "returns": "DAO.proposal",
+          "returns": { "tuple": [] },
+          "stateful": true
+        },
+        {
+          "arguments": [],
+          "name": "deposit",
+          "payable": true,
+          "returns": { "tuple": [] },
           "stateful": true
         }
       ],
       "kind": "contract_main",
       "name": "DAO",
-      "payable": false,
+      "payable": true,
       "state": {
         "record": [
           { "name": "name", "type": "string" },
@@ -139,12 +147,15 @@
               { "name": "description", "type": "string" },
               { "name": "value", "type": "int" },
               { "name": "target", "type": "address" },
+              { "name": "info", "type": "DAO.infoPayload" },
               { "name": "startTime", "type": "int" },
               { "name": "endTime", "type": "int" },
               { "name": "votesFor", "type": "int" },
               { "name": "votesAgainst", "type": "int" },
               { "name": "isExecuted", "type": "bool" },
               { "name": "votes", "type": { "list": ["DAO.vote"] } },
+              { "name": "daoName", "type": "string" },
+              { "name": "daoId", "type": "string" },
               { "name": "hasVoted", "type": { "map": ["address", "bool"] } }
             ]
           },
@@ -199,6 +210,17 @@
             "record": [
               { "name": "account", "type": "address" },
               { "name": "support", "type": "bool" }
+            ]
+          },
+          "vars": []
+        },
+        {
+          "name": "infoPayload",
+          "typedef": {
+            "record": [
+              { "name": "name", "type": "string" },
+              { "name": "socials", "type": { "list": ["DAO.socialUrl"] } },
+              { "name": "image", "type": "string" }
             ]
           },
           "vars": []
