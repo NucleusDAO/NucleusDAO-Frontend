@@ -70,12 +70,6 @@ const DaoInfoForm = () => {
     if (file.size >= maxSize) {
       toast.error('File is too large. Max size of 3mb')
     } else {
-      // let formData = new FormData();
-      // formData.append('file', file);
-      // formData.append(
-      //   'upload_preset',
-      //   'mvybpnf0'
-      // );
       setLogoFormData(file);
   
       if (file) {

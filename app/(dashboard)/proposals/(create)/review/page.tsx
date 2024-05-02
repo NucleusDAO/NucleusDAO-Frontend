@@ -12,16 +12,29 @@ import {
 import RoundedIcon from '@/assets/icons/roundedIcon.png';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { MoveLeft } from 'lucide-react';
+import { MoveLeft, MoveUpRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { PROPOSALS_URL } from '@/config/path';
 import { useContext } from 'react';
 import { AppContext } from '@/context/app-context';
 import Lottie from 'react-lottie';
 import { defaultSuccessOption } from '@/components/animation-options';
+import { ConnectWalletContext } from '@/context/connect-wallet-context';
+import { IConnectWalletContext } from '@/libs/types';
+import Link from 'next/link';
+
+// daoContractAddress: string,
+// proposalType: string,
+// description: string,
+// value: number,
+// target: string
 
 const ReviewProposal = () => {
-  const { createProposal } = useContext(AppContext);
+  const { createProposal, newProposalInfo } = useContext(AppContext);
+  const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
+  const { address } = user;
+
+  console.log(newProposalInfo, '-> new proposal');
 
   const handleCreateProposal = async () => {
     try {
@@ -54,25 +67,58 @@ const ReviewProposal = () => {
         <h1 className="font-medium text-dark dark:text-white text-xl">
           Proposal Information
         </h1>
-        {proposalSummary.map((summary, index) => (
-          <div className="grid grid-cols-2 text-sm w-4/6" key={summary.title}>
-            <p className="dark:text-white text-dark">{summary.title}</p>
-            <div className="flex space-x-2 items-center">
-              {index === proposalSummary.length - 1 && (
-                <Image src={RoundedIcon} alt="logo" width={20} height={20} />
+        {proposalSummary({ ...newProposalInfo.value, address }).map(
+          (summary, index) => (
+            <div className="grid grid-cols-2 text-sm w-4/6" key={summary.title}>
+              <p className="dark:text-white text-dark">{summary.title}</p>
+              {summary.title === 'Logo' && (
+                <img
+                  src={summary.desc}
+                  alt="logo"
+                  className="rounded-lg h-[50px] w-[50px] object-cover -mt-4"
+                />
               )}
-              <p
-                className={cn(
-                  'text-defaultText',
-                  index === proposalSummary.length - 1 &&
-                    'dark:text-white font-light text-dark'
-                )}
-              >
-                {summary.desc}
-              </p>
+              {(summary.title !== 'Logo' && summary.title !== 'Social Media') && (
+                <>
+                  <div className="flex space-x-2 items-center">
+                    {summary.title === 'Published by' && (
+                      <img
+                        src={`https://avatars.z52da5wt.xyz/${address}`}
+                        alt="logo"
+                        width={20}
+                      />
+                    )}
+                    <p
+                      className={cn(
+                        'text-defaultText',
+                        index === proposalSummary.length - 1 &&
+                          'dark:text-white font-light text-dark'
+                      )}
+                    >
+                      {summary.title !== 'Logo' && summary.desc}
+                    </p>
+                  </div>
+                </>
+              )}
+              {summary.title === 'Social Media' && (
+                summary.desc.map((social: { type: string; link: string; }) => (
+                  <Link
+                  href={social.link}
+                  key={social.type}
+                  target='_blank'
+                >
+                  <div className='flex items-center space-x-2 text-primary'>
+                    <p className=''>{social.type}</p>
+                    <div className='border border-primary rounded-sm p-0.5'>
+                      <MoveUpRight size={10} />
+                    </div>
+                  </div>
+                </Link>
+                ))
+              )}
             </div>
-          </div>
-        ))}
+          )
+        )}
       </div>
 
       <div className="flex justify-between">

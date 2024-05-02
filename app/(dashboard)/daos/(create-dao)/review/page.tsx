@@ -31,8 +31,6 @@ const ReviewDao = () => {
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { createDAO, updateNewDaoInfo, newDaoInfo, fetchDAOs } = useContext(AppContext);
 
-  console.log(newDaoInfo, '->')
-
   const handleCreateDAO = async () => {
     setIsLoading(true);
     try {
@@ -205,6 +203,7 @@ const ReviewDao = () => {
               <Button
                 className='w-full'
                 onClick={handleGoHome}
+                loading={isRouting}
               >
                 Back home
               </Button>

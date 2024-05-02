@@ -6,10 +6,11 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { AppContext, IProposal } from './app-context';
+import { AppContext } from './app-context';
 import { usePathname, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { getStatus } from '@/libs/utils';
+import { IProposal } from '@/libs/types';
 
 export const EachDaoContext = createContext<any>({});
 
@@ -75,7 +76,7 @@ export const EachDaoContextProvider = ({ children }: IAppProvider) => {
               })
             );
             const members = await getUsersActivities(dao.contractAddress);
-            // console.log({ members });
+            console.log({ members });
             setMembersActivities(members);
           setIsLoading(false);
         } catch (error: any) {

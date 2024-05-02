@@ -20,40 +20,36 @@ import { Textarea } from '../ui/textarea';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { REVIEW_PROPOSAL_URL } from '@/config/path';
 import { proposalLists } from '@/config/dao-config';
-import { useEffect, useState } from 'react';
-import {
-  SelectFormField,
-} from '@/components/proposals/proposal-form-element';
+import { useContext, useEffect, useState } from 'react';
+import { SelectFormField } from '@/components/proposals/proposal-form-element';
 import ElementBlock from '../proposals/element-block';
 import { EachProposalType } from '@/config/proposal-config';
+import { AppContext } from '@/context/app-context';
+import { IConnectWalletContext } from '@/libs/types';
+import { ConnectWalletContext } from '@/context/connect-wallet-context';
 
 const CreateNewProposalForm = () => {
+  const { setNewProposalInfo, newProposalInfo } = useContext(AppContext);
+  const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
+  const { address } = user;
   const searchParams = useSearchParams();
-  const enums: string = searchParams.get('enums') || '0'
+  const type: string = searchParams.get('enums') || newProposalInfo.value.type;
   const router = useRouter();
-  const [showEl, setShowEl] = useState<boolean>(false);
   const form = useForm<z.infer<typeof proposalInfoSchema>>({
     resolver: zodResolver(proposalInfoSchema),
-    defaultValues: {
-      // title: '',
-      type: enums,
-      description: '',
-      targetWallet: '',
-      value: '0.000067 AE',
-      duration: 0,
-      quorum: 0,
-      socialMedia: [{ type: '', link: '' }],
-    },
+    defaultValues: {...newProposalInfo.value, type},
   });
 
-  const selectedTitle = form.watch('type');
-
   useEffect(() => {
-    setShowEl(!!selectedTitle); // Display the element if watchedInputValue is truthy
-  }, [selectedTitle]);
+    const subscription = form.watch((value, { name, type }) => {
+      const updatedData = { ...newProposalInfo, value };
+      localStorage.setItem('new_proposal', JSON.stringify(updatedData));
+      setNewProposalInfo(updatedData)
+    });
+    return () => subscription.unsubscribe();
+  }, [form.watch]);
 
   const onSubmit = async (data: any) => {
-    console.log(data);
     router.push(REVIEW_PROPOSAL_URL);
   };
 
@@ -84,11 +80,15 @@ const CreateNewProposalForm = () => {
         <div className="md:flex space-y-3 md:space-y-0 justify-between">
           <div className="flex space-x-3 items-center">
             <p className="font-light text-sm text-[#888888]">Published by</p>
-            <Image src={RoundedIcon} alt="logo" width={20} height={20} />
-            <p className="text-sm dark:text-white text-dark">9xfDAO...ntY897</p>
+            <img
+              src={`https://avatars.z52da5wt.xyz/${address}`}
+              alt="logo"
+              width={20}
+            />
+            <p className="text-sm dark:text-white text-dark">{address.slice(0, 15)}...</p>
           </div>
           <Button type="submit" className="px-12 w-full md:w-fit">
-            Publish
+            Review
           </Button>
         </div>
       </form>

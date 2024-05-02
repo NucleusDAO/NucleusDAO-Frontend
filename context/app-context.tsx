@@ -11,41 +11,11 @@ import {
 } from './connect-wallet-context';
 import { getNucleusDAO, getBasicDAO } from '@/libs/ae-utils';
 import { toast } from 'sonner';
-import { IConnectWalletContext, InewDaoInfo } from '@/libs/types';
-import { defaultDaoCreation } from '@/libs/utils';
+import { IAppProvider, IConnectWalletContext, INewProposal, InewDaoInfo } from '@/libs/types';
+import { defaultDaoCreation, defaultProposal } from '@/libs/utils';
 import { VIEW_DAO_URL } from '@/config/path';
 
 export const AppContext = createContext<any>({});
-
-interface IAppProvider {
-  children: ReactNode;
-}
-
-export interface IProposal {
-  id: number;
-  proposal: string;
-  proposalType: string;
-  description: string;
-  value: number;
-  target: string;
-  startTime: number;
-  endTime: number;
-  votesFor: number;
-  votesAgainst: number;
-  isExecuted: boolean;
-}
-
-export interface IDAO {
-  name: string;
-  description: string;
-  image: string;
-  socials: string[];
-  votingTime: number;
-  quorum: number;
-  proposals: IProposal[];
-  totalProposals: number;
-  members: string[];
-}
 
 export const AppContextProvider = ({ children }: IAppProvider) => {
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
@@ -53,12 +23,23 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
   const [daoLoading, setDaoLoading] = useState<boolean>(true);
   const [DAOsData, setDAOsData] = useState<any[]>([]);
   const [newDaoInfo, setNewDaoInfo] = useState<InewDaoInfo>(defaultDaoCreation);
+  const [newProposalInfo, setNewProposalInfo] = useState<INewProposal>(defaultProposal);
+
   const getNewDaoInfo =
     typeof window !== 'undefined' && localStorage.getItem('new_dao');
+
+  const getNewProposalInfo =
+    typeof window !== 'undefined' && localStorage.getItem('new_proposal');
 
   useEffect(() => {
     if (getNewDaoInfo) {
       setNewDaoInfo(JSON.parse(getNewDaoInfo));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (getNewProposalInfo) {
+      setNewProposalInfo(JSON.parse(getNewProposalInfo));
     }
   }, []);
 
@@ -113,36 +94,6 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
   };
 
   useEffect(() => {
-    // const fetchDAOs = async () => {
-    //   try {
-    //     const allDAOs: any = await getAllDaos();
-    //     if (allDAOs) {
-    //       setDAOsData(
-    //         allDAOs.map((dao: any) => {
-    //           return {
-    //             organisation: dao.name,
-    //             image: dao.image,
-    //             activeMember: dao.members.length.toString(),
-    //             activeProposal: `${dao.totalProposals}(${dao.activeProposals})`,
-    //             description: dao.description,
-    //             members: dao.members,
-    //             votes: dao.totalVotes,
-    //             url: encodeURI(
-    //               window.location.origin +
-    //                 VIEW_DAO_URL +
-    //                 '/' +
-    //                 dao.id +
-    //                 '/dashboard'
-    //             ),
-    //           };
-    //         })
-    //       );
-    //       setDaoLoading(false);
-    //     }
-    //   } catch (error) {
-    //     toast.error('Error fetching DAOs');
-    //   }
-    // };
     fetchDAOs();
   }, [user]);
 
@@ -247,6 +198,8 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     getEachDAO,
     getUsersActivities,
     fetchDAOs,
+    newProposalInfo,
+    setNewProposalInfo,
   };
 
   return (

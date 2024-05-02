@@ -1,6 +1,7 @@
-import { IProposal } from "@/context/app-context"
+
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
+import { IProposal } from "./types"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -33,6 +34,24 @@ export const handleChangeFormNumberInput = (fieldName: string, value: string, fo
   } else {
       form.setValue(fieldName, Number(value))
   }
+}
+
+export const handleChangeFormDecimalInput = (fieldName: string, value: string, form: any) => {
+  form.clearErrors(fieldName)
+  // if (value.startsWith('0' || 0)) {
+  //     form.setValue('duration', value[1] === '0' ? 1 : value[1]);
+  // } else {
+  //     form.setValue(fieldName, Number(value))
+  // }
+
+  if (/^0\.\d+$/.test(value)) {
+    form.setValue(fieldName, parseFloat(value));
+} else if (/^\d+(\.\d+)?$/.test(value)) {
+    form.setValue(fieldName, parseFloat(value));
+} else {
+    // Handle invalid input
+    form.setError('value', 'Invalid value')
+}
 }
 
 export const encodeURI = (originalURI: string, keyValuePairs: string, otherKeyPairs?: string) => {
@@ -101,3 +120,14 @@ export const getStatus = (_proposal: IProposal) => {
     }
   }
 };
+
+export const defaultProposal = { value: {
+  type: '0',
+  description: '',
+  targetWallet: '',
+  value: '',
+  logo: '',
+  duration: 0,
+  quorum: 0,
+  socialMedia: [{ type: '', link: '' }]
+} }

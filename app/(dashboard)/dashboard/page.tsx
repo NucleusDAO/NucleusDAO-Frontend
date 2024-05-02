@@ -5,23 +5,23 @@ import { dashboardFeedsData } from '@/components/dashboard/data';
 import { Button } from '@/components/ui/button';
 import { SELECT_DAO_STYLE_URL } from '@/config/path';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
-import { IConnectWalletContext } from '@/libs/types';
+import { IConnectWalletContext, TotalProposalType } from '@/libs/types';
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { AppContext } from '@/context/app-context';
 import DashboadLoading from '@/components/loading/dashboard-loading';
 import { toast } from 'sonner';
 import { useSearchParams } from 'next/navigation';
+import { getBasicDAO } from '@/libs/ae-utils';
 
 const Dashboard = () => {
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
-  const { DAOsData, daoLoading } = useContext(AppContext);
+  const { DAOsData, daoLoading, getEachDAO } = useContext(AppContext);
   const connected: boolean = user.isConnected;
   const searchParams = useSearchParams();
   const currentSearch = searchParams.get('q');
-
-  console.log(user, '->');
+  let userDAO: any[] = [];
 
   const getDAOsData = (width: number) => {
     console.log({ DAOsData });
@@ -41,11 +41,52 @@ const Dashboard = () => {
         return dao;
       }
     });
+    userDAO = individualDAOs;
     if (currentSearch) {
       return individualDAOs.filter((item: { organisation: string }) => item?.organisation?.toLocaleLowerCase().includes(currentSearch.toLowerCase()))
     } else {
       return individualDAOs;
     }
+  };
+
+  const getUserTotalDao = () => {
+    return DAOsData?.filter((dao: any) => {
+      if (dao.members.includes(user.address)) {
+        return dao;
+      }
+    });
+  }
+
+  const userTotals = async () => {
+    const daoInfos = getUserTotalDao();
+    const voteAndProposalPromises = daoInfos.map(async (dao: { organisation: string }) => {
+      const eachDaoName = dao.organisation.toLowerCase().replace(/\s+/g, '-');
+      const getEachInfo = await getEachDAO(eachDaoName);
+      const contract = await getBasicDAO(getEachInfo.contractAddress);
+      const eachActivity = await contract.getMemberActivities(user.address);
+      console.log(eachActivity, '->contract');
+      const votes = await eachActivity.decodedResult.voteCasted;
+      const proposals = await eachActivity.decodedResult.proposalsCreated;
+      return { proposals: Number(proposals), voteCasted: Number(votes)};
+    });
+    const responses = await Promise.all(voteAndProposalPromises);
+    const totalVotes = responses.reduce((accumulator, currentValue) => accumulator + currentValue.voteCasted, 0);
+    const totalProposals = responses.reduce((accumulator, currentValue) => accumulator + currentValue.proposals, 0);
+    // const totalProposal = voteCounts.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+    console.log({ totalVotes, totalProposals }, '-> responses')
+    return { totalVotes, totalProposals };
+  };
+
+  console.log(userTotals(), '-; totals')
+
+  const getTotalProposal = async (): Promise<TotalProposalType> => {
+    const totalProposal = (await userTotals()).totalProposals;
+    return totalProposal;
+  };
+
+  const getTotalVotes = async (): Promise<TotalProposalType> => {
+    const totalVotes = (await userTotals()).totalVotes;
+    return totalVotes;
   };
 
   if (daoLoading) return <DashboadLoading />;
@@ -73,7 +114,7 @@ const Dashboard = () => {
       </div>
 
       <div className="gap-6 md:grid-cols-3 grid">
-        {dashboardFeedsData(connected).map((feed) => (
+        {dashboardFeedsData(connected, getUserTotalDao(), getTotalProposal(), getTotalVotes()).map((feed) => (
           <Cards key={feed.title} {...feed} />
         ))}
       </div>

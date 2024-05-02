@@ -5,23 +5,24 @@ import LegacyLogo from '@/assets/logos/legacy.png';
 import KrypLogo from '@/assets/logos/kryp.png';
 import CocacolaLogo from '@/assets/logos/cocacola.png';
 import CreativesLogo from '@/assets/logos/creatives-dao.png';
+import { TotalProposalType } from '@/libs/types';
 
 const dashboardFeedsData = (
-  connected: boolean
-): { title: string; value: number; icon: ReactNode }[] => [
+  connected: boolean, userDAO: any[], proposal: Promise<TotalProposalType>, votes: Promise<TotalProposalType>
+): { title: string; value: number|Promise<TotalProposalType>; icon: ReactNode }[] => [
   {
     title: 'DAOs Joined',
-    value: connected ? 10 : 0,
+    value: connected ? userDAO.length : 0,
     icon: <DaoIcon size='34' />,
   },
   {
     title: 'Total Votes',
-    value: connected ? 223 : 0,
+    value: connected ? votes : 0,
     icon: <DaoIcon size='34' />,
   },
   {
     title: 'Total Proposals',
-    value: connected ? 50 : 0,
+    value: connected ? proposal : 0,
     icon: <DaoIcon size='34' />,
   },
 ];
