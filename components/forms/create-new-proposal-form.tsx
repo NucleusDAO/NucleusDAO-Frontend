@@ -3,9 +3,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import RoundedIcon from '@/assets/icons/roundedIcon.png';
-import Image from 'next/image';
-
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -34,6 +31,7 @@ const CreateNewProposalForm = () => {
   const { address } = user;
   const searchParams = useSearchParams();
   const type: string = searchParams.get('enums') || newProposalInfo.value.type;
+  const daoID = searchParams.get('ct');
   const router = useRouter();
   const form = useForm<z.infer<typeof proposalInfoSchema>>({
     resolver: zodResolver(proposalInfoSchema),
@@ -50,7 +48,7 @@ const CreateNewProposalForm = () => {
   }, [form.watch]);
 
   const onSubmit = async (data: any) => {
-    router.push(REVIEW_PROPOSAL_URL);
+    router.push(`${REVIEW_PROPOSAL_URL}?ct=${daoID}`);
   };
 
   return (

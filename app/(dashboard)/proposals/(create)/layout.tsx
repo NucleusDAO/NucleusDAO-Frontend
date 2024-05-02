@@ -1,7 +1,7 @@
 'use client';
 
 import { MoveLeft } from 'lucide-react';
-import { ReactNode, useContext, useState } from 'react';
+import { ReactNode, useContext, useEffect, useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import Steps from './component/steps';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { IConnectWalletContext } from '@/libs/types';
 import EmptyDAO from '@/assets/icons/empty-icon.png';
@@ -31,6 +31,8 @@ const Layout = ({ children }: ILayout) => {
   const { isConnected } = user;
   const [open, setOpen] = useState<boolean>(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const daoID = searchParams.get('ct') || '';
 
   const handleBack = () => {
     setNewProposalInfo(defaultProposal);
@@ -57,6 +59,11 @@ const Layout = ({ children }: ILayout) => {
       </div>
     );
   }
+
+  if (!daoID) {
+    router.back();
+  }
+
   return (
     <div className="space-y-8">
       <div className="flex space-x-4 items-start border-b dark:border-b-[#292929] pb-6 border-[#CCCCCC99]">

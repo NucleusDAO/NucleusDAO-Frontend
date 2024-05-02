@@ -150,6 +150,15 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     return daos;
   };
 
+  const getAllProposals = async () => {
+    const allDAOs = await getDAOs();
+    // const contract = await getNucleusDAO();
+    // console.log(allDAOs, '-> allDAOs')
+    // const res = await contract.getProposals();
+    // const daos = res.decodedResult;
+    return allDAOs;
+  };
+
   const getUsersActivities = async (daoContractAddress: string) => {
     const contract = await getBasicDAO(daoContractAddress);
     const res = await contract.getAllMembersActivities();
@@ -165,6 +174,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     return activities;
   };
 
+  
   const getProposals = async (daoContractAddress: string) => {
     const contract = await getBasicDAO(daoContractAddress);
     const res = await contract.getProposals();
@@ -200,6 +210,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     fetchDAOs,
     newProposalInfo,
     setNewProposalInfo,
+    getAllProposals
   };
 
   return (

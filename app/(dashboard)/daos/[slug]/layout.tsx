@@ -26,11 +26,13 @@ const Layout = ({ children }: ILayout) => {
 
   const lastIndex = pathname.lastIndexOf('/');
   const updatedUrl = pathname.substring(0, lastIndex);
+  const urlParts = pathname.split('/'); // Split the URL by "/"
+  const daoId = urlParts[2];
 
   if (isLoading) return <EachDaoLoading />;
   const isMember = currentDAO.members.includes(address);
 
-  console.log(isMember, '-> is member');
+  console.log(updatedUrl, '-> updatedUrl');
 
   return (
     <div className="">
@@ -50,7 +52,7 @@ const Layout = ({ children }: ILayout) => {
         {isConnected && (
           <React.Fragment>
             {isMember ? (
-              <Link href={CREATE_PROPOSAL_URL}>
+              <Link href={`${CREATE_PROPOSAL_URL}?ct=${daoId}`}>
                 <Button>
                   <Plus className="mr-2 h-4 w-4" /> Create Proposal
                 </Button>

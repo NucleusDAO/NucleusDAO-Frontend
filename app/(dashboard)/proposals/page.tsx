@@ -1,12 +1,14 @@
 'use client';
 import EachFilterTab from '@/components/proposals/each-proposal-tab';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { AppContext } from '@/context/app-context';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { IConnectWalletContext } from '@/libs/types';
 import { useContext } from 'react';
 
 const Proposals = () => {
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
+  const { getAllProposals } = useContext(AppContext);
   const connected: boolean = user.isConnected;
   const tabs: { title: string; value: string }[] = [
     { title: 'All', value: '0' },
@@ -15,6 +17,7 @@ const Proposals = () => {
     { title: 'Executed', value: '3' },
     { title: 'Failed', value: '4' },
   ];
+  console.log(getAllProposals())
   return (
     <div className='space-y-8 min-h-[80vh]'>
       <div className='justify-between items-center flex'>

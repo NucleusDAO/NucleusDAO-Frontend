@@ -84,7 +84,7 @@ interface IProposalSummary {
   duration: string;
   logo?: string;
   address: string;
-  socialMedia?: { title: string; link: string; }[]
+  socialMedia?: { type: string; link: string; }[]
 }
 
 export const rate = 0.040166;

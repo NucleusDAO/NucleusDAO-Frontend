@@ -44,11 +44,6 @@ export const EachDaoContextProvider = ({ children }: IAppProvider) => {
   const urlParts = pathname.split('/'); // Split the URL by "/"
   const daoId = urlParts[2];
 
-  // console.log(isLoading, '-> new is loading')
-
-  // console.log(urlParts, '->')
-
-  
   useEffect(() => {
     if (urlParts.length >= 4) {
       (async () => {

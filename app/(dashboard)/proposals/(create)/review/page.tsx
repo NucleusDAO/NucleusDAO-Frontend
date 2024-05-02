@@ -13,15 +13,16 @@ import RoundedIcon from '@/assets/icons/roundedIcon.png';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { MoveLeft, MoveUpRight } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { PROPOSALS_URL } from '@/config/path';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { AppContext } from '@/context/app-context';
 import Lottie from 'react-lottie';
 import { defaultSuccessOption } from '@/components/animation-options';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { IConnectWalletContext } from '@/libs/types';
 import Link from 'next/link';
+import { toast } from 'sonner';
 
 // daoContractAddress: string,
 // proposalType: string,
@@ -30,27 +31,47 @@ import Link from 'next/link';
 // target: string
 
 const ReviewProposal = () => {
-  const { createProposal, newProposalInfo } = useContext(AppContext);
+  const { createProposal, newProposalInfo, getEachDAO } = useContext(AppContext);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
+  const [isCreating, setIsCreating] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
   const { address } = user;
+  const searchParams = useSearchParams();
+  const daoID = searchParams.get('ct');
+  const router = useRouter();
 
   console.log(newProposalInfo, '-> new proposal');
 
   const handleCreateProposal = async () => {
+    setIsCreating(true);
     try {
-      await createProposal(
-        'ct_2mrDW4h47GYRy7gUns9SGeVRRF6q6MYePga7pvUW4Hsfn7V1XB',
-        'transfe',
-        'Annual Anniversay event fund',
-        100,
-        'ak_F7ZzN6kMcst2rFo7s3QEPjD5Frgy36NPeL32Wf9Cx4SnC8oPn'
-      );
-      router.push(PROPOSALS_URL);
-    } catch (error) {
+      const dao = await getEachDAO(daoID);
+      console.log(dao, '-> dao')
+      if (dao) {
+        await createProposal(
+          dao.contractAddress,
+          'transfe',
+          'Annual Anniversay event fund',
+          100,
+          'ak_F7ZzN6kMcst2rFo7s3QEPjD5Frgy36NPeL32Wf9Cx4SnC8oPn'
+        );
+        setOpen(true);
+      } else {
+        toast.error('Contract address not found')
+      }
+      setIsCreating(false)
+      // router.push(PROPOSALS_URL);
+    } catch (error: any) {
+      setIsCreating(false)
+      toast.error(error.message)
       console.error({ error });
     }
   };
-  const router = useRouter();
+
+  const handleGoHome = () => {
+    router.push(PROPOSALS_URL);
+  }
+
   return (
     <div className="space-y-8">
       <div className="space-y-2">
@@ -69,54 +90,99 @@ const ReviewProposal = () => {
         </h1>
         {proposalSummary({ ...newProposalInfo.value, address }).map(
           (summary, index) => (
-            <div className="grid grid-cols-2 text-sm w-4/6" key={summary.title}>
-              <p className="dark:text-white text-dark">{summary.title}</p>
-              {summary.title === 'Logo' && (
-                <img
-                  src={summary.desc}
-                  alt="logo"
-                  className="rounded-lg h-[50px] w-[50px] object-cover -mt-4"
-                />
-              )}
-              {(summary.title !== 'Logo' && summary.title !== 'Social Media') && (
-                <>
-                  <div className="flex space-x-2 items-center">
-                    {summary.title === 'Published by' && (
+            <>
+              {(summary.desc) && (
+                <div className="grid grid-cols-2 text-sm w-4/6" key={summary.title}>
+                    <p className="dark:text-white text-dark">{summary.title}</p>
+                    {summary.title === 'Logo' && (
                       <img
-                        src={`https://avatars.z52da5wt.xyz/${address}`}
-                        alt="logo"
-                        width={20}
-                      />
+                      src={summary.desc}
+                      alt="logo"
+                      className="rounded-lg h-[50px] w-[50px] object-cover -mt-4"
+                    />
                     )}
-                    <p
-                      className={cn(
-                        'text-defaultText',
-                        index === proposalSummary.length - 1 &&
-                          'dark:text-white font-light text-dark'
+                    {summary.title === 'Published by' && (
+                      <div className='flex space-x-2'>
+                        <img
+                          src={`https://avatars.z52da5wt.xyz/${address}`}
+                          alt="logo"
+                          width={20}
+                        />
+                        <p className="dark:text-white text-dark">{summary.desc}</p>
+                      </div>
+                    )}
+
+                    {summary.title === 'Social Media' && (
+                        summary.desc.map((social: { type: string; link: string; }) => (
+                          <Link
+                          href={social.link}
+                          key={social.type}
+                          target='_blank'
+                        >
+                          <div className='flex items-center space-x-2 text-primary'>
+                            <p className=''>{social.type}</p>
+                            <div className='border border-primary rounded-sm p-0.5'>
+                              <MoveUpRight size={10} />
+                            </div>
+                          </div>
+                        </Link>
+                        ))
                       )}
-                    >
-                      {summary.title !== 'Logo' && summary.desc}
-                    </p>
+                      {summary.title !== 'Social Media' && (
+                        <p className="dark:text-white text-dark">{summary.desc}</p>
+                      )}
+
                   </div>
-                </>
               )}
-              {summary.title === 'Social Media' && (
-                summary.desc.map((social: { type: string; link: string; }) => (
-                  <Link
-                  href={social.link}
-                  key={social.type}
-                  target='_blank'
-                >
-                  <div className='flex items-center space-x-2 text-primary'>
-                    <p className=''>{social.type}</p>
-                    <div className='border border-primary rounded-sm p-0.5'>
-                      <MoveUpRight size={10} />
-                    </div>
-                  </div>
-                </Link>
-                ))
-              )}
-            </div>
+            </>
+            // <div className="grid grid-cols-2 text-sm w-4/6" key={summary.title}>
+            //   <p className="dark:text-white text-dark">{summary.title}</p>
+            //   {summary.title === 'Logo' && (
+                // <img
+                //   src={summary.desc}
+                //   alt="logo"
+                //   className="rounded-lg h-[50px] w-[50px] object-cover -mt-4"
+                // />
+            //   )}
+            //   {(summary.title !== 'Logo' && summary.title !== 'Social Media') && (
+            //     <>
+            //       <div className="flex space-x-2 items-center">
+            //         {summary.title === 'Published by' && (
+            //           <img
+            //             src={`https://avatars.z52da5wt.xyz/${address}`}
+            //             alt="logo"
+            //             width={20}
+            //           />
+            //         )}
+            //         <p
+            //           className={cn(
+            //             'text-defaultText',
+            //             index === proposalSummary.length - 1 &&
+            //               'dark:text-white font-light text-dark'
+            //           )}
+            //         >
+            //           {summary.title !== 'Logo' && summary.desc}
+            //         </p>
+            //       </div>
+            //     </>
+            //   )}
+            //   {summary.title === 'Social Media' && (
+            //     summary.desc.map((social: { type: string; link: string; }) => (
+            //       <Link
+            //       href={social.link}
+            //       key={social.type}
+            //       target='_blank'
+            //     >
+            //       <div className='flex items-center space-x-2 text-primary'>
+            //         <p className=''>{social.type}</p>
+            //         <div className='border border-primary rounded-sm p-0.5'>
+            //           <MoveUpRight size={10} />
+            //         </div>
+            //       </div>
+            //     </Link>
+            //     ))
+            //   )}
+            // </div>
           )
         )}
       </div>
@@ -129,12 +195,10 @@ const ReviewProposal = () => {
         >
           <MoveLeft size={20} />
         </Button>
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button type="submit" className="px-12">
+        <AlertDialog open={open} onOpenChange={setOpen}>
+        <Button type="submit" className="px-12" onClick={handleCreateProposal} loading={isCreating} loadingText='Publishing...'>
               Publish Proposal
             </Button>
-          </AlertDialogTrigger>
           <AlertDialogContent className="dark:bg-[#191919] bg-light">
             <AlertDialogHeader>
               <AlertDialogDescription className="text-center text-[#888888] text-sm font-light">
@@ -152,7 +216,7 @@ const ReviewProposal = () => {
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter className="w-full">
-              <Button className="w-full" onClick={handleCreateProposal}>
+              <Button className="w-full" onClick={handleGoHome}>
                 Back home
               </Button>
             </AlertDialogFooter>
