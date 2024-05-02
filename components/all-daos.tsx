@@ -28,18 +28,15 @@ const AllDaos: any = ({
   dashboardTableData,
   connectWalletDescription,
   showDAO,
-  isConnected,
 }: IAllDaos) => {
   const [openPopover, setOpenPopover] = useState<boolean>(false);
   const searchParams = useSearchParams();
   const { replace } = useRouter();
   const pathname = usePathname();
   const currentView = searchParams.get('v') || '';
-  const currentSearch = searchParams.get('search');
+  const currentSearch = searchParams.get('q');
 
   const handleView = useDebouncedCallback((term) => {
-    console.log(`Searching... ${term}`);
-
     const params = new URLSearchParams(searchParams);
 
     if (term) {
@@ -57,7 +54,6 @@ const AllDaos: any = ({
           <SearchInput
             placeholder="Search by organization name"
             classNames="pl-10"
-            queryKey="search"
           />
         </div>
         <div className="flex space-x-3 justify-between md:justify-start">
@@ -87,7 +83,7 @@ const AllDaos: any = ({
                 role="button"
                 className="hover:bg-[#1E1E1E] py-2 px-2 rounded-md"
                 onClick={() => {
-                  toast.info('Coming soon');
+                  toast.info('Coming soon !');
                   setOpenPopover(false);
                 }}
               >

@@ -70,13 +70,13 @@ const DaoInfoForm = () => {
     if (file.size >= maxSize) {
       toast.error('File is too large. Max size of 3mb')
     } else {
-      let formData = new FormData();
-      formData.append('file', file);
-      formData.append(
-        'upload_preset',
-        process.env.NEXT_PUBLIC_CLOUDINARY_PRESET || ''
-      );
-      setLogoFormData(formData);
+      // let formData = new FormData();
+      // formData.append('file', file);
+      // formData.append(
+      //   'upload_preset',
+      //   'mvybpnf0'
+      // );
+      setLogoFormData(file);
   
       if (file) {
         const reader = new FileReader();
@@ -85,7 +85,7 @@ const DaoInfoForm = () => {
           setOnUploadUrl(result);
           form.setValue('logo', file);
           form.setError('logo', { message: '' });
-          const updatedData = { ...newDaoInfo, info: { ...newDaoInfo.info, logo: formData, logoUrl: result } }
+          const updatedData = { ...newDaoInfo, info: { ...newDaoInfo.info, logo: file, logoUrl: result } }
           updateNewDaoInfo(updatedData)
           localStorage.setItem('new_dao', JSON.stringify(updatedData));
         };

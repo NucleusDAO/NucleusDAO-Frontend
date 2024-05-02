@@ -81,37 +81,68 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     setNewDaoInfo(data);
   };
 
-  useEffect(() => {
-    const fetchDAOs = async () => {
-      try {
-        const allDAOs: any = await getAllDaos();
-        if (allDAOs) {
-          setDAOsData(
-            allDAOs.map((dao: any) => {
-              return {
-                organisation: dao.name,
-                image: dao.image,
-                activeMember: dao.members.length.toString(),
-                activeProposal: `${dao.totalProposals}(${dao.activeProposals})`,
-                description: dao.description,
-                members: dao.members,
-                votes: dao.totalVotes,
-                url: encodeURI(
-                  window.location.origin +
-                    VIEW_DAO_URL +
-                    '/' +
-                    dao.id +
-                    '/dashboard'
-                ),
-              };
-            })
-          );
-          setDaoLoading(false);
-        }
-      } catch (error) {
-        toast.error('Error fetching DAOs');
+  const fetchDAOs = async () => {
+    try {
+      const allDAOs: any = await getAllDaos();
+      if (allDAOs) {
+        setDAOsData(
+          allDAOs.map((dao: any) => {
+            return {
+              organisation: dao.name,
+              image: dao.image,
+              activeMember: dao.members.length.toString(),
+              activeProposal: `${dao.totalProposals}(${dao.activeProposals})`,
+              description: dao.description,
+              members: dao.members,
+              votes: dao.totalVotes,
+              url: encodeURI(
+                window.location.origin +
+                  VIEW_DAO_URL +
+                  '/' +
+                  dao.id +
+                  '/dashboard'
+              ),
+            };
+          })
+        );
+        setDaoLoading(false);
       }
-    };
+    } catch (error) {
+      toast.error('Error fetching DAOs');
+    }
+  };
+
+  useEffect(() => {
+    // const fetchDAOs = async () => {
+    //   try {
+    //     const allDAOs: any = await getAllDaos();
+    //     if (allDAOs) {
+    //       setDAOsData(
+    //         allDAOs.map((dao: any) => {
+    //           return {
+    //             organisation: dao.name,
+    //             image: dao.image,
+    //             activeMember: dao.members.length.toString(),
+    //             activeProposal: `${dao.totalProposals}(${dao.activeProposals})`,
+    //             description: dao.description,
+    //             members: dao.members,
+    //             votes: dao.totalVotes,
+    //             url: encodeURI(
+    //               window.location.origin +
+    //                 VIEW_DAO_URL +
+    //                 '/' +
+    //                 dao.id +
+    //                 '/dashboard'
+    //             ),
+    //           };
+    //         })
+    //       );
+    //       setDaoLoading(false);
+    //     }
+    //   } catch (error) {
+    //     toast.error('Error fetching DAOs');
+    //   }
+    // };
     fetchDAOs();
   }, [user]);
 
@@ -215,6 +246,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     newDaoInfo,
     getEachDAO,
     getUsersActivities,
+    fetchDAOs,
   };
 
   return (

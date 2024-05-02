@@ -12,58 +12,67 @@ import { useContext } from 'react';
 import { AppContext } from '@/context/app-context';
 import DashboadLoading from '@/components/loading/dashboard-loading';
 import { toast } from 'sonner';
+import { useSearchParams } from 'next/navigation';
 
 const Dashboard = () => {
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { DAOsData, daoLoading } = useContext(AppContext);
   const connected: boolean = user.isConnected;
+  const searchParams = useSearchParams();
+  const currentSearch = searchParams.get('q');
 
   console.log(user, '->');
 
   const getDAOsData = (width: number) => {
     console.log({ DAOsData });
-    const individualDAOs = DAOsData?.filter((dao: any) => {
+    let individualDAOs;
+
+    individualDAOs = DAOsData?.filter((dao: any) => {
       if (dao.members.includes(user.address)) {
         dao.orgIcon = (
           <img
             src={dao.image}
-            alt='dao logo'
+            alt="dao logo"
             width={width}
             height={width}
-            className='border border-red w-8 h-8 md:w-10 md:h-10 rounded-md'
+            className="border border-red w-8 h-8 md:w-10 md:h-10 rounded-md"
           />
         );
         return dao;
       }
     });
-    return individualDAOs;
+    if (currentSearch) {
+      return individualDAOs.filter((item: { organisation: string }) => item?.organisation?.toLocaleLowerCase().includes(currentSearch.toLowerCase()))
+    } else {
+      return individualDAOs;
+    }
   };
 
   if (daoLoading) return <DashboadLoading />;
 
   return (
-    <div className='space-y-8 min-h-[80vh]'>
-      <div className='flex justify-between items-center'>
+    <div className="space-y-8 min-h-[80vh]">
+      <div className="flex justify-between items-center">
         <h1
-          role='heading'
-          className='dark:text-white text-[#292929] font-medium text-xl'
+          role="heading"
+          className="dark:text-white text-[#292929] font-medium text-xl"
         >
           Global Feed
         </h1>
         {connected ? (
           <Link href={SELECT_DAO_STYLE_URL}>
             <Button>
-              <Plus className='mr-2 h-4 w-4' /> Create DAO
+              <Plus className="mr-2 h-4 w-4" /> Create DAO
             </Button>
           </Link>
         ) : (
           <Button onClick={() => toast.error('Please connect your wallet!')}>
-            <Plus className='mr-2 h-4 w-4' /> Create DAO
+            <Plus className="mr-2 h-4 w-4" /> Create DAO
           </Button>
         )}
       </div>
 
-      <div className='gap-6 md:grid-cols-3 grid'>
+      <div className="gap-6 md:grid-cols-3 grid">
         {dashboardFeedsData(connected).map((feed) => (
           <Cards key={feed.title} {...feed} />
         ))}
@@ -71,7 +80,7 @@ const Dashboard = () => {
 
       <AllDaos
         dashboardTableData={getDAOsData}
-        connectWalletDescription='Connect your wallet to be able to see your dashboard'
+        connectWalletDescription="Connect your wallet to be able to see your dashboard"
         showDAO={connected}
       />
     </div>

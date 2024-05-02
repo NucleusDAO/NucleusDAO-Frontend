@@ -18,7 +18,7 @@ const Daos = () => {
   const { DAOsData, daoLoading } = useContext(AppContext);
   const connected: boolean = user.isConnected;
   const searchParams = useSearchParams();
-  const currentSearch = searchParams.get('search');
+  const currentSearch = searchParams.get('q');
 
   const getDAOsData = (width: number) => {
     let allDAO;
@@ -36,7 +36,7 @@ const Daos = () => {
           alt='dao logo'
           width={width}
           height={width}
-          className='border border-red w-8 h-8 md:w-10 md:h-10 rounded-md'
+          className='border border-red w-8 h-8 md:w-10 md:h-10 rounded-md object-cover'
         />
       );
       return dao;

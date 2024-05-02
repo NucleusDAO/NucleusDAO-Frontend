@@ -26,16 +26,21 @@ import { defaultSuccessOption } from '@/components/animation-options';
 const ReviewDao = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isRouting, setIsRouting] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
-  const { createDAO, updateNewDaoInfo, newDaoInfo } = useContext(AppContext);
+  const { createDAO, updateNewDaoInfo, newDaoInfo, fetchDAOs } = useContext(AppContext);
+
+  console.log(newDaoInfo, '->')
 
   const handleCreateDAO = async () => {
     setIsLoading(true);
     try {
-      const fileUpload = await uploadFile(newDaoInfo.info.logo);
+      let formData = new FormData();
+      formData.append('file', newDaoInfo.info.logo);
+      formData.append('upload_preset','bqr7mcvh');
+      const fileUpload = await uploadFile(formData);
       const logoURL = fileUpload.data.url;
-
       await createDAO(
         newDaoInfo.info.daoName,
         newDaoInfo.info.daoName.replace(/\s+/g, '-').toLowerCase(),
@@ -44,21 +49,35 @@ const ReviewDao = () => {
         newDaoInfo.info.socialMedia.map((s: any) => {
           return { name: s.type, url: s.link };
         }),
-        newDaoInfo.info.initialMembers.map((m: any) => {
+        newDaoInfo.members.map((m: any) => {
           return m.address;
         }),
         0,
-        newDaoInfo.votingTime,
+        newDaoInfo.duration,
         newDaoInfo.quorum
-      );
+      )
       // Deleted dao information from localStorage
       setIsLoading(false);
+      localStorage.removeItem('new_dao');
+      updateNewDaoInfo(defaultDaoCreation);
       setOpen(true);
     } catch (error: any) {
       setIsLoading(false);
       toast.error(error.message);
     }
   };
+
+  const handleGoHome = async () => {
+    setIsRouting(true);
+    try {
+      await fetchDAOs();
+      setIsRouting(false)
+      router.push(DAO_URL);
+    } catch (error: any) {
+      setIsRouting(false);
+      toast.error(error.message);
+    }
+  }
 
   return (
     <div className='space-y-8'>
@@ -129,7 +148,7 @@ const ReviewDao = () => {
           <p className='dark:text-white text-dark'>Members</p>
           <p className='text-defaultText'>{`${
             newDaoInfo.members[0].address ? newDaoInfo.members.length : '0'
-          } wallet address (es`}</p>
+          } wallet address (es)`}</p>
         </div>
       </div>
 
@@ -185,11 +204,7 @@ const ReviewDao = () => {
             <AlertDialogFooter className='w-full'>
               <Button
                 className='w-full'
-                onClick={() => {
-                  localStorage.removeItem('new_dao');
-                  updateNewDaoInfo(defaultDaoCreation);
-                  router.push(DAO_URL);
-                }}
+                onClick={handleGoHome}
               >
                 Back home
               </Button>
