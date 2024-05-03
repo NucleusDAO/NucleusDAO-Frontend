@@ -54,28 +54,35 @@ export const content = [
   },
 ];
 
-export const contentChain: { title: string; description: string; classNames: string, chain: StaticImageData }[] = [
+export const contentChain: { title: string; description: string; classNames: string, chain: StaticImageData, top?: string, right?: string; bottom?: string; left?: string; }[] = [
   {
       title: 'Proposal Creation',
       description: 'It enables members to propose initiatives.',
       classNames: '-top-20',
+      top: '-80px',
       chain: ProposalCreationChain
   },
   {
       title: 'Voting Mechanism',
       description: 'Easily cast votes securely.',
       classNames: '-top-10 -right-[192px]',
+      top: '-40px',
+      right: '-192px',
       chain: VotingMechanismChain
   },
   {
       title: 'DAO Creation',
       description: 'Customize and deploy DAOs',
+      bottom: '4px',
+      left: '-230px',
       classNames: 'bottom-1 -left-[230px]',
       chain: DaoCreationChain
   },
   {
       title: 'DAO Treasury',
       description: 'DAO has its own Treasury.',
+      bottom: '4px',
+      right: '-230px',
       classNames: 'bottom-1 -right-[230px]',
       chain: DaoTresuryChain
   },
