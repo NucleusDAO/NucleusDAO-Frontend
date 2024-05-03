@@ -190,12 +190,12 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     return dao;
   };
 
-  const getEachProposal = async (id: string) => {
-    const contract = await getNucleusDAO();
-    const res = await contract.getProposal(id);
-    const proposal = res.decodedResult;
-    return proposal;
-  }
+  // const getEachProposal = async (id: string) => {
+  //   const contract = await getBasicDAO(daoContractAddress);
+  //   const res = await contract.getProposal(id);
+  //   const proposal = res.decodedResult;
+  //   return proposal;
+  // }
 
   const value = {
     createDAO,
@@ -210,7 +210,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     fetchDAOs,
     newProposalInfo,
     setNewProposalInfo,
-    getEachProposal,
+    // getEachProposal,
   };
 
   return (

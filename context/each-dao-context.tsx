@@ -44,6 +44,8 @@ export const EachDaoContextProvider = ({ children }: IAppProvider) => {
   const urlParts = pathname.split('/'); // Split the URL by "/"
   const daoId = urlParts[2];
 
+  console.log(daoId, '-? dao ID')
+
   useEffect(() => {
     if (urlParts.length >= 4) {
       setIsLoading(true);
@@ -54,6 +56,7 @@ export const EachDaoContextProvider = ({ children }: IAppProvider) => {
             const proposals: IProposal[] = await getProposals(
               dao.contractAddress
             );
+            // console.log(proposals, '-> proposals')
             setEachDAOProposal(
               proposals.map((proposal: IProposal) => {
                 return {

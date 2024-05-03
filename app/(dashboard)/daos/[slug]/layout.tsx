@@ -29,13 +29,15 @@ const Layout = ({ children }: ILayout) => {
   const urlParts = pathname.split('/'); // Split the URL by "/"
   const daoId = urlParts[2];
 
+  
   if (isLoading) return <EachDaoLoading />;
-
+  
   const isMember = currentDAO.members.includes(address);
 
-  console.log(isLoading, '-> isloading')
+
+  // console.log(isLoading, '-> isloading')
   
-  console.log(updatedUrl, '-> updatedUrl');
+  console.log(currentDAO, '-> currentDAO');
 
   return (
     <>

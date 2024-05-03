@@ -62,7 +62,7 @@ const EachProposal = () => {
         </div>
       </div>
       
-      <EachProposalView tabs={tabs} />
+      <EachProposalView tabs={tabs} currentProposal />
     </div>
   );
 };
