@@ -82,3 +82,40 @@ export interface IAllDaos {
     activeProposal: string;
   }[];
 }
+
+export type TotalProposalType = number;
+
+
+export interface IAppProvider {
+  children: ReactNode;
+}
+
+export interface IProposal {
+  id: number;
+  proposal: string;
+  proposalType: string;
+  description: string;
+  value: number;
+  target: string;
+  startTime: number;
+  endTime: number;
+  votesFor: number;
+  votesAgainst: number;
+  isExecuted: boolean;
+}
+
+export interface IDAO {
+  name: string;
+  description: string;
+  image: string;
+  socials: string[];
+  votingTime: number;
+  quorum: number;
+  proposals: IProposal[];
+  totalProposals: number;
+  members: string[];
+}
+
+export interface INewProposal {
+  value: { type: string; logo: string; description: string; targetWallet: string; value: string; duration: number; quorum: number; socialMedia: { type: string; link: string }[] }
+}

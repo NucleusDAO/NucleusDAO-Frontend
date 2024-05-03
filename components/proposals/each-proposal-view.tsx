@@ -10,6 +10,7 @@ import { useSearchParams } from 'next/navigation';
 import ProposalResult from './proposal-result';
 import ProposalInfo from './proposal-info';
 import { useMediaQuery } from '@/hooks/use-media-query';
+import { proposalLists } from '@/config/dao-config';
 
 
 interface IEachTabView {
@@ -17,12 +18,14 @@ interface IEachTabView {
 }
 
 interface IEachProposalView {
-  tabs: string[]
+  tabs: string[];
+  currentProposal: any;
 }
 
-const EachProposalView = ({ tabs }: IEachProposalView) => {
+const EachProposalView = ({ tabs, currentProposal }: IEachProposalView) => {
   const isDesktop = useMediaQuery('(min-width: 768px)');
   const [showFullProposal, setShowFullProposal] = useState<boolean>(false);
+  const [description, setDescription] = useState<string>(currentProposal.description)
   const voteStatus: string = 'Active';
   const searchParams = useSearchParams();
 
@@ -36,20 +39,16 @@ const EachProposalView = ({ tabs }: IEachProposalView) => {
   return (
     <div className="space-y-6">
       <h1 className="dark:text-white font-medium text-xl md:text-3xl pt-6 text-dark">
-        Brand Identity Change
+         {proposalLists.find((proposal: { type: string }) => proposal.type === currentProposal.type)?.title}
       </h1>
       <div className="flex space-x-3 items-center">
         <p className="font-light text-sm text-[#888888]">Published by</p>
         <Image src={RoundedIcon} alt="logo" width={isDesktop ? 20 : 16} height={isDesktop ? 20 : 16} />
-        <p className="font-light text-xs md:text-sm dark:text-white text-dark">9xfDAO...ntY897</p>
+        <p className="font-light text-xs md:text-sm dark:text-white text-dark">{currentProposal.wallet}</p>
       </div>
       <div className="space-y-4">
         <p className="text-xs md:text-sm text-defaultText">
-          Making a change of brand identity and UI features that can enhance the
-          usability and functionality of Legacy. This features can lead to a
-          more engaging user experience, increased user engagement, improved
-          communication of value proposition, brand cohesion, differentiation in
-          the market, and long-term scalability.
+          {description}
         </p>
         {!showFullProposal && (
           <Button onClick={() => setShowFullProposal(true)}>
@@ -62,7 +61,7 @@ const EachProposalView = ({ tabs }: IEachProposalView) => {
         <div className="space-y-8">
           {showFullProposal && (
             <div className="text-xs md:text-sm text-defaultText trans space-y-3">
-              <p>
+              {/* <p>
                 Refreshed Branding: Start by evaluating Legacy's existing brand
                 identity and considering if any updates or refinements are
                 necessary. This may involve updating the logo, color palette,
@@ -73,7 +72,7 @@ const EachProposalView = ({ tabs }: IEachProposalView) => {
                 research and usability testing to identify pain points, gather
                 feedback, and iterate on the UI features accordingly. Would like
                 to propose to change the brand identity of Legacy.
-              </p>
+              </p> */}
               <Button onClick={() => setShowFullProposal(false)}>
                 Show less
               </Button>

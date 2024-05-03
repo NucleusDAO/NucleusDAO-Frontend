@@ -12,7 +12,7 @@ import basicDAOAci from './contract/BasicDAO.json';
 import { DASHBOARD_URL } from '@/config/path';
 
 const nucleusDAOContractAddress =
-  'ct_2nKgdeCv9dnLBHCEscVduQzRc8CLjJhh8uJb98az5hhQ8SJS5q';
+  'ct_ZyNy92LTo3XfemdVm3GHSUSa9RKY7oAAS5pB38MCkSWuWRmu4';
 
 const TESTNET_NODE_URL = 'https://testnet.aeternity.io';
 const MAINNET_NODE_URL = 'https://mainnet.aeternity.io';
@@ -110,7 +110,8 @@ export const connectWallet = async ({
       return;
     }
     if (isHome) {
-      const domainName = typeof window !== 'undefined' && window.location.origin;
+      const domainName =
+        typeof window !== 'undefined' && window.location.origin;
       const dashboardURL = `${domainName}/${DASHBOARD_URL}/`;
       addressDeepLink = createDeepLinkUrl({
         type: 'address',

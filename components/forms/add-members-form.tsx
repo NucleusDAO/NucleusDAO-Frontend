@@ -36,7 +36,6 @@ const AddMemberForm = () => {
 
   useEffect(() => {
     const subscription = form.watch((value, { name, type }) => {
-      console.log(value.members, '-> value');
       const updatedData = { ...newDaoInfo, members: value.members };
       localStorage.setItem('new_dao', JSON.stringify(updatedData));
       updateNewDaoInfo(updatedData)

@@ -15,8 +15,9 @@ const Proposals = () => {
     { title: 'Executed', value: '3' },
     { title: 'Failed', value: '4' },
   ];
+
   return (
-    <div className='space-y-8'>
+    <div className='space-y-8 min-h-[80vh]'>
       <div className='justify-between items-center flex'>
         <h1
           role='heading'

@@ -52,8 +52,8 @@ export { columns };
 export const WalletAddressCell = ({ row }: any) => {
   const { wallet } = row.original;
   return (
-    <div className="flex space-x-2 items-center w-[25vw]">
-      <Image src={RoundedIcon} alt="waller" width={24} />
+    <div className='flex space-x-2 items-center w-[25vw]'>
+      <Image src={RoundedIcon} alt='waller' width={24} />
       <p>{wallet}</p>
     </div>
   );
@@ -69,25 +69,25 @@ export const ActionCell = ({ row }: any) => {
         <Dialog>
           <DialogTrigger asChild>
             <Button
-              className="bg-[#1E1E1E] hover:bg-[#262626] text-white"
-              size="sm"
+              className='bg-[#1E1E1E] hover:bg-[#262626] text-white'
+              size='sm'
             >
               Delete
             </Button>
           </DialogTrigger>
-          <DialogContent className="dark:bg-[#191919] bg-light">
+          <DialogContent className='dark:bg-[#191919] bg-light'>
             <DialogHeader>
-              <DialogTitle className="dark:text-white font-medium py-3 text-dark">
+              <DialogTitle className='dark:text-white font-medium py-3 text-dark'>
                 Remove Member
               </DialogTitle>
-              <DialogDescription className="font-light py-2">
+              <DialogDescription className='font-light py-2'>
                 You have to make a proposal before you can remove members from
                 the DAO. Do you want to make a proposal now?
               </DialogDescription>
             </DialogHeader>
 
             <Link href={`${CREATE_PROPOSAL_URL}?enums=2`}>
-              <Button className="w-full">Propose</Button>
+              <Button className='w-full'>Propose</Button>
             </Link>
           </DialogContent>
         </Dialog>

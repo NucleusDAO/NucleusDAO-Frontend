@@ -12,18 +12,30 @@ const EachDaoProposals = () => {
   const filter = searchParams.get('filter') || '';
   const [proposals, setProposals] = useState(eachDAOProposal);
 
+  console.log(proposals, '-> proposal')
+
   useEffect(() => {
     if (search) {
-      setProposals(eachDAOProposal?.filter((item: { wallet: string; type: string; }) =>  item?.wallet?.toLowerCase().includes(search.toLowerCase()) || item?.type?.toLocaleLowerCase()?.includes(search.toLowerCase())))
+      setProposals(
+        eachDAOProposal?.filter(
+          (item: { wallet: string; type: string }) =>
+            item?.wallet?.toLowerCase().includes(search.toLowerCase()) ||
+            item?.type?.toLocaleLowerCase()?.includes(search.toLowerCase())
+        )
+      );
     } else if (filter) {
-      setProposals(eachDAOProposal?.filter((item: { status: string }) =>  item?.status?.toLowerCase().includes(filter.toLowerCase())))
+      setProposals(
+        eachDAOProposal?.filter((item: { status: string }) =>
+          item?.status?.toLowerCase().includes(filter.toLowerCase())
+        )
+      );
     } else {
       setProposals(eachDAOProposal);
     }
   }, [search, filter]);
 
   return (
-    <div className="-mt-4">
+    <div className='-mt-4'>
       <EachFilterTab proposalData={proposals} search={search} filter={filter} />
     </div>
   );

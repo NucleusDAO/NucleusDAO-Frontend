@@ -1,14 +1,38 @@
 'use client';
 import EachProposalView from '@/components/proposals/each-proposal-view';
+import { AppContext } from '@/context/app-context';
+import { EachDaoContext } from '@/context/each-dao-context';
 import { cn } from '@/libs/utils';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useContext, useEffect } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 
 const EachProposal = () => {
+  const router = useRouter();
+  const { currentDAO, eachDAOProposal } = useContext(EachDaoContext);
     const tabs: string[] = ['Result', 'Information'];
     const searchParams = useSearchParams();
     const { replace } = useRouter();
     const pathname = usePathname();
+
+    const urlParts = pathname.split('/'); // Split the URL by "/"
+    const proposalId = urlParts[4];
+    const currentProposal =  eachDAOProposal.find((proposal: { id: string }) => proposal.id === proposalId)
+
+    // useEffect(() => {
+    //   const getProposal = async () => {
+    //     if (proposalId) {
+    //       const proposal = await getEachProposal(Number(proposalId));
+    //       console.log(proposal, '->')
+    //     } else {
+    //       router.back();
+    //     }
+    //   };
+    //   getProposal()
+    // }, [proposalId]);
+  
+    console.log(eachDAOProposal, '-> eachDAOProposal')
+    console.log(currentProposal, '-> current proposal')
   
     const currentTab: string = searchParams.get('q') || tabs[0];
   
@@ -44,7 +68,7 @@ const EachProposal = () => {
           ))}
         </div>
       </div>
-      <EachProposalView tabs={tabs} />
+      <EachProposalView tabs={tabs} currentProposal={currentProposal} />
     </div>
   );
 };

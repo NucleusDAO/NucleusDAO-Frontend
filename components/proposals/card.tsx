@@ -11,6 +11,7 @@ import { encodeURI } from '@/libs/utils';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { useContext } from 'react';
+import { proposalLists } from '@/config/dao-config';
 
 interface IProposalCard {
   description: string;
@@ -61,7 +62,7 @@ const ProposalCard = ({
                       Proposal Type
                     </p>
                     <h3 className="dark:text-white capitalize text-dark font-medium text-sm md:text-lg">
-                      {type}
+                      {proposalLists.find((proposal: { type: string }) => proposal.type === type)?.title}
                     </h3>
                   </div>
                 </div>

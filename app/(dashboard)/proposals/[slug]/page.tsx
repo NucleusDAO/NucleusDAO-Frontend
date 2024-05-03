@@ -1,12 +1,15 @@
 'use client';
 import EachProposalView from '@/components/proposals/each-proposal-view';
+import { AppContext } from '@/context/app-context';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { cn } from '@/libs/utils';
 import { MoveLeft } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useContext } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 
 const EachProposal = () => {
+  const { getEachProposal } = useContext(AppContext);
   const isDesktop = useMediaQuery('(min-width: 768px)');
   const router = useRouter();
   const tabs: string[] = ['Result', 'Information'];
@@ -59,7 +62,7 @@ const EachProposal = () => {
         </div>
       </div>
       
-      <EachProposalView tabs={tabs} />
+      <EachProposalView tabs={tabs} currentProposal />
     </div>
   );
 };

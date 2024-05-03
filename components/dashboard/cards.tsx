@@ -1,8 +1,9 @@
+import { TotalProposalType } from '@/libs/types';
 import { ReactNode } from 'react';
 
 interface ICards {
   title: string;
-  value: number;
+  value: number|Promise<TotalProposalType>;
   icon: ReactNode;
 }
 

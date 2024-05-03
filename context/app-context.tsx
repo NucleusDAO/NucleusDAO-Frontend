@@ -1,40 +1,21 @@
-import { ReactNode, createContext, useContext, useEffect, useState } from 'react';
-import { ConnectWalletContext, ConnectWalletProvider } from './connect-wallet-context';
+import {
+  ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
+import {
+  ConnectWalletContext,
+  ConnectWalletProvider,
+} from './connect-wallet-context';
 import { getNucleusDAO, getBasicDAO } from '@/libs/ae-utils';
 import { toast } from 'sonner';
-import { IConnectWalletContext, InewDaoInfo } from '@/libs/types';
-import { defaultDaoCreation } from '@/libs/utils';
+import { IAppProvider, IConnectWalletContext, INewProposal, InewDaoInfo } from '@/libs/types';
+import { defaultDaoCreation, defaultProposal } from '@/libs/utils';
+import { VIEW_DAO_URL } from '@/config/path';
 
 export const AppContext = createContext<any>({});
-
-interface IAppProvider {
-  children: ReactNode;
-}
-
-export interface IProposal {
-  id: number;
-  proposal: string;
-  proposalType: string;
-  description: string;
-  value: number;
-  target: string;
-  endTime: number;
-  votesFor: number;
-  votesAgainst: number;
-  isExecuted: boolean;
-}
-
-export interface IDAO {
-  name: string;
-  description: string;
-  image: string;
-  socials: string[];
-  votingTime: number;
-  quorum: number;
-  proposals: IProposal[];
-  totalProposals: number;
-  members: string[];
-}
 
 export const AppContextProvider = ({ children }: IAppProvider) => {
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
@@ -42,11 +23,23 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
   const [daoLoading, setDaoLoading] = useState<boolean>(true);
   const [DAOsData, setDAOsData] = useState<any[]>([]);
   const [newDaoInfo, setNewDaoInfo] = useState<InewDaoInfo>(defaultDaoCreation);
-  const getNewDaoInfo = typeof window !== 'undefined' && localStorage.getItem('new_dao');
+  const [newProposalInfo, setNewProposalInfo] = useState<INewProposal>(defaultProposal);
+
+  const getNewDaoInfo =
+    typeof window !== 'undefined' && localStorage.getItem('new_dao');
+
+  const getNewProposalInfo =
+    typeof window !== 'undefined' && localStorage.getItem('new_proposal');
 
   useEffect(() => {
     if (getNewDaoInfo) {
       setNewDaoInfo(JSON.parse(getNewDaoInfo));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (getNewProposalInfo) {
+      setNewProposalInfo(JSON.parse(getNewProposalInfo));
     }
   }, []);
 
@@ -66,55 +59,66 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
   };
 
   const updateNewDaoInfo = (data: any) => {
-    setNewDaoInfo(data)
-  }
+    setNewDaoInfo(data);
+  };
+
+  const fetchDAOs = async () => {
+    try {
+      const allDAOs: any = await getAllDaos();
+      if (allDAOs) {
+        setDAOsData(
+          allDAOs.map((dao: any) => {
+            return {
+              organisation: dao.name,
+              image: dao.image,
+              activeMember: dao.members.length.toString(),
+              activeProposal: `${dao.totalProposals}(${dao.activeProposals})`,
+              description: dao.description,
+              members: dao.members,
+              votes: dao.totalVotes,
+              url: encodeURI(
+                window.location.origin +
+                  VIEW_DAO_URL +
+                  '/' +
+                  dao.id +
+                  '/dashboard'
+              ),
+            };
+          })
+        );
+        setDaoLoading(false);
+      }
+    } catch (error) {
+      toast.error('Error fetching DAOs');
+    }
+  };
 
   useEffect(() => {
-    const fetchDAOs = async () => {
-      try {
-        const allDAOs: any = await getAllDaos();
-        if (allDAOs) {
-          setDAOsData(
-            allDAOs.map((dao: any) => {
-              return {
-                organisation: dao.name,
-                image: dao.image,
-                activeMember: dao.members.length.toString(),
-                activeProposal: `${dao.proposals}(${dao.activeProposals})`,
-                description: dao.description,
-                members: dao.members,
-                votes: '',
-                url: `https://nucleusdao.com/dao/${dao.name
-                  .toLowerCase()
-                  .replace(/\s/g, '-')}`,
-              };
-            })
-          );
-          setDaoLoading(false);
-        }
-      } catch (error) {
-        toast.error('Error fetching DAOs');
-      }
-    };
     fetchDAOs();
-  }, [user.isConnected]);
+  }, [user]);
 
   const createDAO = async (
     name: string,
+    id: string,
     description: string,
     image: string,
     socials: string[],
     initialMembers: string[],
-    startingBalance: number
+    startingBalance: number,
+    votingTime: number,
+    quorum: number
   ) => {
     const contract = await getNucleusDAO();
     const res = await contract.createDAO(
       name,
+      id,
       description,
       image,
       socials,
       initialMembers,
-      startingBalance
+      startingBalance,
+      votingTime,
+      quorum
     );
     console.log({ res });
     const dao = res.decodedResult;
@@ -126,14 +130,16 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     proposalType: string,
     description: string,
     value: number,
-    target: string
+    target: string,
+    info: { name: string; socials: { name: string; url: string }[], image: string }
   ) => {
     const contract = await getBasicDAO(daoContractAddress);
-    const res = await contract.createDAO(
+    const res = await contract.createProposal(
       proposalType,
       description,
       value,
-      target
+      target,
+      info
     );
     const proposal = res.decodedResult;
     return proposal;
@@ -146,11 +152,35 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     return daos;
   };
 
+  const getUsersActivities = async (daoContractAddress: string) => {
+    const contract = await getBasicDAO(daoContractAddress);
+    const res = await contract.getAllMembersActivities();
+    const activities = res.decodedResult;
+    for (let i = 0; i < activities.length; i++) {
+      let activity = activities[i];
+      for (let key in activity) {
+        if (typeof activity[key] == 'bigint') {
+          activity[key] = Number(activity[key]);
+        }
+      }
+    }
+    return activities;
+  };
+
+  
   const getProposals = async (daoContractAddress: string) => {
     const contract = await getBasicDAO(daoContractAddress);
     const res = await contract.getProposals();
-    const daos = res.decodedResult;
-    return daos;
+    const proposals = res.decodedResult;
+    for (let i = 0; i < proposals.length; i++) {
+      let proposal = proposals[i];
+      for (let key in proposal) {
+        if (typeof proposal[key] == 'bigint') {
+          proposal[key] = Number(proposal[key]);
+        }
+      }
+    }
+    return proposals;
   };
 
   const getEachDAO = async (id: string) => {
@@ -159,6 +189,13 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     const dao = res.decodedResult;
     return dao;
   };
+
+  // const getEachProposal = async (id: string) => {
+  //   const contract = await getBasicDAO(daoContractAddress);
+  //   const res = await contract.getProposal(id);
+  //   const proposal = res.decodedResult;
+  //   return proposal;
+  // }
 
   const value = {
     createDAO,
@@ -169,6 +206,11 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     updateNewDaoInfo,
     newDaoInfo,
     getEachDAO,
+    getUsersActivities,
+    fetchDAOs,
+    newProposalInfo,
+    setNewProposalInfo,
+    // getEachProposal,
   };
 
   return (

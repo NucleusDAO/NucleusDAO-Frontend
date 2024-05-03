@@ -1,11 +1,16 @@
+'use client';
 import { Checkbox } from "@/components/ui/checkbox";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import FormGroup from "@/components/ui/form-group";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { rate } from "@/config/dao-config";
+import { AppContext } from "@/context/app-context";
 import { cn, handleChangeFormNumberInput, handleMinus, handlePlus } from "@/libs/utils";
 import { Minus, Plus, Trash2 } from "lucide-react";
+import { ChangeEvent, useContext, useState } from "react";
 import { useFieldArray } from "react-hook-form";
+import { toast } from "sonner";
 
 interface ISelectFormField {
     form: any;
@@ -72,9 +77,11 @@ const EquivalentValueFormField = ({ form }: { form: any }) => {
             <FormLabel>Value</FormLabel>
             <FormControl>
               <FormGroup>
-                <Input placeholder="value" {...field} />
+                <Input placeholder="value" {...field} 
+                    />
+                
                 <p className="text-xs font-light text-[#888888] absolute right-4">
-                  120 <span className="text-[10px]">USD</span>
+                  {Number(field.value)*rate} <span className="text-[10px]">USD</span>
                 </p>
               </FormGroup>
             </FormControl>
@@ -101,7 +108,7 @@ const ProposalDurationFormField = ({ form }: { form: any }) => {
                             'dark:bg-[#1E1E1E] rounded-lg py-2 px-2 dark:hover:bg-[#2a2a2a] trans bg-[#D2D2D2] hover:bg-[#D2D2D2]'
                           )}
                           role="button"
-                          onClick={() => handleMinus('duration', form)}
+                          onClick={() => {form.getValues('duration') ? null : handleMinus('duration', form)}}
                         >
                           <Minus size={18} />
                         </div>
@@ -109,6 +116,7 @@ const ProposalDurationFormField = ({ form }: { form: any }) => {
                           placeholder="value"
                           type="number"
                           className="border-none dark:bg-[#191919] w-fit text-center bg-white"
+                          readOnly
                           {...field}
                           onChange={({ target }) =>
                             handleChangeFormNumberInput(
@@ -121,7 +129,7 @@ const ProposalDurationFormField = ({ form }: { form: any }) => {
                         <div
                           className="dark:bg-[#1E1E1E] rounded-lg py-2 px-2 dark:hover:bg-[#2a2a2a] trans hover:bg-[#D2D2D2] bg-[#D2D2D2]"
                           role="button"
-                          onClick={() => handlePlus('duration', form)}
+                          onClick={() => {form.getValues('duration') ? null : handlePlus('duration', form)}}
                         >
                           <Plus size={18} />
                         </div>
@@ -198,40 +206,79 @@ const QuorumFormField = ({ form }: { form: any }) => {
     )
 }
 
-const UploadFileFormField = ({ form }: { form: any }) => {
+const UploadFileFormField = ({ form }: { form: any; }) => {
+  const { setNewProposalInfo, newProposalInfo } = useContext(AppContext);
+  const [onUploadUrl, setOnUploadUrl] = useState<string>(newProposalInfo.value.logo || '');
+
+  const handleUpload = async (e: ChangeEvent<HTMLInputElement>) => {
+    const maxSize: number = 3 * 1024 * 1024;
+    const file: any = e.target.files?.[0];
+    if (file.size >= maxSize) {
+      toast.error('File is too large. Max size of 3mb')
+    } else {
+      // setLogoFormData(file);
+  
+      if (file) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const result = reader.result as string;
+          setOnUploadUrl(result);
+          form.setValue('logo', file);
+          form.setError('logo', { message: '' });
+          const updatedData = { value: { ...newProposalInfo.value, logo: result } };
+          setNewProposalInfo(updatedData)
+          localStorage.setItem('new_proposal', JSON.stringify(updatedData));
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+  };
+
   return (
-    <FormField
-    control={form.control}
-    name="logo"
-    render={({ field }) => (
-      <FormItem>
-        <FormLabel>
-          Logo{' '}
-          <span className='text-[#DD3857]'>*</span>
-          <span className="text-[#888888] text-sm">{' '}
-            JPG, PNG, or SVG of not more than 3MB.
-          </span>
-        </FormLabel>
-        <FormControl>
-          <FormGroup>
+  <FormField
+  control={form.control}
+  name="logo"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>
+        Logo <span className="text-[#DD3857]">*</span>
+        <span className="text-[#888888] text-sm">
+          {' '}
+          JPG, PNG, or SVG of not more than 3MB.
+        </span>
+      </FormLabel>
+      <FormControl>
+        <FormGroup>
+          {onUploadUrl && (
+            <div className="flex space-x-2 items-end">
+              <img
+                src={onUploadUrl}
+                alt="logo"
+                className="rounded-lg h-[50px] w-[50px] object-cover"
+              />
+              <p className="text-[10px]">Change</p>
+            </div>
+          )}
+          {!onUploadUrl && (
             <div
               className="dark:bg-[#1E1E1E] bg-light text-dark dark:text-defaultText h-[50px] w-[50px] rounded-lg flex items-center justify-center"
               role="button"
             >
               <Plus />
             </div>
-            <Input
-              type="file"
-              className="absolute h-full border-b border-0 w-fit rounded-none inset-0 cursor-pointer opacity-0"
-              accept=".jpg, .jpeg, .png"
-              {...field}
-            />
-          </FormGroup>
-        </FormControl>
-        <FormMessage />
-      </FormItem>
-    )}
-  />
+          )}
+          <Input
+            type="file"
+            className="absolute h-full border-b border-0 w-fit rounded-none inset-0 cursor-pointer opacity-0"
+            accept=".jpg, .jpeg, .png"
+            onChange={handleUpload}
+          />
+        </FormGroup>
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
   )
 }
 
