@@ -8,8 +8,8 @@ import CreativesLogo from '@/assets/logos/creatives-dao.png';
 import { TotalProposalType } from '@/libs/types';
 
 const dashboardFeedsData = (
-  connected: boolean, userDAO: any[], proposal: Promise<TotalProposalType>, votes: Promise<TotalProposalType>
-): { title: string; value: number|Promise<TotalProposalType>; icon: ReactNode }[] => [
+  connected: boolean, userDAO: any[], proposal: number, votes: number
+): { title: string; value: number; icon: ReactNode }[] => [
   {
     title: 'DAOs Joined',
     value: connected ? userDAO.length : 0,

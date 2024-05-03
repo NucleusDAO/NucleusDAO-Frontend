@@ -105,7 +105,7 @@ const proposalInfoSchema = z.object({
     .max(7, { message: '7 days is the maximun expiration days' })
     .optional(),
   quorum: z.number().optional(),
-  socialMedia: z.array(socialMediaSchema),
+  socialMedia: z.array(socialMediaSchema).optional(),
 });
 
 const defineMembershipSchema = z.object({

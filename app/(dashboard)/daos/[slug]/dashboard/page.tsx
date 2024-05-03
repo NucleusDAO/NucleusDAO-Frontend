@@ -3,9 +3,11 @@ import { ChevronUp } from 'lucide-react';
 import { dashboardTab, tabView } from './config';
 import { useState } from 'react';
 import { cn } from '@/libs/utils';
+import EachDaoLoading from '@/components/loading/each-dao-loading';
 
 const EachDaoDashboard = () => {
     const [selectedTab, setSelectTab] = useState<number>(0);
+
   return (
     <div className="md:flex space-x-0 md:space-x-8 space-y-4 md:space-y-0">
       <div className="md:w-[25%] space-y-4">

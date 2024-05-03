@@ -19,7 +19,7 @@ import { IConnectWalletContext } from '@/libs/types';
 import { AppContext } from '@/context/app-context';
 import { uploadFile } from '@/config/apis';
 import { toast } from 'sonner';
-import { defaultDaoCreation } from '@/libs/utils';
+import { daysToMilliseconds, defaultDaoCreation } from '@/libs/utils';
 import Lottie from 'react-lottie';
 import { defaultSuccessOption } from '@/components/animation-options';
 
@@ -51,7 +51,7 @@ const ReviewDao = () => {
           return m.address;
         }),
         0,
-        newDaoInfo.duration,
+        daysToMilliseconds(newDaoInfo.duration),
         newDaoInfo.quorum
       )
       // Deleted dao information from localStorage

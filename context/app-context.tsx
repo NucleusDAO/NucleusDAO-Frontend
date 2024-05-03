@@ -130,14 +130,16 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     proposalType: string,
     description: string,
     value: number,
-    target: string
+    target: string,
+    info: { name: string; socials: { name: string; url: string }[], image: string }
   ) => {
     const contract = await getBasicDAO(daoContractAddress);
-    const res = await contract.createDAO(
+    const res = await contract.createProposal(
       proposalType,
       description,
       value,
-      target
+      target,
+      info
     );
     const proposal = res.decodedResult;
     return proposal;
@@ -148,15 +150,6 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     const res = await contract.getDAOs();
     const daos = res.decodedResult;
     return daos;
-  };
-
-  const getAllProposals = async () => {
-    const allDAOs = await getDAOs();
-    // const contract = await getNucleusDAO();
-    // console.log(allDAOs, '-> allDAOs')
-    // const res = await contract.getProposals();
-    // const daos = res.decodedResult;
-    return allDAOs;
   };
 
   const getUsersActivities = async (daoContractAddress: string) => {
@@ -197,6 +190,13 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     return dao;
   };
 
+  const getEachProposal = async (id: string) => {
+    const contract = await getNucleusDAO();
+    const res = await contract.getProposal(id);
+    const proposal = res.decodedResult;
+    return proposal;
+  }
+
   const value = {
     createDAO,
     createProposal,
@@ -210,7 +210,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     fetchDAOs,
     newProposalInfo,
     setNewProposalInfo,
-    getAllProposals
+    getEachProposal,
   };
 
   return (

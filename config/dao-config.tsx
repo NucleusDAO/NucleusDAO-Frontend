@@ -37,41 +37,50 @@ const DaoTemplateList: {
   },
 ];
 
-const proposalLists: { title: string; enums: number }[] = [
+const proposalLists: { title: string; enums: number; type: string }[] = [
   {
     title: 'Propose a transfer',
+    type: 'transfer',
     enums: 0,
   },
   {
     title: 'Propose to add a new member to the group',
+    type: 'addMember',
     enums: 1,
   },
   {
     title: 'Propose to remove a member from the group',
+    type: 'removeMember',
     enums: 2,
   },
   {
     title: 'Propose to change voting time',
+    type: 'setVotingTime',
     enums: 3,
   },
   {
     title: 'Propose to change the quorum',
+    type: 'setQuorum',
     enums: 4,
   },
   {
     title: 'Propose to change DAO’s name',
+    type: 'updateName',
     enums: 5,
   },
   {
     title: 'Propose to change DAO’s logo',
+    type: 'updateImage',
     enums: 6,
   },
   {
     title: 'Propose to add social links',
+    type: 'updateSocials',
     enums: 7,
   },
   {
     title: 'Other',
+    type: 'transfer',
     enums: 8,
   },
 ];

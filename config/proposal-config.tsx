@@ -6,8 +6,7 @@ import {
   UpdateSocialsFormField,
   UploadFileFormField,
 } from '@/components/proposals/proposal-form-element';
-import { AppContext } from '@/context/app-context';
-import { FC, useContext, useState } from 'react';
+import { FC } from 'react';
 
 export const ProposalTransfer = ({ form }: { form: any }) => {
   return (

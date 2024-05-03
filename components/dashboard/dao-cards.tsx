@@ -1,6 +1,7 @@
 import { LinkIcon, PeopleIcon, ProposalIcon2 } from '@/assets/svgs';
+import { EachDaoContext } from '@/context/each-dao-context';
 import Link from 'next/link';
-import { ReactNode } from 'react';
+import { ReactNode, useContext } from 'react';
 
 export interface IDaoCard {
   organisation: string;
@@ -19,6 +20,7 @@ const DaoCard = ({
   activeMember,
   url,
 }: IDaoCard) => {
+  const { setCurrentDAOId } = useContext(EachDaoContext);
   return (
     <div className='dark:bg-[#191919] bg-white p-5 rounded-lg space-y-7'>
       <div className='flex space-x-4 items-center pb-7'>

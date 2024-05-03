@@ -12,6 +12,8 @@ const EachDaoProposals = () => {
   const filter = searchParams.get('filter') || '';
   const [proposals, setProposals] = useState(eachDAOProposal);
 
+  console.log(proposals, '-> proposal')
+
   useEffect(() => {
     if (search) {
       setProposals(

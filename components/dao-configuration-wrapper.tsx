@@ -13,17 +13,20 @@ import Link from 'next/link';
 import { CREATE_PROPOSAL_URL } from '@/config/path';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { IConnectWalletContext } from '@/libs/types';
-import { useSearchParams } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 
 interface IDaoConfigurationWrapper {
   children: ReactNode;
 }
 
 const DaoConfigurationWrapper = ({ children }: IDaoConfigurationWrapper) => {
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { isConnected } = user;
   const currentPage = searchParams.get('q');
+  const urlParts = pathname.split('/'); // Split the URL by "/"
+  const daoId = urlParts[2];
   return (
     <div className="space-y-5">
       <div className="flex justify-between items-center">
@@ -45,7 +48,7 @@ const DaoConfigurationWrapper = ({ children }: IDaoConfigurationWrapper) => {
               </DialogDescription>
             </DialogHeader>
 
-            <Link href={`${CREATE_PROPOSAL_URL}?enums=${currentPage === 'Profile' ? '5' : '7'}`}>
+            <Link href={`${CREATE_PROPOSAL_URL}?enums=${currentPage === 'Profile' ? '5' : '7'}&ct=${daoId}`}>
               <Button className="w-full">Propose</Button>
             </Link>
           </DialogContent>

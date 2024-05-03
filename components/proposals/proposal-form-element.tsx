@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { rate } from "@/config/dao-config";
 import { AppContext } from "@/context/app-context";
-import { cn, handleChangeFormDecimalInput, handleChangeFormNumberInput, handleMinus, handlePlus } from "@/libs/utils";
+import { cn, handleChangeFormNumberInput, handleMinus, handlePlus } from "@/libs/utils";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import { ChangeEvent, useContext, useState } from "react";
 import { useFieldArray } from "react-hook-form";
@@ -78,13 +78,6 @@ const EquivalentValueFormField = ({ form }: { form: any }) => {
             <FormControl>
               <FormGroup>
                 <Input placeholder="value" {...field} 
-                // onChange={({ target }) =>
-                //       handleChangeFormDecimalInput(
-                //         'value',
-                //         target.value,
-                //         form
-                //       )
-                //     } 
                     />
                 
                 <p className="text-xs font-light text-[#888888] absolute right-4">
@@ -115,7 +108,7 @@ const ProposalDurationFormField = ({ form }: { form: any }) => {
                             'dark:bg-[#1E1E1E] rounded-lg py-2 px-2 dark:hover:bg-[#2a2a2a] trans bg-[#D2D2D2] hover:bg-[#D2D2D2]'
                           )}
                           role="button"
-                          onClick={() => handleMinus('duration', form)}
+                          onClick={() => {form.getValues('duration') ? null : handleMinus('duration', form)}}
                         >
                           <Minus size={18} />
                         </div>
@@ -123,6 +116,7 @@ const ProposalDurationFormField = ({ form }: { form: any }) => {
                           placeholder="value"
                           type="number"
                           className="border-none dark:bg-[#191919] w-fit text-center bg-white"
+                          readOnly
                           {...field}
                           onChange={({ target }) =>
                             handleChangeFormNumberInput(
@@ -135,7 +129,7 @@ const ProposalDurationFormField = ({ form }: { form: any }) => {
                         <div
                           className="dark:bg-[#1E1E1E] rounded-lg py-2 px-2 dark:hover:bg-[#2a2a2a] trans hover:bg-[#D2D2D2] bg-[#D2D2D2]"
                           role="button"
-                          onClick={() => handlePlus('duration', form)}
+                          onClick={() => {form.getValues('duration') ? null : handlePlus('duration', form)}}
                         >
                           <Plus size={18} />
                         </div>

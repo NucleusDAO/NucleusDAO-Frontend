@@ -46,6 +46,7 @@ export const EachDaoContextProvider = ({ children }: IAppProvider) => {
 
   useEffect(() => {
     if (urlParts.length >= 4) {
+      setIsLoading(true);
       (async () => {
         try {
             const dao = await getEachDAO(daoId);
@@ -73,15 +74,15 @@ export const EachDaoContextProvider = ({ children }: IAppProvider) => {
             const members = await getUsersActivities(dao.contractAddress);
             console.log({ members });
             setMembersActivities(members);
-          setIsLoading(false);
         } catch (error: any) {
-          setIsLoading(false);
           toast.error(error.message);
           console.error('Error fetching DAO:', error);
+        } finally {
+          setIsLoading(false); // Set loading state to false after fetching data
         }
       })();
     }
-  }, [urlParts.length]);
+  }, [daoId]);
 
   function getDuration(startTime: number, endTime: number) {
     const diff = endTime - startTime;
@@ -102,5 +103,5 @@ export const EachDaoContextProvider = ({ children }: IAppProvider) => {
 
   return (
     <EachDaoContext.Provider value={value}>{children}</EachDaoContext.Provider>
-  );
+    );
 };
