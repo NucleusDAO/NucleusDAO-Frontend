@@ -4,7 +4,7 @@ import { CREATE_PROPOSAL_URL } from '@/config/path';
 import { Globe, MoveLeft, Plus } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import React, { ReactNode, useContext } from 'react';
+import React, { ReactNode, useContext, useEffect } from 'react';
 import { CopyIcon } from '@/assets/svgs';
 import { eachDaoViews } from '@/config/dao-config';
 import { cn, encodeURI } from '@/libs/utils';
@@ -22,12 +22,16 @@ const Layout = ({ children }: ILayout) => {
   const pathname = usePathname();
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { isConnected, address } = user;
-  const { isLoading, currentDAO } = useContext(EachDaoContext);
+  const { isLoading, currentDAO, setIsLoading } = useContext(EachDaoContext);
 
   const urlParts = pathname.split('/'); // Split the URL by "/"
   const daoId = urlParts[2];
   const domainName = typeof window !== 'undefined' && window.location.origin;
   const url = `${domainName}/daos/${daoId}`;
+
+  useEffect(() => {
+    setIsLoading(true);
+  }, []);
 
   if (isLoading) return <EachDaoLoading />;
 

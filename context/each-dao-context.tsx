@@ -44,14 +44,6 @@ export const EachDaoContextProvider = ({ children }: IAppProvider) => {
   const urlParts = pathname.split('/'); // Split the URL by "/"
   const daoId = urlParts[2];
 
-  console.log(daoId, '-? dao ID');
-
-  useEffect(() => {
-    setIsLoading(true);
-  }, []);
-
-  console.log(isLoading, '-> is loading');
-
   useEffect(() => {
     setIsLoading(true);
     if (urlParts.length >= 4) {
@@ -84,6 +76,7 @@ export const EachDaoContextProvider = ({ children }: IAppProvider) => {
     setCurrentDAO,
     setMembersActivities,
     setEachDAOProposal,
+    setIsLoading,
   };
 
   return (
