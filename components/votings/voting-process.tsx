@@ -7,7 +7,6 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -16,21 +15,89 @@ import { IConnectWalletContext } from '@/libs/types';
 import { toast } from 'sonner';
 import Lottie from 'react-lottie';
 import { defaultSuccessOption } from '../animation-options';
+import { AppContext } from '@/context/app-context';
+import { updateGetProposal } from '@/libs/utils';
+import { EachDaoContext } from '@/context/each-dao-context';
 
-const VotingProcess = () => {
-  const [selectedOption, setSelectedOption] = useState<string>('');
-  const [showModal, setShowModal] = useState<boolean>(false);
+interface IVotingProcess {
+  currentProposal: {
+    id: string;
+    votes: { account: string; support: boolean }[];
+  };
+}
+
+const VotingProcess = ({ currentProposal }: IVotingProcess) => {
+  const { voteFor, voteAgainst, getEachDAO, getProposals, getUsersActivities } =
+    useContext(AppContext);
+  const {
+    currentDAO,
+    setCurrentDAO,
+    setEachDAOProposal,
+    setMembersActivities,
+  } = useContext(EachDaoContext);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
-  const connected: boolean = user.isConnected;
-  const hasVoted: boolean = false;
+  const { isConnected, address } = user;
+  const userVote = address
+    ? currentProposal.votes.find(
+        (vote: { account: string; support: boolean }) =>
+          vote.account === address
+      )
+    : null;
+  const defaultSelection = userVote?.support
+    ? 'yes'
+    : userVote?.support === false
+    ? 'no'
+    : '';
+  const [selectedOption, setSelectedOption] =
+    useState<string>(defaultSelection);
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const hasVoted: boolean = !!userVote?.account;
+  const [isVoting, setIsVoting] = useState<boolean>(false);
 
   const votingOptions = ['yes', 'no'];
 
   const handleOptionChange = (option: string) => {
-    if (connected) {
+    if (isConnected) {
       setSelectedOption(option);
     } else {
-      toast.error('Connect to you wallet!');
+      toast.error('Connect your wallet first!');
+    }
+  };
+
+  const handleVote = async () => {
+    setIsVoting(true);
+    try {
+      if (selectedOption === 'yes') {
+        const vote = await voteFor(
+          Number(currentProposal.id),
+          currentDAO.contractAddress
+        );
+        await updateGetProposal({
+          getEachDAO,
+          daoId: currentDAO.id,
+          setCurrentDAO,
+          getProposals,
+          setEachDAOProposal,
+          getUsersActivities,
+          setMembersActivities,
+        });
+      } else {
+        const vote = await voteAgainst();
+        await updateGetProposal({
+          getEachDAO,
+          daoId: currentDAO.id,
+          setCurrentDAO,
+          getProposals,
+          setEachDAOProposal,
+          getUsersActivities,
+          setMembersActivities,
+        });
+      }
+      setShowModal(true);
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      setIsVoting(false);
     }
   };
 
@@ -49,6 +116,7 @@ const VotingProcess = () => {
               defaultValue={selectedOption}
               value={selectedOption}
               key={option}
+              disabled={!!userVote?.account}
               onValueChange={() => handleOptionChange(option)}
               role="button"
             >
@@ -72,11 +140,15 @@ const VotingProcess = () => {
             </RadioGroup>
           ))}
           <Dialog onOpenChange={setShowModal} open={showModal}>
-            <DialogTrigger asChild>
-              <Button className="w-full" disabled={!selectedOption}>
-                Vote
-              </Button>
-            </DialogTrigger>
+            <Button
+              className="w-full"
+              disabled={!selectedOption || !!userVote?.account}
+              onClick={handleVote}
+              loading={isVoting}
+              loadingText="Voting..."
+            >
+              Vote
+            </Button>
             <DialogContent className="dark:bg-[#191919] bg-white">
               <DialogHeader>
                 <DialogTitle className="dark:text-white font-medium py-1 text-center text-dark ">
@@ -85,7 +157,7 @@ const VotingProcess = () => {
                     height={150}
                     width={150}
                   />
-                  <p className='-mt-2'>Vote Casted</p>
+                  <p className="-mt-2">Vote Casted</p>
                 </DialogTitle>
                 <DialogDescription className="py-2 text-center">
                   You have casted your vote. The result will be shown if the

@@ -9,7 +9,7 @@ import {
 import { AppContext } from './app-context';
 import { usePathname, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { getStatus } from '@/libs/utils';
+import { updateGetProposal } from '@/libs/utils';
 import { IProposal } from '@/libs/types';
 
 export const EachDaoContext = createContext<any>({});
@@ -44,39 +44,28 @@ export const EachDaoContextProvider = ({ children }: IAppProvider) => {
   const urlParts = pathname.split('/'); // Split the URL by "/"
   const daoId = urlParts[2];
 
-  console.log(daoId, '-? dao ID')
+  console.log(daoId, '-? dao ID');
 
   useEffect(() => {
+    setIsLoading(true);
+  }, []);
+
+  console.log(isLoading, '-> is loading');
+
+  useEffect(() => {
+    setIsLoading(true);
     if (urlParts.length >= 4) {
-      setIsLoading(true);
       (async () => {
         try {
-            const dao = await getEachDAO(daoId);
-            setCurrentDAO(dao);
-            const proposals: IProposal[] = await getProposals(
-              dao.contractAddress
-            );
-            // console.log(proposals, '-> proposals')
-            setEachDAOProposal(
-              proposals.map((proposal: IProposal) => {
-                return {
-                  type: proposal.proposalType,
-                  status: getStatus(proposal),
-                  description: proposal.description,
-                  wallet:
-                    proposal.target.slice(0, 6) +
-                    '...' +
-                    proposal.target.slice(-4),
-                  duration: getDuration(proposal.startTime, proposal.endTime),
-                  totalVote: `${proposal.votesFor + proposal.votesAgainst}`,
-                  organisation: dao.name,
-                  id: proposal.id.toString(),
-                };
-              })
-            );
-            const members = await getUsersActivities(dao.contractAddress);
-            console.log({ members });
-            setMembersActivities(members);
+          await updateGetProposal({
+            getEachDAO,
+            daoId,
+            setCurrentDAO,
+            getProposals,
+            setEachDAOProposal,
+            getUsersActivities,
+            setMembersActivities,
+          });
         } catch (error: any) {
           toast.error(error.message);
           console.error('Error fetching DAO:', error);
@@ -87,24 +76,17 @@ export const EachDaoContextProvider = ({ children }: IAppProvider) => {
     }
   }, [daoId]);
 
-  function getDuration(startTime: number, endTime: number) {
-    const diff = endTime - startTime;
-
-    const days = Math.floor(diff / (24 * 60 * 60 * 1000));
-    const hours = Math.floor((diff % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
-    const minutes = Math.floor((diff % (60 * 60 * 1000)) / (60 * 1000));
-
-    return `${days}d ${hours}h ${minutes}m`;
-  }
-
   const value = {
     eachDAOProposal,
     membersActivities,
     isLoading,
     currentDAO,
+    setCurrentDAO,
+    setMembersActivities,
+    setEachDAOProposal,
   };
 
   return (
     <EachDaoContext.Provider value={value}>{children}</EachDaoContext.Provider>
-    );
+  );
 };
