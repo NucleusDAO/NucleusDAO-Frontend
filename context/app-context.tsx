@@ -19,6 +19,7 @@ import {
 } from '@/libs/types';
 import { defaultDaoCreation, defaultProposal } from '@/libs/utils';
 import { VIEW_DAO_URL } from '@/config/path';
+import ErrorFetchingComponent from '@/components/error-fetching-comp';
 
 export const AppContext = createContext<any>({});
 
@@ -96,6 +97,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
       }
     } catch (error) {
       toast.error('Error fetching DAOs');
+      return <ErrorFetchingComponent />;
     }
   };
 

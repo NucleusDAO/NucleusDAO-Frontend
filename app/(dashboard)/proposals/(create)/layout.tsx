@@ -1,7 +1,7 @@
 'use client';
 
 import { MoveLeft } from 'lucide-react';
-import { ReactNode, useContext, useEffect, useState } from 'react';
+import { ReactNode, useContext, useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -20,6 +20,7 @@ import Image from 'next/image';
 import { PROPOSALS_URL } from '@/config/path';
 import { AppContext } from '@/context/app-context';
 import { defaultProposal } from '@/libs/utils';
+import NotAuthorized from '@/components/not-authorized';
 
 interface ILayout {
   children: ReactNode;
@@ -27,7 +28,8 @@ interface ILayout {
 
 const Layout = ({ children }: ILayout) => {
   const { setNewProposalInfo } = useContext(AppContext);
-  const { user, handleConnectWallet } = useContext<IConnectWalletContext>(ConnectWalletContext);
+  const { user, handleConnectWallet } =
+    useContext<IConnectWalletContext>(ConnectWalletContext);
   const { isConnected } = user;
   const [open, setOpen] = useState<boolean>(false);
   const router = useRouter();
@@ -38,27 +40,12 @@ const Layout = ({ children }: ILayout) => {
     setNewProposalInfo(defaultProposal);
     localStorage.removeItem('new_proposal');
     router.push(PROPOSALS_URL);
-  }
+  };
 
-  if (!isConnected) {
+  if (!isConnected)
     return (
-      <div className="min-h-[80vh] w-full text-center flex items-center justify-center">
-        <div className='w-[30%] space-y-4'>
-          <Image
-            src={EmptyDAO}
-            alt="DAO empty"
-            width={100}
-            className="mx-auto"
-          />
-          <p className='mt-2'>Sorry, only connected user are allowed to create a proposal</p>
-          <div className='flex space-x-3'>
-            <Button variant='outline' className='px-10' onClick={() => router.back()}>Go Back</Button>
-            <Button onClick={handleConnectWallet}>Connect Wallet</Button>
-          </div>
-        </div>
-      </div>
+      <NotAuthorized description="Sorry, only connected user are allowed to create a proposal" />
     );
-  }
 
   if (!daoID) {
     router.back();

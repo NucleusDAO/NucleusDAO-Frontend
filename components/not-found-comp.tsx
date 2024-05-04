@@ -1,6 +1,4 @@
 import React from 'react';
-import Lottie from 'react-lottie';
-import { defaultNotFoundOption } from '@/components/animation-options';
 import NotFoundImage from '@/assets/images/not-found.png';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
@@ -9,7 +7,7 @@ import { HOME_URL } from '@/config/path';
 import { useMediaQuery } from '@/hooks/use-media-query';
 
 const NotFoundComponent = () => {
-    const isDesktop = useMediaQuery('(min-width: 768px)');
+  const isDesktop = useMediaQuery('(min-width: 768px)');
   return (
     <React.Fragment>
       <div className="w-full px-12 lg:px-0 lg:w-1/2 mx-auto my-20 space-y-4 text-center">
@@ -32,7 +30,6 @@ const NotFoundComponent = () => {
         width={isDesktop ? 500 : 350}
         className="mx-auto px-16 lg:px-0"
       />
-      {/* <Lottie options={defaultNotFoundOption} height={150} width={150} /> */}
     </React.Fragment>
   );
 };

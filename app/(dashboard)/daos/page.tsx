@@ -33,10 +33,10 @@ const Daos = () => {
       dao.orgIcon = (
         <img
           src={dao.image}
-          alt='dao logo'
+          alt="dao logo"
           width={width}
           height={width}
-          className='border border-red w-8 h-8 md:w-10 md:h-10 rounded-md object-cover'
+          className="border border-red w-8 h-8 md:w-10 md:h-10 rounded-md object-cover"
         />
       );
       return dao;
@@ -46,23 +46,23 @@ const Daos = () => {
   if (daoLoading) return <DaoLoading />;
 
   return (
-    <div className='space-y-2 min-h-[80vh]'>
-      <div className='flex justify-between items-center'>
+    <div className="space-y-2 min-h-[80vh]">
+      <div className="flex justify-between items-center">
         <h1
-          role='heading'
-          className='dark:text-white font-medium text-xl text-dark'
+          role="heading"
+          className="dark:text-white font-medium text-xl text-dark"
         >
           Explore DAOs
         </h1>
         {connected ? (
           <Link href={SELECT_DAO_STYLE_URL}>
             <Button>
-              <Plus className='mr-2 h-4 w-4' /> Create DAO
+              <Plus className="mr-2 h-4 w-4" /> Create DAO
             </Button>
           </Link>
         ) : (
           <Button onClick={() => toast.error('Please connect your wallet!')}>
-            <Plus className='mr-2 h-4 w-4' /> Create DAO
+            <Plus className="mr-2 h-4 w-4" /> Create DAO
           </Button>
         )}
       </div>

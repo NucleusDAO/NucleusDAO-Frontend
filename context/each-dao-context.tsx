@@ -11,6 +11,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { updateGetProposal } from '@/libs/utils';
 import { IProposal } from '@/libs/types';
+import ErrorFetchingComponent from '@/components/error-fetching-comp';
 
 export const EachDaoContext = createContext<any>({});
 
@@ -63,6 +64,7 @@ export const EachDaoContextProvider = ({ children }: IAppProvider) => {
           console.error('Error fetching DAO:', error);
         } finally {
           setIsLoading(false); // Set loading state to false after fetching data
+          return <ErrorFetchingComponent />;
         }
       })();
     }
