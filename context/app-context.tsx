@@ -11,7 +11,12 @@ import {
 } from './connect-wallet-context';
 import { getNucleusDAO, getBasicDAO } from '@/libs/ae-utils';
 import { toast } from 'sonner';
-import { IAppProvider, IConnectWalletContext, INewProposal, InewDaoInfo } from '@/libs/types';
+import {
+  IAppProvider,
+  IConnectWalletContext,
+  INewProposal,
+  InewDaoInfo,
+} from '@/libs/types';
 import { defaultDaoCreation, defaultProposal } from '@/libs/utils';
 import { VIEW_DAO_URL } from '@/config/path';
 
@@ -23,7 +28,8 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
   const [daoLoading, setDaoLoading] = useState<boolean>(true);
   const [DAOsData, setDAOsData] = useState<any[]>([]);
   const [newDaoInfo, setNewDaoInfo] = useState<InewDaoInfo>(defaultDaoCreation);
-  const [newProposalInfo, setNewProposalInfo] = useState<INewProposal>(defaultProposal);
+  const [newProposalInfo, setNewProposalInfo] =
+    useState<INewProposal>(defaultProposal);
 
   const getNewDaoInfo =
     typeof window !== 'undefined' && localStorage.getItem('new_dao');
@@ -131,7 +137,11 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     description: string,
     value: number,
     target: string,
-    info: { name: string; socials: { name: string; url: string }[], image: string }
+    info: {
+      name: string;
+      socials: { name: string; url: string }[];
+      image: string;
+    }
   ) => {
     const contract = await getBasicDAO(daoContractAddress);
     const res = await contract.createProposal(
@@ -167,7 +177,6 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     return activities;
   };
 
-  
   const getProposals = async (daoContractAddress: string) => {
     const contract = await getBasicDAO(daoContractAddress);
     const res = await contract.getProposals();
@@ -190,13 +199,32 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     return dao;
   };
 
-  // const getEachProposal = async (id: string) => {
-  //   const contract = await getBasicDAO(daoContractAddress);
-  //   const res = await contract.getProposal(id);
-  //   const proposal = res.decodedResult;
-  //   return proposal;
-  // }
+  const voteFor = async (proposalId: number, daoContractAddress: string) => {
+    const contract = await getBasicDAO(daoContractAddress);
+    const res = await contract.voteFor(proposalId);
+    const result = res.decodedResult;
+    return result;
+  };
 
+  const voteAgainst = async (
+    proposalId: number,
+    daoContractAddress: string
+  ) => {
+    const contract = await getBasicDAO(daoContractAddress);
+    const res = await contract.voteAgainst(proposalId);
+    const result = res.decodedResult;
+    return result;
+  };
+
+  const executeProposal = async (
+    proposalId: number,
+    daoContractAddress: string
+  ) => {
+    const contract = await getBasicDAO(daoContractAddress);
+    const res = await contract.executeProposal(proposalId);
+    const result = res.decodedResult;
+    return result;
+  };
   const value = {
     createDAO,
     createProposal,
@@ -210,6 +238,9 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     fetchDAOs,
     newProposalInfo,
     setNewProposalInfo,
+    voteFor,
+    voteAgainst,
+    executeProposal,
     // getEachProposal,
   };
 

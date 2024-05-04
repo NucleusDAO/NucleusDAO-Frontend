@@ -5,13 +5,16 @@ import { Button } from '../ui/button';
 import VotingProcess from '../votings/voting-process';
 import { VoteIcon } from '@/assets/svgs';
 import AllVoters from '../votings/all-voters';
-import { ReactNode, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { ReactNode, useContext, useState } from 'react';
+import { usePathname, useSearchParams } from 'next/navigation';
 import ProposalResult from './proposal-result';
 import ProposalInfo from './proposal-info';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { proposalLists } from '@/config/dao-config';
-
+import { EachDaoContext } from '@/context/each-dao-context';
+import { EachStatus } from './data';
+import { ConnectWalletContext } from '@/context/connect-wallet-context';
+import { IConnectWalletContext } from '@/libs/types';
 
 interface IEachTabView {
   [key: string]: ReactNode;
@@ -19,41 +22,76 @@ interface IEachTabView {
 
 interface IEachProposalView {
   tabs: string[];
-  currentProposal: any;
 }
 
-const EachProposalView = ({ tabs, currentProposal }: IEachProposalView) => {
+const EachProposalView = ({ tabs }: IEachProposalView) => {
+  const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
+  const { address } = user;
+  const { currentDAO, eachDAOProposal } = useContext(EachDaoContext);
   const isDesktop = useMediaQuery('(min-width: 768px)');
   const [showFullProposal, setShowFullProposal] = useState<boolean>(false);
-  const [description, setDescription] = useState<string>(currentProposal.description)
-  const voteStatus: string = 'Active';
   const searchParams = useSearchParams();
+  const pathname = usePathname();
+
+  const urlParts = pathname.split('/'); // Split the URL by "/"
+  const proposalId = urlParts[4];
 
   const currentTab: string = searchParams.get('q') || tabs[0];
+  const currentProposal = eachDAOProposal.find(
+    (proposal: { id: string }) => proposal.id === proposalId
+  );
+  const userVote = address
+    ? currentProposal.votes.find(
+        (vote: { account: string }) => vote.account === address
+      )
+    : null;
+  const [description, _] = useState<string>(currentProposal.description);
+
+  console.log(eachDAOProposal, '-> eachDAOProposal');
+  console.log(currentProposal, '-> current proposal');
+  console.log(currentDAO, 'currentDAO');
+
+  console.log(userVote, '->');
 
   const tabViews: IEachTabView = {
-    Result: <ProposalResult />,
-    Information: <ProposalInfo />
-  }
+    Result: <ProposalResult currentProposal={currentProposal} />,
+    Information: <ProposalInfo currentProposal={currentProposal} />,
+  };
 
   return (
     <div className="space-y-6">
       <h1 className="dark:text-white font-medium text-xl md:text-3xl pt-6 text-dark">
-         {proposalLists.find((proposal: { type: string }) => proposal.type === currentProposal.type)?.title}
+        {
+          proposalLists.find(
+            (proposal: { type: string }) =>
+              proposal.type === currentProposal.type
+          )?.title
+        }
       </h1>
       <div className="flex space-x-3 items-center">
         <p className="font-light text-sm text-[#888888]">Published by</p>
-        <Image src={RoundedIcon} alt="logo" width={isDesktop ? 20 : 16} height={isDesktop ? 20 : 16} />
-        <p className="font-light text-xs md:text-sm dark:text-white text-dark">{currentProposal.wallet}</p>
+        <Image
+          src={RoundedIcon}
+          alt="logo"
+          width={isDesktop ? 20 : 16}
+          height={isDesktop ? 20 : 16}
+        />
+        <p className="font-light text-xs md:text-sm dark:text-white text-dark">
+          {currentProposal.wallet}
+        </p>
       </div>
       <div className="space-y-4">
         <p className="text-xs md:text-sm text-defaultText">
-          {description}
+          {description.slice(0, 50)}
         </p>
-        {!showFullProposal && (
-          <Button onClick={() => setShowFullProposal(true)}>
-            Read full proposal
-          </Button>
+        {description.length > 50 && (
+          <>
+            {!showFullProposal && (
+              <Button onClick={() => setShowFullProposal(true)}>
+                Read full proposal
+              </Button>
+            )}
+          </>
         )}
       </div>
 
@@ -61,53 +99,46 @@ const EachProposalView = ({ tabs, currentProposal }: IEachProposalView) => {
         <div className="space-y-8">
           {showFullProposal && (
             <div className="text-xs md:text-sm text-defaultText trans space-y-3">
-              {/* <p>
-                Refreshed Branding: Start by evaluating Legacy's existing brand
-                identity and considering if any updates or refinements are
-                necessary. This may involve updating the logo, color palette,
-                typography, and overall visual style to ensure they align with
-                the product's values and target audience. User-Centric Design:
-                Focus on creating a user-centric design by understanding the
-                needs and preferences of Legacy's target users. Conduct user
-                research and usability testing to identify pain points, gather
-                feedback, and iterate on the UI features accordingly. Would like
-                to propose to change the brand identity of Legacy.
-              </p> */}
+              {description.slice(51, description.length)}
               <Button onClick={() => setShowFullProposal(false)}>
                 Show less
               </Button>
             </div>
           )}
-          <div>
-            {tabViews[currentTab]}
-          </div>
+          <div>{tabViews[currentTab]}</div>
         </div>
         <div className="space-y-8">
           <div className="rounded-lg dark:bg-[#191919] p-8 space-y-4 bg-white">
             <div className="flex justify-between border-b dark:border-[#1E1E1E] pb-4 items-center border-[#CCCCCC99]">
-              <h3 className="font-medium text-xl dark:text-white text-dark">Cast a vote</h3>
+              <h3 className="font-medium text-xl dark:text-white text-dark">
+                Cast a vote
+              </h3>
               <div
                 className="font-light text-sm dark:text-white text-[#0080FF] dark:text-[#0080FF1A] dark:bg-[#1E1E1E] bg-[#0080FF1A] rounded-lg px-3 py-1.5"
                 role="status"
               >
-                {voteStatus}
+                {EachStatus[currentProposal.status]}
               </div>
             </div>
-            <VotingProcess />
+            <VotingProcess currentProposal={currentProposal} />
           </div>
 
           <div className="rounded-lg dark:bg-[#191919] p-8 space-y-4 bg-white">
             <div className="flex justify-between border-b dark:border-[#1E1E1E] border-[#CCCCCC99] pb-4 items-center">
-              <h3 className="font-medium text-xl dark:text-white text-dark">Voters</h3>
+              <h3 className="font-medium text-xl dark:text-white text-dark">
+                Voters
+              </h3>
               <p className="text-sm flex space-x-1.5">
                 <span>
                   <VoteIcon />
                 </span>
-                <span className="dark:text-white text-dark">100</span>{' '}
-                <span className="text-defaultText">votes</span>
+                <span className="dark:text-white text-dark">
+                  {currentProposal.totalVote}
+                </span>
+                <span className="text-defaultText">vote(s)</span>
               </p>
             </div>
-            <AllVoters />
+            <AllVoters voters={currentProposal.votes} />
           </div>
         </div>
       </div>

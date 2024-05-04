@@ -43,14 +43,17 @@ const EachProposal = () => {
           >
             <MoveLeft size={isDesktop ? 20 : 16} />
           </div>
-          <h2 className="dark:text-white text-dark font-medium text-lg md:text-xl">Overview</h2>
+          <h2 className="dark:text-white text-dark font-medium text-lg md:text-xl">
+            Overview
+          </h2>
         </div>
         <div className="flex space-x-2 md:space-x-3 dark:bg-[#191919] rounded-lg p-2 items-center text-sm bg-white">
           {tabs.map((tab) => (
             <div
               className={cn(
                 'p-2 px-2 md:px-4',
-                currentTab === tab && 'text-primary rounded-lg dark:bg-[#1E1E1E] bg-light md:text-base text-sm'
+                currentTab === tab &&
+                  'text-primary rounded-lg dark:bg-[#1E1E1E] bg-light md:text-base text-sm'
               )}
               key={tab}
               onClick={() => handleSwitch(tab)}
@@ -61,8 +64,8 @@ const EachProposal = () => {
           ))}
         </div>
       </div>
-      
-      <EachProposalView tabs={tabs} currentProposal />
+
+      <EachProposalView tabs={tabs} />
     </div>
   );
 };
