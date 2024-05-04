@@ -240,3 +240,21 @@ export const updateGetProposal = async ({
   console.log({ members });
   setMembersActivities(members);
 };
+
+export const activities: { title: string; color: string; url: string }[] = [
+  {
+    title: 'Proposal',
+    color: 'bg-[#444444]',
+    url: 'https://www.youtube.com/watch?v=LXb3EKWsInQ',
+  },
+  {
+    title: 'DAO',
+    color: 'bg-[#25B81B]',
+    url: 'https://www.youtube.com/watch?v=LXb3EKWsInQ',
+  },
+  {
+    title: 'Vote',
+    color: 'bg-[#DCBB0C]',
+    url: 'https://www.youtube.com/watch?v=LXb3EKWsInQ',
+  },
+];

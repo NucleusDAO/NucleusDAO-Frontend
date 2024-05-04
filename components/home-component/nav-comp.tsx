@@ -1,6 +1,6 @@
 'use client';
 import { BrandLogo } from '@/assets/svgs';
-import { DASHBOARD_URL, HOME_URL } from '@/config/path';
+import { DAO_URL, HOME_URL } from '@/config/path';
 import AELogo from '@/assets/icons/ae-icon.png';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -12,11 +12,16 @@ import React, { useState } from 'react';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import Background from '@/assets/images/main-bg.png';
 import { useRouter } from 'next/navigation';
+import { cn } from '@/libs/utils';
 
 const NavComp = () => {
   const router = useRouter();
   const isDesktop = useMediaQuery('(min-width: 768px)');
   const [open, setOpen] = useState<boolean>(false);
+
+  const [hash, setHash] = useState(
+    (typeof window !== 'undefined' && window.location.hash) || ''
+  );
 
   return (
     <nav className="lg:px-16 items-center block lg:flex lg:py-6 justify-between">
@@ -44,21 +49,29 @@ const NavComp = () => {
             backgroundImage: `url(${Background.src})`,
           }}
         >
-          <div className="lg:border space-y-5 lg:space-y-0 pt-12 pb-0 lg:pb-1 lg:pt-1 grid lg:flex relative trans lg:border-[#5E5F62B9] lg:bg-[#1E1E1E] hover:border-t-primary hover:border-t px-6 lg:px-2 py-2 lg:py-0 lg:rounded-full text-white text-sm font-light lg:space-x-14 items-center">
+          <div className="lg:border space-y-5 lg:space-y-0 backdrop-filter backdrop-blur-md pt-12 pb-0 lg:pb-1 lg:pt-1 grid lg:flex lg:fixed trans lg:border-[#5E5F62B9] lg:bg-[#1E1E1E] hover:border-t-primary hover:border-t px-6 lg:px-2 py-2 lg:py-0 lg:rounded-full text-white text-sm font-light lg:space-x-14 items-center">
             {navLinks.map((item) => (
               <Link
                 href={item.href}
                 key={item.title}
-                className="trans lg:border lg:border-[#1E1E1E] hover:border-[#656565B2] rounded-full px-2 lg:px-5 py-2 trans hover:text-primary hover:bg-gradient-to-r from-[#656565B2] via-[#65656533] to-transparent font-normal"
+                className={cn(
+                  'trans lg:border lg:border-[#1E1E1E] backdrop-filter backdrop-blur-md hover:border-[#656565B2] rounded-full px-2 lg:px-5 py-2 trans hover:text-primary hover:bg-gradient-to-r from-[#656565B2] via-[#65656533] to-transparent font-normal',
+                  hash === item.href &&
+                    'text-primary bg-gradient-to-r border-[#656565B2]'
+                )}
+                onClick={() => setHash(item.href)}
               >
                 {item.title}
               </Link>
             ))}
           </div>
-          <div className="px-6 lg:px-0">
-              <Button className="lg:w-fit w-full" onClick={() => router.push(DASHBOARD_URL)}>
-                Launch DAO
-              </Button>
+          <div className="px-6 lg:px-0 lg:absolute lg:right-0">
+            <Button
+              className="lg:w-fit w-full"
+              onClick={() => router.push(DAO_URL)}
+            >
+              Launch DAO
+            </Button>
           </div>
         </div>
       )}
