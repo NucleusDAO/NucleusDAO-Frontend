@@ -20,6 +20,9 @@ import {
 import { defaultDaoCreation, defaultProposal } from '@/libs/utils';
 import { VIEW_DAO_URL } from '@/config/path';
 import ErrorFetchingComponent from '@/components/error-fetching-comp';
+import { useQuery } from '@tanstack/react-query';
+import { AE_PRICE_KEY } from '@/libs/key';
+import { aePrice } from '@/config/apis';
 
 export const AppContext = createContext<any>({});
 

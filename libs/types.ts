@@ -54,6 +54,10 @@ export interface IConnectWalletContext {
   handleDisconnect?: () => void;
 }
 
+export interface IApiContext {
+  getAEPrice: { price: number };
+}
+
 export interface IUser {
   address: string;
   isConnected: boolean;
@@ -135,3 +139,18 @@ export interface INewProposal {
     socialMedia: { type: string; link: string }[];
   };
 }
+
+export type ICreateDAO = {
+  members: string[];
+  name: string;
+  id: string;
+  currentMembers: number;
+};
+
+export type ICreateUser = {
+  address?: string;
+  email: string;
+  profilePicture: string;
+  about: string;
+  username: string;
+};

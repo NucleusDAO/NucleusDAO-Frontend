@@ -19,8 +19,11 @@ import { useRouter } from 'next/navigation';
 import { GOVERNANCE_SETTINGS_URL } from '@/config/path';
 import { useContext, useEffect } from 'react';
 import { AppContext } from '@/context/app-context';
+import { ConnectWalletContext } from '@/context/connect-wallet-context';
+import { IConnectWalletContext } from '@/libs/types';
 
 const AddMemberForm = () => {
+  const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { updateNewDaoInfo, newDaoInfo } = useContext(AppContext);
   const router = useRouter();
   const form = useForm<z.infer<typeof defineMembershipSchema>>({
@@ -33,24 +36,32 @@ const AddMemberForm = () => {
     control: form.control,
     name: 'members',
   });
+  const { address } = user;
 
   useEffect(() => {
     const subscription = form.watch((value, { name, type }) => {
       const updatedData = { ...newDaoInfo, members: value.members };
       localStorage.setItem('new_dao', JSON.stringify(updatedData));
-      updateNewDaoInfo(updatedData)
+      updateNewDaoInfo(updatedData);
     });
     return () => subscription.unsubscribe();
   }, [form.watch]);
 
   const onSubmit = async (data: any) => {
-    console.log(data);
     router.push(GOVERNANCE_SETTINGS_URL);
   };
-
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form
+        onSubmit={(e) => {
+          e.preventDefault(); // Prevent default form submission
+          // Check if there are errors before calling onSubmit
+          if (!Object.keys(form.formState.errors).length) {
+            onSubmit(form.getValues()); // Call onSubmit only if there are no errors
+          }
+        }}
+        className="space-y-8"
+      >
         <div className="space-y-4">
           <FormLabel>Add Members</FormLabel>
           {fields.map((member: any, index) => (
@@ -65,9 +76,19 @@ const AddMemberForm = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <Input placeholder="Enter wallet address" {...field}   onInput={() =>
-                            form.setError('members', { message: '' })
-                          } />
+                        <Input
+                          placeholder="Enter wallet address"
+                          {...field}
+                          onInput={({ target }: any) =>
+                            target.value === address
+                              ? form.setError(`members.${index}.address`, {
+                                  type: 'onChange',
+                                  message:
+                                    'Creator address is not allowed. It is automatically added',
+                                })
+                              : form.clearErrors(`members.${index}.address`)
+                          }
+                        />
                       </FormControl>
                       <FormMessage>
                         {form.formState.errors.members?.[index]?.root

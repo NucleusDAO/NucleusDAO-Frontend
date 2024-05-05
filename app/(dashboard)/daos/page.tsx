@@ -4,9 +4,10 @@ import AllDaos from '@/components/all-daos';
 import DaoLoading from '@/components/loading/dao-loading';
 import { Button } from '@/components/ui/button';
 import { SELECT_DAO_STYLE_URL, VIEW_DAO_URL } from '@/config/path';
+import { ApiContext } from '@/context/api-context';
 import { AppContext } from '@/context/app-context';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
-import { IConnectWalletContext } from '@/libs/types';
+import { IApiContext, IConnectWalletContext } from '@/libs/types';
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
@@ -16,6 +17,10 @@ import { toast } from 'sonner';
 const Daos = () => {
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { DAOsData, daoLoading } = useContext(AppContext);
+  const { getAEPrice } = useContext<IApiContext>(ApiContext);
+
+  console.log(getAEPrice, '-> getAEPrice');
+
   const connected: boolean = user.isConnected;
   const searchParams = useSearchParams();
   const currentSearch = searchParams.get('q');

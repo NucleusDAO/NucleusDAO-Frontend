@@ -10,7 +10,9 @@ const member = z.object({
   address: z.string(),
 });
 
-const joinCommunitySchema = z.object({ email: z.string().email({ message: 'Enter a valid email' }) })
+const joinCommunitySchema = z.object({
+  email: z.string().email({ message: 'Enter a valid email' }),
+});
 
 const daoInfoSchema = z
   .object({
@@ -127,12 +129,13 @@ const defineMembershipSchema = z.object({
 });
 
 const editProfile = z.object({
-  name: z
+  username: z
     .string()
     .min(2, { message: 'Must be 2 or more characters long' })
     .max(50, { message: 'Must be 50 or fewer characters long' }),
-  email: z.string().email(),
-  about: z.string(),
+  email: z.string().email({ message: 'Email is compulsory' }),
+  about: z.string().min(2, { message: 'Field is compulsory' }),
+  profilePicture: z.string().min(2, { message: 'Field is compulsory' }),
 });
 
 const editNotifications = z.object({
