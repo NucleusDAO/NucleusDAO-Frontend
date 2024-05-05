@@ -1,9 +1,16 @@
-import { aePrice, getUser } from '@/config/apis';
-import { AE_PRICE_KEY, EACH_USER } from '@/libs/key';
-import { useQuery } from '@tanstack/react-query';
+import {
+  aePrice,
+  createUser,
+  getNotifications,
+  getUser,
+  updateUser,
+} from '@/config/apis';
+import { AE_PRICE_KEY, EACH_USER, NOTIFICATIONS } from '@/libs/key';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { ReactNode, createContext, useContext } from 'react';
 import { ConnectWalletContext } from './connect-wallet-context';
-import { IConnectWalletContext } from '@/libs/types';
+import { IConnectWalletContext, ICreateUser } from '@/libs/types';
+import { toast } from 'sonner';
 
 export const ApiContext = createContext<any>({});
 
@@ -36,6 +43,26 @@ export const ApiContextProvider = ({ children }: IApiProvider) => {
     enabled: !!address,
   });
 
+  const {
+    data: notifications,
+    isError: isNotificationError,
+    error: notificationErrorMessage,
+    isLoading: isLoadingNotification,
+  } = useQuery({
+    queryKey: [NOTIFICATIONS],
+    queryFn: () => getNotifications(address),
+    enabled: !!address,
+  });
+
+  const { mutate: mutateUsers, isPending: isMutatingUsers } = useMutation({
+    mutationFn: eachUser
+      ? (payload: ICreateUser) => updateUser(payload, address)
+      : createUser,
+    onSuccess: (response: any) =>
+      toast.success(response.message || 'User profile updated successfully.'),
+    onError: (error: any) => toast.error(error.message),
+  });
+
   const value = {
     getAEPrice,
     isAePriceError,
@@ -45,6 +72,12 @@ export const ApiContextProvider = ({ children }: IApiProvider) => {
     isEachUserError,
     eachUserErrorMessage,
     isLoadingEachUser,
+    mutateUsers,
+    isMutatingUsers,
+    notifications,
+    isNotificationError,
+    isLoadingNotification,
+    notificationErrorMessage,
   };
   return <ApiContext.Provider value={value}>{children}</ApiContext.Provider>;
 };

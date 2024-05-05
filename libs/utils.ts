@@ -258,3 +258,23 @@ export const activities: { title: string; color: string; url: string }[] = [
     url: 'https://www.youtube.com/watch?v=LXb3EKWsInQ',
   },
 ];
+
+export function formatTimestamp(timestamp: string) {
+  const date = new Date(timestamp);
+
+  const options: any = {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true,
+  };
+
+  return new Intl.DateTimeFormat('en-GB', options).format(date);
+}
+
+// Example usage:
+const timestamp = '2024-05-05T16:54:44.967Z';
+const formattedDate = formatTimestamp(timestamp);
+console.log(formattedDate); // Output: "5 May 2024, 4:54 PM"

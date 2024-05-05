@@ -24,5 +24,18 @@ export const createUser = (payload: ICreateUser) =>
 export const updateUser = (payload: ICreateUser, address: string) =>
   client.put(`users/${address}`, payload).then((response) => response);
 
+export const updateUserNotification = (payload: ICreateUser, address: string) =>
+  client
+    .put(`users/${address}/notifications`, payload)
+    .then((response) => response);
+
 export const getUser = (address: string) =>
   client.get(`users/${address}`).then((response) => response.data.user);
+
+export const getNotifications = (address: string) =>
+  client.get(`notifications/${address}`).then((response) => response.data);
+
+export const markAllNotificationsAsRead = (address: string) =>
+  client
+    .put(`notifications/mark-read/${address}`)
+    .then((response) => response.data);

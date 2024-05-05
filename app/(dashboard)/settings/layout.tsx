@@ -7,15 +7,22 @@ import { settingsSidebarLinks } from './config';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { IConnectWalletContext } from '@/libs/types';
 import ConnectWalletCallToAction from '@/components/connect-wallet-cta';
+import { ApiContext } from '@/context/api-context';
+import { toast } from 'sonner';
+import ProfileLoading from '@/components/loading/profile-loading';
 
 interface ILayout {
   children: ReactNode;
 }
 
 const Layout = ({ children }: ILayout) => {
+  const { isEachUserError, eachUserErrorMessage, isLoadingEachUser } =
+    useContext(ApiContext);
   const pathname = usePathname();
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const connected: boolean = user.isConnected;
+
+  if (isEachUserError) return toast.error(eachUserErrorMessage.message);
 
   return (
     <div className="space-y-6">
@@ -45,7 +52,11 @@ const Layout = ({ children }: ILayout) => {
             </div>
 
             <div className="w-full md:w-[80%] bg-white dark:bg-gradient-to-r from-[#1E1E1E] dark:to-[#252525] rounded-lg p-4">
-              {children}
+              {isLoadingEachUser ? (
+                <ProfileLoading />
+              ) : (
+                <React.Fragment>{children}</React.Fragment>
+              )}
             </div>
           </div>
         </React.Fragment>

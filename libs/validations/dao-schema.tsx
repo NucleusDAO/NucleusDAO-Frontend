@@ -139,12 +139,12 @@ const editProfile = z.object({
 });
 
 const editNotifications = z.object({
-  email_new_dao: z.boolean().optional(),
-  email_new_proposal: z.boolean().optional(),
-  email_new_updates: z.boolean().optional(),
-  push_new_dao: z.boolean().optional(),
-  push_new_proposal: z.boolean().optional(),
-  push_new_updates: z.boolean().optional(),
+  newDAO: z.boolean().optional(),
+  newProposal: z.boolean().optional(),
+  newUpdate: z.boolean().optional(),
+  pushNewDAO: z.boolean().optional(),
+  pushNewProposal: z.boolean().optional(),
+  pushNewUpdate: z.boolean().optional(),
 });
 
 const editDisplay = z.object({

@@ -21,10 +21,9 @@ import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { IConnectWalletContext, ICreateUser } from '@/libs/types';
 import { toast } from 'sonner';
 import FormGroup from '@/components/ui/form-group';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { createUser, updateUser, uploadFile } from '@/config/apis';
+import { useQueryClient } from '@tanstack/react-query';
+import { uploadFile } from '@/config/apis';
 import { ApiContext } from '@/context/api-context';
-import ProfileLoading from '@/components/loading/profile-loading';
 import { EACH_USER } from '@/libs/key';
 
 const Profile = () => {
@@ -34,34 +33,22 @@ const Profile = () => {
     user: { address },
   } = useContext<IConnectWalletContext>(ConnectWalletContext);
 
-  const { eachUser, isEachUserError, eachUserErrorMessage, isLoadingEachUser } =
-    useContext(ApiContext);
+  const { eachUser, isMutatingUsers, mutateUsers } = useContext(ApiContext);
 
-  const [profileImage, setProfileImage] = useState(DefaultImage.src);
+  const [profileImage, setProfileImage] = useState(
+    eachUser?.profilePicture || DefaultImage.src
+  );
   const [isImageUpload, setIsImageUpload] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (eachUser?.profilePicture) {
-      setProfileImage(eachUser?.profilePicture);
-    }
-  }, [isLoadingEachUser]);
 
   const form = useForm<z.infer<typeof editProfile>>({
     resolver: zodResolver(editProfile),
+    defaultValues: {
+      username: eachUser.username,
+      profilePicture: eachUser.profilePicture,
+      email: eachUser.email,
+      about: eachUser.about,
+    },
   });
-
-  console.log(eachUser, '-> eachh');
-
-  const { mutate, isPending } = useMutation({
-    mutationFn: eachUser
-      ? (payload: ICreateUser) => updateUser(payload, address)
-      : createUser,
-    onSuccess: (response: any) => toast.success(response.message),
-    onError: (error: any) => toast.error(error.message),
-  });
-
-  if (isLoadingEachUser) return <ProfileLoading />;
-  if (isEachUserError) return toast.error(eachUserErrorMessage.message);
 
   const handleUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     const maxSize: number = 3 * 1024 * 1024;
@@ -96,9 +83,8 @@ const Profile = () => {
       }
       profilePicture = data.profilePicture;
       const updatedData = { ...data, profilePicture, address, theme: 'dark' };
-      await mutate(updatedData);
+      await mutateUsers(updatedData);
       queryClient.invalidateQueries(EACH_USER);
-      console.log(data);
     } catch (error: any) {
       toast.error(error.message);
     } finally {
@@ -117,13 +103,6 @@ const Profile = () => {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <div className="flex space-x-2 items-center">
-            {/* <img
-          src={`https://avatars.z52da5wt.xyz/${address}`}
-          alt="logo"
-          width={60}
-          className='rounded-full'
-        /> */}
-
             <FormField
               control={form.control}
               name="profilePicture"
@@ -226,7 +205,7 @@ const Profile = () => {
             <Button
               type="submit"
               className="px-12"
-              loading={isPending || imageUploading}
+              loading={isMutatingUsers || imageUploading}
               loadingText="Updating..."
               disabled={!form.formState.isDirty}
             >
