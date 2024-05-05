@@ -16,7 +16,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { editProfile } from '@/libs/validations/dao-schema';
 import { Textarea } from '@/components/ui/textarea';
-import { ChangeEvent, useContext, useState } from 'react';
+import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { IConnectWalletContext, ICreateUser } from '@/libs/types';
 import { toast } from 'sonner';
@@ -37,23 +37,20 @@ const Profile = () => {
   const { eachUser, isEachUserError, eachUserErrorMessage, isLoadingEachUser } =
     useContext(ApiContext);
 
-  if (isLoadingEachUser) return <ProfileLoading />;
-  if (isEachUserError) return toast.error(eachUserErrorMessage.message);
-
-  console.log(eachUser, '-> eachh');
-  const [profileImage, setProfileImage] = useState(
-    eachUser.profilePicture || DefaultImage.src
-  );
+  const [profileImage, setProfileImage] = useState(DefaultImage.src);
   const [isImageUpload, setIsImageUpload] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (eachUser?.profilePicture) {
+      setProfileImage(eachUser?.profilePicture);
+    }
+  }, [isLoadingEachUser]);
+
   const form = useForm<z.infer<typeof editProfile>>({
     resolver: zodResolver(editProfile),
-    defaultValues: {
-      username: eachUser.username || '',
-      email: eachUser.email || '',
-      about: eachUser.about || '',
-      profilePicture: eachUser.profilePicture || '',
-    },
   });
+
+  console.log(eachUser, '-> eachh');
 
   const { mutate, isPending } = useMutation({
     mutationFn: eachUser
@@ -62,6 +59,9 @@ const Profile = () => {
     onSuccess: (response: any) => toast.success(response.message),
     onError: (error: any) => toast.error(error.message),
   });
+
+  if (isLoadingEachUser) return <ProfileLoading />;
+  if (isEachUserError) return toast.error(eachUserErrorMessage.message);
 
   const handleUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     const maxSize: number = 3 * 1024 * 1024;
@@ -175,7 +175,11 @@ const Profile = () => {
               <FormItem>
                 <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter name" {...field} />
+                  <Input
+                    placeholder="Enter name"
+                    {...field}
+                    defaultValue={eachUser.username || ''}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -190,6 +194,7 @@ const Profile = () => {
                 <FormControl>
                   <Input
                     placeholder="Enter email address"
+                    defaultValue={eachUser.email}
                     {...field}
                     type="email"
                   />
@@ -206,7 +211,11 @@ const Profile = () => {
               <FormItem>
                 <FormLabel>About</FormLabel>
                 <FormControl>
-                  <Textarea placeholder="Tell your story" {...field} />
+                  <Textarea
+                    placeholder="Tell your story"
+                    {...field}
+                    defaultValue={eachUser.about}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

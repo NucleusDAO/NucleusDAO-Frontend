@@ -25,7 +25,7 @@ const Layout = ({ children }: ILayout) => {
       {connected ? (
         <React.Fragment>
           <div className="md:flex justify-between items-start md:space-x-4 space-y-4 md:space-y-0">
-            <div className="w-full md:w-[20%] dark:bg-[#191919] rounded-lg p-2 md:p-4 bg-white">
+            <div className="w-full md:w-[20%] dark:bg-gradient-to-r dark:from-[#1E1E1E] dark:to-[#252525] rounded-lg p-2 md:p-4 bg-white">
               <div className="md:space-y-6 text-[#888888] text-sm flex md:block items-center">
                 {settingsSidebarLinks.map((link) => (
                   <Link key={link.title} href={link.href}>
@@ -44,13 +44,15 @@ const Layout = ({ children }: ILayout) => {
               </div>
             </div>
 
-            <div className="w-full md:w-[80%] bg-white dark:bg-[#191919] rounded-lg p-4">
+            <div className="w-full md:w-[80%] bg-white dark:bg-gradient-to-r from-[#1E1E1E] dark:to-[#252525] rounded-lg p-4">
               {children}
             </div>
           </div>
         </React.Fragment>
       ) : (
-        <div className='min-h-[76vh] flex items-center justify-center'><ConnectWalletCallToAction  description="Connect your wallet to be able to see your settings" /></div>
+        <div className="min-h-[76vh] flex items-center justify-center">
+          <ConnectWalletCallToAction description="Connect your wallet to be able to see your settings" />
+        </div>
       )}
     </div>
   );
