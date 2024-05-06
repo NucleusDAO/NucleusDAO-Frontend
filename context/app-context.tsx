@@ -19,6 +19,10 @@ import {
 } from '@/libs/types';
 import { defaultDaoCreation, defaultProposal } from '@/libs/utils';
 import { VIEW_DAO_URL } from '@/config/path';
+import ErrorFetchingComponent from '@/components/error-fetching-comp';
+import { useQuery } from '@tanstack/react-query';
+import { AE_PRICE_KEY } from '@/libs/key';
+import { aePrice } from '@/config/apis';
 
 export const AppContext = createContext<any>({});
 
@@ -96,6 +100,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
       }
     } catch (error) {
       toast.error('Error fetching DAOs');
+      return <ErrorFetchingComponent />;
     }
   };
 
@@ -192,6 +197,17 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     return proposals;
   };
 
+  const getProposal = async (
+    daoContractAddress: string,
+    proposalId: string
+  ) => {
+    const contract = await getBasicDAO(daoContractAddress);
+    const res = await contract.getProposal(proposalId);
+    const proposal = res.decodedResult;
+
+    return proposal;
+  };
+
   const getEachDAO = async (id: string) => {
     const contract = await getNucleusDAO();
     const res = await contract.getDAO(id);
@@ -240,6 +256,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     setNewProposalInfo,
     voteFor,
     voteAgainst,
+    getProposal,
     executeProposal,
     // getEachProposal,
   };

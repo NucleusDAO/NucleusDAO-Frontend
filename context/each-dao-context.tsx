@@ -7,10 +7,12 @@ import {
   useState,
 } from 'react';
 import { AppContext } from './app-context';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { toast } from 'sonner';
 import { updateGetProposal } from '@/libs/utils';
-import { IProposal } from '@/libs/types';
+import { IConnectWalletContext, IProposal } from '@/libs/types';
+import ErrorFetchingComponent from '@/components/error-fetching-comp';
+import { ConnectWalletContext } from './connect-wallet-context';
 
 export const EachDaoContext = createContext<any>({});
 
@@ -31,12 +33,13 @@ export interface IDAO {
 }
 
 export const EachDaoContextProvider = ({ children }: IAppProvider) => {
-  const router = useRouter();
   const pathname = usePathname();
+  const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const [eachDAOProposal, setEachDAOProposal] = useState<any | null>(null);
   const [currentDAO, setCurrentDAO] = useState<IDAO | null>(null);
   const [membersActivities, setMembersActivities] = useState<any | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const isMember = currentDAO?.members?.includes(user.address);
 
   const { getProposals, getEachDAO, getUsersActivities } =
     useContext(AppContext);
@@ -63,6 +66,7 @@ export const EachDaoContextProvider = ({ children }: IAppProvider) => {
           console.error('Error fetching DAO:', error);
         } finally {
           setIsLoading(false); // Set loading state to false after fetching data
+          return <ErrorFetchingComponent />;
         }
       })();
     }
@@ -76,6 +80,7 @@ export const EachDaoContextProvider = ({ children }: IAppProvider) => {
     setCurrentDAO,
     setMembersActivities,
     setEachDAOProposal,
+    isMember,
     setIsLoading,
   };
 

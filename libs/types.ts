@@ -54,6 +54,10 @@ export interface IConnectWalletContext {
   handleDisconnect?: () => void;
 }
 
+export interface IApiContext {
+  getAEPrice: { price: number };
+}
+
 export interface IUser {
   address: string;
   isConnected: boolean;
@@ -100,11 +104,13 @@ export interface IProposal {
   proposal: string;
   proposalType: string;
   description: string;
+  daoId: string;
   value: number;
   target: string;
   startTime: number;
   endTime: number;
   votesFor: number;
+  daoName: string;
   votesAgainst: number;
   isExecuted: boolean;
   votes: any[];
@@ -133,5 +139,38 @@ export interface INewProposal {
     duration: number;
     quorum: number;
     socialMedia: { type: string; link: string }[];
+  };
+}
+
+export type ICreateDAO = {
+  members: string[];
+  name: string;
+  id: string;
+  currentMembers: number;
+};
+
+export type ICreateUser = {
+  address?: string;
+  email: string;
+  profilePicture: string;
+  about: string;
+  username: string;
+};
+
+export interface IEachProposalView {
+  tabs: string[];
+  currentProposal: {
+    wallet: string;
+    description: string;
+    votes: { account: string; support: boolean }[];
+    type: string;
+    status: string;
+    totalVote: string;
+    id: string;
+    duration: string;
+    startTime: number;
+    endTime: number;
+    votesFor: number;
+    votesAgainst: number;
   };
 }

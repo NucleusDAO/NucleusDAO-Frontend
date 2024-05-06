@@ -14,12 +14,15 @@ import { CREATE_PROPOSAL_URL } from '@/config/path';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { IConnectWalletContext } from '@/libs/types';
 import { usePathname, useSearchParams } from 'next/navigation';
+import { removeExistingStorageItem } from '@/libs/utils';
+import { EachDaoContext } from '@/context/each-dao-context';
 
 interface IDaoConfigurationWrapper {
   children: ReactNode;
 }
 
 const DaoConfigurationWrapper = ({ children }: IDaoConfigurationWrapper) => {
+  const { isMember } = useContext(EachDaoContext);
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
@@ -27,6 +30,9 @@ const DaoConfigurationWrapper = ({ children }: IDaoConfigurationWrapper) => {
   const currentPage = searchParams.get('q');
   const urlParts = pathname.split('/'); // Split the URL by "/"
   const daoId = urlParts[2];
+
+  console.log(isMember, 'isMember');
+
   return (
     <div className="space-y-5">
       <div className="flex justify-between items-center">
@@ -35,7 +41,7 @@ const DaoConfigurationWrapper = ({ children }: IDaoConfigurationWrapper) => {
         </h2>
         <Dialog>
           <DialogTrigger asChild>
-            {isConnected && <Button>Edit Settings</Button>}
+            {isConnected && <>{isMember && <Button>Edit Settings</Button>}</>}
           </DialogTrigger>
           <DialogContent className="">
             <DialogHeader>
@@ -48,7 +54,12 @@ const DaoConfigurationWrapper = ({ children }: IDaoConfigurationWrapper) => {
               </DialogDescription>
             </DialogHeader>
 
-            <Link href={`${CREATE_PROPOSAL_URL}?enums=${currentPage === 'Profile' ? '5' : '7'}&ct=${daoId}`}>
+            <Link
+              href={`${CREATE_PROPOSAL_URL}?enums=${
+                currentPage === 'Profile' ? '5' : '7'
+              }&ct=${daoId}`}
+              onClick={() => removeExistingStorageItem('new_proposal')}
+            >
               <Button className="w-full">Propose</Button>
             </Link>
           </DialogContent>

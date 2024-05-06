@@ -7,7 +7,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import React, { ReactNode, useContext, useEffect } from 'react';
 import { CopyIcon } from '@/assets/svgs';
 import { eachDaoViews } from '@/config/dao-config';
-import { cn, encodeURI } from '@/libs/utils';
+import { cn, encodeURI, removeExistingStorageItem } from '@/libs/utils';
 import EachDaoLoading from '@/components/loading/each-dao-loading';
 import { EachDaoContext } from '@/context/each-dao-context';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
@@ -21,8 +21,9 @@ const Layout = ({ children }: ILayout) => {
   const router = useRouter();
   const pathname = usePathname();
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
-  const { isConnected, address } = user;
-  const { isLoading, currentDAO, setIsLoading } = useContext(EachDaoContext);
+  const { isConnected } = user;
+  const { isLoading, currentDAO, setIsLoading, isMember } =
+    useContext(EachDaoContext);
 
   const urlParts = pathname.split('/'); // Split the URL by "/"
   const daoId = urlParts[2];
@@ -34,10 +35,6 @@ const Layout = ({ children }: ILayout) => {
   }, []);
 
   if (isLoading) return <EachDaoLoading />;
-
-  const isMember = currentDAO?.members?.includes(address);
-
-  console.log(currentDAO, '-> currentDAO');
 
   return (
     <>
@@ -59,7 +56,10 @@ const Layout = ({ children }: ILayout) => {
             {isConnected && (
               <React.Fragment>
                 {isMember && (
-                  <Link href={`${CREATE_PROPOSAL_URL}?ct=${daoId}`}>
+                  <Link
+                    href={`${CREATE_PROPOSAL_URL}?ct=${daoId}`}
+                    onClick={() => removeExistingStorageItem('new_proposal')}
+                  >
                     <Button>
                       <Plus className="mr-2 h-4 w-4" /> Create Proposal
                     </Button>
@@ -102,7 +102,7 @@ const Layout = ({ children }: ILayout) => {
                   {currentDAO.description}
                 </p>
               </div>
-              <div className="pb-4 border-b dark:border-[#292929] md:flex justify-between border-[#CCCCCC99] space-y-4 md:space-y-0">
+              <div className="pb-4 border-b dark:border-[#292929] md:flex  items-center justify-between border-[#CCCCCC99] space-y-4 md:space-y-0">
                 <h2 className="font-medium text-2xl dark:text-white text-dark">
                   Overview
                 </h2>

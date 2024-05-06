@@ -18,6 +18,7 @@ import { AppContext } from '@/context/app-context';
 import { defaultDaoCreation } from '@/libs/utils';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { IConnectWalletContext } from '@/libs/types';
+import NotAuthorized from '@/components/not-authorized';
 
 interface ILayout {
   children: ReactNode;
@@ -30,9 +31,10 @@ const Layout = ({ children }: ILayout) => {
   const router = useRouter();
   const [open, setOpen] = useState<boolean>(false);
 
-  if (!isConnected) {
-    redirect(DAO_URL);
-  }
+  if (!isConnected)
+    return (
+      <NotAuthorized description="Sorry, only connected user are allowed to create a DAO" />
+    );
   return (
     <div className="space-y-8 min-h-[83vh]">
       <div className="flex space-x-4 items-start border-b border-b-[#292929] pb-6">

@@ -140,7 +140,7 @@ export const defaultDaoCreation = {
   quorum: 50,
 };
 
-export const getStatus = (_proposal: IProposal) => {
+export const getStatus = (_proposal: IProposal | any) => {
   if (_proposal.isExecuted) {
     return 'Succeeded';
   }
@@ -178,7 +178,7 @@ export function millisecondsToDays(milliseconds: number) {
 }
 
 export function formatDate(timestamp: number) {
-  const date = new Date(timestamp);
+  const date = new Date(Number(timestamp));
   const options: any = { day: '2-digit', month: 'short', year: 'numeric' };
   return date.toLocaleDateString('en-GB', options);
 }
@@ -215,7 +215,6 @@ export const updateGetProposal = async ({
   const dao = await getEachDAO(daoId);
   setCurrentDAO(dao);
   const proposals: IProposal[] = await getProposals(dao.contractAddress);
-  console.log(proposals, '-> proposals');
   setEachDAOProposal(
     proposals.map((proposal: IProposal) => {
       return {
@@ -258,3 +257,32 @@ export const activities: { title: string; color: string; url: string }[] = [
     url: 'https://www.youtube.com/watch?v=LXb3EKWsInQ',
   },
 ];
+
+export function formatTimestamp(timestamp: string) {
+  const date = new Date(timestamp);
+
+  const options: any = {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true,
+  };
+
+  return new Intl.DateTimeFormat('en-GB', options).format(date);
+}
+
+export function addDaysToCurrentDateAndFormat(days: number) {
+  const currentDate = new Date();
+  const newDate = new Date(currentDate.getTime() + days * 24 * 60 * 60 * 1000);
+  return Math.floor(newDate.getTime() / 1000); // Convert milliseconds to seconds
+}
+
+export const removeExistingStorageItem = (key: string) => {
+  const existingInfo =
+    typeof window !== 'undefined' && localStorage.getItem(key);
+  if (existingInfo) {
+    localStorage.removeItem(key);
+  }
+};

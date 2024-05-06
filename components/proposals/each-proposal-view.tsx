@@ -6,7 +6,7 @@ import VotingProcess from '../votings/voting-process';
 import { VoteIcon } from '@/assets/svgs';
 import AllVoters from '../votings/all-voters';
 import { ReactNode, useContext, useState } from 'react';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import ProposalResult from './proposal-result';
 import ProposalInfo from './proposal-info';
 import { useMediaQuery } from '@/hooks/use-media-query';
@@ -14,32 +14,22 @@ import { proposalLists } from '@/config/dao-config';
 import { EachDaoContext } from '@/context/each-dao-context';
 import { EachStatus } from './data';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
-import { IConnectWalletContext } from '@/libs/types';
+import { IConnectWalletContext, IEachProposalView } from '@/libs/types';
+import { getStatus } from '@/libs/utils';
 
 interface IEachTabView {
   [key: string]: ReactNode;
 }
 
-interface IEachProposalView {
-  tabs: string[];
-}
-
-const EachProposalView = ({ tabs }: IEachProposalView) => {
+const EachProposalView = ({ tabs, currentProposal }: IEachProposalView) => {
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
-  const { address } = user;
-  const { currentDAO, eachDAOProposal } = useContext(EachDaoContext);
+  const { address, isConnected } = user;
+  const { currentDAO, eachDAOProposal, isMember } = useContext(EachDaoContext);
   const isDesktop = useMediaQuery('(min-width: 768px)');
   const [showFullProposal, setShowFullProposal] = useState<boolean>(false);
   const searchParams = useSearchParams();
-  const pathname = usePathname();
-
-  const urlParts = pathname.split('/'); // Split the URL by "/"
-  const proposalId = urlParts[4];
 
   const currentTab: string = searchParams.get('q') || tabs[0];
-  const currentProposal = eachDAOProposal.find(
-    (proposal: { id: string }) => proposal.id === proposalId
-  );
   const userVote = address
     ? currentProposal.votes.find(
         (vote: { account: string }) => vote.account === address
@@ -82,9 +72,9 @@ const EachProposalView = ({ tabs }: IEachProposalView) => {
       </div>
       <div className="space-y-4">
         <p className="text-xs md:text-sm text-defaultText">
-          {description.slice(0, 50)}
+          {description.slice(0, 180)}
         </p>
-        {description.length > 50 && (
+        {description.length > 180 && (
           <>
             {!showFullProposal && (
               <Button onClick={() => setShowFullProposal(true)}>
@@ -99,29 +89,33 @@ const EachProposalView = ({ tabs }: IEachProposalView) => {
         <div className="space-y-8">
           {showFullProposal && (
             <div className="text-xs md:text-sm text-defaultText trans space-y-3">
-              {description.slice(51, description.length)}
-              <Button onClick={() => setShowFullProposal(false)}>
-                Show less
-              </Button>
+              {description.slice(180, description.length)}
+              {description.length > 180 && (
+                <Button onClick={() => setShowFullProposal(false)}>
+                  Show less
+                </Button>
+              )}
             </div>
           )}
           <div>{tabViews[currentTab]}</div>
         </div>
         <div className="space-y-8">
-          <div className="rounded-lg dark:bg-[#191919] p-8 space-y-4 bg-white">
-            <div className="flex justify-between border-b dark:border-[#1E1E1E] pb-4 items-center border-[#CCCCCC99]">
-              <h3 className="font-medium text-xl dark:text-white text-dark">
-                Cast a vote
-              </h3>
-              <div
-                className="font-light text-sm dark:text-white text-[#0080FF] dark:text-[#0080FF1A] dark:bg-[#1E1E1E] bg-[#0080FF1A] rounded-lg px-3 py-1.5"
-                role="status"
-              >
-                {EachStatus[currentProposal.status]}
+          {isMember && isConnected && (
+            <div className="rounded-lg dark:bg-[#191919] p-8 space-y-4 bg-white">
+              <div className="flex justify-between border-b dark:border-[#1E1E1E] pb-4 items-center border-[#CCCCCC99]">
+                <h3 className="font-medium text-xl dark:text-white text-dark">
+                  Cast a vote
+                </h3>
+                <div
+                  className="font-light text-sm dark:text-white text-[#0080FF] dark:text-[#0080FF1A] dark:bg-[#1E1E1E] bg-[#0080FF1A] rounded-lg px-3 py-1.5"
+                  role="status"
+                >
+                  {EachStatus[getStatus(currentProposal)]}
+                </div>
               </div>
+              <VotingProcess currentProposal={currentProposal} />
             </div>
-            <VotingProcess currentProposal={currentProposal} />
-          </div>
+          )}
 
           <div className="rounded-lg dark:bg-[#191919] p-8 space-y-4 bg-white">
             <div className="flex justify-between border-b dark:border-[#1E1E1E] border-[#CCCCCC99] pb-4 items-center">
