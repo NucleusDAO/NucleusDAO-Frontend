@@ -140,7 +140,7 @@ export const defaultDaoCreation = {
   quorum: 50,
 };
 
-export const getStatus = (_proposal: IProposal) => {
+export const getStatus = (_proposal: IProposal | any) => {
   if (_proposal.isExecuted) {
     return 'Succeeded';
   }

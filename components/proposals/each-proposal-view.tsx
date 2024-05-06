@@ -15,6 +15,7 @@ import { EachDaoContext } from '@/context/each-dao-context';
 import { EachStatus } from './data';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { IConnectWalletContext, IEachProposalView } from '@/libs/types';
+import { getStatus } from '@/libs/utils';
 
 interface IEachTabView {
   [key: string]: ReactNode;
@@ -108,7 +109,7 @@ const EachProposalView = ({ tabs, currentProposal }: IEachProposalView) => {
                 className="font-light text-sm dark:text-white text-[#0080FF] dark:text-[#0080FF1A] dark:bg-[#1E1E1E] bg-[#0080FF1A] rounded-lg px-3 py-1.5"
                 role="status"
               >
-                {EachStatus[currentProposal.status]}
+                {EachStatus[getStatus(currentProposal)]}
               </div>
             </div>
             <VotingProcess currentProposal={currentProposal} />

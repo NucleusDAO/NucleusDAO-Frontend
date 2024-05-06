@@ -37,7 +37,6 @@ const EachProposal = () => {
         const dao: { contractAddress: string } = await getEachDAO(daoId);
         setCurrentDAO(dao);
         const proposal = await getProposal(dao.contractAddress, proposalId);
-        console.log(proposal, '-> proposal');
         setCurrentProposal(proposal);
         setIsLoading(false);
       } catch (error: any) {
