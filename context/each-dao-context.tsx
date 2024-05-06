@@ -10,8 +10,9 @@ import { AppContext } from './app-context';
 import { usePathname } from 'next/navigation';
 import { toast } from 'sonner';
 import { updateGetProposal } from '@/libs/utils';
-import { IProposal } from '@/libs/types';
+import { IConnectWalletContext, IProposal } from '@/libs/types';
 import ErrorFetchingComponent from '@/components/error-fetching-comp';
+import { ConnectWalletContext } from './connect-wallet-context';
 
 export const EachDaoContext = createContext<any>({});
 
@@ -33,10 +34,12 @@ export interface IDAO {
 
 export const EachDaoContextProvider = ({ children }: IAppProvider) => {
   const pathname = usePathname();
+  const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const [eachDAOProposal, setEachDAOProposal] = useState<any | null>(null);
   const [currentDAO, setCurrentDAO] = useState<IDAO | null>(null);
   const [membersActivities, setMembersActivities] = useState<any | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const isMember = currentDAO?.members?.includes(user.address);
 
   const { getProposals, getEachDAO, getUsersActivities } =
     useContext(AppContext);
@@ -77,6 +80,7 @@ export const EachDaoContextProvider = ({ children }: IAppProvider) => {
     setCurrentDAO,
     setMembersActivities,
     setEachDAOProposal,
+    isMember,
     setIsLoading,
   };
 

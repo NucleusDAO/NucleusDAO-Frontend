@@ -29,7 +29,7 @@ interface IData {
 
 const EachDaoMembers = () => {
   const pathname = usePathname();
-  const { membersActivities, isLoading } = useContext(EachDaoContext);
+  const { membersActivities, isMember } = useContext(EachDaoContext);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { isConnected } = user;
   const [data, setData] = useState<IData[]>([]);
@@ -67,7 +67,7 @@ const EachDaoMembers = () => {
         </h1>
         <Dialog>
           <DialogTrigger asChild>
-            {isConnected && <Button>Add Member</Button>}
+            {isConnected && isMember && <Button>Add Member</Button>}
           </DialogTrigger>
           <DialogContent className="dark:bg-gradient-to-r dark:from-[#1E1E1E] dark:via-[#1E1E1E]">
             <DialogHeader>

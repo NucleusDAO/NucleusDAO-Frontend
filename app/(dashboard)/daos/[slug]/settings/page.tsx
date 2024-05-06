@@ -13,7 +13,7 @@ interface ITabView {
 }
 
 const Settings = () => {
-  const { currentDAO } = useContext(EachDaoContext);
+  const { currentDAO, isMember } = useContext(EachDaoContext);
   const { name, image, socials } = currentDAO;
 
   const searchParams = useSearchParams();
@@ -32,7 +32,7 @@ const Settings = () => {
       </div>
       <div className="md:flex md:space-x-4 items-start space-y-4 md:space-y-0">
         <div className="w-full md:w-[20%] dark:bg-gradient-to-r dark:from-[#1E1E1E] dark:via-[#1E1E1E] dark:to-[#252525] rounded-lg p-4 bg-white">
-          <SidebarLinksComp activeSidebar={activeSidebar} />
+          <SidebarLinksComp activeSidebar={activeSidebar} isMember={isMember} />
         </div>
         <div className="w-full md:w-[80%] dark:bg-gradient-to-r dark:from-[#1E1E1E] dark:via-[#1E1E1E] dark:to-[#252525] rounded-lg p-4 bg-white">
           {tabs[activeSidebar]}

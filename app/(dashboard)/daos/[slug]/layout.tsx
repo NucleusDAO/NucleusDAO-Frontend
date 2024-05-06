@@ -21,8 +21,9 @@ const Layout = ({ children }: ILayout) => {
   const router = useRouter();
   const pathname = usePathname();
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
-  const { isConnected, address } = user;
-  const { isLoading, currentDAO, setIsLoading } = useContext(EachDaoContext);
+  const { isConnected } = user;
+  const { isLoading, currentDAO, setIsLoading, isMember } =
+    useContext(EachDaoContext);
 
   const urlParts = pathname.split('/'); // Split the URL by "/"
   const daoId = urlParts[2];
@@ -34,8 +35,6 @@ const Layout = ({ children }: ILayout) => {
   }, []);
 
   if (isLoading) return <EachDaoLoading />;
-
-  const isMember = currentDAO?.members?.includes(address);
 
   return (
     <>

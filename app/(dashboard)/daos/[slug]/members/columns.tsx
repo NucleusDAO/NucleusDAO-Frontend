@@ -17,6 +17,7 @@ import { useContext } from 'react';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { IConnectWalletContext } from '@/libs/types';
 import { removeExistingStorageItem } from '@/libs/utils';
+import { EachDaoContext } from '@/context/each-dao-context';
 
 const columns: {
   accessorKey: string;
@@ -61,13 +62,14 @@ export const WalletAddressCell = ({ row }: any) => {
 };
 
 export const ActionCell = ({ row }: any) => {
+  const { isMember } = useContext(EachDaoContext);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { isConnected } = user;
   const { id } = row.original;
 
   return (
     <>
-      {isConnected ? (
+      {isConnected && isMember ? (
         <Dialog>
           <DialogTrigger asChild>
             <Button

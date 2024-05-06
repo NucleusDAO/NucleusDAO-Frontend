@@ -16,7 +16,7 @@ import DepositToken from '@/components/deposit-token';
 const EachDaoFunds = () => {
   const pathname = usePathname();
   const domainName = typeof window !== 'undefined' && window.location.origin;
-  const { currentDAO } = useContext(EachDaoContext);
+  const { isMember } = useContext(EachDaoContext);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { isConnected } = user;
 
@@ -32,7 +32,7 @@ const EachDaoFunds = () => {
             Currently, there are no funds in the treasury. You can initiate a
             proposal to make deposit.
           </p>
-          {isConnected && <DepositToken />}
+          {isConnected && isMember && <DepositToken />}
         </div>
       ) : (
         <>
@@ -56,7 +56,7 @@ const EachDaoFunds = () => {
                   </p>
                 </div>
               </div>
-              {isConnected && <DepositToken />}
+              {isConnected && isMember && <DepositToken />}
             </div>
             <CopyToClipboard
               text={userURL}

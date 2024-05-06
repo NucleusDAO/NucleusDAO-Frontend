@@ -58,6 +58,11 @@ export const getProposals = () =>
 export const createProposalEP = (payload: any) =>
   client.post('proposals', payload).then((response) => response.data);
 
+export const updateProposalEP = (daoId: string, id: string, payload: any) =>
+  client
+    .patch(`proposals/${daoId}/${id}`, payload)
+    .then((response) => response.data);
+
 export const eachProposal = (daoId: string, proposalId: string) =>
   client
     .get(`proposals/${daoId}/${proposalId}`)

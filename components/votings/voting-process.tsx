@@ -18,6 +18,8 @@ import { defaultSuccessOption } from '../animation-options';
 import { AppContext } from '@/context/app-context';
 import { updateGetProposal } from '@/libs/utils';
 import { EachDaoContext } from '@/context/each-dao-context';
+import { updateProposalEP } from '@/config/apis';
+import { usePathname } from 'next/navigation';
 
 interface IVotingProcess {
   currentProposal: {
@@ -27,13 +29,20 @@ interface IVotingProcess {
 }
 
 const VotingProcess = ({ currentProposal }: IVotingProcess) => {
-  const { voteFor, voteAgainst, getEachDAO, getProposals, getUsersActivities } =
-    useContext(AppContext);
+  const {
+    voteFor,
+    voteAgainst,
+    getEachDAO,
+    getProposals,
+    getUsersActivities,
+    getProposal,
+  } = useContext(AppContext);
   const {
     currentDAO,
     setCurrentDAO,
     setEachDAOProposal,
     setMembersActivities,
+    eachDAOProposal,
   } = useContext(EachDaoContext);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { isConnected, address } = user;
@@ -56,6 +65,11 @@ const VotingProcess = ({ currentProposal }: IVotingProcess) => {
 
   const votingOptions = ['yes', 'no'];
 
+  const pathname = usePathname();
+  const urlParts = pathname.split('/');
+  const proposalId = urlParts[urlParts.length - 1];
+  console.log(proposalId, '=>proposalId');
+
   const handleOptionChange = (option: string) => {
     if (isConnected) {
       setSelectedOption(option);
@@ -63,6 +77,8 @@ const VotingProcess = ({ currentProposal }: IVotingProcess) => {
       toast.error('Connect your wallet first!');
     }
   };
+
+  console.log(eachDAOProposal, '-> current dao');
 
   const handleVote = async () => {
     setIsVoting(true);
@@ -81,6 +97,16 @@ const VotingProcess = ({ currentProposal }: IVotingProcess) => {
           getUsersActivities,
           setMembersActivities,
         });
+        const proposals = await getProposal(
+          currentDAO.contractAddress,
+          proposalId
+        );
+        for (let key in proposals) {
+          if (typeof proposals[key] == 'bigint') {
+            proposals[key] = Number(proposals[key]);
+          }
+        }
+        await updateProposalEP(currentDAO.id, proposalId, proposals);
       } else {
         const vote = await voteAgainst(
           Number(currentProposal.id),
@@ -95,6 +121,16 @@ const VotingProcess = ({ currentProposal }: IVotingProcess) => {
           getUsersActivities,
           setMembersActivities,
         });
+        const proposals = await getProposal(
+          currentDAO.contractAddress,
+          proposalId
+        );
+        for (let key in proposals) {
+          if (typeof proposals[key] == 'bigint') {
+            proposals[key] = Number(proposals[key]);
+          }
+        }
+        await updateProposalEP(currentDAO.id, proposalId, proposals);
       }
       setShowModal(true);
     } catch (error: any) {
