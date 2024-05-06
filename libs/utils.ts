@@ -178,7 +178,7 @@ export function millisecondsToDays(milliseconds: number) {
 }
 
 export function formatDate(timestamp: number) {
-  const date = new Date(timestamp);
+  const date = new Date(Number(timestamp));
   const options: any = { day: '2-digit', month: 'short', year: 'numeric' };
   return date.toLocaleDateString('en-GB', options);
 }
@@ -215,7 +215,6 @@ export const updateGetProposal = async ({
   const dao = await getEachDAO(daoId);
   setCurrentDAO(dao);
   const proposals: IProposal[] = await getProposals(dao.contractAddress);
-  console.log(proposals, '-> proposals');
   setEachDAOProposal(
     proposals.map((proposal: IProposal) => {
       return {
@@ -274,7 +273,16 @@ export function formatTimestamp(timestamp: string) {
   return new Intl.DateTimeFormat('en-GB', options).format(date);
 }
 
-// Example usage:
-const timestamp = '2024-05-05T16:54:44.967Z';
-const formattedDate = formatTimestamp(timestamp);
-console.log(formattedDate); // Output: "5 May 2024, 4:54 PM"
+export function addDaysToCurrentDateAndFormat(days: number) {
+  const currentDate = new Date();
+  const newDate = new Date(currentDate.getTime() + days * 24 * 60 * 60 * 1000);
+  return Math.floor(newDate.getTime() / 1000); // Convert milliseconds to seconds
+}
+
+export const removeExistingStorageItem = (key: string) => {
+  const existingInfo =
+    typeof window !== 'undefined' && localStorage.getItem(key);
+  if (existingInfo) {
+    localStorage.removeItem(key);
+  }
+};

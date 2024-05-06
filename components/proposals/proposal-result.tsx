@@ -44,6 +44,8 @@ const ProposalResult = ({ currentProposal }: IProposalResult) => {
   const percentageOfVoteAgainst =
     Number(totalVote) > 0 ? (votesAgainst / Number(totalVote)) * 100 : 0;
 
+  console.log(percentageOfVoteAgainst, '->');
+
   const handleExecuteProposal = async () => {
     setIsExecuting(true);
     try {
@@ -89,6 +91,7 @@ const ProposalResult = ({ currentProposal }: IProposalResult) => {
           </div>
           <Slider
             defaultValue={[percentageOfVoteFor]}
+            value={[percentageOfVoteFor]}
             max={100}
             step={1}
             thumbClassName="hidden"
@@ -101,6 +104,7 @@ const ProposalResult = ({ currentProposal }: IProposalResult) => {
           </div>
           <Slider
             defaultValue={[percentageOfVoteAgainst]}
+            value={[percentageOfVoteAgainst]}
             max={100}
             step={1}
             thumbClassName="hidden"

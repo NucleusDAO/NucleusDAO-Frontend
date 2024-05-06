@@ -19,14 +19,14 @@ import { useContext } from 'react';
 import { EACH_USER } from '@/libs/key';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
-import { updateUserNotification } from '@/config/apis';
+import { updateUser } from '@/config/apis';
 import { toast } from 'sonner';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { IConnectWalletContext } from '@/libs/types';
 
 const Notifications = () => {
   const queryClient: any = useQueryClient();
-  const { eachUser, isMutatingUsers, mutateUsers } = useContext(ApiContext);
+  const { eachUser } = useContext(ApiContext);
   const {
     user: { address },
   } = useContext<IConnectWalletContext>(ConnectWalletContext);
@@ -34,21 +34,25 @@ const Notifications = () => {
   const form = useForm<z.infer<typeof editNotifications>>({
     resolver: zodResolver(editNotifications),
     defaultValues: {
-      newDAO: eachUser.emailNotificationsSettings.newDAO || '',
-      newProposal: eachUser.emailNotificationsSettings.newDAO || '',
-      newUpdate: eachUser.emailNotificationsSettings.newUpdate || '',
-      pushNewDAO: eachUser.pushNotificationsSettings.newDAO || '',
-      pushNewProposal: eachUser.pushNotificationsSettings.newProposal || '',
-      pushNewUpdate: eachUser.pushNotificationsSettings.newUpdate || '',
+      newDAO: eachUser.emailNotificationsSettings.newDAO,
+      newProposal: eachUser.emailNotificationsSettings.newDAO,
+      newUpdate: eachUser.emailNotificationsSettings?.newUpdate,
+      pushNewDAO: eachUser.pushNotificationsSettings.newDAO,
+      pushNewProposal: eachUser.pushNotificationsSettings.newProposal,
+      pushNewUpdate: eachUser.pushNotificationsSettings.newUpdate,
     },
   });
 
   const { mutate, isPending } = useMutation({
-    mutationFn: (payload: any) => updateUserNotification(payload, address),
-    onSuccess: (response: any) =>
-      toast.success(response.message || 'User profile updated successfully.'),
+    mutationFn: (payload: any) => updateUser(payload, address),
+    onSuccess: (response: any) => {
+      queryClient.invalidateQueries(EACH_USER);
+      toast.success(response.message || 'User profile updated successfully.');
+    },
     onError: (error: any) => toast.error(error.message),
   });
+
+  console.log(eachUser, '-> a');
 
   const onSubmit = async (data: any) => {
     const emailNotificationsSettings = {
@@ -194,7 +198,7 @@ const Notifications = () => {
             <Button
               type="submit"
               className="px-12"
-              loading={isMutatingUsers}
+              loading={isPending}
               loadingText="Updating..."
               disabled={!form.formState.isDirty}
             >

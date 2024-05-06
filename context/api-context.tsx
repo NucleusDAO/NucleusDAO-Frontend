@@ -2,10 +2,11 @@ import {
   aePrice,
   createUser,
   getNotifications,
+  getProposals,
   getUser,
   updateUser,
 } from '@/config/apis';
-import { AE_PRICE_KEY, EACH_USER, NOTIFICATIONS } from '@/libs/key';
+import { AE_PRICE_KEY, EACH_USER, NOTIFICATIONS, PROPOSALS } from '@/libs/key';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { ReactNode, createContext, useContext } from 'react';
 import { ConnectWalletContext } from './connect-wallet-context';
@@ -41,6 +42,17 @@ export const ApiContextProvider = ({ children }: IApiProvider) => {
     queryKey: [EACH_USER],
     queryFn: () => getUser(address),
     enabled: !!address,
+    retry: false,
+  });
+
+  const {
+    data: proposals,
+    isError: isProposalError,
+    error: proposalErrorMessage,
+    isLoading: isLoadingProposal,
+  } = useQuery({
+    queryKey: [PROPOSALS],
+    queryFn: getProposals,
   });
 
   const {
@@ -78,6 +90,10 @@ export const ApiContextProvider = ({ children }: IApiProvider) => {
     isNotificationError,
     isLoadingNotification,
     notificationErrorMessage,
+    proposals,
+    isProposalError,
+    proposalErrorMessage,
+    isLoadingProposal,
   };
   return <ApiContext.Provider value={value}>{children}</ApiContext.Provider>;
 };

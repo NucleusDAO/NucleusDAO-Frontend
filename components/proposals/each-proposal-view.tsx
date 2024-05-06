@@ -14,32 +14,21 @@ import { proposalLists } from '@/config/dao-config';
 import { EachDaoContext } from '@/context/each-dao-context';
 import { EachStatus } from './data';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
-import { IConnectWalletContext } from '@/libs/types';
+import { IConnectWalletContext, IEachProposalView } from '@/libs/types';
 
 interface IEachTabView {
   [key: string]: ReactNode;
 }
 
-interface IEachProposalView {
-  tabs: string[];
-}
-
-const EachProposalView = ({ tabs }: IEachProposalView) => {
+const EachProposalView = ({ tabs, currentProposal }: IEachProposalView) => {
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { address } = user;
   const { currentDAO, eachDAOProposal } = useContext(EachDaoContext);
   const isDesktop = useMediaQuery('(min-width: 768px)');
   const [showFullProposal, setShowFullProposal] = useState<boolean>(false);
   const searchParams = useSearchParams();
-  const pathname = usePathname();
-
-  const urlParts = pathname.split('/'); // Split the URL by "/"
-  const proposalId = urlParts[4];
 
   const currentTab: string = searchParams.get('q') || tabs[0];
-  const currentProposal = eachDAOProposal.find(
-    (proposal: { id: string }) => proposal.id === proposalId
-  );
   const userVote = address
     ? currentProposal.votes.find(
         (vote: { account: string }) => vote.account === address
@@ -82,9 +71,9 @@ const EachProposalView = ({ tabs }: IEachProposalView) => {
       </div>
       <div className="space-y-4">
         <p className="text-xs md:text-sm text-defaultText">
-          {description.slice(0, 50)}
+          {description.slice(0, 180)}
         </p>
-        {description.length > 50 && (
+        {description.length > 180 && (
           <>
             {!showFullProposal && (
               <Button onClick={() => setShowFullProposal(true)}>
@@ -99,10 +88,12 @@ const EachProposalView = ({ tabs }: IEachProposalView) => {
         <div className="space-y-8">
           {showFullProposal && (
             <div className="text-xs md:text-sm text-defaultText trans space-y-3">
-              {description.slice(51, description.length)}
-              <Button onClick={() => setShowFullProposal(false)}>
-                Show less
-              </Button>
+              {description.slice(180, description.length)}
+              {description.length > 180 && (
+                <Button onClick={() => setShowFullProposal(false)}>
+                  Show less
+                </Button>
+              )}
             </div>
           )}
           <div>{tabViews[currentTab]}</div>

@@ -22,7 +22,7 @@ const Layout = ({ children }: ILayout) => {
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const connected: boolean = user.isConnected;
 
-  if (isEachUserError) return toast.error(eachUserErrorMessage.message);
+  // if (isEachUserError) return toast.error(eachUserErrorMessage.message);
 
   return (
     <div className="space-y-6">
@@ -32,7 +32,7 @@ const Layout = ({ children }: ILayout) => {
       {connected ? (
         <React.Fragment>
           <div className="md:flex justify-between items-start md:space-x-4 space-y-4 md:space-y-0">
-            <div className="w-full md:w-[20%] dark:bg-gradient-to-r dark:from-[#1E1E1E] dark:to-[#252525] rounded-lg p-2 md:p-4 bg-white">
+            <div className="w-full md:w-[20%] dark:bg-gradient-to-r dark:from-[#1E1E1E] dark:via-[#1E1E1E] dark:to-[#252525] rounded-lg p-2 md:p-4 bg-white">
               <div className="md:space-y-6 text-[#888888] text-sm flex md:block items-center">
                 {settingsSidebarLinks.map((link) => (
                   <Link key={link.title} href={link.href}>
@@ -51,7 +51,7 @@ const Layout = ({ children }: ILayout) => {
               </div>
             </div>
 
-            <div className="w-full md:w-[80%] bg-white dark:bg-gradient-to-r from-[#1E1E1E] dark:to-[#252525] rounded-lg p-4">
+            <div className="w-full md:w-[80%] bg-white dark:bg-gradient-to-r dark:via-[#1E1E1E] from-[#1E1E1E] dark:to-[#252525] rounded-lg p-4">
               {isLoadingEachUser ? (
                 <ProfileLoading />
               ) : (

@@ -17,6 +17,7 @@ import { Switch } from '@/components/ui/switch';
 import { useTheme } from 'next-themes';
 import { ApiContext } from '@/context/api-context';
 import { useContext } from 'react';
+import { toast } from 'sonner';
 
 const Display = () => {
   const { eachUser, mutateUsers } = useContext(ApiContext);
@@ -31,12 +32,14 @@ const Display = () => {
   });
 
   const handleOnCheck = async (value: boolean, type: any) => {
-    const updateSettings = await mutateUsers({ theme: type });
-    if (updateSettings) {
+    try {
+      await mutateUsers({ theme: type });
       form.setValue('light', type === 'light' ? value : false);
       form.setValue('dark', type === 'dark' ? value : false);
       form.setValue('system_', type === 'system_' ? value : false);
       setTheme(type === 'system_' ? 'system' : type);
+    } catch (error: any) {
+      toast.error(error.message);
     }
   };
 

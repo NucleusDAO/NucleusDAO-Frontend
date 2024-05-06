@@ -82,7 +82,10 @@ const VotingProcess = ({ currentProposal }: IVotingProcess) => {
           setMembersActivities,
         });
       } else {
-        const vote = await voteAgainst();
+        const vote = await voteAgainst(
+          Number(currentProposal.id),
+          currentDAO.contractAddress
+        );
         await updateGetProposal({
           getEachDAO,
           daoId: currentDAO.id,

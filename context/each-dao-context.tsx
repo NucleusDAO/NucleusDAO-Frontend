@@ -7,7 +7,7 @@ import {
   useState,
 } from 'react';
 import { AppContext } from './app-context';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { toast } from 'sonner';
 import { updateGetProposal } from '@/libs/utils';
 import { IProposal } from '@/libs/types';
@@ -32,7 +32,6 @@ export interface IDAO {
 }
 
 export const EachDaoContextProvider = ({ children }: IAppProvider) => {
-  const router = useRouter();
   const pathname = usePathname();
   const [eachDAOProposal, setEachDAOProposal] = useState<any | null>(null);
   const [currentDAO, setCurrentDAO] = useState<IDAO | null>(null);

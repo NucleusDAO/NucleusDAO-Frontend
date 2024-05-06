@@ -43,10 +43,10 @@ const Profile = () => {
   const form = useForm<z.infer<typeof editProfile>>({
     resolver: zodResolver(editProfile),
     defaultValues: {
-      username: eachUser.username,
-      profilePicture: eachUser.profilePicture,
-      email: eachUser.email,
-      about: eachUser.about,
+      username: eachUser?.username || '',
+      profilePicture: eachUser?.profilePicture || '',
+      email: eachUser?.email || '',
+      about: eachUser?.about || '',
     },
   });
 
@@ -134,7 +134,7 @@ const Profile = () => {
 
             <div className="space-y-2">
               <p className="text-sm text-dark dark:text-white font-medium">
-                {eachUser.username || `${address.slice(0, 15)}...`}
+                {eachUser?.username || `${address.slice(0, 15)}...`}
               </p>
               <CopyToClipboard
                 text={address}
@@ -157,7 +157,7 @@ const Profile = () => {
                   <Input
                     placeholder="Enter name"
                     {...field}
-                    defaultValue={eachUser.username || ''}
+                    // defaultValue={eachUser?.username || ''}
                   />
                 </FormControl>
                 <FormMessage />
@@ -173,7 +173,7 @@ const Profile = () => {
                 <FormControl>
                   <Input
                     placeholder="Enter email address"
-                    defaultValue={eachUser.email}
+                    // defaultValue={eachUser.email}
                     {...field}
                     type="email"
                   />
@@ -193,7 +193,7 @@ const Profile = () => {
                   <Textarea
                     placeholder="Tell your story"
                     {...field}
-                    defaultValue={eachUser.about}
+                    // defaultValue={eachUser.about}
                   />
                 </FormControl>
                 <FormMessage />

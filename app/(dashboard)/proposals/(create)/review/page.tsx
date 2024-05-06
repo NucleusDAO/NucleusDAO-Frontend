@@ -1,6 +1,10 @@
 'use client';
 import { proposalLists } from '@/config/dao-config';
-import { cn, defaultProposal } from '@/libs/utils';
+import {
+  addDaysToCurrentDateAndFormat,
+  cn,
+  defaultProposal,
+} from '@/libs/utils';
 import {
   AlertDialog,
   AlertDialogContent,
@@ -19,11 +23,16 @@ import { defaultSuccessOption } from '@/components/animation-options';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { IConnectWalletContext } from '@/libs/types';
 import { toast } from 'sonner';
-import { uploadFile } from '@/config/apis';
+import { createProposalEP, uploadFile } from '@/config/apis';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { PROPOSALS } from '@/libs/key';
+import { EachDaoContext } from '@/context/each-dao-context';
 
 const ReviewProposal = () => {
+  const queryClient: any = useQueryClient();
   const { createProposal, newProposalInfo, getEachDAO, setNewProposalInfo } =
     useContext(AppContext);
+  const { currentDAO } = useContext(EachDaoContext);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const [isCreating, setIsCreating] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
@@ -33,6 +42,15 @@ const ReviewProposal = () => {
   const router = useRouter();
   const { value } = newProposalInfo;
 
+  const { mutate, isPending } = useMutation({
+    mutationFn: createProposalEP,
+    onSuccess: (response) => {
+      setOpen(true);
+      setIsCreating(false);
+      queryClient.invalidateQueries(PROPOSALS);
+    },
+    onError: (error) => toast.error(error.message),
+  });
   const handleCreateProposal = async () => {
     setIsCreating(true);
     let logoURL;
@@ -41,28 +59,47 @@ const ReviewProposal = () => {
       if (value.logo) {
         let formData = new FormData();
         formData.append('file', value.logo);
-        formData.append('upload_preset','bqr7mcvh');
+        formData.append('upload_preset', 'bqr7mcvh');
         const fileUpload = await uploadFile(formData);
         logoURL = fileUpload.data.url;
       }
       if (value.socialMedia[0].type && value.socialMedia[0].link) {
-        updatedSocials = value.socialMedia.map((social: { type: string; link: string; }) => {
-          return { name: social.type, url: social.link }
-        })
+        updatedSocials = value.socialMedia.map(
+          (social: { type: string; link: string }) => {
+            return { name: social.type, url: social.link };
+          }
+        );
       }
       const dao = await getEachDAO(daoID);
-      console.log(dao, '-> dao')
       if (dao) {
         const proposal = await createProposal(
-          dao.contractAddress, proposalLists[Number(value.type)].type, value.description, Number(value.value), value.targetWallet, { name: value?.newName || '', socials: updatedSocials ? [...dao.Socials, ...updatedSocials] : dao.socials, image: logoURL || '' }
-          );
-        console.log(proposal, '-> proposal');
-        setOpen(true);
-        setIsCreating(false);
+          dao.contractAddress,
+          proposalLists[Number(value.type)].type,
+          value.description,
+          Number(value.value),
+          value.targetWallet,
+          {
+            name: value?.newName || '',
+            socials: updatedSocials
+              ? [...dao.Socials, ...updatedSocials]
+              : dao.socials,
+            image: logoURL || '',
+          }
+        );
+        for (let key in proposal) {
+          if (typeof proposal[key] == 'bigint') {
+            proposal[key] = Number(proposal[key]);
+          }
+        }
+        await mutate(proposal, {
+          onSuccess: () => {
+            setOpen(true);
+            setIsCreating(false);
+          },
+        });
       } else {
         toast.error('Contract address not found');
       }
-      
     } catch (error: any) {
       setIsCreating(false);
       toast.error(error.message);
@@ -104,10 +141,18 @@ const ReviewProposal = () => {
             <p className="dark:text-[#888888] text-dark">{value.description}</p>
           </div>
         )}
+        {value.newName && (
+          <div className="grid grid-cols-2 text-sm w-4/6">
+            <p className="dark:text-white text-dark">New Name</p>
+            <p className="dark:text-[#888888] text-dark">{value.newName}</p>
+          </div>
+        )}
         {value.targetWallet && (
           <div className="grid grid-cols-2 text-sm w-4/6">
             <p className="dark:text-white text-dark">Target Wallet</p>
-            <p className="dark:text-[#888888] text-dark">{value.targetWallet}</p>
+            <p className="dark:text-[#888888] text-dark">
+              {value.targetWallet}
+            </p>
           </div>
         )}
         {value.duration && (
@@ -116,7 +161,7 @@ const ReviewProposal = () => {
             <p className="dark:text-[#888888] text-dark">{`${value.duration} day(s)`}</p>
           </div>
         )}
-        {value.logo && (          
+        {value.logo && (
           <div className="grid grid-cols-2 text-sm w-4/6">
             <p className="dark:text-white text-dark">Logo</p>
             <img

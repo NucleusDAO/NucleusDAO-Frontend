@@ -104,11 +104,13 @@ export interface IProposal {
   proposal: string;
   proposalType: string;
   description: string;
+  daoId: string;
   value: number;
   target: string;
   startTime: number;
   endTime: number;
   votesFor: number;
+  daoName: string;
   votesAgainst: number;
   isExecuted: boolean;
   votes: any[];
@@ -154,3 +156,21 @@ export type ICreateUser = {
   about: string;
   username: string;
 };
+
+export interface IEachProposalView {
+  tabs: string[];
+  currentProposal: {
+    wallet: string;
+    description: string;
+    votes: { account: string; support: boolean }[];
+    type: string;
+    status: string;
+    totalVote: string;
+    id: string;
+    duration: string;
+    startTime: number;
+    endTime: number;
+    votesFor: number;
+    votesAgainst: number;
+  };
+}

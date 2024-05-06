@@ -1,23 +1,53 @@
 'use client';
+import EachDaoLoading from '@/components/loading/each-dao-loading';
 import EachProposalView from '@/components/proposals/each-proposal-view';
 import { AppContext } from '@/context/app-context';
+import { EachDaoContext } from '@/context/each-dao-context';
 import { useMediaQuery } from '@/hooks/use-media-query';
+import { IEachProposalView } from '@/libs/types';
 import { cn } from '@/libs/utils';
 import { MoveLeft } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { toast } from 'sonner';
 import { useDebouncedCallback } from 'use-debounce';
 
 const EachProposal = () => {
-  const { getEachProposal } = useContext(AppContext);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [currentProposal, setCurrentProposal] = useState<
+    IEachProposalView | any
+  >({});
+  const { getEachDAO, getProposal } = useContext(AppContext);
+  const { setCurrentDAO } = useContext(EachDaoContext);
   const isDesktop = useMediaQuery('(min-width: 768px)');
   const router = useRouter();
   const tabs: string[] = ['Result', 'Information'];
   const searchParams = useSearchParams();
   const { replace } = useRouter();
   const pathname = usePathname();
+  const daoId = searchParams.get('dao') || '';
 
   const currentTab: string = searchParams.get('q') || tabs[0];
+  const urlParts = pathname.split('/'); // Split the URL by "/"
+  const proposalId = urlParts[2];
+
+  useEffect(() => {
+    const getSingleProposal = async () => {
+      try {
+        const dao: { contractAddress: string } = await getEachDAO(daoId);
+        setCurrentDAO(dao);
+        const proposal = await getProposal(dao.contractAddress, proposalId);
+        console.log(proposal, '-> proposal');
+        setCurrentProposal(proposal);
+        setIsLoading(false);
+      } catch (error: any) {
+        toast.error(error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    getSingleProposal();
+  }, [proposalId]);
 
   const handleSwitch = useDebouncedCallback((term) => {
     console.log(`Searching... ${term}`);
@@ -33,7 +63,7 @@ const EachProposal = () => {
   }, 200);
 
   return (
-    <div>
+    <div className="space-y-4">
       <div className="flex items-center justify-between border-b dark:border-[#292929] pb-4">
         <div className="flex items-center space-x-4">
           <div
@@ -65,7 +95,11 @@ const EachProposal = () => {
         </div>
       </div>
 
-      <EachProposalView tabs={tabs} />
+      {isLoading ? (
+        <EachDaoLoading />
+      ) : (
+        <EachProposalView tabs={tabs} currentProposal={currentProposal} />
+      )}
     </div>
   );
 };

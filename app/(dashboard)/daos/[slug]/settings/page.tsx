@@ -14,14 +14,14 @@ interface ITabView {
 
 const Settings = () => {
   const { currentDAO } = useContext(EachDaoContext);
-  const { name, image } = currentDAO;
+  const { name, image, socials } = currentDAO;
 
   const searchParams = useSearchParams();
   const activeSidebar =
     searchParams.get('q') || daoSettingsSidebarLinks[0].title;
   const tabs: ITabView = {
     Profile: <Profile name={name} image={image} />,
-    Links: <Links />,
+    Links: <Links socials={socials} />,
   };
   return (
     <div className="space-y-8">
@@ -31,10 +31,10 @@ const Settings = () => {
         </h2>
       </div>
       <div className="md:flex md:space-x-4 items-start space-y-4 md:space-y-0">
-        <div className="w-full md:w-[20%] dark:bg-[#191919] rounded-lg p-4 bg-white">
+        <div className="w-full md:w-[20%] dark:bg-gradient-to-r dark:from-[#1E1E1E] dark:via-[#1E1E1E] dark:to-[#252525] rounded-lg p-4 bg-white">
           <SidebarLinksComp activeSidebar={activeSidebar} />
         </div>
-        <div className="w-full md:w-[80%] dark:bg-[#191919] rounded-lg p-4 bg-white">
+        <div className="w-full md:w-[80%] dark:bg-gradient-to-r dark:from-[#1E1E1E] dark:via-[#1E1E1E] dark:to-[#252525] rounded-lg p-4 bg-white">
           {tabs[activeSidebar]}
         </div>
       </div>

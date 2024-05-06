@@ -16,11 +16,17 @@ import { Input } from '@/components/ui/input';
 import { editDaoInfoLinksSchema } from '@/libs/validations/dao-schema';
 import { Plus, Trash2 } from 'lucide-react';
 
-const Links = () => {
+interface ILinks {
+  socials: { name: string; url: string }[];
+}
+
+const Links = ({ socials }: ILinks) => {
   const form = useForm<z.infer<typeof editDaoInfoLinksSchema>>({
     resolver: zodResolver(editDaoInfoLinksSchema),
     defaultValues: {
-      socialMedia: [{ type: '', link: '' }],
+      socialMedia: socials.map((s) => ({ type: s.name, link: s.url })) || [
+        { type: '', link: '' },
+      ],
     },
   });
   const { fields, append, remove } = useFieldArray({
