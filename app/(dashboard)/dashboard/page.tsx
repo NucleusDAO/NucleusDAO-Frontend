@@ -68,9 +68,9 @@ const Dashboard = () => {
       const proposal = proposals?.filter(
         (proposal: { proposer: string }) => proposal?.proposer === user?.address
       );
-      const votes = proposals.filter(
+      const votes = proposals?.filter(
         (proposal: { votes: { account: string }[] }) =>
-          proposal.votes.some((vote) => vote.account === user.address)
+          proposal?.votes?.some((vote) => vote?.account === user?.address)
       );
       setTotalVotes(votes?.length);
       setTotalProposals(proposal?.length);
