@@ -40,7 +40,7 @@ export const getNotifications = (address: string) =>
 
 export const markAllNotificationsAsRead = (address: string) =>
   client
-    .put(`notifications/mark-read/${address}`)
+    .post(`notifications/mark-read/${address}`)
     .then((response) => response.data);
 
 export const markSingleNotificationsAsRead = (
@@ -48,7 +48,7 @@ export const markSingleNotificationsAsRead = (
   notificationId: string
 ) =>
   client
-    .put(`notifications/mark-read/${address}/${notificationId}`)
+    .post(`notifications/mark-read/${address}/${notificationId}`)
     .then((response) => response.data);
 
 // Proposals
@@ -58,7 +58,7 @@ export const getProposals = () =>
 export const createProposalEP = (payload: any) =>
   client.post('proposals', payload).then((response) => response.data);
 
-export const updateProposalEP = (daoId: string, id: string, payload: any) =>
+export const updateProposalEP = (daoId: string, id: number, payload: any) =>
   client
     .patch(`proposals/${daoId}/${id}`, payload)
     .then((response) => response.data);
@@ -66,4 +66,12 @@ export const updateProposalEP = (daoId: string, id: string, payload: any) =>
 export const eachProposal = (daoId: string, proposalId: string) =>
   client
     .get(`proposals/${daoId}/${proposalId}`)
+    .then((response) => response.data);
+
+// DAO Dashboard
+export const getHistory = (path: string, daoId: string, params?: any) =>
+  client
+    .get(`daos/${daoId}/${path}`, {
+      params,
+    })
     .then((response) => response.data);

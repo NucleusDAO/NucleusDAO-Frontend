@@ -56,11 +56,10 @@ const Layout = ({ children }: ILayout) => {
             {isConnected && (
               <React.Fragment>
                 {isMember && (
-                  <Link
-                    href={`${CREATE_PROPOSAL_URL}?ct=${daoId}`}
-                    onClick={() => removeExistingStorageItem('new_proposal')}
-                  >
-                    <Button>
+                  <Link href={`${CREATE_PROPOSAL_URL}?ct=${daoId}`}>
+                    <Button
+                      onClick={() => removeExistingStorageItem('new_proposal')}
+                    >
                       <Plus className="mr-2 h-4 w-4" /> Create Proposal
                     </Button>
                   </Link>

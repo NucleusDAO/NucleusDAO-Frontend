@@ -21,7 +21,11 @@ interface IEachTabView {
   [key: string]: ReactNode;
 }
 
-const EachProposalView = ({ tabs, currentProposal }: IEachProposalView) => {
+const EachProposalView = ({
+  tabs,
+  currentProposal,
+  setCurrentProposal,
+}: IEachProposalView) => {
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { address, isConnected } = user;
   const { currentDAO, eachDAOProposal, isMember } = useContext(EachDaoContext);
@@ -31,11 +35,11 @@ const EachProposalView = ({ tabs, currentProposal }: IEachProposalView) => {
 
   const currentTab: string = searchParams.get('q') || tabs[0];
   const userVote = address
-    ? currentProposal.votes.find(
-        (vote: { account: string }) => vote.account === address
+    ? currentProposal?.votes?.find(
+        (vote: { account: string }) => vote?.account === address
       )
     : null;
-  const [description, _] = useState<string>(currentProposal.description);
+  const [description, _] = useState<string>(currentProposal?.description);
 
   console.log(eachDAOProposal, '-> eachDAOProposal');
   console.log(currentProposal, '-> current proposal');
@@ -54,7 +58,8 @@ const EachProposalView = ({ tabs, currentProposal }: IEachProposalView) => {
         {
           proposalLists.find(
             (proposal: { type: string }) =>
-              proposal.type === currentProposal.type
+              // proposal.type === currentProposal.type ||
+              proposal.type === currentProposal.proposalType
           )?.title
         }
       </h1>
@@ -67,7 +72,7 @@ const EachProposalView = ({ tabs, currentProposal }: IEachProposalView) => {
           height={isDesktop ? 20 : 16}
         />
         <p className="font-light text-xs md:text-sm dark:text-white text-dark">
-          {currentProposal.wallet}
+          {currentProposal?.wallet || currentProposal?.proposer}
         </p>
       </div>
       <div className="space-y-4">
@@ -113,7 +118,10 @@ const EachProposalView = ({ tabs, currentProposal }: IEachProposalView) => {
                   {EachStatus[getStatus(currentProposal)]}
                 </div>
               </div>
-              <VotingProcess currentProposal={currentProposal} />
+              <VotingProcess
+                currentProposal={currentProposal}
+                setCurrentProposal={setCurrentProposal}
+              />
             </div>
           )}
 
@@ -127,12 +135,12 @@ const EachProposalView = ({ tabs, currentProposal }: IEachProposalView) => {
                   <VoteIcon />
                 </span>
                 <span className="dark:text-white text-dark">
-                  {currentProposal.totalVote}
+                  {currentProposal?.totalVote}
                 </span>
                 <span className="text-defaultText">vote(s)</span>
               </p>
             </div>
-            <AllVoters voters={currentProposal.votes} />
+            <AllVoters voters={currentProposal?.votes} />
           </div>
         </div>
       </div>

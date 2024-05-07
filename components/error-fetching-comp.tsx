@@ -3,11 +3,17 @@ import Image from 'next/image';
 import EmptyDAO from '@/assets/icons/empty-icon.png';
 import { Button } from './ui/button';
 import { useRouter } from 'next/navigation';
+import { cn } from '@/libs/utils';
 
-const ErrorFetchingComponent = () => {
+const ErrorFetchingComponent = ({ className }: { className?: string }) => {
   const router = useRouter();
   return (
-    <div className="min-h-[80vh] w-full text-center flex items-center justify-center">
+    <div
+      className={cn(
+        'min-h-[80vh] w-full text-center flex items-center justify-center',
+        className
+      )}
+    >
       <div className="w-[30%] space-y-4 mx-auto">
         <Image src={EmptyDAO} alt="DAO empty" width={100} className="mx-auto" />
         <p className="mt-2">

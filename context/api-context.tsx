@@ -6,7 +6,13 @@ import {
   getUser,
   updateUser,
 } from '@/config/apis';
-import { AE_PRICE_KEY, EACH_USER, NOTIFICATIONS, PROPOSALS } from '@/libs/key';
+import {
+  AE_PRICE_KEY,
+  EACH_USER,
+  NOTIFICATIONS,
+  PROPOSALS,
+  PROPOSAL_HISTORY,
+} from '@/libs/key';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { ReactNode, createContext, useContext } from 'react';
 import { ConnectWalletContext } from './connect-wallet-context';
@@ -23,6 +29,7 @@ export const ApiContextProvider = ({ children }: IApiProvider) => {
   const {
     user: { address },
   } = useContext<IConnectWalletContext>(ConnectWalletContext);
+
   const {
     data: getAEPrice,
     isError: isAePriceError,
