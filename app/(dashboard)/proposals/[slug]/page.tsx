@@ -97,7 +97,11 @@ const EachProposal = () => {
       {isLoading ? (
         <EachDaoLoading />
       ) : (
-        <EachProposalView tabs={tabs} currentProposal={currentProposal} />
+        <EachProposalView
+          tabs={tabs}
+          currentProposal={currentProposal}
+          setCurrentProposal={setCurrentProposal}
+        />
       )}
     </div>
   );

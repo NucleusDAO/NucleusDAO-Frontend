@@ -1,5 +1,5 @@
 'use client';
-import { proposalLists } from '@/config/dao-config';
+import { proposalLists, rate } from '@/config/dao-config';
 import {
   addDaysToCurrentDateAndFormat,
   cn,
@@ -27,12 +27,14 @@ import { createProposalEP, uploadFile } from '@/config/apis';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { PROPOSALS } from '@/libs/key';
 import { EachDaoContext } from '@/context/each-dao-context';
+import { ApiContext } from '@/context/api-context';
 
 const ReviewProposal = () => {
   const queryClient: any = useQueryClient();
   const { createProposal, newProposalInfo, getEachDAO, setNewProposalInfo } =
     useContext(AppContext);
   const { currentDAO } = useContext(EachDaoContext);
+  const { getAEPrice } = useContext(ApiContext);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const [isCreating, setIsCreating] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
@@ -159,6 +161,16 @@ const ReviewProposal = () => {
           <div className="grid grid-cols-2 text-sm w-4/6">
             <p className="dark:text-white text-dark">Duration</p>
             <p className="dark:text-[#888888] text-dark">{`${value.duration} day(s)`}</p>
+          </div>
+        )}
+        {value.value && (
+          <div className="grid grid-cols-2 text-sm w-4/6">
+            <p className="dark:text-white text-dark">Value</p>
+            <p className="dark:text-[#888888] text-dark">{`${
+              value.value
+            } AE ~ ${
+              Number(value.value || 0) * (getAEPrice?.price || rate)
+            }USD`}</p>
           </div>
         )}
         {value.logo && (

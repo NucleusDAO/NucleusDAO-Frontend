@@ -11,39 +11,32 @@ import {
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
-import { IConnectWalletContext } from '@/libs/types';
+import { IConnectWalletContext, IProposal } from '@/libs/types';
 import { toast } from 'sonner';
 import Lottie from 'react-lottie';
 import { defaultSuccessOption } from '../animation-options';
 import { AppContext } from '@/context/app-context';
-import { updateGetProposal } from '@/libs/utils';
 import { EachDaoContext } from '@/context/each-dao-context';
 import { updateProposalEP } from '@/config/apis';
-import { usePathname } from 'next/navigation';
+import { PROPOSALS } from '@/libs/key';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface IVotingProcess {
   currentProposal: {
     id: string;
     votes: { account: string; support: boolean }[];
   };
+  setCurrentProposal: (arg: IProposal[]) => void;
 }
 
-const VotingProcess = ({ currentProposal }: IVotingProcess) => {
-  const {
-    voteFor,
-    voteAgainst,
-    getEachDAO,
-    getProposals,
-    getUsersActivities,
-    getProposal,
-  } = useContext(AppContext);
-  const {
-    currentDAO,
-    setCurrentDAO,
-    setEachDAOProposal,
-    setMembersActivities,
-    eachDAOProposal,
-  } = useContext(EachDaoContext);
+const VotingProcess = ({
+  currentProposal,
+  setCurrentProposal,
+}: IVotingProcess) => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { voteFor, voteAgainst, getProposal } = useContext(AppContext);
+  const { currentDAO } = useContext(EachDaoContext);
+  const queryClient: any = useQueryClient();
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { isConnected, address } = user;
   const userVote = address
@@ -65,11 +58,6 @@ const VotingProcess = ({ currentProposal }: IVotingProcess) => {
 
   const votingOptions = ['yes', 'no'];
 
-  const pathname = usePathname();
-  const urlParts = pathname.split('/');
-  const proposalId = urlParts[urlParts.length - 1];
-  console.log(proposalId, '=>proposalId');
-
   const handleOptionChange = (option: string) => {
     if (isConnected) {
       setSelectedOption(option);
@@ -77,8 +65,6 @@ const VotingProcess = ({ currentProposal }: IVotingProcess) => {
       toast.error('Connect your wallet first!');
     }
   };
-
-  console.log(eachDAOProposal, '-> current dao');
 
   const handleVote = async () => {
     setIsVoting(true);
@@ -88,55 +74,52 @@ const VotingProcess = ({ currentProposal }: IVotingProcess) => {
           Number(currentProposal.id),
           currentDAO.contractAddress
         );
-        await updateGetProposal({
-          getEachDAO,
-          daoId: currentDAO.id,
-          setCurrentDAO,
-          getProposals,
-          setEachDAOProposal,
-          getUsersActivities,
-          setMembersActivities,
-        });
-        const proposals = await getProposal(
-          currentDAO.contractAddress,
-          proposalId
-        );
-        for (let key in proposals) {
-          if (typeof proposals[key] == 'bigint') {
-            proposals[key] = Number(proposals[key]);
+        for (let key in vote) {
+          if (typeof vote[key] == 'bigint') {
+            vote[key] = Number(vote[key]);
           }
         }
-        await updateProposalEP(currentDAO.id, proposalId, proposals);
+        await updateProposalEP(currentDAO.id, Number(currentProposal.id), vote);
+        queryClient.invalidateQueries(PROPOSALS);
       } else {
         const vote = await voteAgainst(
           Number(currentProposal.id),
           currentDAO.contractAddress
         );
-        await updateGetProposal({
-          getEachDAO,
-          daoId: currentDAO.id,
-          setCurrentDAO,
-          getProposals,
-          setEachDAOProposal,
-          getUsersActivities,
-          setMembersActivities,
-        });
         const proposals = await getProposal(
           currentDAO.contractAddress,
-          proposalId
+          Number(currentProposal.id)
         );
-        for (let key in proposals) {
-          if (typeof proposals[key] == 'bigint') {
-            proposals[key] = Number(proposals[key]);
+        for (let key in vote) {
+          if (typeof vote[key] == 'bigint') {
+            vote[key] = Number(vote[key]);
           }
         }
-        await updateProposalEP(currentDAO.id, proposalId, proposals);
+        await updateProposalEP(currentDAO.id, Number(currentProposal.id), vote);
+        queryClient.invalidateQueries(PROPOSALS);
       }
       setShowModal(true);
     } catch (error: any) {
       toast.error(error.message);
     } finally {
       setIsVoting(false);
+    }
+  };
+
+  const handleDone = async () => {
+    setIsLoading(true);
+    try {
+      const proposal = await getProposal(
+        currentDAO.contractAddress,
+        Number(currentProposal.id)
+      );
+      setCurrentProposal(proposal);
+      setShowModal(false);
+      setIsLoading(false);
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -203,7 +186,11 @@ const VotingProcess = ({ currentProposal }: IVotingProcess) => {
                   proposal reaches its quorum
                 </DialogDescription>
               </DialogHeader>
-              <Button className="w-full" onClick={() => setShowModal(false)}>
+              <Button
+                className="w-full"
+                onClick={handleDone}
+                loading={isLoading}
+              >
                 Done
               </Button>
             </DialogContent>

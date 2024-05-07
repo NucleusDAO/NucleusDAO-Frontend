@@ -41,10 +41,7 @@ const ProposalCard = ({
   const { address } = user;
   const pathname = usePathname();
   const isDesktop = useMediaQuery('(min-width: 768px)');
-  console.log(daoId, '-> organisation');
-  console.log(pathname, '-> pathname');
-  console.log(pathname === PROPOSALS_URL, '-d');
-  // encodeURI(pathname, id || daoId)
+
   return (
     <Link
       href={`${pathname}/${id}${
@@ -52,14 +49,14 @@ const ProposalCard = ({
       }`}
     >
       <div
-        className="dark:bg-gradient-to-r max-h-[40vh] dark:from-[#1E1E1E] dark:via-[#1E1E1E] dark:to-[#252525] rounded-lg cursor-pointer bg-white"
+        className="dark:bg-gradient-to-r dark:from-[#1E1E1E] dark:via-[#1E1E1E] dark:to-[#252525] rounded-lg cursor-pointer bg-white"
         role="tablist"
       >
         <div className="flex rounded-l space-x-2">
           <div className="dark:bg-[#1E1E1E] bg-[#EEEEEE] p-3 rounded-tl-lg rounded-bl-lg">
             <Image src={LegacyLogo} alt="legacy" width={isDesktop ? 32 : 24} />
           </div>
-          <div className="h- w-[1px] bg-[#292929]" />
+          <div className="h-[30vh] w-[1px] bg-[#292929]" />
           <div className="p-2 md:p-4 space-y-6 w-full">
             <div className="space-y-3">
               <div className="flex items-center justify-between">
@@ -74,7 +71,7 @@ const ProposalCard = ({
                     <p className="text-defaultText text-xs md:text-base">
                       Proposal Type
                     </p>
-                    <h3 className="dark:text-white capitalize text-dark font-medium text-sm md:text-lg w-[90%]">
+                    <h3 className="dark:text-white capitalize text-dark font-medium text-sm md:text-lg">
                       {
                         proposalLists.find(
                           (proposal: { type: string }) => proposal.type === type
@@ -85,11 +82,11 @@ const ProposalCard = ({
                 </div>
                 <div>{EachStatus[status]}</div>
               </div>
-              <p className="text-defaultText text-xs md:text-sm">
-                {description}
+              <p className="text-defaultText text-xs md:text-sm h-[9vh] overflow-auto">
+                {description.slice(0, 300)}
               </p>
             </div>
-            <div className="space-y-4">
+            <div className="space-y-3">
               <Separator />
               <div className="flex items-center justify-between text-[10px] md:text-xs dark:text-[#CCCCCCBF] text-defaultText">
                 <div className="flex space-x-2 items-center">

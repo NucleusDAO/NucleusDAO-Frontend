@@ -50,7 +50,7 @@ const ViewNotificationPopover = () => {
   console.log(notifications, '-> notifications');
 
   const handleView = async (notification: {
-    extra: { daoId: string };
+    extra: { daoId: string; proposalId: string };
     id: string;
     read: boolean;
     title: string;
@@ -62,7 +62,7 @@ const ViewNotificationPopover = () => {
       notification.title === 'New DAO Created'
         ? `${DAO_URL}/${notification.extra.daoId}/dashboard`
         : notification.title === 'New Proposal Created'
-        ? `${PROPOSALS_URL}/${notification.extra.daoId}/dashboard`
+        ? `${PROPOSALS_URL}/${notification.extra.proposalId}?dao=${notification.extra.daoId}`
         : '#'
     );
   };
@@ -74,7 +74,11 @@ const ViewNotificationPopover = () => {
           className="dark:bg-[#1E1E1E] bg-white h-11 w-12 justify-center rounded-lg flex items-center relative dark:text-white text-[#444444]"
           role="button"
         >
-          <div className="w-1.5 h-1.5 top-4 bg-[#DD3857] rounded-full absolute right-4" />
+          {notifications?.some(
+            (item: { read: boolean }) => item.read === false
+          ) && (
+            <div className="w-1.5 h-1.5 top-4 bg-[#DD3857] rounded-full absolute right-4" />
+          )}
           <Bell2 />
         </div>
       </PopoverTrigger>

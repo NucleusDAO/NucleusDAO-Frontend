@@ -7,12 +7,14 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { formatDate, updateGetProposal } from '@/libs/utils';
+import { formatDate, getTimeDifference, updateGetProposal } from '@/libs/utils';
 import { EachDaoContext } from '@/context/each-dao-context';
 import React, { useContext, useState } from 'react';
 import { Button } from '../ui/button';
 import { AppContext } from '@/context/app-context';
 import { toast } from 'sonner';
+import { updateProposalEP } from '@/config/apis';
+import { usePathname } from 'next/navigation';
 
 interface IProposalResult {
   currentProposal: {
@@ -20,6 +22,7 @@ interface IProposalResult {
     startTime: number;
     endTime: number;
     votesFor: number;
+    votes: { account: string }[];
     votesAgainst: number;
     totalVote: string;
     id: string;
@@ -29,8 +32,15 @@ interface IProposalResult {
 
 const ProposalResult = ({ currentProposal }: IProposalResult) => {
   const [isExecuting, setIsExecuting] = useState<boolean>(false);
-  const { duration, startTime, endTime, votesFor, votesAgainst, totalVote } =
-    currentProposal;
+  const {
+    duration,
+    startTime,
+    endTime,
+    votesFor,
+    votesAgainst,
+    votes,
+    totalVote,
+  } = currentProposal;
   const { getEachDAO, getProposals, executeProposal, getUsersActivities } =
     useContext(AppContext);
   const {
@@ -40,16 +50,20 @@ const ProposalResult = ({ currentProposal }: IProposalResult) => {
     setMembersActivities,
   } = useContext(EachDaoContext);
   const percentageOfVoteFor =
-    Number(totalVote) > 0 ? (votesFor / Number(totalVote)) * 100 : 0;
+    votes.length > 0 ? (Number(votesFor) / votes.length) * 100 : 0;
   const percentageOfVoteAgainst =
-    Number(totalVote) > 0 ? (votesAgainst / Number(totalVote)) * 100 : 0;
+    votes.length > 0 ? (Number(votesAgainst) / votes.length) * 100 : 0;
 
-  console.log(percentageOfVoteAgainst, '->');
+  const pathname = usePathname();
+  const urlParts = pathname.split('/');
+  const proposalId = urlParts[urlParts.length - 1];
+
+  console.log(votes.length, '->');
 
   const handleExecuteProposal = async () => {
     setIsExecuting(true);
     try {
-      await executeProposal(
+      const proposal = await executeProposal(
         Number(currentProposal.id),
         currentDAO.contractAddress
       );
@@ -61,7 +75,18 @@ const ProposalResult = ({ currentProposal }: IProposalResult) => {
         setEachDAOProposal,
         getUsersActivities,
         setMembersActivities,
+        proposal,
       });
+      for (let key in proposal) {
+        if (typeof proposal[key] == 'bigint') {
+          proposal[key] = Number(proposal[key]);
+        }
+      }
+      await updateProposalEP(
+        currentDAO.id,
+        Number(currentProposal.id),
+        proposal
+      );
       toast.success('Proposal executed successfully');
     } catch (error: any) {
       toast.error(error.message);
@@ -114,7 +139,7 @@ const ProposalResult = ({ currentProposal }: IProposalResult) => {
           <React.Fragment>
             {percentageOfVoteFor >= currentDAO.quorum && (
               <Button
-                className="w-full"
+                className="w-full mt-1.5"
                 onClick={handleExecuteProposal}
                 loading={isExecuting}
                 loadingText="Executing..."
@@ -137,7 +162,7 @@ const ProposalResult = ({ currentProposal }: IProposalResult) => {
             </span>
             <span>Time left:</span>{' '}
             <span className="text-dark dark:text-white font-light">
-              {duration}
+              {getTimeDifference(Number(endTime))}
             </span>
           </p>
         </div>

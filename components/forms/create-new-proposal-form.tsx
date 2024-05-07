@@ -24,10 +24,13 @@ import { EachProposalType } from '@/config/proposal-config';
 import { AppContext } from '@/context/app-context';
 import { IConnectWalletContext } from '@/libs/types';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
-import { millisecondsToDays } from '@/libs/utils';
+import { getDaysFromMilliseconds, millisecondsToDays } from '@/libs/utils';
+import { EachDaoContext } from '@/context/each-dao-context';
 
 const CreateNewProposalForm = () => {
-  const { setNewProposalInfo, newProposalInfo, getEachDAO } = useContext(AppContext);
+  const { setNewProposalInfo, newProposalInfo, getEachDAO } =
+    useContext(AppContext);
+  const { currentDAO } = useContext(EachDaoContext);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { address } = user;
   const searchParams = useSearchParams();
@@ -36,12 +39,17 @@ const CreateNewProposalForm = () => {
   const router = useRouter();
   const form = useForm<z.infer<typeof proposalInfoSchema>>({
     resolver: zodResolver(proposalInfoSchema),
-    defaultValues: {...newProposalInfo.value, type},
+    defaultValues: {
+      ...newProposalInfo.value,
+      duration: getDaysFromMilliseconds(newProposalInfo.value.duration),
+      type,
+    },
   });
 
   useEffect(() => {
     const getDuration = async () => {
       const dao = await getEachDAO(daoID);
+      console.log(dao.votingTime, '-> dao.votingTime');
       const duration = millisecondsToDays(Number(dao.votingTime));
       form.setValue('duration', duration);
     };
@@ -52,7 +60,7 @@ const CreateNewProposalForm = () => {
     const subscription = form.watch((value, { name, type }) => {
       const updatedData = { ...newProposalInfo, value };
       localStorage.setItem('new_proposal', JSON.stringify(updatedData));
-      setNewProposalInfo(updatedData)
+      setNewProposalInfo(updatedData);
     });
     return () => subscription.unsubscribe();
   }, [form.watch]);
@@ -93,9 +101,15 @@ const CreateNewProposalForm = () => {
               alt="logo"
               width={20}
             />
-            <p className="text-sm dark:text-white text-dark">{address.slice(0, 15)}...</p>
+            <p className="text-sm dark:text-white text-dark">
+              {address.slice(0, 15)}...
+            </p>
           </div>
-          <Button type="submit" className="px-12 w-full md:w-fit" onClick={() => router.push(`${REVIEW_PROPOSAL_URL}?ct=${daoID}`)}>
+          <Button
+            type="submit"
+            className="px-12 w-full md:w-fit"
+            onClick={() => router.push(`${REVIEW_PROPOSAL_URL}?ct=${daoID}`)}
+          >
             Review
           </Button>
         </div>

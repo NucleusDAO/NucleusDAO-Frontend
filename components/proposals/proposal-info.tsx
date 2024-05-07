@@ -1,6 +1,6 @@
 import { LinkIcon } from '@/assets/svgs';
 import { EachDaoContext } from '@/context/each-dao-context';
-import { formatDate } from '@/libs/utils';
+import { formatDate, getTimeDifference } from '@/libs/utils';
 import { Clock5 } from 'lucide-react';
 import Link from 'next/link';
 import { useContext } from 'react';
@@ -56,11 +56,11 @@ const ProposalInfo = ({ currentProposal }: IProposalInfo) => {
           </h3>
           <p className="text-sm font-light flex space-x-2">
             <span>
-              <Clock5 size={18} />
+              <Clock5 size={16} />
             </span>
             <span>Time left:</span>{' '}
             <span className="text-dark dark:text-white font-light">
-              {duration}
+              {getTimeDifference(Number(endTime))}
             </span>
           </p>
         </div>

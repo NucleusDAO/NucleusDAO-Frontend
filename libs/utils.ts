@@ -177,6 +177,11 @@ export function millisecondsToDays(milliseconds: number) {
   return milliseconds / millisecondsInADay;
 }
 
+export function getDaysFromMilliseconds(days: number): number {
+  const millisecondsInADay = 1000 * 60 * 60 * 24;
+  return days * millisecondsInADay;
+}
+
 export function formatDate(timestamp: number) {
   const date = new Date(Number(timestamp));
   const options: any = { day: '2-digit', month: 'short', year: 'numeric' };
@@ -201,6 +206,8 @@ interface IUpdateProposal {
   setEachDAOProposal: any;
   getUsersActivities: (arg: string) => void;
   setMembersActivities: (arg: any) => void;
+  proposal?: any;
+  setCurrentProposal?: (arg: IProposal[]) => void;
 }
 
 export const updateGetProposal = async ({
@@ -211,10 +218,13 @@ export const updateGetProposal = async ({
   setEachDAOProposal,
   getUsersActivities,
   setMembersActivities,
+  setCurrentProposal,
 }: IUpdateProposal) => {
   const dao = await getEachDAO(daoId);
+  console.log(daoId, '-> pro');
   setCurrentDAO(dao);
   const proposals: IProposal[] = await getProposals(dao.contractAddress);
+  setCurrentProposal && setCurrentProposal(proposals);
   setEachDAOProposal(
     proposals.map((proposal: IProposal) => {
       return {
@@ -225,7 +235,7 @@ export const updateGetProposal = async ({
         duration: getDuration(proposal.startTime, proposal.endTime),
         totalVote: `${proposal.votesFor + proposal.votesAgainst}`,
         organisation: dao.name,
-        id: proposal.id.toString(),
+        id: Number(proposal.id).toString(),
         startTime: proposal.startTime,
         endTime: proposal.endTime,
         votesAgainst: proposal.votesAgainst,
@@ -286,3 +296,25 @@ export const removeExistingStorageItem = (key: string) => {
     localStorage.removeItem(key);
   }
 };
+
+function formatTime(milliseconds: number): string {
+  const date = new Date(milliseconds);
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const seconds = String(date.getSeconds()).padStart(2, '0');
+  return `${hours}:${minutes}:${seconds}`;
+}
+
+export function getTimeDifference(timestamp: number): string {
+  const currentTime = Date.now();
+  const difference = Math.abs(currentTime - timestamp);
+
+  const days = Math.floor(difference / (24 * 60 * 60 * 1000));
+  const hours = Math.floor(
+    (difference % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000)
+  );
+  const minutes = Math.floor((difference % (60 * 60 * 1000)) / (60 * 1000));
+  const seconds = Math.floor((difference % (60 * 1000)) / 1000);
+
+  return `${days}d:${hours}h:${minutes}m:${seconds}s`;
+}

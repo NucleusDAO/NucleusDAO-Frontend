@@ -159,8 +159,10 @@ export type ICreateUser = {
 
 export interface IEachProposalView {
   tabs: string[];
+  setCurrentProposal: (arg: IProposal[]) => void;
   currentProposal: {
     wallet: string;
+    proposalType: string;
     description: string;
     votes: { account: string; support: boolean }[];
     type: string;
@@ -170,6 +172,7 @@ export interface IEachProposalView {
     duration: string;
     startTime: number;
     endTime: number;
+    proposer: string;
     votesFor: number;
     votesAgainst: number;
   };
