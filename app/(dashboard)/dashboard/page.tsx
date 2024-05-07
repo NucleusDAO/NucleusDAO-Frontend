@@ -19,17 +19,15 @@ import { ApiContext } from '@/context/api-context';
 const Dashboard = () => {
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { proposals, isLoadingProposal } = useContext(ApiContext);
-  const { DAOsData, daoLoading, getEachDAO } = useContext(AppContext);
+  const { DAOsData, daoLoading } = useContext(AppContext);
   const connected: boolean = user.isConnected;
   const searchParams = useSearchParams();
   const currentSearch = searchParams.get('q');
   let userDAO: any[] = [];
-  const [dashboardLoading, setDashboardLoading] = useState<boolean>(false);
   const [totalVotes, setTotalVotes] = useState<number>(0);
   const [totalProposals, setTotalProposals] = useState<number>(0);
 
   const getDAOsData = (width: number) => {
-    console.log({ DAOsData });
     let individualDAOs;
 
     individualDAOs = DAOsData?.filter((dao: any) => {
@@ -66,56 +64,21 @@ const Dashboard = () => {
     });
   };
 
-  console.log(proposals, '->');
-
-  const userTotals = async () => {
-    const daoInfos = getUserTotalDao();
-    const voteAndProposalPromises = daoInfos.map(
-      async (dao: { organisation: string }) => {
-        const eachDaoName = dao.organisation.toLowerCase().replace(/\s+/g, '-');
-        const getEachInfo = await getEachDAO(eachDaoName);
-        const contract = await getBasicDAO(getEachInfo.contractAddress);
-        const eachActivity = await contract.getMemberActivities(user.address);
-        console.log(eachActivity, '->contract');
-        const votes = await eachActivity.decodedResult.voteCasted;
-        const proposals = await eachActivity.decodedResult.proposalsCreated;
-        return { proposals: Number(proposals), voteCasted: Number(votes) };
-      }
-    );
-    const responses = await Promise.all(voteAndProposalPromises);
-    const totalVotes = responses.reduce(
-      (accumulator, currentValue) => accumulator + currentValue.voteCasted,
-      0
-    );
-    const totalProposals = responses.reduce(
-      (accumulator, currentValue) => accumulator + currentValue.proposals,
-      0
-    );
-    console.log({ totalVotes, totalProposals }, '-> responses');
-    return { totalVotes, totalProposals };
-  };
-
   useEffect(() => {
     if (user.isConnected) {
       const proposal = proposals?.filter(
         (proposal: { proposer: string }) => proposal?.proposer === user?.address
       );
+      const votes = proposals.filter(
+        (proposal: { votes: { account: string }[] }) =>
+          proposal.votes.some((vote) => vote.account === user.address)
+      );
+      setTotalVotes(votes?.length);
       setTotalProposals(proposal?.length);
     }
-    // setDashboardLoading(true);
-    // const fetchData = async () => {
-    //   const userTotalData = await userTotals();
-    //   setTotalVotes(userTotalData.totalVotes);
-    //   setTotalProposals(userTotalData.totalProposals);
-    //   console.log(userTotalData, '-> total');
-    // };
-    // setDashboardLoading(false);
-    // fetchData();
   }, [isLoadingProposal, user.isConnected]);
 
-  console.log({ totalVotes, totalProposals });
-
-  if (daoLoading || dashboardLoading) return <DashboadLoading />;
+  if (daoLoading) return <DashboadLoading />;
 
   return (
     <div className="space-y-8 min-h-[80vh]">
