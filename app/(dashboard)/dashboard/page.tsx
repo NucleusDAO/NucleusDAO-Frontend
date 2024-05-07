@@ -13,7 +13,6 @@ import { AppContext } from '@/context/app-context';
 import DashboadLoading from '@/components/loading/dashboard-loading';
 import { toast } from 'sonner';
 import { useSearchParams } from 'next/navigation';
-import { getBasicDAO } from '@/libs/ae-utils';
 import { ApiContext } from '@/context/api-context';
 
 const Dashboard = () => {
