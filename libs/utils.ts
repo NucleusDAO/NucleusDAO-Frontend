@@ -50,12 +50,6 @@ export const handleChangeFormDecimalInput = (
   form: any
 ) => {
   form.clearErrors(fieldName);
-  // if (value.startsWith('0' || 0)) {
-  //     form.setValue('duration', value[1] === '0' ? 1 : value[1]);
-  // } else {
-  //     form.setValue(fieldName, Number(value))
-  // }
-
   if (/^0\.\d+$/.test(value)) {
     form.setValue(fieldName, parseFloat(value));
   } else if (/^\d+(\.\d+)?$/.test(value)) {
@@ -226,7 +220,7 @@ export const updateGetProposal = async ({
   const proposals: IProposal[] = await getProposals(dao.contractAddress);
   setCurrentProposal && setCurrentProposal(proposals);
   setEachDAOProposal(
-    proposals.map((proposal: IProposal) => {
+    proposals.reverse().map((proposal: IProposal) => {
       return {
         type: proposal.proposalType,
         status: getStatus(proposal),

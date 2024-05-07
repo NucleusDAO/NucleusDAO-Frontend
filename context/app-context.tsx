@@ -20,9 +20,6 @@ import {
 import { defaultDaoCreation, defaultProposal } from '@/libs/utils';
 import { VIEW_DAO_URL } from '@/config/path';
 import ErrorFetchingComponent from '@/components/error-fetching-comp';
-import { useQuery } from '@tanstack/react-query';
-import { AE_PRICE_KEY } from '@/libs/key';
-import { aePrice } from '@/config/apis';
 
 export const AppContext = createContext<any>({});
 
@@ -77,7 +74,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
       const allDAOs: any = await getAllDaos();
       if (allDAOs) {
         setDAOsData(
-          allDAOs.map((dao: any) => {
+          allDAOs.reverse().map((dao: any) => {
             return {
               organisation: dao.name,
               image: dao.image,

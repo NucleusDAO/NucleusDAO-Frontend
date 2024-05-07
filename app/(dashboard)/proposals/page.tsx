@@ -43,7 +43,7 @@ const Proposals = () => {
   useEffect(() => {
     if (proposals && !isLoadingProposal) {
       setEachDAOProposal(
-        proposals.map((proposal: IProposal) => {
+        proposals.reverse().map((proposal: IProposal) => {
           return {
             type: proposal.proposalType,
             status: getStatus(proposal),
