@@ -11,6 +11,7 @@ import FeaturesComp from '@/components/home-component/features-comp';
 import HowItWorksBackground from '@/assets/images/section-3-bg.png';
 import SectionFourBackground from '@/assets/images/section-4-bg.png';
 import FooterSectionBackground from '@/assets/images/footer-section-bg.png';
+import FooterSectionBackgroundSmall from '@/assets/images/footer-section-bg-small.png';
 import { Heading } from '@/components/headings/heading';
 import HowItWorks from '@/components/home-component/how-it-works';
 import WhyAeternity from '@/components/home-component/why-aeternity';
@@ -177,7 +178,11 @@ export default function Home() {
         )}
         style={{
           background: 'round',
-          backgroundImage: `url(${FooterSectionBackground.src})`,
+          backgroundImage: `url(${
+            !isDesktop
+              ? FooterSectionBackgroundSmall.src
+              : FooterSectionBackground.src
+          })`,
         }}
       >
         <section className="space-y-8 flex-grow" id="contactUs">
