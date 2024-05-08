@@ -67,7 +67,6 @@ const ReviewDao = () => {
           ? members
           : members.length + 1,
       });
-      console.log(create, '-> create');
       // Deleted dao information from localStorage
       localStorage.removeItem('new_dao');
       updateNewDaoInfo(defaultDaoCreation);
