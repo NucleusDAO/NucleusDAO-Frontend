@@ -1,4 +1,5 @@
 'use client';
+
 import NavComp from '@/components/home-component/nav-comp';
 import Background from '@/assets/images/main-bg.png';
 import { Separator } from '@/components/ui/separator';
