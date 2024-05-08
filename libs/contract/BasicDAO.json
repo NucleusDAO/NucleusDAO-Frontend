@@ -165,7 +165,7 @@
           "name": "userActivities",
           "typedef": {
             "record": [
-              { "name": "address", "type": "address" },
+              { "name": "account", "type": "address" },
               { "name": "voteCasted", "type": "int" },
               { "name": "proposalsCreated", "type": "int" },
               { "name": "proposalsExecuted", "type": "int" }
@@ -189,6 +189,7 @@
               { "name": "members", "type": { "list": ["address"] } },
               { "name": "totalProposals", "type": "int" },
               { "name": "totalVotes", "type": "int" },
+              { "name": "balance", "type": "int" },
               { "name": "activeProposals", "type": "int" }
             ]
           },

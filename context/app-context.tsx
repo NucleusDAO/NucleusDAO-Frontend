@@ -168,6 +168,21 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     return daos;
   };
 
+  const getAUserActivitiesAcrossDAOs = async (userAddress: string) => {
+    const contract = await getNucleusDAO();
+    const res = await contract.getUserActivitiesAcrossDAOs(userAddress);
+    const activities = res.decodedResult;
+    for (let i = 0; i < activities.length; i++) {
+      let activity = activities[i];
+      for (let key in activity) {
+        if (typeof activity[key] == 'bigint') {
+          activity[key] = Number(activity[key]);
+        }
+      }
+    }
+    return activities;
+  };
+
   const getUsersActivities = async (daoContractAddress: string) => {
     const contract = await getBasicDAO(daoContractAddress);
     const res = await contract.getAllMembersActivities();
@@ -181,6 +196,21 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
       }
     }
     return activities;
+  };
+
+  const getAllProposals = async () => {
+    const contract = await getNucleusDAO();
+    const res = await contract.getAllProposals();
+    const proposals = res.decodedResult;
+    for (let i = 0; i < proposals.length; i++) {
+      let proposal = proposals[i];
+      for (let key in proposal) {
+        if (typeof proposal[key] == 'bigint') {
+          proposal[key] = Number(proposal[key]);
+        }
+      }
+    }
+    return proposals;
   };
 
   const getProposals = async (daoContractAddress: string) => {
