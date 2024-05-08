@@ -18,13 +18,16 @@ import { ApiContext } from '@/context/api-context';
 const Dashboard = () => {
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { proposals, isLoadingProposal } = useContext(ApiContext);
-  const { DAOsData, daoLoading } = useContext(AppContext);
+  const { DAOsData, daoLoading, allProposals, isProposalLoading } =
+    useContext(AppContext);
   const connected: boolean = user.isConnected;
   const searchParams = useSearchParams();
   const currentSearch = searchParams.get('q');
   let userDAO: any[] = [];
   const [totalVotes, setTotalVotes] = useState<number>(0);
   const [totalProposals, setTotalProposals] = useState<number>(0);
+
+  console.log(allProposals, '->');
 
   const getDAOsData = (width: number) => {
     let individualDAOs;
@@ -64,20 +67,20 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    if (user.isConnected) {
-      const proposal = proposals?.filter(
+    if (allProposals) {
+      const proposals = allProposals?.filter(
         (proposal: { proposer: string }) => proposal?.proposer === user?.address
       );
-      const votes = proposals?.filter(
+      const votes = allProposals?.filter(
         (proposal: { votes: { account: string }[] }) =>
           proposal?.votes?.some((vote) => vote?.account === user?.address)
       );
       setTotalVotes(votes?.length);
-      setTotalProposals(proposal?.length);
+      setTotalProposals(proposals?.length);
     }
-  }, [isLoadingProposal, proposals, user.isConnected]);
+  }, [allProposals]);
 
-  if (daoLoading) return <DashboadLoading />;
+  if (daoLoading || isProposalLoading) return <DashboadLoading />;
 
   return (
     <div className="space-y-8 min-h-[80vh]">

@@ -7,7 +7,7 @@ import { Clock4 } from 'lucide-react';
 import { EachStatus } from './data';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { encodeURI, getDuration } from '@/libs/utils';
+import { getTimeDifference } from '@/libs/utils';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { useContext } from 'react';
@@ -23,6 +23,7 @@ interface IProposalCard {
   type: string;
   id: string;
   daoId: string;
+  endTime: string;
   organisation: string;
 }
 
@@ -35,13 +36,14 @@ const ProposalCard = ({
   type,
   id,
   daoId,
+  endTime,
   organisation,
 }: IProposalCard) => {
   const { user } = useContext<any>(ConnectWalletContext);
   const { address } = user;
   const pathname = usePathname();
   const isDesktop = useMediaQuery('(min-width: 768px)');
-
+  console.log(endTime, '-> end tiem');
   return (
     <Link
       href={`${pathname}/${id}${
@@ -105,7 +107,8 @@ const ProposalCard = ({
                 <div className="flex space-x-1 md:space-x-4">
                   <div className="flex items-center space-x-2 text-defaultText">
                     <Clock4 size={isDesktop ? 18 : 9} color="#444444" />
-                    <p>{duration}</p>
+
+                    <p>{getTimeDifference(Number(endTime))}</p>
                   </div>
                   <div className="flex text-xs md:text-sm items-center space-x-2 text-defaultText">
                     <Image

@@ -28,9 +28,13 @@ interface IProposalResult {
     id: string;
     status: string;
   };
+  setCurrentProposal: (arg: any) => void;
 }
 
-const ProposalResult = ({ currentProposal }: IProposalResult) => {
+const ProposalResult = ({
+  currentProposal,
+  setCurrentProposal,
+}: IProposalResult) => {
   const [isExecuting, setIsExecuting] = useState<boolean>(false);
   const {
     duration,
@@ -67,26 +71,27 @@ const ProposalResult = ({ currentProposal }: IProposalResult) => {
         Number(currentProposal.id),
         currentDAO.contractAddress
       );
-      await updateGetProposal({
-        getEachDAO,
-        daoId: currentDAO.id,
-        setCurrentDAO,
-        getProposals,
-        setEachDAOProposal,
-        getUsersActivities,
-        setMembersActivities,
-        proposal,
-      });
-      for (let key in proposal) {
-        if (typeof proposal[key] == 'bigint') {
-          proposal[key] = Number(proposal[key]);
-        }
-      }
-      await updateProposalEP(
-        currentDAO.id,
-        Number(currentProposal.id),
-        proposal
-      );
+      setCurrentProposal(proposal);
+      // await updateGetProposal({
+      //   getEachDAO,
+      //   daoId: currentDAO.id,
+      //   setCurrentDAO,
+      //   getProposals,
+      //   setEachDAOProposal,
+      //   getUsersActivities,
+      //   setMembersActivities,
+      //   proposal,
+      // });
+      // for (let key in proposal) {
+      //   if (typeof proposal[key] == 'bigint') {
+      //     proposal[key] = Number(proposal[key]);
+      //   }
+      // }
+      // await updateProposalEP(
+      //   currentDAO.id,
+      //   Number(currentProposal.id),
+      //   proposal
+      // );
       toast.success('Proposal executed successfully');
     } catch (error: any) {
       toast.error(error.message);

@@ -59,14 +59,14 @@ const ReviewDao = () => {
         daysToMilliseconds(newDaoInfo.duration),
         newDaoInfo.quorum
       );
-      const create = await createDaoEP({
-        name,
-        id,
-        members: [...members, address],
-        currentMembers: members.includes(address)
-          ? members
-          : members.length + 1,
-      });
+      // const create = await createDaoEP({
+      //   name,
+      //   id,
+      //   members: [...members, address],
+      //   currentMembers: members.includes(address)
+      //     ? members
+      //     : members.length + 1,
+      // });
       // Deleted dao information from localStorage
       localStorage.removeItem('new_dao');
       updateNewDaoInfo(defaultDaoCreation);
@@ -132,22 +132,24 @@ const ReviewDao = () => {
         <div className="grid grid-cols-2 text-xs md:text-sm md:w-4/6">
           <p className="dark:text-white text-dark">Links</p>
           {!newDaoInfo.info.socialMedia[0].type && 'None'}
-          {newDaoInfo.info.socialMedia.map(
-            (socialMedia: { link: string; type: string }) => (
-              <Link
-                href={socialMedia.link}
-                key={socialMedia.type}
-                target="_blank"
-              >
-                <div className="flex items-center space-x-2 text-primary">
-                  <p className="">{socialMedia.type}</p>
-                  <div className="border border-primary rounded-sm p-0.5">
-                    <MoveUpRight size={10} />
+          <div className="flex space-x-4">
+            {newDaoInfo.info.socialMedia.map(
+              (socialMedia: { link: string; type: string }) => (
+                <Link
+                  href={socialMedia.link}
+                  key={socialMedia.type}
+                  target="_blank"
+                >
+                  <div className="flex items-center space-x-2 text-primary">
+                    <p className="">{socialMedia.type}</p>
+                    <div className="border border-primary rounded-sm p-0.5">
+                      <MoveUpRight size={10} />
+                    </div>
                   </div>
-                </div>
-              </Link>
-            )
-          )}
+                </Link>
+              )
+            )}
+          </div>
         </div>
       </div>
 

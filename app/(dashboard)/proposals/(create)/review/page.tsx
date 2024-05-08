@@ -26,14 +26,17 @@ import { toast } from 'sonner';
 import { createProposalEP, uploadFile } from '@/config/apis';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { PROPOSALS } from '@/libs/key';
-import { EachDaoContext } from '@/context/each-dao-context';
 import { ApiContext } from '@/context/api-context';
 
 const ReviewProposal = () => {
   const queryClient: any = useQueryClient();
-  const { createProposal, newProposalInfo, getEachDAO, setNewProposalInfo } =
-    useContext(AppContext);
-  const { currentDAO } = useContext(EachDaoContext);
+  const {
+    createProposal,
+    fetchAllProposals,
+    newProposalInfo,
+    getEachDAO,
+    setNewProposalInfo,
+  } = useContext(AppContext);
   const { getAEPrice } = useContext(ApiContext);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const [isCreating, setIsCreating] = useState<boolean>(false);
@@ -74,7 +77,7 @@ const ReviewProposal = () => {
       }
       const dao = await getEachDAO(daoID);
       if (dao) {
-        const proposal = await createProposal(
+        await createProposal(
           dao.contractAddress,
           proposalLists[Number(value.type)].type,
           value.description,
@@ -88,17 +91,18 @@ const ReviewProposal = () => {
             image: logoURL || '',
           }
         );
-        for (let key in proposal) {
-          if (typeof proposal[key] == 'bigint') {
-            proposal[key] = Number(proposal[key]);
-          }
-        }
-        await mutate(proposal, {
-          onSuccess: () => {
-            setOpen(true);
-            setIsCreating(false);
-          },
-        });
+        await fetchAllProposals();
+        // for (let key in proposal) {
+        //   if (typeof proposal[key] == 'bigint') {
+        //     proposal[key] = Number(proposal[key]);
+        //   }
+        // }
+        // await mutate(proposal, {
+        //   onSuccess: () => {
+        //     setOpen(true);
+        //     setIsCreating(false);
+        //   },
+        // });
       } else {
         toast.error('Contract address not found');
       }

@@ -165,7 +165,7 @@
           "name": "userActivities",
           "typedef": {
             "record": [
-              { "name": "address", "type": "address" },
+              { "name": "account", "type": "address" },
               { "name": "voteCasted", "type": "int" },
               { "name": "proposalsCreated", "type": "int" },
               { "name": "proposalsExecuted", "type": "int" }
@@ -189,6 +189,7 @@
               { "name": "members", "type": { "list": ["address"] } },
               { "name": "totalProposals", "type": "int" },
               { "name": "totalVotes", "type": "int" },
+              { "name": "balance", "type": "int" },
               { "name": "activeProposals", "type": "int" }
             ]
           },
@@ -263,10 +264,24 @@
           "stateful": false
         },
         {
+          "arguments": [],
+          "name": "getAllProposals",
+          "payable": false,
+          "returns": { "list": ["DAO.proposal"] },
+          "stateful": false
+        },
+        {
           "arguments": [{ "name": "_daoId", "type": "string" }],
           "name": "getDAO",
           "payable": false,
           "returns": "DAO.info",
+          "stateful": false
+        },
+        {
+          "arguments": [{ "name": "_user", "type": "address" }],
+          "name": "getUserActivitiesAcrossDAOs",
+          "payable": false,
+          "returns": "DAO.userActivities",
           "stateful": false
         }
       ],

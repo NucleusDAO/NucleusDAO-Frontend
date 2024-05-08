@@ -14,7 +14,6 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { editDaoInfoLinksSchema } from '@/libs/validations/dao-schema';
-import { Plus, Trash2 } from 'lucide-react';
 
 interface ILinks {
   socials: { name: string; url: string }[];
@@ -66,7 +65,9 @@ const Links = ({ socials }: ILinks) => {
                         <FormControl>
                           <Input
                             placeholder="Website, Twitter, Instagram"
+                            readOnly
                             {...field}
+                            onChange={() => null}
                           />
                         </FormControl>
                         <FormMessage />
@@ -79,32 +80,20 @@ const Links = ({ socials }: ILinks) => {
                     render={({ field }) => (
                       <FormItem>
                         <FormControl>
-                          <Input placeholder="https://" {...field} />
+                          <Input
+                            placeholder="https://"
+                            {...field}
+                            readOnly
+                            onChange={() => null}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
                 </div>
-                {/* {fields.length > 1 && (
-                  <div
-                    className="w-[3%]"
-                    role="button"
-                    onClick={() => remove(index)}
-                  >
-                    <Trash2 color="#F998A9" size={20} />
-                  </div>
-                )} */}
               </div>
             ))}
-            {/* <div
-              className="flex space-x-2 dark:bg-[#1E1E1E] bg-white border border-[#CCCCCC99] dark:border-[#292929] text-dark dark:text-white w-fit rounded-lg py-2 px-3 items-center justify-center text-xs"
-              role="button"
-              onClick={() => append({ type: '', link: '' })}
-            >
-              <Plus className="mr-2 h-4 w-4" />
-              Add Link
-            </div> */}
           </div>
         </form>
       </Form>

@@ -12,17 +12,23 @@ import { EachDaoContext } from '@/context/each-dao-context';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { toast } from 'sonner';
 import DepositToken from '@/components/deposit-token';
+import { ApiContext } from '@/context/api-context';
+import { rate } from '@/config/dao-config';
 
 const EachDaoFunds = () => {
   const pathname = usePathname();
   const domainName = typeof window !== 'undefined' && window.location.origin;
-  const { isMember } = useContext(EachDaoContext);
+  const { currentDAO } = useContext(EachDaoContext);
+  const { getAEPrice } = useContext(ApiContext);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { isConnected } = user;
 
   const lastIndex = pathname.lastIndexOf('/');
   const updatedUrl = pathname.substring(0, lastIndex);
   const userURL: string = `${domainName}${updatedUrl}`;
+
+  const usdValue: number =
+    Number(currentDAO.balance) * getAEPrice.price || rate;
 
   return (
     <div className="space-y-4">
@@ -43,16 +49,16 @@ const EachDaoFunds = () => {
                 <div className="space-y-1.5">
                   <div className="flex space-x-2 items-center">
                     <p className="dark:text-white text-dark font-bold text-2xl">
-                      $254.08
+                      {parseFloat(usdValue.toFixed(3))}
                     </p>
 
                     <div className="flex items-center space-x-2 text-[#1CA013] ">
                       <ChevronUp size={16} />
-                      <p className="font-medium text-xs">16.59%</p>
+                      {/* <p className="font-medium text-xs">16.59%</p> */}
                     </div>
                   </div>
                   <p className="text-[#888888] text-xs font-light">
-                    ~0.052693 AE
+                    {`~${Number(currentDAO.balance)}AE`}
                   </p>
                 </div>
               </div>
