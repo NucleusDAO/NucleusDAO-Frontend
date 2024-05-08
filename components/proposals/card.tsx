@@ -56,7 +56,6 @@ const ProposalCard = ({
           <div className="dark:bg-[#1E1E1E] bg-[#EEEEEE] p-3 rounded-tl-lg rounded-bl-lg">
             <Image src={LegacyLogo} alt="legacy" width={isDesktop ? 32 : 24} />
           </div>
-          <div className="h-[30vh] w-[1px] bg-[#292929]" />
           <div className="p-2 md:p-4 space-y-6 w-full">
             <div className="space-y-3">
               <div className="flex items-center justify-between">

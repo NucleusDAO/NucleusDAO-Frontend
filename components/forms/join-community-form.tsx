@@ -41,7 +41,6 @@ const JoinCommunityForm = () => {
       setOpen(true);
       form.resetField('email');
       setSuccessMessage(response.message);
-      toast.success(response.message);
     },
     onError: (error) => toast.error(error.message),
   });
@@ -74,6 +73,7 @@ const JoinCommunityForm = () => {
             className="absolute -top-6 right-2 px-6"
             style={{ height: '41px' }}
             loading={isPending}
+            disabled={isPending}
             loadingText="Subscribing..."
           >
             Susbcribe
