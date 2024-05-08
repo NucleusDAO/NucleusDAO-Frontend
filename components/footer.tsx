@@ -1,6 +1,11 @@
 import { HOME_URL } from '@/config/path';
 import Link from 'next/link';
-import { BrandLogo, FacebookIcon, InstagramIcon } from '@/assets/svgs';
+import {
+  BrandLogo,
+  FacebookIcon,
+  InstagramIcon,
+  TwitterIcon,
+} from '@/assets/svgs';
 import Image from 'next/image';
 import LogoIcon from '@/assets/icons/nucleusdao-purple.svg';
 import { navLinks } from '@/config/home-config';
@@ -16,7 +21,7 @@ const Footer = () => {
             <BrandLogo className="text-white  w-[100px] lg:w-[130px" />
           </div>
         </Link>
-        <div className="relative grid grid-cols-2 lg:flex trans px-2 rounded-full text-white text-sm font-light lg:space-x-14 items-center">
+        <div className="relative grid grid-cols-1 lg:flex trans px-2 rounded-full text-white text-sm font-light lg:space-x-14 items-center">
           {navLinks.map((item) => (
             <Link
               href={item.href}
@@ -30,6 +35,9 @@ const Footer = () => {
         <div className="space-x-4 flex items-center">
           <FacebookIcon />
           <InstagramIcon />
+          <Link href="https://twitter.com/NucleusDAO" target="_blank">
+            <TwitterIcon />
+          </Link>
         </div>
       </div>
       <Separator className="bg-[#444444] mb-4  mt-4 lg:mt-1" />

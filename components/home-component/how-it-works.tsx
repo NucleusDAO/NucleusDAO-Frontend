@@ -12,7 +12,7 @@ const HowItWorks = () => {
   return (
     <div className="w-full text-center lg:text-left p-8 space-y-8 lg:space-y-10 justify-between backdrop-filter backdrop-blur-md border border-[#65656533] rounded-[20px] bg-gradient-to-r from-[#1E1E1E33] to-[#19191933]">
       <div className="lg:flex w-full lg:space-x-16 space-y-8 lg:space-y-0">
-        <div className="lg:w-[12%] mx-auto lg:mx-0 w-[40%] space-y-6 text-sm">
+        <div className="lg:w-[12%] items-end w-full mx-auto lg:mx-0 lg:block space-x-6 lg:space-x-0 flex space-y-6 text-sm">
           {activities.map((each) => (
             <div
               role="button"
