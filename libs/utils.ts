@@ -243,20 +243,51 @@ export const updateGetProposal = async ({
   setMembersActivities(members);
 };
 
-export const activities: { title: string; color: string; url: string }[] = [
+export const activities: {
+  title: string;
+  color: string;
+  url: string;
+  options: { title: string; instruction: string[] };
+}[] = [
   {
     title: 'Proposal',
     color: 'bg-[#444444]',
+    options: {
+      title: 'Create a Proposal:',
+      instruction: [
+        "Go to your DAO's dashboard",
+        "Select 'Create Proposal'",
+        'Choose a predefined proposal template or create a custom one',
+        "Fill in the details and hit 'Submit.'",
+      ],
+    },
     url: '',
   },
   {
     title: 'DAO',
     color: 'bg-[#25B81B]',
+    options: {
+      title: 'Create a DAO:',
+      instruction: [
+        'Go to your personal dashboard',
+        "Click 'Create DAO'.",
+        'Customize the governance settings and provide required DAO details.',
+        "Hit 'Create' to finalize the DAO creation.",
+      ],
+    },
     url: '',
   },
   {
     title: 'Vote',
     color: 'bg-[#DCBB0C]',
+    options: {
+      title: 'Vote on a Proposal:',
+      instruction: [
+        'Ensure you are a member of the DAO with the proposal.',
+        'Access the proposal and cast your vote.',
+        "You're all set",
+      ],
+    },
     url: '',
   },
 ];
