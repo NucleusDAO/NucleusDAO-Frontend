@@ -77,9 +77,9 @@ const EachProposalView = ({
       </div>
       <div className="space-y-4">
         <p className="text-xs md:text-sm text-defaultText">
-          {description.slice(0, 180)}
+          {description?.slice(0, 180)}
         </p>
-        {description.length > 180 && (
+        {description?.length > 180 && (
           <>
             {!showFullProposal && (
               <Button onClick={() => setShowFullProposal(true)}>
@@ -94,8 +94,8 @@ const EachProposalView = ({
         <div className="space-y-8">
           {showFullProposal && (
             <div className="text-xs md:text-sm text-defaultText trans space-y-3">
-              {description.slice(180, description.length)}
-              {description.length > 180 && (
+              {description?.slice(180, description.length)}
+              {description?.length > 180 && (
                 <Button onClick={() => setShowFullProposal(false)}>
                   Show less
                 </Button>
