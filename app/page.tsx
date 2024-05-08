@@ -173,7 +173,7 @@ export default function Home() {
               title="Join the Early Community"
               className="lg:text-center"
             />
-            <p className="font-light text-sm lg:text-normal">
+            <p className="font-light px-12 lg:text-normal">
               Be among the first to shape the future of decentralized
               governance. Sign up now for exclusive access to updates, insights,
               and a chance to participate in our launch.

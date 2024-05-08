@@ -212,6 +212,13 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     return dao;
   };
 
+  const deposit = async (daoContractAddress: string, amount: number) => {
+    const contract = await getBasicDAO(daoContractAddress);
+    const res = await contract.deposit({ amount });
+    const response = res.decodedResult;
+    return response;
+  };
+
   const voteFor = async (proposalId: number, daoContractAddress: string) => {
     const contract = await getBasicDAO(daoContractAddress);
     const res = await contract.voteFor(proposalId);
@@ -255,6 +262,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     voteAgainst,
     getProposal,
     executeProposal,
+    deposit,
     // getEachProposal,
   };
 

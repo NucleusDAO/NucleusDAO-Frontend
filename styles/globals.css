@@ -130,3 +130,12 @@ input[type="number"]::-webkit-outer-spin-button {
   animation: mainFadeInOut 15s infinite;
 }
 
+/* @keyframes mainFadeInOut {
+  0%, 20% { opacity: 0; }
+  40%, 60% { opacity: 1; }
+  80%, 100% { opacity: 0.5; }
+}
+
+.main-animate-fade-in-out {
+  animation: mainFadeInOut 5s infinite;
+} */

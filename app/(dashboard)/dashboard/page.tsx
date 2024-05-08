@@ -75,7 +75,7 @@ const Dashboard = () => {
       setTotalVotes(votes?.length);
       setTotalProposals(proposal?.length);
     }
-  }, [isLoadingProposal, user.isConnected]);
+  }, [isLoadingProposal, proposals, user.isConnected]);
 
   if (daoLoading) return <DashboadLoading />;
 
