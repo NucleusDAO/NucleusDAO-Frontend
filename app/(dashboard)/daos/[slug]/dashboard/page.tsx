@@ -6,19 +6,22 @@ import { cn } from '@/libs/utils';
 import { useSearchParams } from 'next/navigation';
 import { ApiContext } from '@/context/api-context';
 import { EachDaoContext } from '@/context/each-dao-context';
+import { rate } from '@/config/dao-config';
 
 const EachDaoDashboard = () => {
   const [selectedTab, setSelectTab] = useState<number>(0);
   const { getAEPrice } = useContext(ApiContext);
   const { currentDAO } = useContext(EachDaoContext);
-  const searchParams = useSearchParams();
+
+  const aeAmount: number =
+    Number(currentDAO.balance) / getAEPrice.price || rate;
 
   return (
     <div className="md:flex space-x-0 md:space-x-8 space-y-4 md:space-y-0">
       <div className="md:w-[25%] space-y-4">
         {dashboardTab({
-          aeAmount: 0,
-          usdAmount: 0,
+          aeAmount: parseFloat(aeAmount.toFixed(2)),
+          usdAmount: Number(currentDAO.balance),
           totalProposals: Number(currentDAO.totalProposals),
           totalMembers: currentDAO.members.length,
         }).map((tab, index) => (

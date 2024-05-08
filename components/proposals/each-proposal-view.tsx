@@ -48,7 +48,12 @@ const EachProposalView = ({
   console.log(userVote, '->');
 
   const tabViews: IEachTabView = {
-    Result: <ProposalResult currentProposal={currentProposal} />,
+    Result: (
+      <ProposalResult
+        currentProposal={currentProposal}
+        setCurrentProposal={setCurrentProposal}
+      />
+    ),
     Information: <ProposalInfo currentProposal={currentProposal} />,
   };
 

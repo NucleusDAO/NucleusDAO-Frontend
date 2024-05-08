@@ -70,35 +70,38 @@ const VotingProcess = ({
     setIsVoting(true);
     try {
       if (selectedOption === 'yes') {
-        const vote = await voteFor(
+        const proposal = await voteFor(
           Number(currentProposal.id),
           currentDAO.contractAddress
         );
-        for (let key in vote) {
-          if (typeof vote[key] == 'bigint') {
-            vote[key] = Number(vote[key]);
-          }
-        }
-        await updateProposalEP(currentDAO.id, Number(currentProposal.id), vote);
-        queryClient.invalidateQueries(PROPOSALS);
+        setCurrentProposal(proposal);
+        setShowModal(true);
+        // for (let key in vote) {
+        //   if (typeof vote[key] == 'bigint') {
+        //     vote[key] = Number(vote[key]);
+        //   }
+        // }
+        // await updateProposalEP(currentDAO.id, Number(currentProposal.id), vote);
+        // queryClient.invalidateQueries(PROPOSALS);
       } else {
-        const vote = await voteAgainst(
+        const proposal = await voteAgainst(
           Number(currentProposal.id),
           currentDAO.contractAddress
         );
-        const proposals = await getProposal(
-          currentDAO.contractAddress,
-          Number(currentProposal.id)
-        );
-        for (let key in vote) {
-          if (typeof vote[key] == 'bigint') {
-            vote[key] = Number(vote[key]);
-          }
-        }
-        await updateProposalEP(currentDAO.id, Number(currentProposal.id), vote);
-        queryClient.invalidateQueries(PROPOSALS);
+        setCurrentProposal(proposal);
+        setShowModal(true);
+        // const proposals = await getProposal(
+        //   currentDAO.contractAddress,
+        //   Number(currentProposal.id)
+        // );
+        // for (let key in vote) {
+        //   if (typeof vote[key] == 'bigint') {
+        //     vote[key] = Number(vote[key]);
+        //   }
+        // }
+        // await updateProposalEP(currentDAO.id, Number(currentProposal.id), vote);
+        // queryClient.invalidateQueries(PROPOSALS);
       }
-      setShowModal(true);
     } catch (error: any) {
       toast.error(error.message);
     } finally {
@@ -109,11 +112,11 @@ const VotingProcess = ({
   const handleDone = async () => {
     setIsLoading(true);
     try {
-      const proposal = await getProposal(
-        currentDAO.contractAddress,
-        Number(currentProposal.id)
-      );
-      setCurrentProposal(proposal);
+      // const proposal = await getProposal(
+      //   currentDAO.contractAddress,
+      //   Number(currentProposal.id)
+      // );
+      // setCurrentProposal(proposal);
       setShowModal(false);
       setIsLoading(false);
     } catch (error: any) {
