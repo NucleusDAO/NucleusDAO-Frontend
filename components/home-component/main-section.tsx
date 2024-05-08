@@ -36,7 +36,7 @@ const MainSection = () => {
     // Set up an interval to change content every 5 seconds
     const intervalId = setInterval(() => {
       setContentIndex((prevIndex) => (prevIndex + 1) % mainContent.length);
-    }, 30000);
+    }, 15000);
 
     // Clear the interval on component unmount
     return () => clearInterval(intervalId);
@@ -44,7 +44,7 @@ const MainSection = () => {
 
   return (
     <div className="mx-auto w-full lg:w-3/5 text-center space-y-4 lg:mt-14 pt-32 lg:pt-0 relative">
-      <div className="w-full min-h-[38px] absolute bottom-0 top-0 space-y-4 opacity-2">
+      <div className="w-full min-h-[38px] absolute bottom-0 lg:bottom-0 lg:top-0 space-y-4 opacity-10">
         <Heading
           title={mainContent[contentIndex].title}
           className={cn(
@@ -56,7 +56,7 @@ const MainSection = () => {
           {mainContent[contentIndex].description}
         </h3>
         <React.Fragment>
-          <div className="flex items-center space-x-8 justify-center relative pt-2 main-animate-fade-in-out">
+          <div className="flex items-center space-x-8 justify-center relative pt-2">
             <Link href={'#join'}>
               <Button className="px-6">{mainContent[contentIndex].cta}</Button>
             </Link>
@@ -74,6 +74,7 @@ const MainSection = () => {
           </div>
         </React.Fragment>
       </div>
+
       <div className="w-full min-h-[38px] main-animate-fade-in-out space-y-4">
         <Heading
           title={mainContent[contentIndex].title}
