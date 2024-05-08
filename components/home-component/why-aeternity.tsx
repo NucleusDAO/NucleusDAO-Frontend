@@ -61,7 +61,7 @@ const WhyAeternity = () => {
             backgroundSize: '100%',
           }}
         >
-          <p className="text-white lg:text-[24px] pl-8 w-1/2">
+          <p className="text-white lg:text-[24px] pl-8 w-1/2" id="join">
             Decentralized Scalability & Transparent Governance
           </p>
         </div>

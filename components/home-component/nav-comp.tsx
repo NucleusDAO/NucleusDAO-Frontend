@@ -66,12 +66,15 @@ const NavComp = () => {
             ))}
           </div>
           <div className="px-6 lg:px-0 lg:absolute lg:right-0">
-            <Button
-              className="lg:w-fit w-full"
-              onClick={() => router.push(DAO_URL)}
-            >
-              Launch DAO
-            </Button>
+            <Link href="#join">
+              <Button
+                className="lg:w-fit w-full px-8"
+                // onClick={() => router.push(DAO_URL)}
+              >
+                Join Now
+                {/* Launch DAO */}
+              </Button>
+            </Link>
           </div>
         </div>
       )}

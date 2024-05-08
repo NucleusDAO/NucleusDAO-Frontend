@@ -75,3 +75,7 @@ export const getHistory = (path: string, daoId: string, params?: any) =>
       params,
     })
     .then((response) => response.data);
+
+// Waiting List
+export const joinWaitList = (payload: { email: string }) =>
+  client.post('waitlists', payload).then((response) => response.data);

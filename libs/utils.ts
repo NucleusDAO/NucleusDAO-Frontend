@@ -215,7 +215,6 @@ export const updateGetProposal = async ({
   setCurrentProposal,
 }: IUpdateProposal) => {
   const dao = await getEachDAO(daoId);
-  console.log(daoId, '-> pro');
   setCurrentDAO(dao);
   const proposals: IProposal[] = await getProposals(dao.contractAddress);
   setCurrentProposal && setCurrentProposal(proposals);
