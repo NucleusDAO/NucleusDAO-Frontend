@@ -15,7 +15,7 @@ const ErrorFetchingComponent = ({ className }: { className?: string }) => {
       )}
     >
       <div className="w-[30%] space-y-4 mx-auto">
-        <Image src={EmptyDAO} alt="DAO empty" width={100} className="mx-auto" />
+        <h1>This site can’t be reached</h1>
         <p className="mt-2">
           ...Seems like you're having troubles while connecting to our contract
           address. Kindly try again later...
