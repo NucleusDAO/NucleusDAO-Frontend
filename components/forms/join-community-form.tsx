@@ -52,7 +52,10 @@ const JoinCommunityForm = () => {
   return (
     <div>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="lg:space-y-8 space-y-4"
+        >
           <FormField
             control={form.control}
             name="email"
@@ -60,7 +63,7 @@ const JoinCommunityForm = () => {
               <FormItem>
                 <FormControl>
                   <Input
-                    className="bg-[#1E1E1E66] h-[56px] pl-4 text-[#D2D2D2] pr-28 placeholder:text-[#292929] border-[#65656580]"
+                    className="bg-[#1E1E1E66] h-[56px] pl-4 text-[#D2D2D2] lg:pr-28 placeholder:text-[#292929] border-[#65656580]"
                     placeholder="Enter your email address"
                     {...field}
                   />
@@ -70,7 +73,7 @@ const JoinCommunityForm = () => {
             )}
           />
           <Button
-            className="absolute -top-6 right-2 px-6"
+            className="lg:absolute lg:-top-6 lg:right-2 px-6 w-full lg:w-fit"
             style={{ height: '41px' }}
             loading={isPending}
             disabled={isPending}
@@ -94,7 +97,7 @@ const JoinCommunityForm = () => {
                 <p className="font-medium dark:text-white pb-2 -mt-2 text-xl text-dark">
                   {successMessage}
                 </p>
-                <p>
+                <p className="text-sm">
                   You're all set to stay updated on upcoming releases, exclusive
                   offers, and exciting news! Keep an eye on your inbox for
                   updates and exclusive perks just for our waitlist members.

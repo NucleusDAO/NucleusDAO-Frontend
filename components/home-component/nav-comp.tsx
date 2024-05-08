@@ -14,10 +14,10 @@ import Background from '@/assets/images/main-bg.png';
 import { useRouter } from 'next/navigation';
 import { cn } from '@/libs/utils';
 
-const NavComp = () => {
+const NavComp = ({ open, setOpen }: { open: boolean; setOpen: any }) => {
   const router = useRouter();
   const isDesktop = useMediaQuery('(min-width: 768px)');
-  const [open, setOpen] = useState<boolean>(false);
+  // const [open, setOpen] = useState<boolean>(false);
 
   const [hash, setHash] = useState(
     (typeof window !== 'undefined' && window.location.hash) || ''
@@ -25,7 +25,12 @@ const NavComp = () => {
 
   return (
     <nav className="lg:px-16 items-center block lg:flex lg:py-6 justify-between">
-      <div className="flex justify-between items-center lg:backdrop-blur-none backdrop-filter backdrop-blur-md w-full lg:w-fit fixed lg:relative z-10 px-6 lg:px-0">
+      <div
+        className={cn(
+          'flex justify-between items-center lg:backdrop-blur-none lg:backdrop-filter backdrop-blur-md w-full lg:w-fit fixed lg:relative z-10 px-6 lg:px-0',
+          open && 'backdrop-blur-none'
+        )}
+      >
         <Link href={HOME_URL} className="flex">
           <div className="flex space-x-2 items-center">
             <Image id="logo" src={LogoIcon} alt="NucleusDao Logo" width={40} />
@@ -43,23 +48,26 @@ const NavComp = () => {
 
       {(open || isDesktop) && (
         <div
-          className="h-screen lg:h-fit lg:flex justify-between lg:w-[70%] items-center space-y-5 lg:space-y-0 fixed lg:relative z-10 w-full mt-10 lg:mt-0"
+          className="h-screen lg:h-fit lg:flex justify-between lg:w-[70%] items-center space-y-5 lg:space-y-0 fixed lg:relative z-10 w-full mt-16 lg:mt-0"
           style={{
             background: 'round',
             backgroundImage: `url(${Background.src})`,
           }}
         >
-          <div className="lg:border space-y-5 lg:space-y-0 backdrop-filter backdrop-blur-md pt-12 pb-0 lg:pb-1 lg:pt-1 grid lg:flex lg:fixed trans lg:border-[#5E5F62B9] lg:bg-[#1E1E1E] hover:border-t-primary hover:border-t px-6 lg:px-2 py-2 lg:py-0 lg:rounded-full text-white text-sm font-light lg:space-x-14 items-center">
+          <div className="lg:border space-y-5 lg:space-y-0 lg:backdrop-filter lg:backdrop-blur-md pt-12 pb-0 lg:pb-1 lg:pt-1 grid lg:flex lg:fixed trans lg:border-[#5E5F62B9] lg:bg-[#1E1E1E] hover:border-t-primary hover:border-t px-6 lg:px-2 py-2 lg:py-0 lg:rounded-full text-white text-sm font-light lg:space-x-14 items-center">
             {navLinks.map((item) => (
               <Link
                 href={item.href}
                 key={item.title}
                 className={cn(
-                  'trans lg:border lg:border-[#1E1E1E] backdrop-filter backdrop-blur-md hover:border-[#656565B2] rounded-full px-2 lg:px-5 py-2 trans hover:text-primary hover:bg-gradient-to-r from-[#656565B2] via-[#65656533] to-transparent font-normal',
+                  'trans lg:border lg:border-[#1E1E1E] lg:backdrop-filter lg:backdrop-blur-md hover:border-[#656565B2] rounded-full px-2 lg:px-5 py-2 trans hover:text-primary hover:bg-gradient-to-r from-[#656565B2] via-[#65656533] to-transparent font-normal',
                   hash === item.href &&
                     'text-primary bg-gradient-to-r border-[#656565B2]'
                 )}
-                onClick={() => setHash(item.href)}
+                onClick={() => {
+                  setHash(item.href);
+                  setOpen(false);
+                }}
               >
                 {item.title}
               </Link>

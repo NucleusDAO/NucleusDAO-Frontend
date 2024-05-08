@@ -20,11 +20,14 @@ import MainSection from '@/components/home-component/main-section';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import Link from 'next/link';
 import { DAO_URL } from '@/config/path';
+import { useState } from 'react';
+import { cn } from '@/libs/utils';
 
 export default function Home() {
   const isDesktop = useMediaQuery('(min-width: 768px)');
+  const [open, setOpen] = useState<boolean>(false);
   return (
-    <div className="min-h-screen bg-[#0A0A0A]">
+    <div className={cn('min-h-screen bg-[#0A0A0A]', open && 'fixed')}>
       <main
         className="bg-contain bg-no-repeat w-full min-h-[90vh] lg:min-h-[105vh]"
         style={{
@@ -32,7 +35,7 @@ export default function Home() {
           backgroundImage: `url(${Background.src})`,
         }}
       >
-        <NavComp />
+        <NavComp open={open} setOpen={setOpen} />
         <MainSection />
         <div className="text-center mx-auto">
           <Lottie
@@ -89,7 +92,7 @@ export default function Home() {
         >
           <h2 className="">Features</h2>
         </div>
-        <div className="w-full lg:w-[45%] mx-auto text-center space-y-2 lg:space-y-4">
+        <div className="w-full px-6 lg:px-0 lg:w-[45%] mx-auto text-center space-y-2 lg:space-y-4">
           <Heading
             title="Innovation Unleashed: Explore the Features of NucleusDAO"
             className="lg:text-center"
@@ -155,7 +158,7 @@ export default function Home() {
       </section>
 
       <div
-        className="flex flex-col lg:min-h-[90vh] bg-contain bg-no-repeat w-full px-6 lg:px-24 pb-5"
+        className="flex flex-col lg:min-h-[90vh] bg-cover lg:bg-contain bg-no-repeat w-full px-6 lg:px-24 pb-5"
         style={{
           background: 'round',
           backgroundImage: `url(${FooterSectionBackground.src})`,
@@ -173,7 +176,7 @@ export default function Home() {
               title="Join the Early Community"
               className="lg:text-center"
             />
-            <p className="font-light px-12 lg:text-normal">
+            <p className="font-light px-6 lg:px-12 lg:text-normal text-sm">
               Be among the first to shape the future of decentralized
               governance. Sign up now for exclusive access to updates, insights,
               and a chance to participate in our launch.
