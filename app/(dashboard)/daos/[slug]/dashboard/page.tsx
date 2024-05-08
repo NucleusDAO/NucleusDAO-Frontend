@@ -13,15 +13,15 @@ const EachDaoDashboard = () => {
   const { getAEPrice } = useContext(ApiContext);
   const { currentDAO } = useContext(EachDaoContext);
 
-  const aeAmount: number =
-    Number(currentDAO.balance) / getAEPrice.price || rate;
+  const usdValue: number =
+    Number(currentDAO.balance) * getAEPrice.price || rate;
 
   return (
     <div className="md:flex space-x-0 md:space-x-8 space-y-4 md:space-y-0">
       <div className="md:w-[25%] space-y-4">
         {dashboardTab({
-          aeAmount: parseFloat(aeAmount.toFixed(2)),
-          usdAmount: Number(currentDAO.balance),
+          aeAmount: Number(currentDAO.balance),
+          usdAmount: parseFloat(usdValue.toFixed(3)),
           totalProposals: Number(currentDAO.totalProposals),
           totalMembers: currentDAO.members.length,
         }).map((tab, index) => (

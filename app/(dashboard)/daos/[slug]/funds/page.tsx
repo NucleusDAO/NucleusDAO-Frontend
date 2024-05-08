@@ -27,7 +27,8 @@ const EachDaoFunds = () => {
   const updatedUrl = pathname.substring(0, lastIndex);
   const userURL: string = `${domainName}${updatedUrl}`;
 
-  const aeValue: number = Number(currentDAO.balance) / getAEPrice.price || rate;
+  const usdValue: number =
+    Number(currentDAO.balance) * getAEPrice.price || rate;
 
   return (
     <div className="space-y-4">
@@ -48,7 +49,7 @@ const EachDaoFunds = () => {
                 <div className="space-y-1.5">
                   <div className="flex space-x-2 items-center">
                     <p className="dark:text-white text-dark font-bold text-2xl">
-                      {Number(currentDAO.balance)}
+                      {parseFloat(usdValue.toFixed(3))}
                     </p>
 
                     <div className="flex items-center space-x-2 text-[#1CA013] ">
@@ -57,7 +58,7 @@ const EachDaoFunds = () => {
                     </div>
                   </div>
                   <p className="text-[#888888] text-xs font-light">
-                    {`~${parseFloat(aeValue.toFixed(2))}AE`}
+                    {`~${Number(currentDAO.balance)}AE`}
                   </p>
                 </div>
               </div>
