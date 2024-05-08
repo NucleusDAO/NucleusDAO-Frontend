@@ -11,19 +11,19 @@ import DaoCreationBackground from '@/assets/images/each-feature-4-bg.png';
 export const navLinks: { title: string; href: string }[] = [
   {
     title: 'About',
-    href: '#about',
+    href: '/#about',
   },
   {
     title: 'How it Works',
-    href: '#howItWorks',
+    href: '/#howItWorks',
   },
   {
     title: 'Features',
-    href: '#features',
+    href: '/#features',
   },
   {
     title: 'Contact Us',
-    href: '#contactUs',
+    href: '/#contactUs',
   },
 ];
 

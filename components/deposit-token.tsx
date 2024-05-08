@@ -18,6 +18,7 @@ import { toast } from 'sonner';
 import { EachDaoContext } from '@/context/each-dao-context';
 import Lottie from 'react-lottie';
 import { defaultSuccessOption } from './animation-options';
+import { formatAmount, AE_AMOUNT_FORMATS } from '@aeternity/aepp-sdk';
 
 const DepositToken = () => {
   const [open, setOpen] = useState<boolean>(false);
@@ -36,9 +37,10 @@ const DepositToken = () => {
     setIsDepositing(true);
     setIsDeposited(false);
     try {
-      const res = await deposit(currentDAO.contractAddress, aeValue);
-      setAeValue(0);
-      setUsdValue(0);
+      const amount = formatAmount(aeValue, {
+        denomination: AE_AMOUNT_FORMATS.AE,
+      });
+      const res = await deposit(currentDAO.contractAddress, amount);
     } catch (error: any) {
       toast.error(error.message);
     } finally {
@@ -75,6 +77,8 @@ const DepositToken = () => {
                 <Button
                   className="px-16 mt-4"
                   onClick={() => {
+                    setAeValue(0);
+                    setUsdValue(0);
                     setOpen(false);
                     setIsDeposited(false);
                   }}

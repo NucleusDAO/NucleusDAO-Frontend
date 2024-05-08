@@ -32,7 +32,7 @@ const EachDaoFunds = () => {
             Currently, there are no funds in the treasury. You can initiate a
             proposal to make deposit.
           </p>
-          {<DepositToken />}
+          {isConnected && <DepositToken />}
         </div>
       ) : (
         <>
@@ -56,7 +56,7 @@ const EachDaoFunds = () => {
                   </p>
                 </div>
               </div>
-              {<DepositToken />}
+              {isConnected && <DepositToken />}
             </div>
             <CopyToClipboard
               text={userURL}
