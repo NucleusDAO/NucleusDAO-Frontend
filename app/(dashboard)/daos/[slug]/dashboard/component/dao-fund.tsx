@@ -24,8 +24,6 @@ export const DaoFunds = () => {
   const timeframe = searchParams.get('q') || 'yearly';
 
   const handleSelect = useDebouncedCallback((term) => {
-    console.log(`Searching... ${term}`);
-
     const params = new URLSearchParams(searchParams);
 
     if (term) {
@@ -48,8 +46,6 @@ export const DaoFunds = () => {
     queryFn: () => getHistory('balance-history', daoId, { timeframe }),
     enabled: !!daoId,
   });
-
-  console.log(history, '->');
 
   if (isHistoryError)
     return <ErrorFetchingComponent className="min-h-[50vh]" />;
