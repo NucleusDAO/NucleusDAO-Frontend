@@ -27,7 +27,7 @@ const ConnectWalletPopOver = ({ callToAction }: IConnectWalletPopOver) => {
           {connected ? (
             <>
               <div
-                className="dark:bg-[#1E1E1E] bg-white h-11 rounded-lg flex items-center dark:text-[#888888] p-3 text-[12px] space-x-3 text-dark"
+                className="dark:bg-gradient-to-r dark:from-[#1E1E1E] dark:via-[#1E1E1E] dark:to-[#252525] bg-white h-11 rounded-lg flex items-center dark:text-[#888888] p-3 text-[12px] space-x-3 text-dark"
                 role="button"
               >
                 <img

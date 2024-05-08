@@ -6,6 +6,7 @@ import { Suspense } from 'react';
 import Loading from '@/components/loading';
 import { ThemeProvider } from '@/components/themes/theme.provider';
 import { Toaster as Sonner } from '@/components/ui/sonner';
+import TanstackProvider from '@/context/tanstack-provider';
 
 const rubik = Rubik({ subsets: ['latin'] });
 
@@ -55,7 +56,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Suspense fallback={<Loading />}>
-            <ConnectWalletProvider>{children}</ConnectWalletProvider>
+            <ConnectWalletProvider>
+              <TanstackProvider>{children}</TanstackProvider>
+            </ConnectWalletProvider>
           </Suspense>
           <Sonner richColors />
         </ThemeProvider>

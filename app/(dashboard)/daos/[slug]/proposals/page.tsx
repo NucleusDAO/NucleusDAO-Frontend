@@ -8,9 +8,9 @@ import { useContext, useEffect, useState } from 'react';
 const EachDaoProposals = () => {
   const { eachDAOProposal } = useContext(EachDaoContext);
   const searchParams = useSearchParams();
+  const [proposals, setProposals] = useState(eachDAOProposal);
   const search = searchParams.get('search') || '';
   const filter = searchParams.get('filter') || '';
-  const [proposals, setProposals] = useState(eachDAOProposal);
 
   useEffect(() => {
     if (search) {
@@ -33,7 +33,7 @@ const EachDaoProposals = () => {
   }, [search, filter]);
 
   return (
-    <div className='-mt-4'>
+    <div className="-mt-4">
       <EachFilterTab proposalData={proposals} search={search} filter={filter} />
     </div>
   );

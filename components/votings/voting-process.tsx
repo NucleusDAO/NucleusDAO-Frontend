@@ -7,30 +7,119 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
-import { IConnectWalletContext } from '@/libs/types';
+import { IConnectWalletContext, IProposal } from '@/libs/types';
 import { toast } from 'sonner';
 import Lottie from 'react-lottie';
 import { defaultSuccessOption } from '../animation-options';
+import { AppContext } from '@/context/app-context';
+import { EachDaoContext } from '@/context/each-dao-context';
+import { updateProposalEP } from '@/config/apis';
+import { PROPOSALS } from '@/libs/key';
+import { useQueryClient } from '@tanstack/react-query';
 
-const VotingProcess = () => {
-  const [selectedOption, setSelectedOption] = useState<string>('');
-  const [showModal, setShowModal] = useState<boolean>(false);
+interface IVotingProcess {
+  currentProposal: {
+    id: string;
+    votes: { account: string; support: boolean }[];
+  };
+  setCurrentProposal: (arg: IProposal[]) => void;
+}
+
+const VotingProcess = ({
+  currentProposal,
+  setCurrentProposal,
+}: IVotingProcess) => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { voteFor, voteAgainst, getProposal } = useContext(AppContext);
+  const { currentDAO } = useContext(EachDaoContext);
+  const queryClient: any = useQueryClient();
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
-  const connected: boolean = user.isConnected;
-  const hasVoted: boolean = false;
+  const { isConnected, address } = user;
+  const userVote = address
+    ? currentProposal.votes.find(
+        (vote: { account: string; support: boolean }) =>
+          vote.account === address
+      )
+    : null;
+  const defaultSelection = userVote?.support
+    ? 'yes'
+    : userVote?.support === false
+    ? 'no'
+    : '';
+  const [selectedOption, setSelectedOption] =
+    useState<string>(defaultSelection);
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const hasVoted: boolean = !!userVote?.account;
+  const [isVoting, setIsVoting] = useState<boolean>(false);
 
   const votingOptions = ['yes', 'no'];
 
   const handleOptionChange = (option: string) => {
-    if (connected) {
+    if (isConnected) {
       setSelectedOption(option);
     } else {
-      toast.error('Connect to you wallet!');
+      toast.error('Connect your wallet first!');
+    }
+  };
+
+  const handleVote = async () => {
+    setIsVoting(true);
+    try {
+      if (selectedOption === 'yes') {
+        const vote = await voteFor(
+          Number(currentProposal.id),
+          currentDAO.contractAddress
+        );
+        for (let key in vote) {
+          if (typeof vote[key] == 'bigint') {
+            vote[key] = Number(vote[key]);
+          }
+        }
+        await updateProposalEP(currentDAO.id, Number(currentProposal.id), vote);
+        queryClient.invalidateQueries(PROPOSALS);
+      } else {
+        const vote = await voteAgainst(
+          Number(currentProposal.id),
+          currentDAO.contractAddress
+        );
+        const proposals = await getProposal(
+          currentDAO.contractAddress,
+          Number(currentProposal.id)
+        );
+        for (let key in vote) {
+          if (typeof vote[key] == 'bigint') {
+            vote[key] = Number(vote[key]);
+          }
+        }
+        await updateProposalEP(currentDAO.id, Number(currentProposal.id), vote);
+        queryClient.invalidateQueries(PROPOSALS);
+      }
+      setShowModal(true);
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      setIsVoting(false);
+    }
+  };
+
+  const handleDone = async () => {
+    setIsLoading(true);
+    try {
+      const proposal = await getProposal(
+        currentDAO.contractAddress,
+        Number(currentProposal.id)
+      );
+      setCurrentProposal(proposal);
+      setShowModal(false);
+      setIsLoading(false);
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -49,6 +138,7 @@ const VotingProcess = () => {
               defaultValue={selectedOption}
               value={selectedOption}
               key={option}
+              disabled={!!userVote?.account}
               onValueChange={() => handleOptionChange(option)}
               role="button"
             >
@@ -72,11 +162,15 @@ const VotingProcess = () => {
             </RadioGroup>
           ))}
           <Dialog onOpenChange={setShowModal} open={showModal}>
-            <DialogTrigger asChild>
-              <Button className="w-full" disabled={!selectedOption}>
-                Vote
-              </Button>
-            </DialogTrigger>
+            <Button
+              className="w-full"
+              disabled={!selectedOption || !!userVote?.account}
+              onClick={handleVote}
+              loading={isVoting}
+              loadingText="Voting..."
+            >
+              Vote
+            </Button>
             <DialogContent className="dark:bg-[#191919] bg-white">
               <DialogHeader>
                 <DialogTitle className="dark:text-white font-medium py-1 text-center text-dark ">
@@ -85,14 +179,18 @@ const VotingProcess = () => {
                     height={150}
                     width={150}
                   />
-                  <p className='-mt-2'>Vote Casted</p>
+                  <p className="-mt-2">Vote Casted</p>
                 </DialogTitle>
                 <DialogDescription className="py-2 text-center">
                   You have casted your vote. The result will be shown if the
                   proposal reaches its quorum
                 </DialogDescription>
               </DialogHeader>
-              <Button className="w-full" onClick={() => setShowModal(false)}>
+              <Button
+                className="w-full"
+                onClick={handleDone}
+                loading={isLoading}
+              >
                 Done
               </Button>
             </DialogContent>

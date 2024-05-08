@@ -1,23 +1,14 @@
 import { PlayIcon } from '@/assets/svgs';
-import { cn } from '@/libs/utils';
-import React from 'react';
+import { activities, cn } from '@/libs/utils';
+import React, { useState } from 'react';
 import ReactPlayer from 'react-player';
 
 const HowItWorks = () => {
-  const activities: { title: string; color: string }[] = [
-    {
-      title: 'Proposal',
-      color: 'bg-[#444444]',
-    },
-    {
-      title: 'DAO',
-      color: 'bg-[#25B81B]',
-    },
-    {
-      title: 'Vote',
-      color: 'bg-[#DCBB0C]',
-    },
-  ];
+  const [currentPlay, setCurrentPlay] = useState<{
+    title: string;
+    color: string;
+    url: string;
+  }>(activities[0]);
   return (
     <div className="w-full text-center lg:text-left p-8 space-y-8 lg:space-y-10 justify-between backdrop-filter backdrop-blur-md border border-[#65656533] rounded-[20px] bg-gradient-to-r from-[#1E1E1E33] to-[#19191933]">
       <div className="lg:flex w-full lg:space-x-16 space-y-8 lg:space-y-0">
@@ -25,8 +16,13 @@ const HowItWorks = () => {
           {activities.map((each) => (
             <div
               role="button"
-              className="border hover:border-primary hover:text-primary text-[#888888] font-light trans border-[#656565B2] flex items-center space-x-3 bg-gradient-to-r from-[#444444] via-[#292929B2] to-[#44444433] py-1.5 px-2 rounded-[25px]"
+              className={cn(
+                'border hover:border-primary hover:text-primary text-[#888888] font-light trans border-[#656565B2] flex items-center space-x-3 bg-gradient-to-r from-[#444444] via-[#292929B2] to-[#44444433] py-1.5 px-2 rounded-[25px]',
+                currentPlay.title === each.title &&
+                  'text-primary border-primary'
+              )}
               key={each.title}
+              onClick={() => setCurrentPlay(each)}
             >
               <div
                 className={cn(each.color, 'w-[20px] h-[20px] rounded-full')}
@@ -37,7 +33,7 @@ const HowItWorks = () => {
         </div>
         <div className="w-[100%] border p-4 rounded-[20px] border-[#656565B2]">
           <ReactPlayer
-            url="https://www.youtube.com/watch?v=LXb3EKWsInQ"
+            url={currentPlay.url}
             width="100%"
             controls
             playIcon={

@@ -6,10 +6,13 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { AppContext, IProposal } from './app-context';
-import { usePathname, useRouter } from 'next/navigation';
+import { AppContext } from './app-context';
+import { usePathname } from 'next/navigation';
 import { toast } from 'sonner';
-import { getStatus } from '@/libs/utils';
+import { updateGetProposal } from '@/libs/utils';
+import { IConnectWalletContext, IProposal } from '@/libs/types';
+import ErrorFetchingComponent from '@/components/error-fetching-comp';
+import { ConnectWalletContext } from './connect-wallet-context';
 
 export const EachDaoContext = createContext<any>({});
 
@@ -30,12 +33,13 @@ export interface IDAO {
 }
 
 export const EachDaoContextProvider = ({ children }: IAppProvider) => {
-  const router = useRouter();
   const pathname = usePathname();
+  const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const [eachDAOProposal, setEachDAOProposal] = useState<any | null>(null);
   const [currentDAO, setCurrentDAO] = useState<IDAO | null>(null);
   const [membersActivities, setMembersActivities] = useState<any | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const isMember = currentDAO?.members?.includes(user.address);
 
   const { getProposals, getEachDAO, getUsersActivities } =
     useContext(AppContext);
@@ -43,65 +47,41 @@ export const EachDaoContextProvider = ({ children }: IAppProvider) => {
   const urlParts = pathname.split('/'); // Split the URL by "/"
   const daoId = urlParts[2];
 
-  // console.log(isLoading, '-> new is loading')
-
-  // console.log(urlParts, '->')
-
-  
   useEffect(() => {
+    setIsLoading(true);
     if (urlParts.length >= 4) {
       (async () => {
         try {
-            const dao = await getEachDAO(daoId);
-            setCurrentDAO(dao);
-            const proposals: IProposal[] = await getProposals(
-              dao.contractAddress
-            );
-            setEachDAOProposal(
-              proposals.map((proposal: IProposal) => {
-                return {
-                  type: proposal.proposalType,
-                  status: getStatus(proposal),
-                  description: proposal.description,
-                  wallet:
-                    proposal.target.slice(0, 6) +
-                    '...' +
-                    proposal.target.slice(-4),
-                  duration: getDuration(proposal.startTime, proposal.endTime),
-                  totalVote: `${proposal.votesFor + proposal.votesAgainst}`,
-                  organisation: dao.name,
-                  id: proposal.id.toString(),
-                };
-              })
-            );
-            const members = await getUsersActivities(dao.contractAddress);
-            // console.log({ members });
-            setMembersActivities(members);
-          setIsLoading(false);
+          await updateGetProposal({
+            getEachDAO,
+            daoId,
+            setCurrentDAO,
+            getProposals,
+            setEachDAOProposal,
+            getUsersActivities,
+            setMembersActivities,
+          });
         } catch (error: any) {
-          setIsLoading(false);
           toast.error(error.message);
           console.error('Error fetching DAO:', error);
+        } finally {
+          setIsLoading(false); // Set loading state to false after fetching data
+          return <ErrorFetchingComponent />;
         }
       })();
     }
-  }, [urlParts.length]);
-
-  function getDuration(startTime: number, endTime: number) {
-    const diff = endTime - startTime;
-
-    const days = Math.floor(diff / (24 * 60 * 60 * 1000));
-    const hours = Math.floor((diff % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
-    const minutes = Math.floor((diff % (60 * 60 * 1000)) / (60 * 1000));
-
-    return `${days}d ${hours}h ${minutes}m`;
-  }
+  }, [daoId]);
 
   const value = {
     eachDAOProposal,
     membersActivities,
     isLoading,
     currentDAO,
+    setCurrentDAO,
+    setMembersActivities,
+    setEachDAOProposal,
+    isMember,
+    setIsLoading,
   };
 
   return (

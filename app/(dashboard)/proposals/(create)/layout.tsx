@@ -1,7 +1,7 @@
 'use client';
 
 import { MoveLeft } from 'lucide-react';
-import { ReactNode, useState } from 'react';
+import { ReactNode, useContext, useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -12,15 +12,45 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import Steps from './component/steps';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { ConnectWalletContext } from '@/context/connect-wallet-context';
+import { IConnectWalletContext } from '@/libs/types';
+import EmptyDAO from '@/assets/icons/empty-icon.png';
+import Image from 'next/image';
+import { PROPOSALS_URL } from '@/config/path';
+import { AppContext } from '@/context/app-context';
+import { defaultProposal } from '@/libs/utils';
+import NotAuthorized from '@/components/not-authorized';
 
 interface ILayout {
   children: ReactNode;
 }
 
 const Layout = ({ children }: ILayout) => {
+  const { setNewProposalInfo } = useContext(AppContext);
+  const { user, handleConnectWallet } =
+    useContext<IConnectWalletContext>(ConnectWalletContext);
+  const { isConnected } = user;
   const [open, setOpen] = useState<boolean>(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const daoID = searchParams.get('ct') || '';
+
+  const handleBack = () => {
+    setNewProposalInfo(defaultProposal);
+    localStorage.removeItem('new_proposal');
+    router.push(PROPOSALS_URL);
+  };
+
+  if (!isConnected)
+    return (
+      <NotAuthorized description="Sorry, only connected user are allowed to create a proposal" />
+    );
+
+  if (!daoID) {
+    router.back();
+  }
+
   return (
     <div className="space-y-8">
       <div className="flex space-x-4 items-start border-b dark:border-b-[#292929] pb-6 border-[#CCCCCC99]">
@@ -47,14 +77,14 @@ const Layout = ({ children }: ILayout) => {
               <Button variant="outline" onClick={() => setOpen(false)}>
                 No, stay
               </Button>
-              <Button onClick={() => router.back()}>
-                  Yes, exit
-              </Button>
+              <Button onClick={handleBack}>Yes, exit</Button>
             </div>
           </DialogContent>
         </Dialog>
         <div className="space-y-3">
-          <h1 className="dark:text-white text-dark font-medium text-2xl">Create a Proposal</h1>
+          <h1 className="dark:text-white text-dark font-medium text-2xl">
+            Create a Proposal
+          </h1>
           <p className="text-defaultText text-sm">
             Ensure you provide comprehensive details, data, and any relevant
             supporting materials that will assist voters in making a

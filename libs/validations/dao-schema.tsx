@@ -10,7 +10,9 @@ const member = z.object({
   address: z.string(),
 });
 
-const joinCommunitySchema = z.object({ email: z.string().email({ message: 'Enter a valid email' }) })
+const joinCommunitySchema = z.object({
+  email: z.string().email({ message: 'Enter a valid email' }),
+});
 
 const daoInfoSchema = z
   .object({
@@ -105,7 +107,7 @@ const proposalInfoSchema = z.object({
     .max(7, { message: '7 days is the maximun expiration days' })
     .optional(),
   quorum: z.number().optional(),
-  socialMedia: z.array(socialMediaSchema),
+  socialMedia: z.array(socialMediaSchema).optional(),
 });
 
 const defineMembershipSchema = z.object({
@@ -127,21 +129,22 @@ const defineMembershipSchema = z.object({
 });
 
 const editProfile = z.object({
-  name: z
+  username: z
     .string()
     .min(2, { message: 'Must be 2 or more characters long' })
     .max(50, { message: 'Must be 50 or fewer characters long' }),
-  email: z.string().email(),
-  about: z.string(),
+  email: z.string().email({ message: 'Email is compulsory' }),
+  about: z.string().min(2, { message: 'Field is compulsory' }),
+  profilePicture: z.string().min(2, { message: 'Field is compulsory' }),
 });
 
 const editNotifications = z.object({
-  email_new_dao: z.boolean().optional(),
-  email_new_proposal: z.boolean().optional(),
-  email_new_updates: z.boolean().optional(),
-  push_new_dao: z.boolean().optional(),
-  push_new_proposal: z.boolean().optional(),
-  push_new_updates: z.boolean().optional(),
+  newDAO: z.boolean().optional(),
+  newProposal: z.boolean().optional(),
+  newUpdate: z.boolean().optional(),
+  pushNewDAO: z.boolean().optional(),
+  pushNewProposal: z.boolean().optional(),
+  pushNewUpdate: z.boolean().optional(),
 });
 
 const editDisplay = z.object({

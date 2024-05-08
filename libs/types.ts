@@ -1,13 +1,13 @@
-import { ReactNode } from "react";
+import { ReactNode } from 'react';
 
 export type WalletInfo = {
   name: string;
   type: string;
-//   getConnection: () => Promise<any>
+  //   getConnection: () => Promise<any>
 };
 
 export type WalletConnection = {
-  getConnection: () => Promise<any>|any; // Adjust any to the actual return type of getConnection
+  getConnection: () => Promise<any> | any; // Adjust any to the actual return type of getConnection
 };
 
 export type DeepLinkParams = {
@@ -35,7 +35,7 @@ export type ConnectWalletParams = {
   isHome: boolean;
   walletObj?: {
     info: WalletInfo;
-    getConnection?: () => Promise<any>|any; // Adjust any to the actual return type of getConnection
+    getConnection?: () => Promise<any> | any; // Adjust any to the actual return type of getConnection
   };
 };
 
@@ -49,10 +49,13 @@ export type WalletScanningParams = {
 
 export interface IConnectWalletContext {
   handleConnectWallet?: () => void;
-  user: {  address: string;
-    isConnected: boolean;}
-  isConnecting: boolean
+  user: { address: string; isConnected: boolean };
+  isConnecting: boolean;
   handleDisconnect?: () => void;
+}
+
+export interface IApiContext {
+  getAEPrice: { price: number };
 }
 
 export interface IUser {
@@ -62,8 +65,15 @@ export interface IUser {
 
 export interface InewDaoInfo {
   style: string;
-  info: { daoName: string; daoUrl: string; about: string; socialMedia?: { link: string; type: string }[]; logo: File|null; logoUrl: string; },
-  members: { address: string; }[],
+  info: {
+    daoName: string;
+    daoUrl: string;
+    about: string;
+    socialMedia?: { link: string; type: string }[];
+    logo: File | null;
+    logoUrl: string;
+  };
+  members: { address: string }[];
   quorum: number;
   duration: number;
 }
@@ -81,4 +91,89 @@ export interface IAllDaos {
     activeMember: string;
     activeProposal: string;
   }[];
+}
+
+export type TotalProposalType = number;
+
+export interface IAppProvider {
+  children: ReactNode;
+}
+
+export interface IProposal {
+  id: number;
+  proposal: string;
+  proposalType: string;
+  description: string;
+  daoId: string;
+  value: number;
+  target: string;
+  startTime: number;
+  endTime: number;
+  votesFor: number;
+  daoName: string;
+  votesAgainst: number;
+  isExecuted: boolean;
+  votes: any[];
+  hasVoted: any;
+}
+
+export interface IDAO {
+  name: string;
+  description: string;
+  image: string;
+  socials: string[];
+  votingTime: number;
+  quorum: number;
+  proposals: IProposal[];
+  totalProposals: number;
+  members: string[];
+}
+
+export interface INewProposal {
+  value: {
+    type: string;
+    logo: string;
+    description: string;
+    targetWallet: string;
+    value: string;
+    duration: number;
+    quorum: number;
+    socialMedia: { type: string; link: string }[];
+  };
+}
+
+export type ICreateDAO = {
+  members: string[];
+  name: string;
+  id: string;
+  currentMembers: number;
+};
+
+export type ICreateUser = {
+  address?: string;
+  email: string;
+  profilePicture: string;
+  about: string;
+  username: string;
+};
+
+export interface IEachProposalView {
+  tabs: string[];
+  setCurrentProposal: (arg: IProposal[]) => void;
+  currentProposal: {
+    wallet: string;
+    proposalType: string;
+    description: string;
+    votes: { account: string; support: boolean }[];
+    type: string;
+    status: string;
+    totalVote: string;
+    id: string;
+    duration: string;
+    startTime: number;
+    endTime: number;
+    proposer: string;
+    votesFor: number;
+    votesAgainst: number;
+  };
 }

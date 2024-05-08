@@ -6,7 +6,7 @@ import {
   UpdateSocialsFormField,
   UploadFileFormField,
 } from '@/components/proposals/proposal-form-element';
-import { ReactNode, FC } from 'react';
+import { FC } from 'react';
 
 export const ProposalTransfer = ({ form }: { form: any }) => {
   return (
@@ -88,6 +88,7 @@ export const ProposeToChangeDaosName = ({ form }: { form: any }) => {
 };
 
 export const ProposeToChangeDaosLogo = ({ form }: { form: any }) => {
+
   return (
     <>
       <UploadFileFormField form={form} />

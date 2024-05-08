@@ -28,18 +28,15 @@ const AllDaos: any = ({
   dashboardTableData,
   connectWalletDescription,
   showDAO,
-  isConnected,
 }: IAllDaos) => {
   const [openPopover, setOpenPopover] = useState<boolean>(false);
   const searchParams = useSearchParams();
   const { replace } = useRouter();
   const pathname = usePathname();
   const currentView = searchParams.get('v') || '';
-  const currentSearch = searchParams.get('search');
+  const currentSearch = searchParams.get('q');
 
   const handleView = useDebouncedCallback((term) => {
-    console.log(`Searching... ${term}`);
-
     const params = new URLSearchParams(searchParams);
 
     if (term) {
@@ -57,7 +54,6 @@ const AllDaos: any = ({
           <SearchInput
             placeholder="Search by organization name"
             classNames="pl-10"
-            queryKey="search"
           />
         </div>
         <div className="flex space-x-3 justify-between md:justify-start">
@@ -87,7 +83,7 @@ const AllDaos: any = ({
                 role="button"
                 className="hover:bg-[#1E1E1E] py-2 px-2 rounded-md"
                 onClick={() => {
-                  toast.info('Coming soon');
+                  toast.info('Coming soon !');
                   setOpenPopover(false);
                 }}
               >
@@ -132,7 +128,12 @@ const AllDaos: any = ({
                 {dashboardTableData(0).length === 0 && showDAO && (
                   <div className="h-[40vh] w-full space-y-4 pt-20">
                     <div className="text-center w-full">
-                      <Image src={EmptyDAO} alt="DAO empty" width={100} className='mx-auto' />
+                      <Image
+                        src={EmptyDAO}
+                        alt="DAO empty"
+                        width={100}
+                        className="mx-auto"
+                      />
                     </div>
                     <div className="flex items-center justify-center">
                       {currentSearch ? (
@@ -146,12 +147,11 @@ const AllDaos: any = ({
                             roles and responsibilities, and establishing rules
                             for participation.
                           </p>
-                            <Link href={SELECT_DAO_STYLE_URL}>
-                              <Button>
-                                <Plus className="mr-2 h-4 w-4" /> Create
-                                DAO
-                              </Button>
-                            </Link>
+                          <Link href={SELECT_DAO_STYLE_URL}>
+                            <Button>
+                              <Plus className="mr-2 h-4 w-4" /> Create DAO
+                            </Button>
+                          </Link>
                         </div>
                       )}
                     </div>
@@ -159,7 +159,7 @@ const AllDaos: any = ({
                 )}
                 <div className="grid md:grid-cols-2 gap-8">
                   {dashboardTableData(40).map((data: any) => (
-                    <DaoCard key={data.activeMember} {...data} />
+                    <DaoCard key={data.organisation} {...data} />
                   ))}
                 </div>
               </>

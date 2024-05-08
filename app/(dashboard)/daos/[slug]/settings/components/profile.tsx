@@ -40,7 +40,12 @@ const Profile = ({ name, image }: { name: string; image: string }) => {
               <FormItem>
                 <FormLabel>Dao name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter DAO name" {...field} readOnly />
+                  <Input
+                    placeholder="Enter DAO name"
+                    {...field}
+                    readOnly
+                    onChange={() => null}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -68,8 +73,9 @@ const Profile = ({ name, image }: { name: string; image: string }) => {
                           type="file"
                           className="absolute h-full border-b border-0 rounded-none inset-0 cursor-pointer opacity-0"
                           accept=".jpg, .jpeg, .png"
-                          readOnly
                           {...field}
+                          onChange={() => null}
+                          readOnly
                         />
                       </>
                     )}

@@ -62,7 +62,7 @@ const CreateNewDao = () => {
               type="button"
               className={cn(
                 'w-full',
-                template.status === 'Coming Soon' &&
+                template.status === 'Coming Soon !' &&
                   'dark:bg-[#191919] dark:text-[#444444] bg-white text-dark font-normal'
               )}
               disabled={!!template.status}

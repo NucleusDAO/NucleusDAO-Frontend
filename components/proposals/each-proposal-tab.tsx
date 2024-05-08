@@ -2,7 +2,7 @@
 import { DashboardIcon } from '@/assets/svgs';
 import SearchInput from '@/components/ui/search-input';
 import { cn } from '@/libs/utils';
-import { List, ListFilter, Plus } from 'lucide-react';
+import { List, ListFilter } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useDebouncedCallback } from 'use-debounce';
 import ProposalCard from './card';
@@ -14,12 +14,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { useContext, useState } from 'react';
-import Link from 'next/link';
-import { CREATE_PROPOSAL_URL } from '@/config/path';
-import { Button } from '../ui/button';
-import { ConnectWalletContext } from '@/context/connect-wallet-context';
-import { IConnectWalletContext } from '@/libs/types';
+import { useState } from 'react';
 import { defaultProposalOption } from '../animation-options';
 
 const EachFilterTab = ({
@@ -31,16 +26,16 @@ const EachFilterTab = ({
   search?: string;
   filter?: string;
 }) => {
-  const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
-  const { isConnected } = user;
   const [openPopover, setOpenPopover] = useState<boolean>(false);
   const searchParams = useSearchParams();
   const { replace } = useRouter();
   const pathname = usePathname();
   const currentView = searchParams.get('v') || '';
 
+  console.log(proposalData, '-> dt');
+
   const filterItems: string[] = [
-    'Default',
+    'All',
     'Active',
     'Pending',
     'Failed',
@@ -49,7 +44,7 @@ const EachFilterTab = ({
 
   const handleFilter = useDebouncedCallback((filterBy: string) => {
     const params = new URLSearchParams(searchParams);
-    if (filterBy === 'Default') {
+    if (filterBy === 'All') {
       params.delete('filter');
     } else {
       params.set('filter', filterBy);
@@ -59,8 +54,6 @@ const EachFilterTab = ({
   }, 200);
 
   const handleView = useDebouncedCallback((term) => {
-    console.log(`Searching... ${term}`);
-
     const params = new URLSearchParams(searchParams);
 
     if (term) {
@@ -142,9 +135,9 @@ const EachFilterTab = ({
 
         {(currentView === 'grid' || currentView !== 'list') && (
           <>
-            {proposalData.length === 0 && (
-              <div className='h-[40vh] w-full space-y-2'>
-                <div className="text-center mx-auto">
+            {proposalData?.length === 0 && (
+              <div className="h-[40vh] w-full space-y-2">
+                <div className="text-center mx-auto pt-10">
                   <Lottie
                     options={defaultProposalOption}
                     height={150}
@@ -163,13 +156,6 @@ const EachFilterTab = ({
                         concerns, and monitor the progress of your proposal as
                         it moves through the decision-making process.
                       </p>
-                      {isConnected && (
-                        <Link href={CREATE_PROPOSAL_URL}>
-                          <Button>
-                            <Plus className="mr-2 h-4 w-4" /> Create Proposal
-                          </Button>
-                        </Link>
-                      )}
                     </div>
                   )}
                 </div>

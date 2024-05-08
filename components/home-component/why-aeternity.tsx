@@ -4,6 +4,8 @@ import WhyAEBg2 from '@/assets/images/why-ae-2-bg.png';
 import WhyAEBg3 from '@/assets/images/why-ae-3-bg.png';
 import WhyAEBg4 from '@/assets/images/why-ae-4-bg.png';
 import { Button } from '../ui/button';
+import Link from 'next/link';
+import { DAO_URL } from '@/config/path';
 
 const WhyAeternity = () => {
   return (
@@ -17,8 +19,12 @@ const WhyAeternity = () => {
         }}
       >
         <Heading title="Why Æternity Blockchain?" />
-        <p className='lg:text-normal text-sm'>Advanced Blockchain Technology.</p>
-        <Button className="px-6 lg:px-10">Launch your DAO</Button>
+        <p className="lg:text-normal text-sm">
+          Advanced Blockchain Technology.
+        </p>
+        <Button className="px-6 lg:px-10">
+          <Link href={DAO_URL}>Launch your DAO</Link>
+        </Button>
       </div>
       <div className="w-full lg:w-[60%] space-y-4">
         <div className="lg:flex lg:space-x-4 items-center w-full space-y-6 lg:space-y-0">
@@ -55,7 +61,7 @@ const WhyAeternity = () => {
             backgroundSize: '100%',
           }}
         >
-          <p className="text-white lg:text-[24px] pl-8 w-1/2">
+          <p className="text-white lg:text-[24px] pl-8 w-1/2" id="join">
             Decentralized Scalability & Transparent Governance
           </p>
         </div>
