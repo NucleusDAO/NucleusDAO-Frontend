@@ -1,6 +1,6 @@
 'use client';
 import { BrandLogo } from '@/assets/svgs';
-import { DAO_URL, HOME_URL } from '@/config/path';
+import { HOME_URL } from '@/config/path';
 import AELogo from '@/assets/icons/ae-icon.png';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -17,7 +17,6 @@ import { cn } from '@/libs/utils';
 const NavComp = ({ open, setOpen }: { open: boolean; setOpen: any }) => {
   const router = useRouter();
   const isDesktop = useMediaQuery('(min-width: 768px)');
-  // const [open, setOpen] = useState<boolean>(false);
 
   const [hash, setHash] = useState(
     (typeof window !== 'undefined' && window.location.hash) || ''
