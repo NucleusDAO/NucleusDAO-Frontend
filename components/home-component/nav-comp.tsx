@@ -16,7 +16,10 @@ import { cn } from '@/libs/utils';
 
 const NavComp = ({ open, setOpen }: { open: boolean; setOpen: any }) => {
   const router = useRouter();
-  const isDesktop = useMediaQuery('(min-width: 768px)');
+  const isDesktop = useMediaQuery('(min-width: 1068px)');
+  const screenWidth =
+    (typeof window !== 'undefined' && window.innerWidth >= 980) ||
+    window.innerWidth >= 1000;
 
   const [hash, setHash] = useState(
     (typeof window !== 'undefined' && window.location.hash) || ''
@@ -45,15 +48,15 @@ const NavComp = ({ open, setOpen }: { open: boolean; setOpen: any }) => {
         </div>
       </div>
 
-      {(open || isDesktop) && (
+      {(open || isDesktop || screenWidth) && (
         <div
-          className="h-screen lg:h-fit lg:flex justify-between lg:w-[70%] items-center space-y-5 lg:space-y-0 fixed lg:relative z-10 w-full mt-16 lg:mt-0"
+          className="h-screen lg:h-fit lg:flex justify-between lg:w-[70%] xl-[50%] items-center space-y-5 lg:space-y-0 fixed lg:relative z-10 w-full mt-16 lg:mt-0"
           style={{
             background: 'round',
             backgroundImage: `url(${Background.src})`,
           }}
         >
-          <div className="lg:border space-y-5 lg:space-y-0 lg:backdrop-filter lg:backdrop-blur-md pt-12 pb-0 lg:pb-1 lg:pt-1 grid lg:flex lg:fixed trans lg:border-[#5E5F62B9] lg:bg-[#1E1E1E] hover:border-t-primary hover:border-t px-6 lg:px-2 py-2 lg:py-0 lg:rounded-full text-white text-sm font-light lg:space-x-14 items-center">
+          <div className="lg:border space-y-5 lg:space-y-0 lg:backdrop-filter lg:backdrop-blur-md pt-12 pb-0 lg:pb-1 lg:pt-1 grid lg:flex lg:fixed trans lg:border-[#5E5F62B9] lg:bg-[#1E1E1E] hover:border-t-primary hover:border-t px-6 lg:px-2 py-2 lg:py-0 lg:rounded-full text-white text-sm font-light lg:space-x-14 items-center lg:ml-3">
             {navLinks.map((item) => (
               <Link
                 href={item.href}
@@ -72,7 +75,12 @@ const NavComp = ({ open, setOpen }: { open: boolean; setOpen: any }) => {
               </Link>
             ))}
           </div>
-          <div className="px-6 lg:px-0 lg:absolute lg:right-0">
+          <div
+            className={cn(
+              'px-6 lg:px-0 lg:absolute',
+              screenWidth ? 'lg:-right-4' : 'lg:right-0'
+            )}
+          >
             <Link href="/#join">
               <Button
                 className="lg:w-fit w-full px-8"
@@ -87,7 +95,7 @@ const NavComp = ({ open, setOpen }: { open: boolean; setOpen: any }) => {
       )}
       <div
         className={
-          'bg-gradient-to-t from-[#1E1E1E] to-[#1E1E1E80] absolute lg:h-[52px] h-[40px] w-[40px] lg:w-[52px] top-16 lg:top-28 right-[40px] lg:right-[400px]'
+          'bg-gradient-to-t from-[#1E1E1E] to-[#1E1E1E80] absolute lg:h-[52px] h-[40px] w-[40px] xl:w-[52px] top-16 lg:top-28 right-[40px] lg:right-[400px]'
         }
       >
         <div className="bg-gradient-to-r h-full w-full from-primary via-primary flex items-center justify-center to-primary shadow-[inset_0px_0px_6px_6px_rgba(0,0,0,0.3)] animate-fade-in-out">

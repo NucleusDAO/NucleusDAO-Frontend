@@ -25,11 +25,19 @@ import { cn } from '@/libs/utils';
 
 export default function Home() {
   const isDesktop = useMediaQuery('(min-width: 768px)');
+  const screenWidth =
+    (typeof window !== 'undefined' && window.innerWidth >= 1880) ||
+    window.innerWidth >= 912;
+  const currentWidth = typeof window !== 'undefined' && window.innerWidth;
+  console.log(currentWidth, '->');
   const [open, setOpen] = useState<boolean>(false);
   return (
     <div className={cn('min-h-screen bg-[#0A0A0A]', open && 'fixed')}>
       <main
-        className="bg-contain bg-no-repeat w-full min-h-[90vh] lg:min-h-[105vh]"
+        className={cn(
+          'bg-contain bg-no-repeat',
+          screenWidth ? 'min-h-[40vh]' : 'w-full min-h-[90vh] lg:min-h-[105vh]'
+        )}
         style={{
           background: 'round',
           backgroundImage: `url(${Background.src})`,
@@ -46,7 +54,10 @@ export default function Home() {
         </div>
       </main>
       <section
-        className="bg-cover bg-no-repeat w-full min-h-fit lg:min-h-[160vh] p-12 lg:p-24 space-y-4 lg:space-y-8"
+        className={cn(
+          'bg-cover bg-no-repeat w-full p-12 lg:p-24 space-y-4 lg:space-y-8',
+          screenWidth ? 'min-h-[40vh]' : 'min-h-fit lg:min-h-[160vh]'
+        )}
         style={{
           backgroundImage: `url(${SectionTwoBackground.src})`,
         }}
@@ -70,7 +81,7 @@ export default function Home() {
 
         <div className="border border-[#656565] py-8 px-6 lg:px-14 rounded-[20px] bg-gradient-to-r from-[#1E1E1E33] to-[#19191933] lg:flex-row flex-col-reverse flex justify-between items-center">
           <div className="space-y-4 lg:space-y-8 lg:pl-16">
-            <h2 className="text-white font-medium text-[24px] lg:text-[28px] w-full lg:w-[60%] mt-4 lg:mt-0">
+            <h2 className="text-white font-medium text-[24px] lg:text-[28px] w-full xl:w-[60%] mt-4 lg:mt-0">
               Launch your DAO with an Inclusive Builder
             </h2>
 
@@ -85,7 +96,9 @@ export default function Home() {
           />
         </div>
       </section>
-      <section className="w-full lg:-mt-32 space-y-6">
+      <section
+        className={cn('w-full space-y-6', screenWidth ? '' : 'lg:-mt-32')}
+      >
         <div
           className="border border-[#5E5F62B9] mx-auto bg-gradient-to-r text-sm from-[#44444433] to-[#65656533] px-6 py-2 rounded-[20px] w-fit text-[#9050E9]"
           role="heading"
@@ -158,7 +171,10 @@ export default function Home() {
       </section>
 
       <div
-        className="flex flex-col lg:min-h-[90vh] bg-cover lg:bg-contain bg-no-repeat w-full px-6 lg:px-24 pb-5"
+        className={cn(
+          'flex flex-col bg-cover lg:bg-contain bg-no-repeat w-full px-6 lg:px-24 pb-5 ',
+          Number(currentWidth) < 1440 ? 'lg:min-h-[10%]' : 'lg:min-h-[90vh]'
+        )}
         style={{
           background: 'round',
           backgroundImage: `url(${FooterSectionBackground.src})`,

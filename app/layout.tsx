@@ -57,7 +57,11 @@ export default function RootLayout({
         >
           <Suspense fallback={<Loading />}>
             <ConnectWalletProvider>
-              <TanstackProvider>{children}</TanstackProvider>
+              <TanstackProvider>
+                <div className="flex justify-center mx-auto max-w-[1880px]">
+                  {children}
+                </div>
+              </TanstackProvider>
             </ConnectWalletProvider>
           </Suspense>
           <Sonner richColors />
