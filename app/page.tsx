@@ -87,7 +87,7 @@ export default function Home() {
             </h2>
 
             <Button className="px-8 h-9" id="features">
-              <Link href={DAO_URL}>Launch your DAO</Link>
+              <Link href={'/#join'}>Launch your DAO</Link>
             </Button>
           </div>
           <Image

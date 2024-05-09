@@ -23,7 +23,7 @@ const WhyAeternity = () => {
           Advanced Blockchain Technology.
         </p>
         <Button className="px-6 lg:px-10">
-          <Link href={DAO_URL}>Launch your DAO</Link>
+          <Link href={'/#join'}>Launch your DAO</Link>
         </Button>
       </div>
       <div className="w-full lg:w-[60%] space-y-4">
