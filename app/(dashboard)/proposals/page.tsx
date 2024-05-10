@@ -4,7 +4,6 @@ import EachFilterTab from '@/components/proposals/each-proposal-tab';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { proposalLists } from '@/config/dao-config';
 import { AppContext } from '@/context/app-context';
-import { EachDaoContext } from '@/context/each-dao-context';
 import { IProposal } from '@/libs/types';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
@@ -12,7 +11,6 @@ import { useDebouncedCallback } from 'use-debounce';
 
 const Proposals = () => {
   const { isProposalLoading, allProposals } = useContext(AppContext);
-  const { eachDAOProposal } = useContext(EachDaoContext);
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { replace } = useRouter();

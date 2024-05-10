@@ -22,13 +22,14 @@ const Layout = ({ children }: ILayout) => {
   const pathname = usePathname();
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { isConnected } = user;
-  const { isLoading, currentDAO, setIsLoading, isMember } =
-    useContext(EachDaoContext);
+  const { isLoading, currentDAO, isMember } = useContext(EachDaoContext);
 
   const urlParts = pathname.split('/'); // Split the URL by "/"
   const daoId = urlParts[2];
   const domainName = typeof window !== 'undefined' && window.location.origin;
   const url = `${domainName}/daos/${daoId}`;
+
+  console.log(currentDAO, '->currentDAO');
 
   if (isLoading) return <EachDaoLoading />;
 
@@ -84,11 +85,14 @@ const Layout = ({ children }: ILayout) => {
                   </Link>
                 </div>
               </div>
-              <div className="dark:bg-[#1E1E1E] bg-white p-4 flex items-center justify-center rounded-lg">
-                <Globe
-                  className="text-primary dark:text-defaultText"
-                  size={22}
-                />
+              <div className="flex items-center space-x-4">
+                {!isMember && isConnected && <Button>Join DAO</Button>}
+                <div className="dark:bg-[#1E1E1E] bg-white p-4 flex items-center justify-center rounded-lg">
+                  <Globe
+                    className="text-primary dark:text-defaultText"
+                    size={22}
+                  />
+                </div>
               </div>
             </div>
             <p className="text-[#888888] text-sm">{currentDAO.description}</p>
