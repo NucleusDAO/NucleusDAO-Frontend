@@ -79,7 +79,7 @@ const EachDaoMembers = () => {
     <div className="space-y-4 dark:bg-gradient-to-r dark:from-[#1E1E1E] dark:via-[#1E1E1E] dark:to-[#252525] p-4 rounded-lg bg-white">
       <div className="flex justify-between items-center">
         <h1 className="dark:text-white text-dark font-medium text-xl">
-          Transaction details
+          Members
         </h1>
         <Dialog>
           <DialogTrigger asChild>
