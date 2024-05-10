@@ -11,15 +11,16 @@ import {
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
-import { IConnectWalletContext, IProposal } from '@/libs/types';
+import {
+  IConnectWalletContext,
+  IEachProposalView,
+  IProposal,
+} from '@/libs/types';
 import { toast } from 'sonner';
 import Lottie from 'react-lottie';
 import { defaultSuccessOption } from '../animation-options';
 import { AppContext } from '@/context/app-context';
 import { EachDaoContext } from '@/context/each-dao-context';
-import { updateProposalEP } from '@/config/apis';
-import { PROPOSALS } from '@/libs/key';
-import { useQueryClient } from '@tanstack/react-query';
 
 interface IVotingProcess {
   currentProposal: {
@@ -34,9 +35,8 @@ const VotingProcess = ({
   setCurrentProposal,
 }: IVotingProcess) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { voteFor, voteAgainst, getProposal } = useContext(AppContext);
+  const { voteFor, voteAgainst, fetchAllProposals } = useContext(AppContext);
   const { currentDAO } = useContext(EachDaoContext);
-  const queryClient: any = useQueryClient();
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { isConnected, address } = user;
   const userVote = address
@@ -55,6 +55,9 @@ const VotingProcess = ({
   const [showModal, setShowModal] = useState<boolean>(false);
   const hasVoted: boolean = !!userVote?.account;
   const [isVoting, setIsVoting] = useState<boolean>(false);
+  const [eachProposal, setEachProposal] = useState<IEachProposalView | any>(
+    null
+  );
 
   const votingOptions = ['yes', 'no'];
 
@@ -74,33 +77,15 @@ const VotingProcess = ({
           Number(currentProposal.id),
           currentDAO.contractAddress
         );
-        setCurrentProposal(proposal);
-        setShowModal(true);
-        // for (let key in vote) {
-        //   if (typeof vote[key] == 'bigint') {
-        //     vote[key] = Number(vote[key]);
-        //   }
-        // }
-        // await updateProposalEP(currentDAO.id, Number(currentProposal.id), vote);
-        // queryClient.invalidateQueries(PROPOSALS);
+        await setShowModal(true);
+        setEachProposal(proposal);
       } else {
         const proposal = await voteAgainst(
           Number(currentProposal.id),
           currentDAO.contractAddress
         );
-        setCurrentProposal(proposal);
-        setShowModal(true);
-        // const proposals = await getProposal(
-        //   currentDAO.contractAddress,
-        //   Number(currentProposal.id)
-        // );
-        // for (let key in vote) {
-        //   if (typeof vote[key] == 'bigint') {
-        //     vote[key] = Number(vote[key]);
-        //   }
-        // }
-        // await updateProposalEP(currentDAO.id, Number(currentProposal.id), vote);
-        // queryClient.invalidateQueries(PROPOSALS);
+        await setShowModal(true);
+        setEachProposal(proposal);
       }
     } catch (error: any) {
       toast.error(error.message);
@@ -112,11 +97,12 @@ const VotingProcess = ({
   const handleDone = async () => {
     setIsLoading(true);
     try {
+      fetchAllProposals();
       // const proposal = await getProposal(
       //   currentDAO.contractAddress,
       //   Number(currentProposal.id)
       // );
-      // setCurrentProposal(proposal);
+      setCurrentProposal(eachProposal);
       setShowModal(false);
       setIsLoading(false);
     } catch (error: any) {

@@ -14,7 +14,7 @@ const EachDaoDashboard = () => {
   const { currentDAO } = useContext(EachDaoContext);
 
   const usdValue: number =
-    Number(currentDAO.balance) * getAEPrice.price || rate;
+    Number(currentDAO.balance) * getAEPrice?.price || rate;
 
   return (
     <div className="md:flex space-x-0 md:space-x-8 space-y-4 md:space-y-0">

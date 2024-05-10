@@ -82,7 +82,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
       const allDAOs: any = await getAllDaos();
       if (allDAOs) {
         setDAOsData(
-          allDAOs.reverse().map((dao: any) => {
+          allDAOs.map((dao: any) => {
             return {
               organisation: dao.name,
               image: dao.image,
@@ -106,6 +106,8 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     } catch (error: any) {
       toast.error(error.message);
       return <ErrorFetchingComponent />;
+    } finally {
+      setDaoLoading(false);
     }
   };
 
@@ -138,7 +140,6 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
           };
         })
       );
-      console.log(proposals, '-> proposalss');
     } catch (error: any) {
       toast.error(error.message);
       return <ErrorFetchingComponent />;
@@ -146,6 +147,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
       setIsProposalLoading(false);
     }
   };
+
   useEffect(() => {
     fetchAllProposals();
   }, []);
@@ -213,6 +215,23 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     const contract = await getNucleusDAO();
     const res = await contract.getUserActivitiesAcrossDAOs(userAddress);
     const activities = res.decodedResult;
+    for (let i = 0; i < activities.length; i++) {
+      let activity = activities[i];
+      for (let key in activity) {
+        if (typeof activity[key] == 'bigint') {
+          activity[key] = Number(activity[key]);
+        }
+      }
+    }
+    return activities;
+  };
+
+  const getAllUsersActivities = async (daoContractAddress: string) => {
+    const contract = await getBasicDAO(daoContractAddress);
+    const res = await contract.getAllMembersActivities();
+    const activities = res.decodedResult;
+    console.log(res, '-> res');
+    console.log(activities, '-> activities');
     for (let i = 0; i < activities.length; i++) {
       let activity = activities[i];
       for (let key in activity) {
@@ -340,7 +359,9 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     deposit,
     getAllProposals,
     isProposalLoading,
+    fetchAllProposals,
     allProposals,
+    getAllUsersActivities,
     // getEachProposal,
   };
 

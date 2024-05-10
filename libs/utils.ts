@@ -219,7 +219,7 @@ export const updateGetProposal = async ({
   const proposals: IProposal[] = await getProposals(dao.contractAddress);
   setCurrentProposal && setCurrentProposal(proposals);
   setEachDAOProposal(
-    proposals.reverse().map((proposal: IProposal) => {
+    proposals.map((proposal: IProposal) => {
       return {
         type: proposal.proposalType,
         status: getStatus(proposal),

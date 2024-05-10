@@ -27,7 +27,9 @@ const Proposals = () => {
     { value: 'Failed', title: 'Failed' },
   ];
 
-  console.log(allProposal, '-> ');
+  useEffect(() => {
+    setAllProposal(allProposals);
+  }, [isProposalLoading]);
 
   const currentTab: string =
     searchParams.get('q') || searchParams.get('filter') || tabs[0].value;
@@ -58,7 +60,7 @@ const Proposals = () => {
         )
       );
     } else {
-      setAllProposal(eachDAOProposal);
+      setAllProposal(allProposals);
     }
   }, [search, filter]);
 
@@ -95,7 +97,7 @@ const Proposals = () => {
               className="text-[#777777] text-sm font-light"
             >
               <EachFilterTab
-                proposalData={allProposal || []}
+                proposalData={allProposal}
                 search={search}
                 filter={filter}
               />
