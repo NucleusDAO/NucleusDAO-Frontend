@@ -31,7 +31,7 @@ const EachDaoProposals = () => {
     } else {
       setProposals(eachDAOProposal);
     }
-  }, [search, filter]);
+  }, [search, filter, eachDAOProposal]);
 
   if (isProposalLoading) return <EachDaoLoading />;
 

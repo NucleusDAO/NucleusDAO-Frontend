@@ -45,14 +45,8 @@ const ProposalResult = ({
     votes,
     totalVote,
   } = currentProposal;
-  const { getEachDAO, getProposals, executeProposal, getUsersActivities } =
-    useContext(AppContext);
-  const {
-    currentDAO,
-    setCurrentDAO,
-    setEachDAOProposal,
-    setMembersActivities,
-  } = useContext(EachDaoContext);
+  const { executeProposal } = useContext(AppContext);
+  const { currentDAO } = useContext(EachDaoContext);
   const percentageOfVoteFor =
     votes.length > 0 ? (Number(votesFor) / votes.length) * 100 : 0;
   const percentageOfVoteAgainst =
