@@ -2,6 +2,7 @@
 import DashboadLoading from '@/components/loading/dashboard-loading';
 import EachFilterTab from '@/components/proposals/each-proposal-tab';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { proposalLists } from '@/config/dao-config';
 import { AppContext } from '@/context/app-context';
 import { EachDaoContext } from '@/context/each-dao-context';
 import { IProposal } from '@/libs/types';
@@ -11,7 +12,7 @@ import { useDebouncedCallback } from 'use-debounce';
 
 const Proposals = () => {
   const { isProposalLoading, allProposals } = useContext(AppContext);
-  const { eachDAOProposal, setEachDAOProposal } = useContext(EachDaoContext);
+  const { eachDAOProposal } = useContext(EachDaoContext);
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { replace } = useRouter();
@@ -27,10 +28,6 @@ const Proposals = () => {
     { value: 'Failed', title: 'Failed' },
   ];
 
-  // useEffect(() => {
-  //   setAllProposal(allProposals);
-  // }, [isProposalLoading]);
-
   const currentTab: string =
     searchParams.get('q') || searchParams.get('filter') || tabs[0].value;
 
@@ -44,18 +41,18 @@ const Proposals = () => {
     replace(`${pathname}?${params.toString()}`);
   }, 200);
 
+  console.log(proposalLists.find((proposal) => proposal.type === 'addMember'));
+
   useEffect(() => {
     if (search) {
       setAllProposal(
-        eachDAOProposal?.filter(
-          (item: { wallet: string; type: string }) =>
-            item?.wallet?.toLowerCase().includes(search.toLowerCase()) ||
-            item?.type?.toLocaleLowerCase()?.includes(search.toLowerCase())
+        allProposals?.filter((item: { wallet: string; type: string }) =>
+          item?.type?.toLocaleLowerCase()?.includes(search.toLowerCase())
         )
       );
     } else if (filter) {
       setAllProposal(
-        eachDAOProposal?.filter((item: { status: string }) =>
+        allProposals?.filter((item: { status: string }) =>
           item?.status?.toLowerCase().includes(filter.toLowerCase())
         )
       );
