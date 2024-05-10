@@ -45,7 +45,7 @@ const ReviewDao = () => {
       const members = newDaoInfo.members.map((m: any) => {
         return m.address;
       });
-      await createDAO(
+      const dao = await createDAO(
         name,
         id,
         newDaoInfo.info.about,
@@ -58,6 +58,7 @@ const ReviewDao = () => {
         daysToMilliseconds(newDaoInfo.duration),
         newDaoInfo.quorum
       );
+      console.log(dao, '-> response');
       // Deleted dao information from localStorage
       localStorage.removeItem('new_dao');
       updateNewDaoInfo(defaultDaoCreation);

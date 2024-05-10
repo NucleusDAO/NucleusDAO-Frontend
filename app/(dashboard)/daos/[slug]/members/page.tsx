@@ -12,7 +12,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import Link from 'next/link';
 import { CREATE_PROPOSAL_URL } from '@/config/path';
 import { useContext, useEffect, useState } from 'react';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
@@ -21,6 +20,7 @@ import { EachDaoContext } from '@/context/each-dao-context';
 import { usePathname, useRouter } from 'next/navigation';
 import { removeExistingStorageItem } from '@/libs/utils';
 import { AppContext } from '@/context/app-context';
+import EachDaoLoading from '@/components/loading/each-dao-loading';
 
 interface IData {
   wallet: string;
@@ -31,8 +31,8 @@ interface IData {
 const EachDaoMembers = () => {
   const router = useRouter();
   const pathname = usePathname();
-  const { getUsersActivities } = useContext(AppContext);
-  const { membersActivities, isMember, currentDAO } =
+  const { getUsersActivities, getAllUsersActivities } = useContext(AppContext);
+  const { membersActivities, isMember, currentDAO, isMemberLoading } =
     useContext(EachDaoContext);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { isConnected } = user;
@@ -51,13 +51,13 @@ const EachDaoMembers = () => {
 
   useEffect(() => {
     const fetchMembers = async () =>
-      await getUsersActivities(currentDAO.contractAddress);
+      await getAllUsersActivities(currentDAO.contractAddress);
     console.log(
       fetchMembers().then((res) => console.log(res)),
       'fetch memebrs'
     );
   }, []);
-  // console.log(members, '-> membersActivities');
+  console.log(currentDAO, '-> currentDAO');
 
   useEffect(() => {
     if (membersActivities) {
@@ -72,6 +72,8 @@ const EachDaoMembers = () => {
       );
     }
   }, [membersActivities]);
+
+  if (isMemberLoading) return <EachDaoLoading />;
 
   return (
     <div className="space-y-4 dark:bg-gradient-to-r dark:from-[#1E1E1E] dark:via-[#1E1E1E] dark:to-[#252525] p-4 rounded-lg bg-white">
