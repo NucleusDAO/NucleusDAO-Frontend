@@ -82,7 +82,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
       const allDAOs: any = await getAllDaos();
       if (allDAOs) {
         setDAOsData(
-          allDAOs.reverse().map((dao: any) => {
+          allDAOs.map((dao: any) => {
             return {
               organisation: dao.name,
               image: dao.image,
@@ -106,6 +106,8 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     } catch (error: any) {
       toast.error(error.message);
       return <ErrorFetchingComponent />;
+    } finally {
+      setDaoLoading(false);
     }
   };
 
@@ -138,7 +140,6 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
           };
         })
       );
-      console.log(proposals, '-> proposalss');
     } catch (error: any) {
       toast.error(error.message);
       return <ErrorFetchingComponent />;
@@ -146,6 +147,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
       setIsProposalLoading(false);
     }
   };
+
   useEffect(() => {
     fetchAllProposals();
   }, []);
@@ -340,6 +342,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     deposit,
     getAllProposals,
     isProposalLoading,
+    fetchAllProposals,
     allProposals,
     // getEachProposal,
   };

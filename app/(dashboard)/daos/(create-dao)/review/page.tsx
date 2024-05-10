@@ -17,7 +17,7 @@ import { useContext, useState } from 'react';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { IConnectWalletContext } from '@/libs/types';
 import { AppContext } from '@/context/app-context';
-import { createDaoEP, uploadFile } from '@/config/apis';
+import { uploadFile } from '@/config/apis';
 import { toast } from 'sonner';
 import { daysToMilliseconds, defaultDaoCreation } from '@/libs/utils';
 import Lottie from 'react-lottie';
@@ -29,7 +29,6 @@ const ReviewDao = () => {
   const [isRouting, setIsRouting] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
-  const { address } = user;
   const { createDAO, updateNewDaoInfo, newDaoInfo, fetchDAOs } =
     useContext(AppContext);
 
@@ -59,14 +58,6 @@ const ReviewDao = () => {
         daysToMilliseconds(newDaoInfo.duration),
         newDaoInfo.quorum
       );
-      // const create = await createDaoEP({
-      //   name,
-      //   id,
-      //   members: [...members, address],
-      //   currentMembers: members.includes(address)
-      //     ? members
-      //     : members.length + 1,
-      // });
       // Deleted dao information from localStorage
       localStorage.removeItem('new_dao');
       updateNewDaoInfo(defaultDaoCreation);

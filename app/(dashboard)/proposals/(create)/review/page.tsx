@@ -1,10 +1,6 @@
 'use client';
 import { proposalLists, rate } from '@/config/dao-config';
-import {
-  addDaysToCurrentDateAndFormat,
-  cn,
-  defaultProposal,
-} from '@/libs/utils';
+import { defaultProposal } from '@/libs/utils';
 import {
   AlertDialog,
   AlertDialogContent,
@@ -23,13 +19,10 @@ import { defaultSuccessOption } from '@/components/animation-options';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { IConnectWalletContext } from '@/libs/types';
 import { toast } from 'sonner';
-import { createProposalEP, uploadFile } from '@/config/apis';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { PROPOSALS } from '@/libs/key';
+import { uploadFile } from '@/config/apis';
 import { ApiContext } from '@/context/api-context';
 
 const ReviewProposal = () => {
-  const queryClient: any = useQueryClient();
   const {
     createProposal,
     fetchAllProposals,
@@ -38,6 +31,7 @@ const ReviewProposal = () => {
     setNewProposalInfo,
   } = useContext(AppContext);
   const { getAEPrice } = useContext(ApiContext);
+  const [isRouting, setIsRouting] = useState<boolean>(false);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const [isCreating, setIsCreating] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
@@ -47,15 +41,6 @@ const ReviewProposal = () => {
   const router = useRouter();
   const { value } = newProposalInfo;
 
-  const { mutate, isPending } = useMutation({
-    mutationFn: createProposalEP,
-    onSuccess: (response) => {
-      setOpen(true);
-      setIsCreating(false);
-      queryClient.invalidateQueries(PROPOSALS);
-    },
-    onError: (error) => toast.error(error.message),
-  });
   const handleCreateProposal = async () => {
     setIsCreating(true);
     let logoURL;
@@ -81,28 +66,18 @@ const ReviewProposal = () => {
           dao.contractAddress,
           proposalLists[Number(value.type)].type,
           value.description,
-          Number(value.value),
-          value.targetWallet,
+          Number(value.value) || 0,
+          value.targetWallet || address,
           {
             name: value?.newName || '',
             socials: updatedSocials
-              ? [...dao.Socials, ...updatedSocials]
+              ? [...(dao.Socials || []), ...updatedSocials]
               : dao.socials,
             image: logoURL || '',
           }
         );
-        await fetchAllProposals();
-        // for (let key in proposal) {
-        //   if (typeof proposal[key] == 'bigint') {
-        //     proposal[key] = Number(proposal[key]);
-        //   }
-        // }
-        // await mutate(proposal, {
-        //   onSuccess: () => {
-        //     setOpen(true);
-        //     setIsCreating(false);
-        //   },
-        // });
+        setOpen(true);
+        setIsCreating(false);
       } else {
         toast.error('Contract address not found');
       }
@@ -113,10 +88,18 @@ const ReviewProposal = () => {
     }
   };
 
-  const handleGoHome = () => {
-    localStorage.removeItem('new_proposal');
-    setNewProposalInfo(defaultProposal);
-    router.push(PROPOSALS_URL);
+  const handleGoHome = async () => {
+    setIsRouting(true);
+    try {
+      await fetchAllProposals();
+      setIsRouting(false);
+      localStorage.removeItem('new_proposal');
+      setNewProposalInfo(defaultProposal);
+      router.push(PROPOSALS_URL);
+    } catch (error: any) {
+      setIsRouting(false);
+      toast.error(error.message);
+    }
   };
 
   return (
@@ -238,7 +221,11 @@ const ReviewProposal = () => {
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter className="w-full">
-              <Button className="w-full" onClick={handleGoHome}>
+              <Button
+                className="w-full"
+                onClick={handleGoHome}
+                loading={isRouting}
+              >
                 Back home
               </Button>
             </AlertDialogFooter>

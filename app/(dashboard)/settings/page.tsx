@@ -27,7 +27,6 @@ import { ApiContext } from '@/context/api-context';
 import { EACH_USER } from '@/libs/key';
 
 const Profile = () => {
-  const queryClient: any = useQueryClient();
   const [imageUploading, setImageUploading] = useState<boolean>(false);
   const {
     user: { address },
@@ -79,12 +78,14 @@ const Profile = () => {
         formData.append('file', data.profilePicture);
         formData.append('upload_preset', 'bqr7mcvh');
         const fileUpload = await uploadFile(formData);
+        console.log(fileUpload, '-> uplpad');
         profilePicture = fileUpload.data.url;
       }
-      profilePicture = data.profilePicture;
       const updatedData = { ...data, profilePicture, address, theme: 'dark' };
+      console.log(updatedData, '->');
       await mutateUsers(updatedData);
-      queryClient.invalidateQueries(EACH_USER);
+      // console.log(response, '->');
+      // queryClient.invalidateQueries(EACH_USER);
     } catch (error: any) {
       toast.error(error.message);
     } finally {

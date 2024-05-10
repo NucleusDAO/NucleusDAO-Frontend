@@ -56,7 +56,7 @@ const AllVoters = ({ voters }: IAllVoters) => {
             width={60}
             className="mx-auto"
           />
-          <p className="text-center">No votes currently</p>
+          <p className="text-center font-light">No votes currently</p>
         </div>
       )}
     </div>

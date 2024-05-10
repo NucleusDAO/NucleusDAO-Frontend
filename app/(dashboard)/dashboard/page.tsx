@@ -13,11 +13,9 @@ import { AppContext } from '@/context/app-context';
 import DashboadLoading from '@/components/loading/dashboard-loading';
 import { toast } from 'sonner';
 import { useSearchParams } from 'next/navigation';
-import { ApiContext } from '@/context/api-context';
 
 const Dashboard = () => {
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
-  const { proposals, isLoadingProposal } = useContext(ApiContext);
   const { DAOsData, daoLoading, allProposals, isProposalLoading } =
     useContext(AppContext);
   const connected: boolean = user.isConnected;

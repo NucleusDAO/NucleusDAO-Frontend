@@ -37,7 +37,6 @@ const ProposalCard = ({
   id,
   daoId,
   endTime,
-  organisation,
 }: IProposalCard) => {
   const { user } = useContext<any>(ConnectWalletContext);
   const { address } = user;
@@ -73,7 +72,7 @@ const ProposalCard = ({
                     <p className="text-defaultText text-xs md:text-base">
                       Proposal Type
                     </p>
-                    <h3 className="dark:text-white capitalize text-dark font-medium text-sm md:text-lg">
+                    <h3 className="dark:text-white capitalize text-dark font-medium text-sm md:text-lg h-[8vh]">
                       {
                         proposalLists.find(
                           (proposal: { type: string }) => proposal.type === type
