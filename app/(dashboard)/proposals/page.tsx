@@ -27,9 +27,9 @@ const Proposals = () => {
     { value: 'Failed', title: 'Failed' },
   ];
 
-  useEffect(() => {
-    setAllProposal(allProposals);
-  }, [isProposalLoading]);
+  // useEffect(() => {
+  //   setAllProposal(allProposals);
+  // }, [isProposalLoading]);
 
   const currentTab: string =
     searchParams.get('q') || searchParams.get('filter') || tabs[0].value;
@@ -62,7 +62,7 @@ const Proposals = () => {
     } else {
       setAllProposal(allProposals);
     }
-  }, [search, filter]);
+  }, [search, filter, isProposalLoading]);
 
   if (isProposalLoading) return <DashboadLoading />;
 

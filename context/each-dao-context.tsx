@@ -78,6 +78,8 @@ export const EachDaoContextProvider = ({ children }: IAppProvider) => {
     }
   }, [daoId]);
 
+  console.log(!!currentDAO, '->current dao');
+
   useEffect(() => {
     setIsProposalLoading(true);
     if (!!currentDAO) {
@@ -119,6 +121,8 @@ export const EachDaoContextProvider = ({ children }: IAppProvider) => {
       })();
     }
   }, [currentDAO]);
+
+  console.log(eachDAOProposal, '-> eachDAOProposal');
 
   useEffect(() => {
     setIsMemberLoading(true);
