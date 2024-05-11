@@ -13,7 +13,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { redirect, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { AppContext } from '@/context/app-context';
 import { defaultDaoCreation } from '@/libs/utils';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';

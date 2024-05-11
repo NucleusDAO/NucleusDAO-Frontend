@@ -60,7 +60,7 @@ const ProposalCard = ({
           <div className="h-[30vh] w-[1px] bg-[#292929]" />
           <div className="p-2 md:p-4 space-y-6 w-full">
             <div className="space-y-3">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between space-x-4">
                 <div className="flex space-x-4 items-center">
                   <Image
                     src={RoundedIcon}
@@ -72,7 +72,7 @@ const ProposalCard = ({
                     <p className="text-defaultText text-xs md:text-base">
                       Proposal Type
                     </p>
-                    <h3 className="dark:text-white capitalize text-dark font-medium text-sm md:text-lg h-[8vh]">
+                    <h3 className="dark:text-white capitalize text-dark font-medium text-sm md:text-lg h-[10vh]">
                       {
                         proposalLists.find(
                           (proposal: { type: string }) => proposal.type === type

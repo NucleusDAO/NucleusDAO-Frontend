@@ -45,7 +45,8 @@ const ProposalResult = ({
     votes,
     totalVote,
   } = currentProposal;
-  const { executeProposal } = useContext(AppContext);
+  const { executeProposal, fetchAllProposals, fetchDAOs } =
+    useContext(AppContext);
   const { currentDAO } = useContext(EachDaoContext);
   const percentageOfVoteFor =
     votes.length > 0 ? (Number(votesFor) / votes.length) * 100 : 0;
@@ -67,6 +68,8 @@ const ProposalResult = ({
       );
       setCurrentProposal(proposal);
       toast.success('Proposal executed successfully');
+      fetchDAOs();
+      fetchAllProposals();
     } catch (error: any) {
       toast.error(error.message);
     } finally {

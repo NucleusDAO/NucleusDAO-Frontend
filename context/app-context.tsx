@@ -118,6 +118,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
   const fetchAllProposals = async () => {
     try {
       const proposals = await getAllProposals();
+      console.log(proposals, '-> prop');
       setAllProposals(
         proposals.reverse().map((proposal: IProposal) => {
           return {
@@ -129,7 +130,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
             duration: getDuration(proposal.startTime, proposal.endTime),
             totalVote: `${proposal.votesFor + proposal.votesAgainst}`,
             organisation: proposal.daoName,
-            id: proposal?.id ? proposal?.id?.toString() : '',
+            id: proposal.id,
             startTime: proposal.startTime,
             endTime: proposal.endTime,
             daoId: proposal.daoId,
