@@ -113,12 +113,13 @@ const proposalInfoSchema = z.object({
 const defineMembershipSchema = z.object({
   members: z.array(member).refine((data: any) => {
     for (const [index, item] of data.entries()) {
+      console.log(item, '-item');
       if (item.address === '' || /^\s+$/.test(item.address)) {
         throw new z.ZodError([
           {
             code: 'custom',
             path: ['members', index], // Pass the index here
-            message: 'Type and link are both required for social media',
+            message: 'Member address is required',
           },
         ]);
       }
@@ -127,6 +128,21 @@ const defineMembershipSchema = z.object({
     return true;
   }),
 });
+
+// const defineMembershipSchema = z.object({
+//   members: z.array(member).refine((data) => {
+//     if (data.length === 0 || data.every((item) => item.address.trim() === '')) {
+//       throw new z.ZodError([
+//         {
+//           code: 'custom',
+//           path: [],
+//           message: 'At least one member address is required',
+//         },
+//       ]);
+//     }
+//     return true;
+//   }),
+// });
 
 const editProfile = z.object({
   username: z

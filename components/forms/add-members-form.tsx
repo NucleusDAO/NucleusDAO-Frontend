@@ -48,7 +48,20 @@ const AddMemberForm = () => {
   }, [form.watch]);
 
   const onSubmit = async (data: any) => {
-    router.push(GOVERNANCE_SETTINGS_URL);
+    const isEmptyAddress = data.members.some(
+      (item: { address: string }) => item.address === ''
+    );
+    const index = data.members.findIndex(
+      (item: { address: string }) => item.address === ''
+    );
+    if (isEmptyAddress) {
+      form.setError(`members.${index}.address`, {
+        type: 'onChange',
+        message: 'Field should not be empty',
+      });
+    } else {
+      router.push(GOVERNANCE_SETTINGS_URL);
+    }
   };
   return (
     <Form {...form}>
