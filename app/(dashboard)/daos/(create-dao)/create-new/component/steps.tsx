@@ -41,11 +41,7 @@ const Steps = () => {
       title: 'Define Membership',
       url: DEFINE_MEMBERSHIP_URL,
       disabled: !newDaoInfo.style || validateDaoInfo(newDaoInfo),
-      completed:
-        validateMembership(newDaoInfo.members) ||
-        pathname === DEFINE_MEMBERSHIP_URL ||
-        pathname === GOVERNANCE_SETTINGS_URL ||
-        pathname === REVIEW_DAO_URL,
+      completed: validateMembership(newDaoInfo.members),
     },
     {
       title: 'Governance Settings',

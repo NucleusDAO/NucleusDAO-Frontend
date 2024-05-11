@@ -19,11 +19,7 @@ import { IConnectWalletContext } from '@/libs/types';
 import { AppContext } from '@/context/app-context';
 import { uploadFile } from '@/config/apis';
 import { toast } from 'sonner';
-import {
-  daysToMilliseconds,
-  defaultDaoCreation,
-  validateMembership,
-} from '@/libs/utils';
+import { daysToMilliseconds, defaultDaoCreation } from '@/libs/utils';
 import Lottie from 'react-lottie';
 import { defaultSuccessOption } from '@/components/animation-options';
 
@@ -36,8 +32,6 @@ const ReviewDao = () => {
   const { createDAO, updateNewDaoInfo, newDaoInfo, fetchDAOs } =
     useContext(AppContext);
 
-  console.log(validateMembership(newDaoInfo.members));
-
   const handleCreateDAO = async () => {
     setIsLoading(true);
     try {
@@ -48,39 +42,21 @@ const ReviewDao = () => {
       const logoURL = fileUpload.data.url;
       const name = newDaoInfo.info.daoName;
       const id = newDaoInfo.info.daoName.replace(/\s+/g, '-').toLowerCase();
-      const members = !validateMembership(newDaoInfo.members)
-        ? []
-        : newDaoInfo.members.map((m: any) => {
-            return m.address;
-          });
-      // const dao = await createDAO(
-      //   name,
-      //   id,
-      //   newDaoInfo.info.about,
-      //   logoURL,
-      //   newDaoInfo.info.socialMedia.map((s: any) => {
-      //     return { name: s.type, url: s.link };
-      //   }),
-      //   members,
-      //   0,
-      //   daysToMilliseconds(newDaoInfo.duration),
-      //   newDaoInfo.quorum
-      // );
-      console.log(
-        {
-          name,
-          id,
-          about: newDaoInfo.info.about,
-          logoURL,
-          soc: newDaoInfo.info.socialMedia.map((s: any) => {
-            return { name: s.type, url: s.link };
-          }),
-          members,
-          value: 0,
-          days: daysToMilliseconds(newDaoInfo.duration),
-          q: newDaoInfo.quorum,
-        },
-        '-> response'
+      const members = newDaoInfo.members.map((m: any) => {
+        return m.address;
+      });
+      const dao = await createDAO(
+        name,
+        id,
+        newDaoInfo.info.about,
+        logoURL,
+        newDaoInfo.info.socialMedia.map((s: any) => {
+          return { name: s.type, url: s.link };
+        }),
+        members,
+        0,
+        daysToMilliseconds(newDaoInfo.duration),
+        newDaoInfo.quorum
       );
       // Deleted dao information from localStorage
       localStorage.removeItem('new_dao');
@@ -102,6 +78,8 @@ const ReviewDao = () => {
     } catch (error: any) {
       setIsRouting(false);
       toast.error(error.message);
+    } finally {
+      setIsRouting(false);
     }
   };
 
@@ -176,13 +154,10 @@ const ReviewDao = () => {
         </h1>
         <div className="grid grid-cols-2 text-xs md:text-sm md:w-4/6">
           <p className="dark:text-white text-dark">Members</p>
-          {validateMembership(newDaoInfo.members) ? (
-            <p className="text-defaultText">{`${
-              newDaoInfo.members[0].address ? newDaoInfo.members.length : '0'
-            } wallet address (es)`}</p>
-          ) : (
-            <p className="text-defaultText">No members address</p>
-          )}
+
+          <p className="text-defaultText">{`${
+            newDaoInfo.members[0].address ? newDaoInfo.members.length + 1 : '1'
+          } wallet address (es)`}</p>
         </div>
       </div>
 
