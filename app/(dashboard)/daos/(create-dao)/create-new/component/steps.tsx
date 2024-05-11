@@ -3,6 +3,7 @@ import {
   DAO_INFO_URL,
   DEFINE_MEMBERSHIP_URL,
   GOVERNANCE_SETTINGS_URL,
+  REVIEW_DAO_URL,
   SELECT_DAO_STYLE_URL,
 } from '@/config/path';
 import { AppContext } from '@/context/app-context';
@@ -16,12 +17,19 @@ const Steps = () => {
   const pathname = usePathname();
   const { newDaoInfo } = useContext(AppContext);
 
-  const steps: { title: string; url: string; completed?: boolean; disabled?: boolean; }[] = [
+  console.log(newDaoInfo, '-> ');
+
+  const steps: {
+    title: string;
+    url: string;
+    completed?: boolean;
+    disabled?: boolean;
+  }[] = [
     {
       title: 'Select DAO Style',
       url: SELECT_DAO_STYLE_URL,
       completed: newDaoInfo.style,
-      disabled: false
+      disabled: false,
     },
     {
       title: 'DAO Information',
@@ -33,12 +41,19 @@ const Steps = () => {
       title: 'Define Membership',
       url: DEFINE_MEMBERSHIP_URL,
       disabled: !newDaoInfo.style || validateDaoInfo(newDaoInfo),
-      completed: validateMembership(newDaoInfo.members)
+      completed:
+        validateMembership(newDaoInfo.members) ||
+        pathname === DEFINE_MEMBERSHIP_URL ||
+        pathname === GOVERNANCE_SETTINGS_URL ||
+        pathname === REVIEW_DAO_URL,
     },
     {
       title: 'Governance Settings',
       url: GOVERNANCE_SETTINGS_URL,
-      disabled: !newDaoInfo.style || validateDaoInfo(newDaoInfo) || !validateMembership(newDaoInfo.members),
+      disabled:
+        !newDaoInfo.style ||
+        validateDaoInfo(newDaoInfo) ||
+        !validateMembership(newDaoInfo.members),
       completed: newDaoInfo.duration > 0 && newDaoInfo.quorum > 0,
     },
   ];
@@ -51,7 +66,7 @@ const Steps = () => {
           <Link href={step.disabled ? '#' : step.url} key={step.title}>
             <div
               className={cn('flex space-x-3 py-1 md:py-4 items-center text-sm')}
-              role='button'
+              role="button"
             >
               <div className="w-fit relative">
                 <div

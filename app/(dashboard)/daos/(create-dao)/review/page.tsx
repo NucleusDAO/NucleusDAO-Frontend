@@ -19,7 +19,11 @@ import { IConnectWalletContext } from '@/libs/types';
 import { AppContext } from '@/context/app-context';
 import { uploadFile } from '@/config/apis';
 import { toast } from 'sonner';
-import { daysToMilliseconds, defaultDaoCreation } from '@/libs/utils';
+import {
+  daysToMilliseconds,
+  defaultDaoCreation,
+  validateMembership,
+} from '@/libs/utils';
 import Lottie from 'react-lottie';
 import { defaultSuccessOption } from '@/components/animation-options';
 
@@ -32,6 +36,8 @@ const ReviewDao = () => {
   const { createDAO, updateNewDaoInfo, newDaoInfo, fetchDAOs } =
     useContext(AppContext);
 
+  console.log(validateMembership(newDaoInfo.members));
+
   const handleCreateDAO = async () => {
     setIsLoading(true);
     try {
@@ -42,23 +48,40 @@ const ReviewDao = () => {
       const logoURL = fileUpload.data.url;
       const name = newDaoInfo.info.daoName;
       const id = newDaoInfo.info.daoName.replace(/\s+/g, '-').toLowerCase();
-      const members = newDaoInfo.members.map((m: any) => {
-        return m.address;
-      });
-      const dao = await createDAO(
-        name,
-        id,
-        newDaoInfo.info.about,
-        logoURL,
-        newDaoInfo.info.socialMedia.map((s: any) => {
-          return { name: s.type, url: s.link };
-        }),
-        members,
-        0,
-        daysToMilliseconds(newDaoInfo.duration),
-        newDaoInfo.quorum
+      const members = !validateMembership(newDaoInfo.members)
+        ? []
+        : newDaoInfo.members.map((m: any) => {
+            return m.address;
+          });
+      // const dao = await createDAO(
+      //   name,
+      //   id,
+      //   newDaoInfo.info.about,
+      //   logoURL,
+      //   newDaoInfo.info.socialMedia.map((s: any) => {
+      //     return { name: s.type, url: s.link };
+      //   }),
+      //   members,
+      //   0,
+      //   daysToMilliseconds(newDaoInfo.duration),
+      //   newDaoInfo.quorum
+      // );
+      console.log(
+        {
+          name,
+          id,
+          about: newDaoInfo.info.about,
+          logoURL,
+          soc: newDaoInfo.info.socialMedia.map((s: any) => {
+            return { name: s.type, url: s.link };
+          }),
+          members,
+          value: 0,
+          days: daysToMilliseconds(newDaoInfo.duration),
+          q: newDaoInfo.quorum,
+        },
+        '-> response'
       );
-      console.log(dao, '-> response');
       // Deleted dao information from localStorage
       localStorage.removeItem('new_dao');
       updateNewDaoInfo(defaultDaoCreation);
@@ -124,24 +147,26 @@ const ReviewDao = () => {
         <div className="grid grid-cols-2 text-xs md:text-sm md:w-4/6">
           <p className="dark:text-white text-dark">Links</p>
           {!newDaoInfo.info.socialMedia[0].type && 'None'}
-          <div className="flex space-x-4">
-            {newDaoInfo.info.socialMedia.map(
-              (socialMedia: { link: string; type: string }) => (
-                <Link
-                  href={socialMedia.link}
-                  key={socialMedia.type}
-                  target="_blank"
-                >
-                  <div className="flex items-center space-x-2 text-primary">
-                    <p className="">{socialMedia.type}</p>
-                    <div className="border border-primary rounded-sm p-0.5">
-                      <MoveUpRight size={10} />
+          {newDaoInfo.info.socialMedia[0].type && (
+            <div className="flex space-x-4">
+              {newDaoInfo.info.socialMedia.map(
+                (socialMedia: { link: string; type: string }) => (
+                  <Link
+                    href={socialMedia.link}
+                    key={socialMedia.type}
+                    target="_blank"
+                  >
+                    <div className="flex items-center space-x-2 text-primary">
+                      <p className="">{socialMedia.type}</p>
+                      <div className="border border-primary rounded-sm p-0.5">
+                        <MoveUpRight size={10} />
+                      </div>
                     </div>
-                  </div>
-                </Link>
-              )
-            )}
-          </div>
+                  </Link>
+                )
+              )}
+            </div>
+          )}
         </div>
       </div>
 
@@ -151,9 +176,13 @@ const ReviewDao = () => {
         </h1>
         <div className="grid grid-cols-2 text-xs md:text-sm md:w-4/6">
           <p className="dark:text-white text-dark">Members</p>
-          <p className="text-defaultText">{`${
-            newDaoInfo.members[0].address ? newDaoInfo.members.length : '0'
-          } wallet address (es)`}</p>
+          {validateMembership(newDaoInfo.members) ? (
+            <p className="text-defaultText">{`${
+              newDaoInfo.members[0].address ? newDaoInfo.members.length : '0'
+            } wallet address (es)`}</p>
+          ) : (
+            <p className="text-defaultText">No members address</p>
+          )}
         </div>
       </div>
 
