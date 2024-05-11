@@ -84,7 +84,9 @@ export const encodeURI = (
   return modifiedUrl;
 };
 
-export const validateMembership = (membershipArray: { address: string }[]) => {
+export const validateMembership: any = (
+  membershipArray: { address: string }[]
+) => {
   return !membershipArray.some((item) => item.address === '');
 };
 

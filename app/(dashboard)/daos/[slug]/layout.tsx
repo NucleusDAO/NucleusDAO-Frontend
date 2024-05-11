@@ -12,6 +12,14 @@ import EachDaoLoading from '@/components/loading/each-dao-loading';
 import { EachDaoContext } from '@/context/each-dao-context';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { IConnectWalletContext } from '@/libs/types';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 
 interface ILayout {
   children: ReactNode;
@@ -86,7 +94,35 @@ const Layout = ({ children }: ILayout) => {
                 </div>
               </div>
               <div className="flex items-center space-x-4">
-                {!isMember && isConnected && <Button>Join DAO</Button>}
+                <Dialog>
+                  <DialogTrigger asChild>
+                    {!isMember && isConnected && <Button>Join DAO</Button>}
+                  </DialogTrigger>
+                  <DialogContent className="dark:bg-gradient-to-r dark:from-[#1E1E1E] dark:via-[#1E1E1E]">
+                    <DialogHeader>
+                      <DialogTitle className="text-white font-medium py-3">
+                        Join DAO
+                      </DialogTitle>
+                      <DialogDescription className="font-light py-2">
+                        You have to make a proposal before you can become a
+                        member of a DAO. Do you want to make a proposal now?
+                      </DialogDescription>
+                    </DialogHeader>
+
+                    <Button
+                      className="w-full"
+                      onClick={() => {
+                        removeExistingStorageItem('new_proposal');
+                        router.push(
+                          `${CREATE_PROPOSAL_URL}?ct=${daoId}&enums=1&type=new`
+                        );
+                      }}
+                    >
+                      Propose
+                    </Button>
+                  </DialogContent>
+                </Dialog>
+
                 <div className="dark:bg-[#1E1E1E] bg-white p-4 flex items-center justify-center rounded-lg">
                   <Globe
                     className="text-primary dark:text-defaultText"

@@ -35,6 +35,7 @@ const CreateNewProposalForm = () => {
   const { address } = user;
   const searchParams = useSearchParams();
   const type: string = searchParams.get('enums') || newProposalInfo.value.type;
+  const memberType = searchParams.get('type') || '';
   const daoID = searchParams.get('ct');
   const router = useRouter();
   const form = useForm<z.infer<typeof proposalInfoSchema>>({
@@ -72,7 +73,12 @@ const CreateNewProposalForm = () => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <SelectFormField form={form} filterData={proposalLists} />
+        <SelectFormField
+          form={form}
+          filterData={
+            memberType ? [proposalLists[Number(type)]] : proposalLists
+          }
+        />
 
         <FormField
           control={form.control}
