@@ -35,7 +35,8 @@ const VotingProcess = ({
   setCurrentProposal,
 }: IVotingProcess) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { voteFor, voteAgainst, fetchAllProposals } = useContext(AppContext);
+  const { voteFor, voteAgainst, fetchAllProposals, fetchDAOs } =
+    useContext(AppContext);
   const { currentDAO } = useContext(EachDaoContext);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { isConnected, address } = user;
@@ -98,6 +99,7 @@ const VotingProcess = ({
     setIsLoading(true);
     try {
       fetchAllProposals();
+      fetchDAOs();
       // const proposal = await getProposal(
       //   currentDAO.contractAddress,
       //   Number(currentProposal.id)
