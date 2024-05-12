@@ -13,11 +13,18 @@ import { AppContext } from '@/context/app-context';
 import DashboadLoading from '@/components/loading/dashboard-loading';
 import { toast } from 'sonner';
 import { useSearchParams } from 'next/navigation';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const Dashboard = () => {
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
-  const { DAOsData, daoLoading, totalProposals, totalVotes, getActivities } =
-    useContext(AppContext);
+  const {
+    DAOsData,
+    daoLoading,
+    totalProposals,
+    totalVotes,
+    isLoadingActivities,
+    getActivities,
+  } = useContext(AppContext);
   const connected: boolean = user.isConnected;
   const searchParams = useSearchParams();
   const currentSearch = searchParams.get('q');
@@ -62,7 +69,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (user.address) {
-      getActivities();
+      getActivities(user.address);
     }
   }, [user.address]);
 
@@ -90,16 +97,29 @@ const Dashboard = () => {
         )}
       </div>
 
-      <div className="gap-6 md:grid-cols-3 grid">
-        {dashboardFeedsData(
-          connected,
-          getUserTotalDao(),
-          totalProposals,
-          totalVotes
-        ).map((feed) => (
-          <Cards key={feed.title} {...feed} />
-        ))}
-      </div>
+      {isLoadingActivities ? (
+        <div className="gap-6 md:grid-cols-3 grid">
+          {Array(3)
+            .fill(null)
+            .map((_, index) => (
+              <Skeleton
+                className="w-full h-20 dark:bg-[#1E1E1E] bg-[#F5F5F5]"
+                key={`card-${index}`}
+              />
+            ))}
+        </div>
+      ) : (
+        <div className="gap-6 md:grid-cols-3 grid">
+          {dashboardFeedsData(
+            connected,
+            getUserTotalDao(),
+            totalProposals,
+            totalVotes
+          ).map((feed) => (
+            <Cards key={feed.title} {...feed} />
+          ))}
+        </div>
+      )}
 
       <AllDaos
         dashboardTableData={getDAOsData}

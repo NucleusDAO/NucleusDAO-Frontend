@@ -39,9 +39,11 @@ const ProposalResult = ({
     useContext(AppContext);
   const { currentDAO, isMember } = useContext(EachDaoContext);
   const percentageOfVoteFor: number =
-    votes.length > 0 ? (Number(votesFor) / votes.length) * 100 : 0;
+    votes.length > 0 ? (Number(votesFor) / currentDAO.members.length) * 100 : 0;
   const percentageOfVoteAgainst: number =
-    votes.length > 0 ? (Number(votesAgainst) / votes.length) * 100 : 0;
+    votes.length > 0
+      ? (Number(votesAgainst) / currentDAO.members.length) * 100
+      : 0;
 
   const handleExecuteProposal = async () => {
     setIsExecuting(true);
@@ -71,7 +73,9 @@ const ProposalResult = ({
           </h3>
           <p className="text-sm font-light">
             Approved by:{' '}
-            <span className="dark:text-white text-dark font-medium">{`${percentageOfVoteFor}%`}</span>
+            <span className="dark:text-white text-dark font-medium">{`${percentageOfVoteFor.toFixed(
+              2
+            )}%`}</span>
           </p>
         </div>
         <div className="space-y-3">
@@ -79,7 +83,9 @@ const ProposalResult = ({
             <p className="dark:text-white text-dark font-medium text-base">
               Yes
             </p>
-            <p className="text-defaultText font-light text-base">{`${percentageOfVoteFor}%`}</p>
+            <p className="text-defaultText font-light text-base">{`${percentageOfVoteFor.toFixed(
+              2
+            )}%`}</p>
           </div>
           <Slider
             defaultValue={[percentageOfVoteFor]}
@@ -104,16 +110,17 @@ const ProposalResult = ({
         </div>
         {isMember && (
           <>
-            {getStatus(currentProposal) === 'Pending' && (
-              <Button
-                className="w-full mt-1.5"
-                onClick={handleExecuteProposal}
-                loading={isExecuting}
-                loadingText="Executing..."
-              >
-                Excecute Proposal
-              </Button>
-            )}
+            {getStatus(currentProposal) === 'Pending' &&
+              percentageOfVoteFor >= Number(currentDAO.quorum) && (
+                <Button
+                  className="w-full mt-1.5"
+                  onClick={handleExecuteProposal}
+                  loading={isExecuting}
+                  loadingText="Executing..."
+                >
+                  Excecute Proposal
+                </Button>
+              )}
           </>
         )}
       </div>
