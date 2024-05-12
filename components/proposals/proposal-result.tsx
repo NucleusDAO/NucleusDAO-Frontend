@@ -7,14 +7,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { formatDate, getTimeDifference, updateGetProposal } from '@/libs/utils';
+import { formatDate, getStatus, getTimeDifference } from '@/libs/utils';
 import { EachDaoContext } from '@/context/each-dao-context';
 import React, { useContext, useState } from 'react';
 import { Button } from '../ui/button';
 import { AppContext } from '@/context/app-context';
 import { toast } from 'sonner';
-import { updateProposalEP } from '@/config/apis';
-import { usePathname } from 'next/navigation';
 
 interface IProposalResult {
   currentProposal: {
@@ -36,28 +34,14 @@ const ProposalResult = ({
   setCurrentProposal,
 }: IProposalResult) => {
   const [isExecuting, setIsExecuting] = useState<boolean>(false);
-  const {
-    duration,
-    startTime,
-    endTime,
-    votesFor,
-    votesAgainst,
-    votes,
-    totalVote,
-  } = currentProposal;
-  const { executeProposal, fetchAllProposals, fetchDAOs } =
+  const { startTime, endTime, votesFor, votesAgainst, votes } = currentProposal;
+  const { executeProposal, fetchAllProposals, getActivities, fetchDAOs } =
     useContext(AppContext);
-  const { currentDAO } = useContext(EachDaoContext);
-  const percentageOfVoteFor =
+  const { currentDAO, isMember } = useContext(EachDaoContext);
+  const percentageOfVoteFor: number =
     votes.length > 0 ? (Number(votesFor) / votes.length) * 100 : 0;
-  const percentageOfVoteAgainst =
+  const percentageOfVoteAgainst: number =
     votes.length > 0 ? (Number(votesAgainst) / votes.length) * 100 : 0;
-
-  const pathname = usePathname();
-  const urlParts = pathname.split('/');
-  const proposalId = urlParts[urlParts.length - 1];
-
-  console.log(votes.length, '->');
 
   const handleExecuteProposal = async () => {
     setIsExecuting(true);
@@ -70,6 +54,7 @@ const ProposalResult = ({
       toast.success('Proposal executed successfully');
       fetchDAOs();
       fetchAllProposals();
+      getActivities();
     } catch (error: any) {
       toast.error(error.message);
     } finally {
@@ -117,9 +102,9 @@ const ProposalResult = ({
             thumbClassName="hidden"
           />
         </div>
-        {currentProposal.status === 'Pending' && (
-          <React.Fragment>
-            {percentageOfVoteFor >= currentDAO.quorum && (
+        {isMember && (
+          <>
+            {getStatus(currentProposal) === 'Pending' && (
               <Button
                 className="w-full mt-1.5"
                 onClick={handleExecuteProposal}
@@ -129,7 +114,7 @@ const ProposalResult = ({
                 Excecute Proposal
               </Button>
             )}
-          </React.Fragment>
+          </>
         )}
       </div>
 

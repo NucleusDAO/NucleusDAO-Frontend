@@ -32,7 +32,7 @@ const EachDaoMembers = () => {
   const router = useRouter();
   const pathname = usePathname();
   const { getUsersActivities, getAllUsersActivities } = useContext(AppContext);
-  const { membersActivities, isMember, currentDAO, isMemberLoading } =
+  const { membersActivities, isMember, currentDAO, memberLoading } =
     useContext(EachDaoContext);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { isConnected } = user;
@@ -73,7 +73,7 @@ const EachDaoMembers = () => {
     }
   }, [membersActivities]);
 
-  if (isMemberLoading) return <EachDaoLoading />;
+  if (memberLoading) return <EachDaoLoading />;
 
   return (
     <div className="space-y-4 dark:bg-gradient-to-r dark:from-[#1E1E1E] dark:via-[#1E1E1E] dark:to-[#252525] p-4 rounded-lg bg-white">

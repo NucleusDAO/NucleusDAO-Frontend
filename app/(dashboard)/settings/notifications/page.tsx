@@ -35,7 +35,7 @@ const Notifications = () => {
     resolver: zodResolver(editNotifications),
     defaultValues: {
       newDAO: eachUser?.emailNotificationsSettings?.newDAO || false,
-      newProposal: eachUser?.emailNotificationsSettings?.newDAO || false,
+      newProposal: eachUser?.emailNotificationsSettings?.newProposal || false,
       newUpdate: eachUser?.emailNotificationsSettings?.newUpdate || false,
       pushNewDAO: eachUser?.pushNotificationsSettings?.newDAO || false,
       pushNewProposal:
@@ -53,13 +53,11 @@ const Notifications = () => {
     onError: (error: any) => toast.error(error.message),
   });
 
-  console.log(eachUser, '-> a');
-
   const onSubmit = async (data: any) => {
     const emailNotificationsSettings = {
       newDAO: data.newDAO,
       newProposal: data.newProposal,
-      newUpdate: data.newProposal,
+      newUpdate: data.newUpdate,
     };
     const pushNotificationsSettings = {
       newDAO: data.pushNewDAO,

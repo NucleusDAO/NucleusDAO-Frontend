@@ -21,6 +21,7 @@ import Lottie from 'react-lottie';
 import { defaultSuccessOption } from '../animation-options';
 import { AppContext } from '@/context/app-context';
 import { EachDaoContext } from '@/context/each-dao-context';
+import { cn, getStatus } from '@/libs/utils';
 
 interface IVotingProcess {
   currentProposal: {
@@ -35,7 +36,7 @@ const VotingProcess = ({
   setCurrentProposal,
 }: IVotingProcess) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { voteFor, voteAgainst, fetchAllProposals, fetchDAOs } =
+  const { voteFor, voteAgainst, getActivities, fetchAllProposals, fetchDAOs } =
     useContext(AppContext);
   const { currentDAO } = useContext(EachDaoContext);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
@@ -61,37 +62,47 @@ const VotingProcess = ({
   );
 
   const votingOptions = ['yes', 'no'];
+  const isDisabled: boolean =
+    !!userVote?.account || getStatus(currentProposal) === 'Failed';
 
   const handleOptionChange = (option: string) => {
-    if (isConnected) {
-      setSelectedOption(option);
+    if (isDisabled) {
+      null;
     } else {
-      toast.error('Connect your wallet first!');
+      if (isConnected) {
+        setSelectedOption(option);
+      } else {
+        toast.error('Connect your wallet first!');
+      }
     }
   };
 
   const handleVote = async () => {
-    setIsVoting(true);
-    try {
-      if (selectedOption === 'yes') {
-        const proposal = await voteFor(
-          Number(currentProposal.id),
-          currentDAO.contractAddress
-        );
-        await setShowModal(true);
-        setEachProposal(proposal);
-      } else {
-        const proposal = await voteAgainst(
-          Number(currentProposal.id),
-          currentDAO.contractAddress
-        );
-        await setShowModal(true);
-        setEachProposal(proposal);
+    if (isDisabled) {
+      null;
+    } else {
+      setIsVoting(true);
+      try {
+        if (selectedOption === 'yes') {
+          const proposal = await voteFor(
+            Number(currentProposal.id),
+            currentDAO.contractAddress
+          );
+          await setShowModal(true);
+          setEachProposal(proposal);
+        } else {
+          const proposal = await voteAgainst(
+            Number(currentProposal.id),
+            currentDAO.contractAddress
+          );
+          await setShowModal(true);
+          setEachProposal(proposal);
+        }
+      } catch (error: any) {
+        toast.error(error.message);
+      } finally {
+        setIsVoting(false);
       }
-    } catch (error: any) {
-      toast.error(error.message);
-    } finally {
-      setIsVoting(false);
     }
   };
 
@@ -100,10 +111,7 @@ const VotingProcess = ({
     try {
       fetchAllProposals();
       fetchDAOs();
-      // const proposal = await getProposal(
-      //   currentDAO.contractAddress,
-      //   Number(currentProposal.id)
-      // );
+      getActivities();
       setCurrentProposal(eachProposal);
       setShowModal(false);
       setIsLoading(false);
@@ -129,7 +137,7 @@ const VotingProcess = ({
               defaultValue={selectedOption}
               value={selectedOption}
               key={option}
-              disabled={!!userVote?.account}
+              disabled={isDisabled}
               onValueChange={() => handleOptionChange(option)}
               role="button"
             >
@@ -140,7 +148,10 @@ const VotingProcess = ({
                 <Label
                   htmlFor={option}
                   id={option}
-                  className="capitalize dark:text-white font-medium text-dark"
+                  className={cn(
+                    'capitalize dark:text-white font-medium text-dark',
+                    isDisabled && 'opacity-40'
+                  )}
                 >
                   {option}
                 </Label>
@@ -155,7 +166,7 @@ const VotingProcess = ({
           <Dialog onOpenChange={setShowModal} open={showModal}>
             <Button
               className="w-full"
-              disabled={!selectedOption || !!userVote?.account}
+              disabled={!selectedOption || isDisabled}
               onClick={handleVote}
               loading={isVoting}
               loadingText="Voting..."
