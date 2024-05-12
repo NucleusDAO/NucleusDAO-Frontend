@@ -41,10 +41,10 @@ export const EachDaoContextProvider = ({ children }: IAppProvider) => {
   const [membersActivities, setMembersActivities] = useState<any | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isProposalLoading, setIsProposalLoading] = useState<boolean>(true);
-  const [isMemberLoading, setIsMemberLoading] = useState<boolean>(true);
+  const [memberLoading, setMemberLoading] = useState<boolean>(true);
   const isMember = currentDAO?.members?.includes(user.address);
 
-  const { getProposals, getEachDAO, getAllUsersActivities } =
+  const { getProposals, getEachDAO, getAllUsersActivities, isUserMemberOfDAO } =
     useContext(AppContext);
 
   const urlParts = pathname.split('/'); // Split the URL by "/"
@@ -59,15 +59,6 @@ export const EachDaoContextProvider = ({ children }: IAppProvider) => {
           console.log(daos, '-> DAOL');
           setCurrentDAO(daos);
           setIsLoading(false);
-          // await updateGetProposal({
-          //   getEachDAO,
-          //   daoId,
-          //   setCurrentDAO,
-          //   getProposals,
-          //   setEachDAOProposal,
-          //   getUsersActivities,
-          //   setMembersActivities,
-          // });
         } catch (error: any) {
           toast.error(error.message);
           return <ErrorFetchingComponent />;
@@ -77,8 +68,6 @@ export const EachDaoContextProvider = ({ children }: IAppProvider) => {
       })();
     }
   }, [daoId]);
-
-  console.log(!!currentDAO, '->current dao');
 
   useEffect(() => {
     setIsProposalLoading(true);
@@ -122,10 +111,8 @@ export const EachDaoContextProvider = ({ children }: IAppProvider) => {
     }
   }, [currentDAO]);
 
-  console.log(eachDAOProposal, '-> eachDAOProposal');
-
   useEffect(() => {
-    setIsMemberLoading(true);
+    setMemberLoading(true);
     if (!!currentDAO) {
       (async () => {
         try {
@@ -133,12 +120,12 @@ export const EachDaoContextProvider = ({ children }: IAppProvider) => {
             currentDAO.contractAddress
           );
           setMembersActivities(members);
-          setIsMemberLoading(false);
+          setMemberLoading(false);
         } catch (error: any) {
           toast.error(error.message);
           return <ErrorFetchingComponent />;
         } finally {
-          setIsMemberLoading(false); // Set loading state to false after fetching data
+          setMemberLoading(false); // Set loading state to false after fetching data
         }
       })();
     }
@@ -153,7 +140,7 @@ export const EachDaoContextProvider = ({ children }: IAppProvider) => {
     setMembersActivities,
     setEachDAOProposal,
     isMember,
-    isMemberLoading,
+    memberLoading,
     isProposalLoading,
     setIsLoading,
   };

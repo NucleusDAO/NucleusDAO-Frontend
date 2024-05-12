@@ -129,29 +129,11 @@ const defineMembershipSchema = z.object({
   }),
 });
 
-// const defineMembershipSchema = z.object({
-//   members: z.array(member).refine((data) => {
-//     if (data.length === 0 || data.every((item) => item.address.trim() === '')) {
-//       throw new z.ZodError([
-//         {
-//           code: 'custom',
-//           path: [],
-//           message: 'At least one member address is required',
-//         },
-//       ]);
-//     }
-//     return true;
-//   }),
-// });
-
 const editProfile = z.object({
-  username: z
-    .string()
-    .min(2, { message: 'Must be 2 or more characters long' })
-    .max(50, { message: 'Must be 50 or fewer characters long' }),
+  username: z.string(),
   email: z.string().email({ message: 'Email is compulsory' }),
-  about: z.string().min(2, { message: 'Field is compulsory' }),
-  profilePicture: z.string().min(2, { message: 'Field is compulsory' }),
+  about: z.string(),
+  profilePicture: z.string(),
 });
 
 const editNotifications = z.object({

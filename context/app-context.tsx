@@ -37,6 +37,9 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
   const [isProposalLoading, setIsProposalLoading] = useState<boolean>(true);
   const [allProposals, setAllProposals] = useState<IProposal[]>([]);
   const [newDaoInfo, setNewDaoInfo] = useState<InewDaoInfo>(defaultDaoCreation);
+  const [totalVotes, setTotalVotes] = useState<number>(0);
+  const [totalProposals, setTotalProposals] = useState<number>(0);
+  const [isLoadingActivites, setIsLoadingActivities] = useState<boolean>(false);
   const [newProposalInfo, setNewProposalInfo] =
     useState<INewProposal>(defaultProposal);
 
@@ -57,6 +60,21 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
       setNewProposalInfo(JSON.parse(getNewProposalInfo));
     }
   }, []);
+
+  const getActivities = async () => {
+    setIsLoadingActivities(true);
+    try {
+      const activities: { proposalsCreated: number; voteCasted: number } =
+        await getAUserActivitiesAcrossDAOs(user.address);
+      console.log(activities, '-> activities');
+      setTotalProposals(Number(activities.proposalsCreated));
+      setTotalVotes(Number(activities.voteCasted));
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      setIsLoadingActivities(false);
+    }
+  };
 
   const getAllDaos = async () => {
     return getDAOs().then((res: any) => {
@@ -212,6 +230,15 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     return daos;
   };
 
+  const isUserMemberOfDAO = async (
+    daoContractAddress: string,
+    userAddress: string
+  ) => {
+    const contract = await getBasicDAO(daoContractAddress);
+    const res = await contract.isMember(userAddress);
+    return res.decodedResult;
+  };
+
   const getAUserActivitiesAcrossDAOs = async (userAddress: string) => {
     const contract = await getNucleusDAO();
     const res = await contract.getUserActivitiesAcrossDAOs(userAddress);
@@ -231,8 +258,6 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     const contract = await getBasicDAO(daoContractAddress);
     const res = await contract.getAllMembersActivities();
     const activities = res.decodedResult;
-    console.log(res, '-> res');
-    console.log(activities, '-> activities');
     for (let i = 0; i < activities.length; i++) {
       let activity = activities[i];
       for (let key in activity) {
@@ -363,6 +388,12 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     fetchAllProposals,
     allProposals,
     getAllUsersActivities,
+    getAUserActivitiesAcrossDAOs,
+    totalVotes,
+    totalProposals,
+    getActivities,
+    isLoadingActivites,
+    isUserMemberOfDAO,
     // getEachProposal,
   };
 
