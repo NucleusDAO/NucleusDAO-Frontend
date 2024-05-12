@@ -23,8 +23,6 @@ const Dashboard = () => {
   const currentSearch = searchParams.get('q');
   let userDAO: any[] = [];
 
-  console.log(DAOsData, '-> DAOsData');
-
   const getDAOsData = (width: number) => {
     let individualDAOs;
 
@@ -63,7 +61,9 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    getActivities();
+    if (user.address) {
+      getActivities();
+    }
   }, [user.address]);
 
   if (daoLoading) return <DashboadLoading />;
