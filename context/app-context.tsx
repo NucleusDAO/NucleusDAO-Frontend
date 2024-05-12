@@ -227,6 +227,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
 
   const getDAOs = async () => {
     const contract = await getNucleusDAO();
+    console.log({ contract });
     const res = await contract.getDAOs();
     const daos = res.decodedResult;
     return daos;
