@@ -43,7 +43,11 @@ const SelectFormField = ({ form, filterData }: ISelectFormField) => {
       render={({ field }) => (
         <FormItem>
           <FormLabel>Title</FormLabel>
-          <Select onValueChange={field.onChange} defaultValue={field.value}>
+          <Select
+            onValueChange={field.onChange}
+            // setNewProposalInfo({ value: {...newProposalInfo, type: field.type} });
+            defaultValue={field.value}
+          >
             <FormControl>
               <SelectTrigger>
                 <SelectValue
@@ -73,12 +77,14 @@ const TextFormField = ({
   label,
   placeholder,
   type,
+  props,
 }: {
   form: any;
   name: string;
   label: string;
   placeholder: string;
   type?: string;
+  props?: any;
 }) => {
   return (
     <FormField
@@ -88,7 +94,12 @@ const TextFormField = ({
         <FormItem>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            <Input placeholder={placeholder} type={type || 'text'} {...field} />
+            <Input
+              placeholder={placeholder}
+              type={type || 'text'}
+              {...field}
+              {...props}
+            />
           </FormControl>
           <FormMessage />
         </FormItem>
@@ -148,9 +159,7 @@ const ProposalDurationFormField = ({ form }: { form: any }) => {
                   )}
                   role="button"
                   onClick={() => {
-                    form.getValues('duration')
-                      ? null
-                      : handleMinus('duration', form);
+                    field.value === 1 ? null : handleMinus('duration', form);
                   }}
                 >
                   <Minus size={18} />
@@ -169,9 +178,7 @@ const ProposalDurationFormField = ({ form }: { form: any }) => {
                   className="dark:bg-[#1E1E1E] rounded-lg py-2 px-2 dark:hover:bg-[#2a2a2a] trans hover:bg-[#D2D2D2] bg-[#D2D2D2]"
                   role="button"
                   onClick={() => {
-                    form.getValues('duration')
-                      ? null
-                      : handlePlus('duration', form);
+                    handlePlus('duration', form);
                   }}
                 >
                   <Plus size={18} />
@@ -203,7 +210,9 @@ const QuorumFormField = ({ form }: { form: any }) => {
                     'dark:bg-[#1E1E1E] rounded-lg py-2 px-2 dark:hover:bg-[#2a2a2a] trans bg-[#D2D2D2]'
                   )}
                   role="button"
-                  onClick={() => handleMinus('duration', form)}
+                  onClick={() => {
+                    field.value === 1 ? null : handleMinus('quorum', form);
+                  }}
                 >
                   <Minus size={18} />
                 </div>
@@ -228,6 +237,7 @@ const QuorumFormField = ({ form }: { form: any }) => {
                 <Checkbox
                   id="proposalCheck"
                   className="rounded-full border-[#5BE950] data-[state=checked]:bg-[#5BE950]"
+                  checked={field.value >= 50}
                 />
                 <label
                   htmlFor="proposalCheck"

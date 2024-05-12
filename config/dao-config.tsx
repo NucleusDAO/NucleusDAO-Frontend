@@ -55,17 +55,12 @@ const proposalLists: { title: string; enums: number; type: string }[] = [
   },
   {
     title: 'Propose to change voting time',
-    type: 'setVotingTime',
+    type: 'voteTime',
     enums: 3,
   },
   {
     title: 'Propose to change the quorum',
     type: 'quorum',
-    enums: 4,
-  },
-  {
-    title: 'Propose to change vote time',
-    type: 'voteTime',
     enums: 4,
   },
   {
