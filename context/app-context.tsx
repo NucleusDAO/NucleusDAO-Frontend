@@ -39,7 +39,8 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
   const [newDaoInfo, setNewDaoInfo] = useState<InewDaoInfo>(defaultDaoCreation);
   const [totalVotes, setTotalVotes] = useState<number>(0);
   const [totalProposals, setTotalProposals] = useState<number>(0);
-  const [isLoadingActivites, setIsLoadingActivities] = useState<boolean>(false);
+  const [isLoadingActivities, setIsLoadingActivities] =
+    useState<boolean>(false);
   const [newProposalInfo, setNewProposalInfo] =
     useState<INewProposal>(defaultProposal);
 
@@ -61,15 +62,15 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     }
   }, []);
 
-  const getActivities = async () => {
+  const getActivities = async (address: string) => {
     setIsLoadingActivities(true);
     try {
       const activities: { proposalsCreated: number; voteCasted: number } =
-        await getAUserActivitiesAcrossDAOs(user.address);
-      console.log(activities, '-> activities');
+        await getAUserActivitiesAcrossDAOs(address);
       setTotalProposals(Number(activities.proposalsCreated));
       setTotalVotes(Number(activities.voteCasted));
     } catch (error: any) {
+      console.log(error, '-> error');
       toast.error(error.message);
     } finally {
       setIsLoadingActivities(false);
@@ -243,14 +244,6 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     const contract = await getNucleusDAO();
     const res = await contract.getUserActivitiesAcrossDAOs(userAddress);
     const activities = res.decodedResult;
-    for (let i = 0; i < activities.length; i++) {
-      let activity = activities[i];
-      for (let key in activity) {
-        if (typeof activity[key] == 'bigint') {
-          activity[key] = Number(activity[key]);
-        }
-      }
-    }
     return activities;
   };
 
@@ -392,7 +385,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     totalVotes,
     totalProposals,
     getActivities,
-    isLoadingActivites,
+    isLoadingActivities,
     isUserMemberOfDAO,
     // getEachProposal,
   };
