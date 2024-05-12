@@ -74,7 +74,7 @@ const ProposalResult = ({
           <p className="text-sm font-light">
             Approved by:{' '}
             <span className="dark:text-white text-dark font-medium">{`${percentageOfVoteFor.toFixed(
-              2
+              1
             )}%`}</span>
           </p>
         </div>
@@ -84,7 +84,7 @@ const ProposalResult = ({
               Yes
             </p>
             <p className="text-defaultText font-light text-base">{`${percentageOfVoteFor.toFixed(
-              2
+              1
             )}%`}</p>
           </div>
           <Slider
@@ -98,7 +98,9 @@ const ProposalResult = ({
         <div className="space-y-3">
           <div className="flex justify-between pt-4">
             <p className="text-white font-medium text-base">No</p>
-            <p className="text-defaultText font-light text-base">{`${percentageOfVoteAgainst}%`}</p>
+            <p className="text-defaultText font-light text-base">{`${percentageOfVoteAgainst.toFixed(
+              1
+            )}%`}</p>
           </div>
           <Slider
             defaultValue={[percentageOfVoteAgainst]}
