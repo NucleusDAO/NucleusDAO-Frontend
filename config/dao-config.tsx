@@ -60,7 +60,12 @@ const proposalLists: { title: string; enums: number; type: string }[] = [
   },
   {
     title: 'Propose to change the quorum',
-    type: 'setQuorum',
+    type: 'quorum',
+    enums: 4,
+  },
+  {
+    title: 'Propose to change vote time',
+    type: 'voteTime',
     enums: 4,
   },
   {
@@ -78,11 +83,11 @@ const proposalLists: { title: string; enums: number; type: string }[] = [
     type: 'updateSocials',
     enums: 7,
   },
-  {
-    title: 'Other',
-    type: 'transfer',
-    enums: 8,
-  },
+  // {
+  //   title: 'Other',
+  //   type: 'transfer',
+  //   enums: 8,
+  // },
 ];
 
 interface IProposalSummary {
@@ -93,7 +98,7 @@ interface IProposalSummary {
   duration: string;
   logo?: string;
   address: string;
-  socialMedia?: { type: string; link: string; }[]
+  socialMedia?: { type: string; link: string }[];
 }
 
 export const rate = 0.040166;
@@ -107,7 +112,7 @@ const proposalSummary = ({
   address,
   logo,
   socialMedia,
-}: IProposalSummary): { title: string; desc: string|any }[] => [
+}: IProposalSummary): { title: string; desc: string | any }[] => [
   {
     title: 'Title',
     desc: proposalLists[Number(type)].title || '',
@@ -130,11 +135,11 @@ const proposalSummary = ({
   },
   {
     title: 'Logo',
-    desc: logo || ''
+    desc: logo || '',
   },
   {
     title: 'Social Media',
-    desc: socialMedia || []
+    desc: socialMedia || [],
   },
   {
     title: 'Published by',
