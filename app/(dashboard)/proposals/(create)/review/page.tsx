@@ -9,7 +9,7 @@ import {
   AlertDialogHeader,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
-import { MoveLeft } from 'lucide-react';
+import { MoveLeft, MoveUpRight } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { PROPOSALS_URL } from '@/config/path';
 import { useContext, useState } from 'react';
@@ -21,6 +21,7 @@ import { IConnectWalletContext } from '@/libs/types';
 import { toast } from 'sonner';
 import { uploadFile } from '@/config/apis';
 import { ApiContext } from '@/context/api-context';
+import Link from 'next/link';
 
 const ReviewProposal = () => {
   const {
@@ -66,7 +67,7 @@ const ReviewProposal = () => {
           dao.contractAddress,
           proposalLists[Number(value.type)].type,
           value.description,
-          Number(value.value) || 0,
+          Number(value.value) || Number(value.maximum) || 0,
           value.targetWallet || address,
           {
             name: value?.newName || '',
@@ -136,6 +137,12 @@ const ReviewProposal = () => {
             <p className="dark:text-[#888888] text-dark">{value.newName}</p>
           </div>
         )}
+        {!!value.quorum && (
+          <div className="grid grid-cols-2 text-sm w-4/6">
+            <p className="dark:text-white text-dark">New Quorum</p>
+            <p className="dark:text-[#888888] text-dark">{value.quorum}</p>
+          </div>
+        )}
         {value.targetWallet && (
           <div className="grid grid-cols-2 text-sm w-4/6">
             <p className="dark:text-white text-dark">Target Wallet</p>
@@ -150,6 +157,12 @@ const ReviewProposal = () => {
             <p className="dark:text-[#888888] text-dark">{`${value.duration} day(s)`}</p>
           </div>
         )}
+        {value.maximum && (
+          <div className="grid grid-cols-2 text-sm w-4/6">
+            <p className="dark:text-white text-dark">New Duration</p>
+            <p className="dark:text-[#888888] text-dark">{`${value.maximum} day(s)`}</p>
+          </div>
+        )}
         {value.value && (
           <div className="grid grid-cols-2 text-sm w-4/6">
             <p className="dark:text-white text-dark">Value</p>
@@ -158,6 +171,32 @@ const ReviewProposal = () => {
             } AE ~ ${
               Number(value.value || 0) * (getAEPrice?.price || rate)
             }USD`}</p>
+          </div>
+        )}
+        {value.socialMedia[0].type && (
+          <div className="grid grid-cols-2 text-xs md:text-sm md:w-4/6">
+            <p className="dark:text-white text-dark">Links</p>
+            {!value.socialMedia[0].type && 'None'}
+            {value.socialMedia[0].type && (
+              <div className="flex space-x-4">
+                {value.socialMedia.map(
+                  (socialMedia: { link: string; type: string }) => (
+                    <Link
+                      href={socialMedia.link}
+                      key={socialMedia.type}
+                      target="_blank"
+                    >
+                      <div className="flex items-center space-x-2 text-primary text-sm">
+                        <p className="">{socialMedia.type}</p>
+                        <div className="border border-primary rounded-sm p-0.5">
+                          <MoveUpRight size={10} />
+                        </div>
+                      </div>
+                    </Link>
+                  )
+                )}
+              </div>
+            )}
           </div>
         )}
         {value.logo && (

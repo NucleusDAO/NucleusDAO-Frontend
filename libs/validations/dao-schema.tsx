@@ -95,15 +95,13 @@ const proposalInfoSchema = z.object({
       required_error: 'Minimum value is required',
       invalid_type_error: 'Minimum value must be a number',
     })
-    .min(1, { message: '1 day is the least expiration days' })
-    .max(3, { message: '3 days is the minimum expiration days' })
     .optional(),
   maximum: z.coerce
     .number({
       required_error: 'Maximum value is required',
       invalid_type_error: 'Maximum value must be a number',
     })
-    .min(3, { message: '3 days is the least expiration days' })
+    .min(1, { message: '3 days is the least expiration days' })
     .max(7, { message: '7 days is the maximun expiration days' })
     .optional(),
   quorum: z.number().optional(),

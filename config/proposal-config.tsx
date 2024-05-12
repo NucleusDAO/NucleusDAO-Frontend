@@ -6,7 +6,9 @@ import {
   UpdateSocialsFormField,
   UploadFileFormField,
 } from '@/components/proposals/proposal-form-element';
-import { FC } from 'react';
+import { EachDaoContext } from '@/context/each-dao-context';
+import { formatTimestamp, millisecondsToDays } from '@/libs/utils';
+import { FC, useContext } from 'react';
 
 export const ProposalTransfer = ({ form }: { form: any }) => {
   return (
@@ -27,6 +29,10 @@ export const ProposalTransfer = ({ form }: { form: any }) => {
 };
 
 export const ProposeToChangeVotingTime = ({ form }: { form: any }) => {
+  const { currentDAO } = useContext(EachDaoContext);
+  const initialDuration = millisecondsToDays(Number(currentDAO?.votingTime));
+  console.log(currentDAO, '->');
+  console.log(millisecondsToDays(Number(currentDAO?.votingTime)));
   return (
     <>
       <div className="grid grid-cols-2 gap-6">
@@ -34,18 +40,30 @@ export const ProposeToChangeVotingTime = ({ form }: { form: any }) => {
           form={form}
           name="minimum"
           type="number"
-          label="Minimum"
+          label="From"
           placeholder="From how many days"
+          props={{ disabled: true, value: initialDuration }}
         />
         <TextFormField
           form={form}
           name="maximum"
           type="number"
-          label="Maximum"
+          label="To"
           placeholder="To how many days"
+          // props={{
+          //   onInput: ({ target }: any) => {
+          //     if (target.value.startsWith(0)) {
+          //       form.setError('maximum', {
+          //         messsage: 'Duration cannot starts with 0',
+          //       });
+          //     } else {
+          //       form.setError('maximum', { message: '' });
+          //     }
+          //   },
+          // }}
         />
       </div>
-      <ProposalDurationFormField form={form} />
+      {/* <ProposalDurationFormField form={form} /> */}
     </>
   );
 };
@@ -59,7 +77,7 @@ export const ProposeToUpdateMember = ({ form }: { form: any }) => {
         label="Target Wallet"
         placeholder="Wallet address"
       />
-      <ProposalDurationFormField form={form} />
+      {/* <ProposalDurationFormField form={form} /> */}
     </>
   );
 };
@@ -68,7 +86,7 @@ export const ProposeToChangeQuorum = ({ form }: { form: any }) => {
   return (
     <>
       <QuorumFormField form={form} />
-      <ProposalDurationFormField form={form} />
+      {/* <ProposalDurationFormField form={form} /> */}
     </>
   );
 };
@@ -82,17 +100,16 @@ export const ProposeToChangeDaosName = ({ form }: { form: any }) => {
         label="New DAO Name"
         placeholder="Enter DAO New Name"
       />
-      <ProposalDurationFormField form={form} />
+      {/* <ProposalDurationFormField form={form} /> */}
     </>
   );
 };
 
 export const ProposeToChangeDaosLogo = ({ form }: { form: any }) => {
-
   return (
     <>
       <UploadFileFormField form={form} />
-      <ProposalDurationFormField form={form} />
+      {/* <ProposalDurationFormField form={form} /> */}
     </>
   );
 };
@@ -101,7 +118,7 @@ export const ProposeToUpdateDaosSocials = ({ form }: { form: any }) => {
   return (
     <>
       <UpdateSocialsFormField form={form} />
-      <ProposalDurationFormField form={form} />
+      {/* <ProposalDurationFormField form={form} /> */}
     </>
   );
 };
@@ -109,7 +126,7 @@ export const ProposeToUpdateDaosSocials = ({ form }: { form: any }) => {
 export const ProposeToUpdateOthers = ({ form }: { form: any }) => {
   return (
     <>
-    <ProposalDurationFormField form={form} />
+      <ProposalDurationFormField form={form} />
     </>
   );
 };

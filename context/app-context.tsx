@@ -67,6 +67,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     try {
       const activities: { proposalsCreated: number; voteCasted: number } =
         await getAUserActivitiesAcrossDAOs(address);
+      console.log(activities, '->');
       setTotalProposals(Number(activities.proposalsCreated));
       setTotalVotes(Number(activities.voteCasted));
     } catch (error: any) {
@@ -149,7 +150,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
             duration: getDuration(proposal.startTime, proposal.endTime),
             totalVote: `${proposal.votesFor + proposal.votesAgainst}`,
             organisation: proposal.daoName,
-            id: proposal.id,
+            id: proposal?.id,
             startTime: proposal.startTime,
             endTime: proposal.endTime,
             daoId: proposal.daoId,

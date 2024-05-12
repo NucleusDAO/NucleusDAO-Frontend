@@ -106,17 +106,20 @@ const VotingProcess = ({
     }
   };
 
+  console.log(eachProposal, '-> eachProposal');
+
   const handleDone = async () => {
     setIsLoading(true);
     try {
       fetchAllProposals();
       fetchDAOs();
       getActivities();
-      setCurrentProposal(eachProposal);
+      setCurrentProposal({ ...eachProposal, id: Number(eachProposal.id) });
       setShowModal(false);
       setIsLoading(false);
     } catch (error: any) {
-      toast.error(error.message);
+      console.log(error, '-> erros');
+      // toast.error(error.message);
     } finally {
       setIsLoading(false);
     }

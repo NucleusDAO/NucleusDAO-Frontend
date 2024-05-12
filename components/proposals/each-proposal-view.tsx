@@ -98,7 +98,7 @@ const EachProposalView = ({
         <div className="space-y-8">
           {showFullProposal && (
             <div className="text-xs md:text-sm text-defaultText trans space-y-3">
-              {description?.slice(180, description.length)}
+              {description?.slice(180, description?.length)}
               {description?.length > 180 && (
                 <Button onClick={() => setShowFullProposal(false)}>
                   Show less

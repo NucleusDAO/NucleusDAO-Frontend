@@ -72,7 +72,7 @@ const ProposalCard = ({
                     <p className="text-defaultText text-xs md:text-base">
                       Proposal Type
                     </p>
-                    <h3 className="dark:text-white capitalize text-dark font-medium text-sm md:text-lg h-[10vh]">
+                    <h3 className="dark:text-white capitalize text-dark font-medium text-sm md:text-lg max-h-[10vh]">
                       {
                         proposalLists.find(
                           (proposal: { type: string }) => proposal.type === type
@@ -83,7 +83,7 @@ const ProposalCard = ({
                 </div>
                 <div>{EachStatus[status]}</div>
               </div>
-              <p className="text-defaultText text-xs md:text-sm h-[9vh] overflow-auto">
+              <p className="text-defaultText text-xs md:text-sm max-h-[9vh] overflow-auto">
                 {description.slice(0, 300)}
               </p>
             </div>
