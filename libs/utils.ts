@@ -84,7 +84,9 @@ export const encodeURI = (
   return modifiedUrl;
 };
 
-export const validateMembership = (membershipArray: { address: string }[]) => {
+export const validateMembership: any = (
+  membershipArray: { address: string }[]
+) => {
   return !membershipArray.some((item) => item.address === '');
 };
 
@@ -219,7 +221,7 @@ export const updateGetProposal = async ({
   const proposals: IProposal[] = await getProposals(dao.contractAddress);
   setCurrentProposal && setCurrentProposal(proposals);
   setEachDAOProposal(
-    proposals.reverse().map((proposal: IProposal) => {
+    proposals.map((proposal: IProposal) => {
       return {
         type: proposal.proposalType,
         status: getStatus(proposal),
@@ -300,14 +302,27 @@ function formatTime(milliseconds: number): string {
 
 export function getTimeDifference(timestamp: number): string {
   const currentTime = Date.now();
-  const difference = Math.abs(currentTime - timestamp);
 
-  const days = Math.floor(difference / (24 * 60 * 60 * 1000));
-  const hours = Math.floor(
-    (difference % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000)
+  // Calculate the time difference
+  let timeDifference = timestamp - currentTime;
+
+  if (timeDifference < 0) {
+    timeDifference = 0;
+  }
+
+  // Convert the time difference to hours and minutes
+  const daysLeft = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+  const hoursLeft = Math.floor(
+    (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
   );
-  const minutes = Math.floor((difference % (60 * 60 * 1000)) / (60 * 1000));
-  const seconds = Math.floor((difference % (60 * 1000)) / 1000);
+  const minutesLeft = Math.floor(
+    (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
+  );
+  const secondsLeft = Math.floor((timeDifference % (1000 * 60)) / 1000);
 
-  return `${days}d:${hours}h:${minutes}m:${seconds}s`;
+  return `${daysLeft}d:${hoursLeft}h:${minutesLeft}m:${secondsLeft}s`;
+}
+
+export function wait() {
+  return new Promise((resolve) => setTimeout(resolve, 1000));
 }

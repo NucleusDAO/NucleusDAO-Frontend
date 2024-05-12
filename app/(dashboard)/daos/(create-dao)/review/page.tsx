@@ -17,7 +17,7 @@ import { useContext, useState } from 'react';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { IConnectWalletContext } from '@/libs/types';
 import { AppContext } from '@/context/app-context';
-import { createDaoEP, uploadFile } from '@/config/apis';
+import { uploadFile } from '@/config/apis';
 import { toast } from 'sonner';
 import { daysToMilliseconds, defaultDaoCreation } from '@/libs/utils';
 import Lottie from 'react-lottie';
@@ -29,7 +29,6 @@ const ReviewDao = () => {
   const [isRouting, setIsRouting] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
-  const { address } = user;
   const { createDAO, updateNewDaoInfo, newDaoInfo, fetchDAOs } =
     useContext(AppContext);
 
@@ -46,7 +45,7 @@ const ReviewDao = () => {
       const members = newDaoInfo.members.map((m: any) => {
         return m.address;
       });
-      await createDAO(
+      const dao = await createDAO(
         name,
         id,
         newDaoInfo.info.about,
@@ -59,14 +58,6 @@ const ReviewDao = () => {
         daysToMilliseconds(newDaoInfo.duration),
         newDaoInfo.quorum
       );
-      const create = await createDaoEP({
-        name,
-        id,
-        members: [...members, address],
-        currentMembers: members.includes(address)
-          ? members
-          : members.length + 1,
-      });
       // Deleted dao information from localStorage
       localStorage.removeItem('new_dao');
       updateNewDaoInfo(defaultDaoCreation);
@@ -87,6 +78,8 @@ const ReviewDao = () => {
     } catch (error: any) {
       setIsRouting(false);
       toast.error(error.message);
+    } finally {
+      setIsRouting(false);
     }
   };
 
@@ -132,21 +125,25 @@ const ReviewDao = () => {
         <div className="grid grid-cols-2 text-xs md:text-sm md:w-4/6">
           <p className="dark:text-white text-dark">Links</p>
           {!newDaoInfo.info.socialMedia[0].type && 'None'}
-          {newDaoInfo.info.socialMedia.map(
-            (socialMedia: { link: string; type: string }) => (
-              <Link
-                href={socialMedia.link}
-                key={socialMedia.type}
-                target="_blank"
-              >
-                <div className="flex items-center space-x-2 text-primary">
-                  <p className="">{socialMedia.type}</p>
-                  <div className="border border-primary rounded-sm p-0.5">
-                    <MoveUpRight size={10} />
-                  </div>
-                </div>
-              </Link>
-            )
+          {newDaoInfo.info.socialMedia[0].type && (
+            <div className="flex space-x-4">
+              {newDaoInfo.info.socialMedia.map(
+                (socialMedia: { link: string; type: string }) => (
+                  <Link
+                    href={socialMedia.link}
+                    key={socialMedia.type}
+                    target="_blank"
+                  >
+                    <div className="flex items-center space-x-2 text-primary">
+                      <p className="">{socialMedia.type}</p>
+                      <div className="border border-primary rounded-sm p-0.5">
+                        <MoveUpRight size={10} />
+                      </div>
+                    </div>
+                  </Link>
+                )
+              )}
+            </div>
           )}
         </div>
       </div>
@@ -157,8 +154,9 @@ const ReviewDao = () => {
         </h1>
         <div className="grid grid-cols-2 text-xs md:text-sm md:w-4/6">
           <p className="dark:text-white text-dark">Members</p>
+
           <p className="text-defaultText">{`${
-            newDaoInfo.members[0].address ? newDaoInfo.members.length : '0'
+            newDaoInfo.members[0].address ? newDaoInfo.members.length + 1 : '1'
           } wallet address (es)`}</p>
         </div>
       </div>

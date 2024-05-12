@@ -95,15 +95,13 @@ const proposalInfoSchema = z.object({
       required_error: 'Minimum value is required',
       invalid_type_error: 'Minimum value must be a number',
     })
-    .min(1, { message: '1 day is the least expiration days' })
-    .max(3, { message: '3 days is the minimum expiration days' })
     .optional(),
   maximum: z.coerce
     .number({
       required_error: 'Maximum value is required',
       invalid_type_error: 'Maximum value must be a number',
     })
-    .min(3, { message: '3 days is the least expiration days' })
+    .min(1, { message: '3 days is the least expiration days' })
     .max(7, { message: '7 days is the maximun expiration days' })
     .optional(),
   quorum: z.number().optional(),
@@ -113,12 +111,13 @@ const proposalInfoSchema = z.object({
 const defineMembershipSchema = z.object({
   members: z.array(member).refine((data: any) => {
     for (const [index, item] of data.entries()) {
+      console.log(item, '-item');
       if (item.address === '' || /^\s+$/.test(item.address)) {
         throw new z.ZodError([
           {
             code: 'custom',
             path: ['members', index], // Pass the index here
-            message: 'Type and link are both required for social media',
+            message: 'Member address is required',
           },
         ]);
       }
@@ -129,13 +128,10 @@ const defineMembershipSchema = z.object({
 });
 
 const editProfile = z.object({
-  username: z
-    .string()
-    .min(2, { message: 'Must be 2 or more characters long' })
-    .max(50, { message: 'Must be 50 or fewer characters long' }),
+  username: z.string(),
   email: z.string().email({ message: 'Email is compulsory' }),
-  about: z.string().min(2, { message: 'Field is compulsory' }),
-  profilePicture: z.string().min(2, { message: 'Field is compulsory' }),
+  about: z.string(),
+  profilePicture: z.string(),
 });
 
 const editNotifications = z.object({

@@ -37,7 +37,6 @@ const ProposalCard = ({
   id,
   daoId,
   endTime,
-  organisation,
 }: IProposalCard) => {
   const { user } = useContext<any>(ConnectWalletContext);
   const { address } = user;
@@ -61,7 +60,7 @@ const ProposalCard = ({
           <div className="h-[30vh] w-[1px] bg-[#292929]" />
           <div className="p-2 md:p-4 space-y-6 w-full">
             <div className="space-y-3">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between space-x-4">
                 <div className="flex space-x-4 items-center">
                   <Image
                     src={RoundedIcon}
@@ -73,7 +72,7 @@ const ProposalCard = ({
                     <p className="text-defaultText text-xs md:text-base">
                       Proposal Type
                     </p>
-                    <h3 className="dark:text-white capitalize text-dark font-medium text-sm md:text-lg">
+                    <h3 className="dark:text-white capitalize text-dark font-medium text-sm md:text-lg max-h-[10vh]">
                       {
                         proposalLists.find(
                           (proposal: { type: string }) => proposal.type === type
@@ -84,7 +83,7 @@ const ProposalCard = ({
                 </div>
                 <div>{EachStatus[status]}</div>
               </div>
-              <p className="text-defaultText text-xs md:text-sm h-[9vh] overflow-auto">
+              <p className="text-defaultText text-xs md:text-sm max-h-[9vh] overflow-auto">
                 {description.slice(0, 300)}
               </p>
             </div>

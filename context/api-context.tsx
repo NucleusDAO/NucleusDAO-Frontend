@@ -13,7 +13,7 @@ import {
   PROPOSALS,
   PROPOSAL_HISTORY,
 } from '@/libs/key';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ReactNode, createContext, useContext } from 'react';
 import { ConnectWalletContext } from './connect-wallet-context';
 import { IConnectWalletContext, ICreateUser } from '@/libs/types';
@@ -26,6 +26,7 @@ interface IApiProvider {
 }
 
 export const ApiContextProvider = ({ children }: IApiProvider) => {
+  const queryClient: any = useQueryClient();
   const {
     user: { address },
   } = useContext<IConnectWalletContext>(ConnectWalletContext);
@@ -38,6 +39,7 @@ export const ApiContextProvider = ({ children }: IApiProvider) => {
   } = useQuery({
     queryKey: [AE_PRICE_KEY],
     queryFn: aePrice,
+    retry: false,
   });
 
   const {
@@ -70,16 +72,19 @@ export const ApiContextProvider = ({ children }: IApiProvider) => {
   } = useQuery({
     queryKey: [NOTIFICATIONS],
     queryFn: () => getNotifications(address),
-    enabled: !!address,
+    enabled: !!address && !!eachUser,
   });
 
   const { mutate: mutateUsers, isPending: isMutatingUsers } = useMutation({
-    mutationFn: eachUser
+    mutationFn: !!eachUser
       ? (payload: ICreateUser) => updateUser(payload, address)
-      : createUser,
-    onSuccess: (response: any) =>
-      toast.success(response.message || 'User profile updated successfully.'),
-    onError: (error: any) => toast.error(error.message),
+      : (payload: ICreateUser) => createUser(payload),
+    onSuccess: (response: any) => {
+      queryClient.invalidateQueries({ queryKey: [EACH_USER] });
+      toast.success(response.message || 'User profile updated successfully.');
+    },
+    onError: (error: any) =>
+      toast.error(error.response.data.message || 'Email has been in use'),
   });
 
   const value = {

@@ -28,8 +28,7 @@ interface ILayout {
 
 const Layout = ({ children }: ILayout) => {
   const { setNewProposalInfo } = useContext(AppContext);
-  const { user, handleConnectWallet } =
-    useContext<IConnectWalletContext>(ConnectWalletContext);
+  const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { isConnected } = user;
   const [open, setOpen] = useState<boolean>(false);
   const router = useRouter();

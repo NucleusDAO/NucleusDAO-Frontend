@@ -32,8 +32,6 @@ const EachFilterTab = ({
   const pathname = usePathname();
   const currentView = searchParams.get('v') || '';
 
-  console.log(proposalData, '-> dt');
-
   const filterItems: string[] = [
     'All',
     'Active',
@@ -151,16 +149,17 @@ const EachFilterTab = ({
                     </p>
                   ) : (
                     <div className="text-center w-2/5">
-                      <p className="pb-3">
+                      <p className="pb-3 font-light">
                         Engage with the community, address any questions or
-                        concerns, and monitor the progress of your proposal as
-                        it moves through the decision-making process.
+                        concerns, and monitor the progress of the proposal as it
+                        moves through the decision-making process.
                       </p>
                     </div>
                   )}
                 </div>
               </div>
             )}
+            {console.log(proposalData, '-> data, d,m')}
             <div className="grid md:grid-cols-2 gap-6">
               {proposalData?.map((proposal) => (
                 <ProposalCard key={proposal.status} {...proposal} />

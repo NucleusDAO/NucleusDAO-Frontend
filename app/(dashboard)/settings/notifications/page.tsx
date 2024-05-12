@@ -34,12 +34,13 @@ const Notifications = () => {
   const form = useForm<z.infer<typeof editNotifications>>({
     resolver: zodResolver(editNotifications),
     defaultValues: {
-      newDAO: eachUser.emailNotificationsSettings.newDAO,
-      newProposal: eachUser.emailNotificationsSettings.newDAO,
-      newUpdate: eachUser.emailNotificationsSettings?.newUpdate,
-      pushNewDAO: eachUser.pushNotificationsSettings.newDAO,
-      pushNewProposal: eachUser.pushNotificationsSettings.newProposal,
-      pushNewUpdate: eachUser.pushNotificationsSettings.newUpdate,
+      newDAO: eachUser?.emailNotificationsSettings?.newDAO || false,
+      newProposal: eachUser?.emailNotificationsSettings?.newProposal || false,
+      newUpdate: eachUser?.emailNotificationsSettings?.newUpdate || false,
+      pushNewDAO: eachUser?.pushNotificationsSettings?.newDAO || false,
+      pushNewProposal:
+        eachUser?.pushNotificationsSettings?.newProposal || false,
+      pushNewUpdate: eachUser?.pushNotificationsSettings?.newUpdate || false,
     },
   });
 
@@ -52,13 +53,11 @@ const Notifications = () => {
     onError: (error: any) => toast.error(error.message),
   });
 
-  console.log(eachUser, '-> a');
-
   const onSubmit = async (data: any) => {
     const emailNotificationsSettings = {
       newDAO: data.newDAO,
       newProposal: data.newProposal,
-      newUpdate: data.newProposal,
+      newUpdate: data.newUpdate,
     };
     const pushNotificationsSettings = {
       newDAO: data.pushNewDAO,

@@ -7,14 +7,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { formatDate, getTimeDifference, updateGetProposal } from '@/libs/utils';
+import { formatDate, getStatus, getTimeDifference } from '@/libs/utils';
 import { EachDaoContext } from '@/context/each-dao-context';
 import React, { useContext, useState } from 'react';
 import { Button } from '../ui/button';
 import { AppContext } from '@/context/app-context';
 import { toast } from 'sonner';
-import { updateProposalEP } from '@/config/apis';
-import { usePathname } from 'next/navigation';
 
 interface IProposalResult {
   currentProposal: {
@@ -28,37 +26,24 @@ interface IProposalResult {
     id: string;
     status: string;
   };
+  setCurrentProposal: (arg: any) => void;
 }
 
-const ProposalResult = ({ currentProposal }: IProposalResult) => {
+const ProposalResult = ({
+  currentProposal,
+  setCurrentProposal,
+}: IProposalResult) => {
   const [isExecuting, setIsExecuting] = useState<boolean>(false);
-  const {
-    duration,
-    startTime,
-    endTime,
-    votesFor,
-    votesAgainst,
-    votes,
-    totalVote,
-  } = currentProposal;
-  const { getEachDAO, getProposals, executeProposal, getUsersActivities } =
+  const { startTime, endTime, votesFor, votesAgainst, votes } = currentProposal;
+  const { executeProposal, fetchAllProposals, getActivities, fetchDAOs } =
     useContext(AppContext);
-  const {
-    currentDAO,
-    setCurrentDAO,
-    setEachDAOProposal,
-    setMembersActivities,
-  } = useContext(EachDaoContext);
-  const percentageOfVoteFor =
-    votes.length > 0 ? (Number(votesFor) / votes.length) * 100 : 0;
-  const percentageOfVoteAgainst =
-    votes.length > 0 ? (Number(votesAgainst) / votes.length) * 100 : 0;
-
-  const pathname = usePathname();
-  const urlParts = pathname.split('/');
-  const proposalId = urlParts[urlParts.length - 1];
-
-  console.log(votes.length, '->');
+  const { currentDAO, isMember } = useContext(EachDaoContext);
+  const percentageOfVoteFor: number =
+    votes.length > 0 ? (Number(votesFor) / currentDAO.members.length) * 100 : 0;
+  const percentageOfVoteAgainst: number =
+    votes.length > 0
+      ? (Number(votesAgainst) / currentDAO.members.length) * 100
+      : 0;
 
   const handleExecuteProposal = async () => {
     setIsExecuting(true);
@@ -67,27 +52,11 @@ const ProposalResult = ({ currentProposal }: IProposalResult) => {
         Number(currentProposal.id),
         currentDAO.contractAddress
       );
-      await updateGetProposal({
-        getEachDAO,
-        daoId: currentDAO.id,
-        setCurrentDAO,
-        getProposals,
-        setEachDAOProposal,
-        getUsersActivities,
-        setMembersActivities,
-        proposal,
-      });
-      for (let key in proposal) {
-        if (typeof proposal[key] == 'bigint') {
-          proposal[key] = Number(proposal[key]);
-        }
-      }
-      await updateProposalEP(
-        currentDAO.id,
-        Number(currentProposal.id),
-        proposal
-      );
+      setCurrentProposal(proposal);
       toast.success('Proposal executed successfully');
+      fetchDAOs();
+      fetchAllProposals();
+      getActivities();
     } catch (error: any) {
       toast.error(error.message);
     } finally {
@@ -104,7 +73,9 @@ const ProposalResult = ({ currentProposal }: IProposalResult) => {
           </h3>
           <p className="text-sm font-light">
             Approved by:{' '}
-            <span className="dark:text-white text-dark font-medium">{`${percentageOfVoteFor}%`}</span>
+            <span className="dark:text-white text-dark font-medium">{`${percentageOfVoteFor.toFixed(
+              1
+            )}%`}</span>
           </p>
         </div>
         <div className="space-y-3">
@@ -112,7 +83,9 @@ const ProposalResult = ({ currentProposal }: IProposalResult) => {
             <p className="dark:text-white text-dark font-medium text-base">
               Yes
             </p>
-            <p className="text-defaultText font-light text-base">{`${percentageOfVoteFor}%`}</p>
+            <p className="text-defaultText font-light text-base">{`${percentageOfVoteFor.toFixed(
+              1
+            )}%`}</p>
           </div>
           <Slider
             defaultValue={[percentageOfVoteFor]}
@@ -125,7 +98,9 @@ const ProposalResult = ({ currentProposal }: IProposalResult) => {
         <div className="space-y-3">
           <div className="flex justify-between pt-4">
             <p className="text-white font-medium text-base">No</p>
-            <p className="text-defaultText font-light text-base">{`${percentageOfVoteAgainst}%`}</p>
+            <p className="text-defaultText font-light text-base">{`${percentageOfVoteAgainst.toFixed(
+              1
+            )}%`}</p>
           </div>
           <Slider
             defaultValue={[percentageOfVoteAgainst]}
@@ -135,19 +110,20 @@ const ProposalResult = ({ currentProposal }: IProposalResult) => {
             thumbClassName="hidden"
           />
         </div>
-        {currentProposal.status === 'Pending' && (
-          <React.Fragment>
-            {percentageOfVoteFor >= currentDAO.quorum && (
-              <Button
-                className="w-full mt-1.5"
-                onClick={handleExecuteProposal}
-                loading={isExecuting}
-                loadingText="Executing..."
-              >
-                Excecute Proposal
-              </Button>
-            )}
-          </React.Fragment>
+        {isMember && (
+          <>
+            {getStatus(currentProposal) === 'Pending' &&
+              percentageOfVoteFor >= Number(currentDAO.quorum) && (
+                <Button
+                  className="w-full mt-1.5"
+                  onClick={handleExecuteProposal}
+                  loading={isExecuting}
+                  loadingText="Executing..."
+                >
+                  Excecute Proposal
+                </Button>
+              )}
+          </>
         )}
       </div>
 

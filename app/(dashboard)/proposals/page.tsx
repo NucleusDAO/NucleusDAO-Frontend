@@ -1,26 +1,23 @@
 'use client';
-import ErrorFetchingComponent from '@/components/error-fetching-comp';
 import DashboadLoading from '@/components/loading/dashboard-loading';
 import EachFilterTab from '@/components/proposals/each-proposal-tab';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ApiContext } from '@/context/api-context';
-import { ConnectWalletContext } from '@/context/connect-wallet-context';
-import { EachDaoContext } from '@/context/each-dao-context';
-import { IConnectWalletContext, IProposal } from '@/libs/types';
-import { getDuration, getStatus } from '@/libs/utils';
+import { proposalLists } from '@/config/dao-config';
+import { AppContext } from '@/context/app-context';
+import { IProposal } from '@/libs/types';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 
 const Proposals = () => {
-  const { currentDAO, eachDAOProposal, setEachDAOProposal } =
-    useContext(EachDaoContext);
+  const { isProposalLoading, allProposals } = useContext(AppContext);
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { replace } = useRouter();
-  const [allProposal, setAllProposal] = useState<IProposal[]>(eachDAOProposal);
+  const [allProposal, setAllProposal] = useState<IProposal[]>(allProposals);
   const search = searchParams.get('search') || '';
   const filter = searchParams.get('filter') || '';
+
   const tabs: { title: string; value: string }[] = [
     { value: 'All', title: 'All' },
     { value: 'Active', title: 'Active' },
@@ -31,45 +28,6 @@ const Proposals = () => {
 
   const currentTab: string =
     searchParams.get('q') || searchParams.get('filter') || tabs[0].value;
-  const {
-    proposals,
-    isProposalError,
-    proposalErrorMessage,
-    isLoadingProposal,
-  } = useContext(ApiContext);
-
-  console.log(proposals, '-> proposal');
-
-  useEffect(() => {
-    if (proposals && !isLoadingProposal) {
-      setEachDAOProposal(
-        proposals.reverse().map((proposal: IProposal) => {
-          return {
-            type: proposal.proposalType,
-            status: getStatus(proposal),
-            description: proposal.description,
-            wallet:
-              proposal.target.slice(0, 6) + '...' + proposal.target.slice(-4),
-            duration: getDuration(proposal.startTime, proposal.endTime),
-            totalVote: `${proposal.votesFor + proposal.votesAgainst}`,
-            organisation: proposal.daoName,
-            id: proposal?.id ? proposal?.id?.toString() : '',
-            startTime: proposal.startTime,
-            endTime: proposal.endTime,
-            daoId: proposal.daoId,
-            votesAgainst: proposal.votesAgainst,
-            votesFor: proposal.votesFor,
-            votes: proposal.votes,
-            hasVoted: proposal.hasVoted,
-          };
-        })
-      );
-    }
-  }, [isLoadingProposal]);
-
-  useEffect(() => {
-    setAllProposal(eachDAOProposal);
-  }, [eachDAOProposal]);
 
   const handleFilter = useDebouncedCallback((filterBy: string) => {
     const params = new URLSearchParams(searchParams);
@@ -81,32 +39,27 @@ const Proposals = () => {
     replace(`${pathname}?${params.toString()}`);
   }, 200);
 
-  console.log(currentTab, '-> proposal');
+  console.log(proposalLists.find((proposal) => proposal.type === 'addMember'));
 
   useEffect(() => {
     if (search) {
       setAllProposal(
-        eachDAOProposal?.filter(
-          (item: { wallet: string; type: string }) =>
-            item?.wallet?.toLowerCase().includes(search.toLowerCase()) ||
-            item?.type?.toLocaleLowerCase()?.includes(search.toLowerCase())
+        allProposals?.filter((item: { wallet: string; type: string }) =>
+          item?.type?.toLocaleLowerCase()?.includes(search.toLowerCase())
         )
       );
     } else if (filter) {
       setAllProposal(
-        eachDAOProposal?.filter((item: { status: string }) =>
+        allProposals?.filter((item: { status: string }) =>
           item?.status?.toLowerCase().includes(filter.toLowerCase())
         )
       );
     } else {
-      setAllProposal(eachDAOProposal);
+      setAllProposal(allProposals);
     }
-  }, [search, filter]);
+  }, [search, filter, isProposalLoading]);
 
-  if (isLoadingProposal) return <DashboadLoading />;
-  if (isProposalError) return <ErrorFetchingComponent />;
-
-  console.log(currentTab, '-> currentTrab');
+  if (isProposalLoading) return <DashboadLoading />;
 
   return (
     <div className="space-y-8 min-h-[80vh]">
@@ -139,7 +92,7 @@ const Proposals = () => {
               className="text-[#777777] text-sm font-light"
             >
               <EachFilterTab
-                proposalData={allProposal || []}
+                proposalData={allProposal}
                 search={search}
                 filter={filter}
               />

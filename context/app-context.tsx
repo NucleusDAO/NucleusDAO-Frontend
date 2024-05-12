@@ -15,9 +15,15 @@ import {
   IAppProvider,
   IConnectWalletContext,
   INewProposal,
+  IProposal,
   InewDaoInfo,
 } from '@/libs/types';
-import { defaultDaoCreation, defaultProposal } from '@/libs/utils';
+import {
+  defaultDaoCreation,
+  defaultProposal,
+  getDuration,
+  getStatus,
+} from '@/libs/utils';
 import { VIEW_DAO_URL } from '@/config/path';
 import ErrorFetchingComponent from '@/components/error-fetching-comp';
 
@@ -28,7 +34,13 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
   const [allDAOs, setAllDAOs] = useState<any[]>();
   const [daoLoading, setDaoLoading] = useState<boolean>(true);
   const [DAOsData, setDAOsData] = useState<any[]>([]);
+  const [isProposalLoading, setIsProposalLoading] = useState<boolean>(true);
+  const [allProposals, setAllProposals] = useState<IProposal[]>([]);
   const [newDaoInfo, setNewDaoInfo] = useState<InewDaoInfo>(defaultDaoCreation);
+  const [totalVotes, setTotalVotes] = useState<number>(0);
+  const [totalProposals, setTotalProposals] = useState<number>(0);
+  const [isLoadingActivities, setIsLoadingActivities] =
+    useState<boolean>(false);
   const [newProposalInfo, setNewProposalInfo] =
     useState<INewProposal>(defaultProposal);
 
@@ -49,6 +61,22 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
       setNewProposalInfo(JSON.parse(getNewProposalInfo));
     }
   }, []);
+
+  const getActivities = async (address: string) => {
+    setIsLoadingActivities(true);
+    try {
+      const activities: { proposalsCreated: number; voteCasted: number } =
+        await getAUserActivitiesAcrossDAOs(address);
+      console.log(activities, '->');
+      setTotalProposals(Number(activities.proposalsCreated));
+      setTotalVotes(Number(activities.voteCasted));
+    } catch (error: any) {
+      console.log(error, '-> error');
+      toast.error(error.message);
+    } finally {
+      setIsLoadingActivities(false);
+    }
+  };
 
   const getAllDaos = async () => {
     return getDAOs().then((res: any) => {
@@ -74,7 +102,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
       const allDAOs: any = await getAllDaos();
       if (allDAOs) {
         setDAOsData(
-          allDAOs.reverse().map((dao: any) => {
+          allDAOs.map((dao: any) => {
             return {
               organisation: dao.name,
               image: dao.image,
@@ -95,15 +123,55 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
         );
         setDaoLoading(false);
       }
-    } catch (error) {
-      toast.error('Error fetching DAOs');
+    } catch (error: any) {
+      toast.error(error.message);
       return <ErrorFetchingComponent />;
+    } finally {
+      setDaoLoading(false);
     }
   };
 
   useEffect(() => {
     fetchDAOs();
   }, [user]);
+
+  const fetchAllProposals = async () => {
+    try {
+      const proposals = await getAllProposals();
+      console.log(proposals, '-> prop');
+      setAllProposals(
+        proposals.reverse().map((proposal: IProposal) => {
+          return {
+            type: proposal.proposalType,
+            status: getStatus(proposal),
+            description: proposal.description,
+            wallet:
+              proposal.target.slice(0, 6) + '...' + proposal.target.slice(-4),
+            duration: getDuration(proposal.startTime, proposal.endTime),
+            totalVote: `${proposal.votesFor + proposal.votesAgainst}`,
+            organisation: proposal.daoName,
+            id: proposal?.id,
+            startTime: proposal.startTime,
+            endTime: proposal.endTime,
+            daoId: proposal.daoId,
+            votesAgainst: proposal.votesAgainst,
+            votesFor: proposal.votesFor,
+            votes: proposal.votes,
+            hasVoted: proposal.hasVoted,
+          };
+        })
+      );
+    } catch (error: any) {
+      toast.error(error.message);
+      return <ErrorFetchingComponent />;
+    } finally {
+      setIsProposalLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllProposals();
+  }, []);
 
   const createDAO = async (
     name: string,
@@ -164,9 +232,25 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     return daos;
   };
 
+  const isUserMemberOfDAO = async (
+    daoContractAddress: string,
+    userAddress: string
+  ) => {
+    const contract = await getBasicDAO(daoContractAddress);
+    const res = await contract.isMember(userAddress);
+    return res.decodedResult;
+  };
+
   const getAUserActivitiesAcrossDAOs = async (userAddress: string) => {
     const contract = await getNucleusDAO();
     const res = await contract.getUserActivitiesAcrossDAOs(userAddress);
+    const activities = res.decodedResult;
+    return activities;
+  };
+
+  const getAllUsersActivities = async (daoContractAddress: string) => {
+    const contract = await getBasicDAO(daoContractAddress);
+    const res = await contract.getAllMembersActivities();
     const activities = res.decodedResult;
     for (let i = 0; i < activities.length; i++) {
       let activity = activities[i];
@@ -293,6 +377,17 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     getProposal,
     executeProposal,
     deposit,
+    getAllProposals,
+    isProposalLoading,
+    fetchAllProposals,
+    allProposals,
+    getAllUsersActivities,
+    getAUserActivitiesAcrossDAOs,
+    totalVotes,
+    totalProposals,
+    getActivities,
+    isLoadingActivities,
+    isUserMemberOfDAO,
     // getEachProposal,
   };
 

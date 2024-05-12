@@ -1,4 +1,5 @@
 'use client';
+import EachDaoLoading from '@/components/loading/each-dao-loading';
 import EachFilterTab from '@/components/proposals/each-proposal-tab';
 import { AppContext } from '@/context/app-context';
 import { EachDaoContext } from '@/context/each-dao-context';
@@ -6,7 +7,7 @@ import { useSearchParams } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
 
 const EachDaoProposals = () => {
-  const { eachDAOProposal } = useContext(EachDaoContext);
+  const { eachDAOProposal, isProposalLoading } = useContext(EachDaoContext);
   const searchParams = useSearchParams();
   const [proposals, setProposals] = useState(eachDAOProposal);
   const search = searchParams.get('search') || '';
@@ -30,7 +31,9 @@ const EachDaoProposals = () => {
     } else {
       setProposals(eachDAOProposal);
     }
-  }, [search, filter]);
+  }, [search, filter, eachDAOProposal]);
+
+  if (isProposalLoading) return <EachDaoLoading />;
 
   return (
     <div className="-mt-4">

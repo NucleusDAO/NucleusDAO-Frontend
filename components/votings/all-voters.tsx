@@ -20,13 +20,13 @@ const AllVoters = ({ voters }: IAllVoters) => {
       {voters.length > 0 ? (
         <div className="space-y-8 max-h-[400px] overflow-auto">
           {voters
-            .slice(0, list)
+            ?.slice(0, list)
             .map((voter: { account: string; support: boolean }) => (
               <div className="flex justify-between" key={voter.account}>
                 <div className="flex space-x-3 items-center">
                   <Image src={RoundedIcon} alt="logo" width={20} height={20} />
                   <p className="text-sm dark:text-white text-dark">
-                    {`${voter.account.slice(0, 20)}...`}
+                    {`${voter?.account?.slice(0, 20)}...`}
                   </p>
                 </div>
                 <p className="dark:text-white text-dark">
@@ -56,7 +56,7 @@ const AllVoters = ({ voters }: IAllVoters) => {
             width={60}
             className="mx-auto"
           />
-          <p className="text-center">No votes currently</p>
+          <p className="text-center font-light">No votes currently</p>
         </div>
       )}
     </div>

@@ -25,8 +25,10 @@ import { toast } from 'sonner';
 
 const DaoInfoForm = () => {
   const { updateNewDaoInfo, newDaoInfo } = useContext(AppContext);
-  const [logoFormData, setLogoFormData] = useState<FormData|null>(null);
-  const [onUploadUrl, setOnUploadUrl] = useState<string>(newDaoInfo.info.logoUrl || '');
+  const [logoFormData, setLogoFormData] = useState<FormData | null>(null);
+  const [onUploadUrl, setOnUploadUrl] = useState<string>(
+    newDaoInfo.info.logoUrl || ''
+  );
   const router = useRouter();
   const domainName = typeof window !== 'undefined' && window.location.origin;
 
@@ -47,7 +49,15 @@ const DaoInfoForm = () => {
 
   useEffect(() => {
     const subscription = form.watch((value, { name, type }) => {
-      const updatedData = { ...newDaoInfo, info: { ...newDaoInfo.info, ...value, logo: logoFormData, logoUrl: onUploadUrl } }
+      const updatedData = {
+        ...newDaoInfo,
+        info: {
+          ...newDaoInfo.info,
+          ...value,
+          logo: logoFormData,
+          logoUrl: onUploadUrl,
+        },
+      };
       localStorage.setItem('new_dao', JSON.stringify(updatedData));
       updateNewDaoInfo(updatedData);
     });
@@ -68,10 +78,10 @@ const DaoInfoForm = () => {
     const maxSize: number = 3 * 1024 * 1024;
     const file: any = e.target.files?.[0];
     if (file.size >= maxSize) {
-      toast.error('File is too large. Max size of 3mb')
+      toast.error('File is too large. Max size of 3mb');
     } else {
       setLogoFormData(file);
-  
+
       if (file) {
         const reader = new FileReader();
         reader.onloadend = () => {
@@ -79,8 +89,11 @@ const DaoInfoForm = () => {
           setOnUploadUrl(result);
           form.setValue('logo', file);
           form.setError('logo', { message: '' });
-          const updatedData = { ...newDaoInfo, info: { ...newDaoInfo.info, logo: file, logoUrl: result } }
-          updateNewDaoInfo(updatedData)
+          const updatedData = {
+            ...newDaoInfo,
+            info: { ...newDaoInfo.info, logo: file, logoUrl: result },
+          };
+          updateNewDaoInfo(updatedData);
           localStorage.setItem('new_dao', JSON.stringify(updatedData));
         };
         reader.readAsDataURL(file);
@@ -228,14 +241,12 @@ const DaoInfoForm = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <Input
-                          placeholder="https://"
-                          {...field}
-                          onInput={() =>
-                            form.setError('socialMedia', { message: '' })
-                          }
-                        />
+                        <Input placeholder="https://" {...field} />
                       </FormControl>
+                      <p className="text-defaultText text-xs font-light">
+                        Ensure to start with{' '}
+                        <span className="text-primary">https://</span>
+                      </p>
                       <FormMessage>
                         {form.formState.errors.socialMedia?.[index]?.root
                           ?.message || ''}

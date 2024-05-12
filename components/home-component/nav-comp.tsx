@@ -12,16 +12,25 @@ import React, { useState } from 'react';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import Background from '@/assets/images/main-bg.png';
 import { useRouter } from 'next/navigation';
-import { cn } from '@/libs/utils';
+import { cn, wait } from '@/libs/utils';
 
 const NavComp = () => {
   const router = useRouter();
+  const [isPending, setIsPending] = useState<boolean>(false);
   const isDesktop = useMediaQuery('(min-width: 768px)');
   const [open, setOpen] = useState<boolean>(false);
 
   const [hash, setHash] = useState(
     (typeof window !== 'undefined' && window.location.hash) || ''
   );
+
+  function onLaunch() {
+    setIsPending(true);
+    wait().then(() => {
+      router.push(DAO_URL);
+      setIsPending(false);
+    });
+  }
 
   return (
     <nav className="lg:px-16 items-center block lg:flex lg:py-6 justify-between">
@@ -66,9 +75,14 @@ const NavComp = () => {
             ))}
           </div>
           <div className="px-6 lg:px-0 lg:absolute lg:right-0">
-            <Link href={DAO_URL}>
-              <Button className="lg:w-fit w-full px-8">Launch DAO</Button>
-            </Link>
+            <Button
+              className="lg:w-fit w-full px-8"
+              onClick={onLaunch}
+              loading={isPending}
+              loadingText="Launching..."
+            >
+              Launch DAO
+            </Button>
           </div>
         </div>
       )}

@@ -55,7 +55,11 @@ export const WalletAddressCell = ({ row }: any) => {
   const { wallet } = row.original;
   return (
     <div className="flex space-x-2 items-center w-[25vw]">
-      <Image src={RoundedIcon} alt="waller" width={24} />
+      <img
+        src={`https://avatars.z52da5wt.xyz/${wallet}`}
+        alt="logo"
+        className="rounded-full h-6 w-6"
+      />
       <p>{wallet}</p>
     </div>
   );

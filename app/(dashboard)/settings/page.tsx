@@ -16,18 +16,15 @@ import {
 import { Input } from '@/components/ui/input';
 import { editProfile } from '@/libs/validations/dao-schema';
 import { Textarea } from '@/components/ui/textarea';
-import { ChangeEvent, useContext, useEffect, useState } from 'react';
+import { ChangeEvent, useContext, useState } from 'react';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { IConnectWalletContext, ICreateUser } from '@/libs/types';
 import { toast } from 'sonner';
 import FormGroup from '@/components/ui/form-group';
-import { useQueryClient } from '@tanstack/react-query';
 import { uploadFile } from '@/config/apis';
 import { ApiContext } from '@/context/api-context';
-import { EACH_USER } from '@/libs/key';
 
 const Profile = () => {
-  const queryClient: any = useQueryClient();
   const [imageUploading, setImageUploading] = useState<boolean>(false);
   const {
     user: { address },
@@ -79,12 +76,11 @@ const Profile = () => {
         formData.append('file', data.profilePicture);
         formData.append('upload_preset', 'bqr7mcvh');
         const fileUpload = await uploadFile(formData);
+        console.log(fileUpload, '-> uplpad');
         profilePicture = fileUpload.data.url;
       }
-      profilePicture = data.profilePicture;
       const updatedData = { ...data, profilePicture, address, theme: 'dark' };
       await mutateUsers(updatedData);
-      queryClient.invalidateQueries(EACH_USER);
     } catch (error: any) {
       toast.error(error.message);
     } finally {
@@ -154,11 +150,7 @@ const Profile = () => {
               <FormItem>
                 <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="Enter name"
-                    {...field}
-                    // defaultValue={eachUser?.username || ''}
-                  />
+                  <Input placeholder="Enter name" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -173,7 +165,8 @@ const Profile = () => {
                 <FormControl>
                   <Input
                     placeholder="Enter email address"
-                    // defaultValue={eachUser.email}
+                    readOnly={eachUser?.email}
+                    disabled={eachUser?.email}
                     {...field}
                     type="email"
                   />

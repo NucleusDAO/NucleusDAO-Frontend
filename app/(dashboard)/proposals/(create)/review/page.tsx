@@ -1,10 +1,6 @@
 'use client';
 import { proposalLists, rate } from '@/config/dao-config';
-import {
-  addDaysToCurrentDateAndFormat,
-  cn,
-  defaultProposal,
-} from '@/libs/utils';
+import { defaultProposal } from '@/libs/utils';
 import {
   AlertDialog,
   AlertDialogContent,
@@ -13,7 +9,7 @@ import {
   AlertDialogHeader,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
-import { MoveLeft } from 'lucide-react';
+import { MoveLeft, MoveUpRight } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { PROPOSALS_URL } from '@/config/path';
 import { useContext, useState } from 'react';
@@ -23,18 +19,20 @@ import { defaultSuccessOption } from '@/components/animation-options';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { IConnectWalletContext } from '@/libs/types';
 import { toast } from 'sonner';
-import { createProposalEP, uploadFile } from '@/config/apis';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { PROPOSALS } from '@/libs/key';
-import { EachDaoContext } from '@/context/each-dao-context';
+import { uploadFile } from '@/config/apis';
 import { ApiContext } from '@/context/api-context';
+import Link from 'next/link';
 
 const ReviewProposal = () => {
-  const queryClient: any = useQueryClient();
-  const { createProposal, newProposalInfo, getEachDAO, setNewProposalInfo } =
-    useContext(AppContext);
-  const { currentDAO } = useContext(EachDaoContext);
+  const {
+    createProposal,
+    fetchAllProposals,
+    newProposalInfo,
+    getEachDAO,
+    setNewProposalInfo,
+  } = useContext(AppContext);
   const { getAEPrice } = useContext(ApiContext);
+  const [isRouting, setIsRouting] = useState<boolean>(false);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const [isCreating, setIsCreating] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
@@ -44,15 +42,6 @@ const ReviewProposal = () => {
   const router = useRouter();
   const { value } = newProposalInfo;
 
-  const { mutate, isPending } = useMutation({
-    mutationFn: createProposalEP,
-    onSuccess: (response) => {
-      setOpen(true);
-      setIsCreating(false);
-      queryClient.invalidateQueries(PROPOSALS);
-    },
-    onError: (error) => toast.error(error.message),
-  });
   const handleCreateProposal = async () => {
     setIsCreating(true);
     let logoURL;
@@ -74,31 +63,22 @@ const ReviewProposal = () => {
       }
       const dao = await getEachDAO(daoID);
       if (dao) {
-        const proposal = await createProposal(
+        await createProposal(
           dao.contractAddress,
           proposalLists[Number(value.type)].type,
           value.description,
-          Number(value.value),
-          value.targetWallet,
+          Number(value.value) || Number(value.maximum) || 0,
+          value.targetWallet || address,
           {
             name: value?.newName || '',
             socials: updatedSocials
-              ? [...dao.Socials, ...updatedSocials]
+              ? [...(dao.Socials || []), ...updatedSocials]
               : dao.socials,
             image: logoURL || '',
           }
         );
-        for (let key in proposal) {
-          if (typeof proposal[key] == 'bigint') {
-            proposal[key] = Number(proposal[key]);
-          }
-        }
-        await mutate(proposal, {
-          onSuccess: () => {
-            setOpen(true);
-            setIsCreating(false);
-          },
-        });
+        setOpen(true);
+        setIsCreating(false);
       } else {
         toast.error('Contract address not found');
       }
@@ -109,10 +89,18 @@ const ReviewProposal = () => {
     }
   };
 
-  const handleGoHome = () => {
-    localStorage.removeItem('new_proposal');
-    setNewProposalInfo(defaultProposal);
-    router.push(PROPOSALS_URL);
+  const handleGoHome = async () => {
+    setIsRouting(true);
+    try {
+      await fetchAllProposals();
+      setIsRouting(false);
+      localStorage.removeItem('new_proposal');
+      setNewProposalInfo(defaultProposal);
+      router.push(PROPOSALS_URL);
+    } catch (error: any) {
+      setIsRouting(false);
+      toast.error(error.message);
+    }
   };
 
   return (
@@ -149,6 +137,12 @@ const ReviewProposal = () => {
             <p className="dark:text-[#888888] text-dark">{value.newName}</p>
           </div>
         )}
+        {!!value.quorum && (
+          <div className="grid grid-cols-2 text-sm w-4/6">
+            <p className="dark:text-white text-dark">New Quorum</p>
+            <p className="dark:text-[#888888] text-dark">{value.quorum}</p>
+          </div>
+        )}
         {value.targetWallet && (
           <div className="grid grid-cols-2 text-sm w-4/6">
             <p className="dark:text-white text-dark">Target Wallet</p>
@@ -163,6 +157,12 @@ const ReviewProposal = () => {
             <p className="dark:text-[#888888] text-dark">{`${value.duration} day(s)`}</p>
           </div>
         )}
+        {value.maximum && (
+          <div className="grid grid-cols-2 text-sm w-4/6">
+            <p className="dark:text-white text-dark">New Duration</p>
+            <p className="dark:text-[#888888] text-dark">{`${value.maximum} day(s)`}</p>
+          </div>
+        )}
         {value.value && (
           <div className="grid grid-cols-2 text-sm w-4/6">
             <p className="dark:text-white text-dark">Value</p>
@@ -171,6 +171,32 @@ const ReviewProposal = () => {
             } AE ~ ${
               Number(value.value || 0) * (getAEPrice?.price || rate)
             }USD`}</p>
+          </div>
+        )}
+        {value.socialMedia[0].type && (
+          <div className="grid grid-cols-2 text-xs md:text-sm md:w-4/6">
+            <p className="dark:text-white text-dark">Links</p>
+            {!value.socialMedia[0].type && 'None'}
+            {value.socialMedia[0].type && (
+              <div className="flex space-x-4">
+                {value.socialMedia.map(
+                  (socialMedia: { link: string; type: string }) => (
+                    <Link
+                      href={socialMedia.link}
+                      key={socialMedia.type}
+                      target="_blank"
+                    >
+                      <div className="flex items-center space-x-2 text-primary text-sm">
+                        <p className="">{socialMedia.type}</p>
+                        <div className="border border-primary rounded-sm p-0.5">
+                          <MoveUpRight size={10} />
+                        </div>
+                      </div>
+                    </Link>
+                  )
+                )}
+              </div>
+            )}
           </div>
         )}
         {value.logo && (
@@ -234,7 +260,11 @@ const ReviewProposal = () => {
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter className="w-full">
-              <Button className="w-full" onClick={handleGoHome}>
+              <Button
+                className="w-full"
+                onClick={handleGoHome}
+                loading={isRouting}
+              >
                 Back home
               </Button>
             </AlertDialogFooter>

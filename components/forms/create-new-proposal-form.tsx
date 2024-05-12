@@ -24,17 +24,21 @@ import { EachProposalType } from '@/config/proposal-config';
 import { AppContext } from '@/context/app-context';
 import { IConnectWalletContext } from '@/libs/types';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
-import { getDaysFromMilliseconds, millisecondsToDays } from '@/libs/utils';
+import {
+  defaultProposal,
+  getDaysFromMilliseconds,
+  millisecondsToDays,
+} from '@/libs/utils';
 import { EachDaoContext } from '@/context/each-dao-context';
 
 const CreateNewProposalForm = () => {
   const { setNewProposalInfo, newProposalInfo, getEachDAO } =
     useContext(AppContext);
-  const { currentDAO } = useContext(EachDaoContext);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { address } = user;
   const searchParams = useSearchParams();
   const type: string = searchParams.get('enums') || newProposalInfo.value.type;
+  const memberType = searchParams.get('type') || '';
   const daoID = searchParams.get('ct');
   const router = useRouter();
   const form = useForm<z.infer<typeof proposalInfoSchema>>({
@@ -58,21 +62,40 @@ const CreateNewProposalForm = () => {
 
   useEffect(() => {
     const subscription = form.watch((value, { name, type }) => {
-      const updatedData = { ...newProposalInfo, value };
-      localStorage.setItem('new_proposal', JSON.stringify(updatedData));
-      setNewProposalInfo(updatedData);
+      console.log(name === 'type', '-> name');
+      let updatedData;
+      if (name === 'type') {
+        updatedData = { ...defaultProposal.value, type: value.type };
+        localStorage.setItem(
+          'new_proposal',
+          JSON.stringify({ value: updatedData })
+        );
+        setNewProposalInfo({ value: updatedData });
+
+        console.log(updatedData, '-> upd');
+      } else {
+        const updatedData = { ...newProposalInfo, value };
+        localStorage.setItem('new_proposal', JSON.stringify(updatedData));
+        setNewProposalInfo(updatedData);
+      }
     });
     return () => subscription.unsubscribe();
   }, [form.watch]);
 
   const onSubmit = async (data: any) => {
-    // router.push(`${REVIEW_PROPOSAL_URL}?ct=${daoID}`);
+    console.log(data, '->');
+    router.push(`${REVIEW_PROPOSAL_URL}?ct=${daoID}`);
   };
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <SelectFormField form={form} filterData={proposalLists} />
+        <SelectFormField
+          form={form}
+          filterData={
+            memberType ? [proposalLists[Number(type)]] : proposalLists
+          }
+        />
 
         <FormField
           control={form.control}
@@ -108,7 +131,7 @@ const CreateNewProposalForm = () => {
           <Button
             type="submit"
             className="px-12 w-full md:w-fit"
-            onClick={() => router.push(`${REVIEW_PROPOSAL_URL}?ct=${daoID}`)}
+            // onClick={() => router.push(`${REVIEW_PROPOSAL_URL}?ct=${daoID}`)}
           >
             Review
           </Button>

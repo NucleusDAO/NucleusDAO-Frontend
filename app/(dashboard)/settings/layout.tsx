@@ -22,8 +22,6 @@ const Layout = ({ children }: ILayout) => {
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const connected: boolean = user.isConnected;
 
-  // if (isEachUserError) return toast.error(eachUserErrorMessage.message);
-
   return (
     <div className="space-y-6">
       <h1 className="dark:text-white text-dark text-xl font-medium">

@@ -13,18 +13,22 @@ import { AppContext } from '@/context/app-context';
 import DashboadLoading from '@/components/loading/dashboard-loading';
 import { toast } from 'sonner';
 import { useSearchParams } from 'next/navigation';
-import { ApiContext } from '@/context/api-context';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const Dashboard = () => {
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
-  const { proposals, isLoadingProposal } = useContext(ApiContext);
-  const { DAOsData, daoLoading } = useContext(AppContext);
+  const {
+    DAOsData,
+    daoLoading,
+    totalProposals,
+    totalVotes,
+    isLoadingActivities,
+    getActivities,
+  } = useContext(AppContext);
   const connected: boolean = user.isConnected;
   const searchParams = useSearchParams();
   const currentSearch = searchParams.get('q');
   let userDAO: any[] = [];
-  const [totalVotes, setTotalVotes] = useState<number>(0);
-  const [totalProposals, setTotalProposals] = useState<number>(0);
 
   const getDAOsData = (width: number) => {
     let individualDAOs;
@@ -64,18 +68,10 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    if (user.isConnected) {
-      const proposal = proposals?.filter(
-        (proposal: { proposer: string }) => proposal?.proposer === user?.address
-      );
-      const votes = proposals?.filter(
-        (proposal: { votes: { account: string }[] }) =>
-          proposal?.votes?.some((vote) => vote?.account === user?.address)
-      );
-      setTotalVotes(votes?.length);
-      setTotalProposals(proposal?.length);
+    if (user.address) {
+      getActivities(user.address);
     }
-  }, [isLoadingProposal, proposals, user.isConnected]);
+  }, [user.address]);
 
   if (daoLoading) return <DashboadLoading />;
 
@@ -101,16 +97,29 @@ const Dashboard = () => {
         )}
       </div>
 
-      <div className="gap-6 md:grid-cols-3 grid">
-        {dashboardFeedsData(
-          connected,
-          getUserTotalDao(),
-          totalProposals,
-          totalVotes
-        ).map((feed) => (
-          <Cards key={feed.title} {...feed} />
-        ))}
-      </div>
+      {isLoadingActivities ? (
+        <div className="gap-6 md:grid-cols-3 grid">
+          {Array(3)
+            .fill(null)
+            .map((_, index) => (
+              <Skeleton
+                className="w-full h-20 dark:bg-[#1E1E1E] bg-[#F5F5F5]"
+                key={`card-${index}`}
+              />
+            ))}
+        </div>
+      ) : (
+        <div className="gap-6 md:grid-cols-3 grid">
+          {dashboardFeedsData(
+            connected,
+            getUserTotalDao(),
+            totalProposals,
+            totalVotes
+          ).map((feed) => (
+            <Cards key={feed.title} {...feed} />
+          ))}
+        </div>
+      )}
 
       <AllDaos
         dashboardTableData={getDAOsData}
