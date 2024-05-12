@@ -4,10 +4,10 @@ import { CREATE_PROPOSAL_URL } from '@/config/path';
 import { Globe, MoveLeft, Plus } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import React, { ReactNode, useContext } from 'react';
+import React, { ReactNode, useContext, useState } from 'react';
 import { CopyIcon } from '@/assets/svgs';
 import { eachDaoViews } from '@/config/dao-config';
-import { cn, encodeURI, removeExistingStorageItem } from '@/libs/utils';
+import { cn, encodeURI, removeExistingStorageItem, wait } from '@/libs/utils';
 import EachDaoLoading from '@/components/loading/each-dao-loading';
 import { EachDaoContext } from '@/context/each-dao-context';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
@@ -31,6 +31,7 @@ const Layout = ({ children }: ILayout) => {
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { isConnected } = user;
   const { isLoading, currentDAO, isMember } = useContext(EachDaoContext);
+  const [routing, setRouting] = useState<boolean>(false);
 
   const urlParts = pathname.split('/'); // Split the URL by "/"
   const daoId = urlParts[2];
@@ -38,6 +39,19 @@ const Layout = ({ children }: ILayout) => {
   const url = `${domainName}/daos/${daoId}`;
 
   console.log(currentDAO, '->currentDAO');
+
+  function handleView(path: string) {
+    router.push(encodeURI(url, path));
+  }
+
+  function handleCreateProposal() {
+    setRouting(true);
+    removeExistingStorageItem('new_proposal');
+    wait().then(() => {
+      router.push(`${CREATE_PROPOSAL_URL}?ct=${daoId}`);
+      setRouting(false);
+    });
+  }
 
   if (isLoading) return <EachDaoLoading />;
 
@@ -59,13 +73,13 @@ const Layout = ({ children }: ILayout) => {
         {isConnected && (
           <React.Fragment>
             {isMember && (
-              <Link href={`${CREATE_PROPOSAL_URL}?ct=${daoId}`}>
-                <Button
-                  onClick={() => removeExistingStorageItem('new_proposal')}
-                >
-                  <Plus className="mr-2 h-4 w-4" /> Create Proposal
-                </Button>
-              </Link>
+              <Button
+                onClick={handleCreateProposal}
+                loading={routing}
+                loadingText="Please wait..."
+              >
+                <Plus className="mr-2 h-4 w-4" /> Create Proposal
+              </Button>
             )}
           </React.Fragment>
         )}
@@ -139,20 +153,20 @@ const Layout = ({ children }: ILayout) => {
             </h2>
             <div className="flex space-x-4 dark:bg-[#191919] bg-white p-2 rounded-2xl w-[99%] md:w-fit overflow-x-auto">
               {eachDaoViews.map((view) => (
-                <Link href={encodeURI(url, view.path)} key={view.title}>
-                  <div
-                    role="button"
-                    className={cn(
-                      'flex space-x-2 text-xs text-[#888888] items-center bg-white dark:bg-[#1E1E1E] rounded-lg font-light py-2 px-3',
-                      (pathname.endsWith(view.path) ||
-                        pathname.includes(view.path)) &&
-                        'text-primary bg-light'
-                    )}
-                  >
-                    {view.icon}
-                    <p>{view.title}</p>
-                  </div>
-                </Link>
+                <div
+                  role="button"
+                  className={cn(
+                    'flex space-x-2 text-xs text-[#888888] items-center bg-white dark:bg-[#1E1E1E] rounded-lg font-light py-2 px-3',
+                    (pathname.endsWith(view.path) ||
+                      pathname.includes(view.path)) &&
+                      'text-primary bg-light'
+                  )}
+                  key={view.title}
+                  onClick={() => handleView(view.path)}
+                >
+                  {view.icon}
+                  <p>{view.title}</p>
+                </div>
               ))}
             </div>
           </div>

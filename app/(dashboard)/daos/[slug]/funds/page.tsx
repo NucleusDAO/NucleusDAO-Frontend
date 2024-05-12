@@ -28,7 +28,7 @@ const EachDaoFunds = () => {
   const userURL: string = `${domainName}${updatedUrl}`;
 
   const usdValue: number =
-    Number(currentDAO.balance) * getAEPrice.price || rate;
+    Number(currentDAO.balance) * getAEPrice?.price || rate;
 
   return (
     <div className="space-y-4">

@@ -322,3 +322,7 @@ export function getTimeDifference(timestamp: number): string {
 
   return `${daysLeft}d:${hoursLeft}h:${minutesLeft}m:${secondsLeft}s`;
 }
+
+export function wait() {
+  return new Promise((resolve) => setTimeout(resolve, 1000));
+}
