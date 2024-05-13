@@ -62,6 +62,12 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     }
   }, []);
 
+  useEffect(() => {
+    if (user.address) {
+      getActivities(user.address);
+    }
+  }, [user.address]);
+
   const getActivities = async (address: string) => {
     setIsLoadingActivities(true);
     try {

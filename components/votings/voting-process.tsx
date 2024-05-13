@@ -113,7 +113,7 @@ const VotingProcess = ({
     try {
       fetchAllProposals();
       fetchDAOs();
-      getActivities();
+      getActivities(address);
       setCurrentProposal({ ...eachProposal, id: Number(eachProposal.id) });
       setShowModal(false);
       setIsLoading(false);

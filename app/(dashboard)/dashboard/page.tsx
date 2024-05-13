@@ -67,11 +67,11 @@ const Dashboard = () => {
     });
   };
 
-  useEffect(() => {
-    if (user.address) {
-      getActivities(user.address);
-    }
-  }, [user.address]);
+  // useEffect(() => {
+  //   if (user.address) {
+  //     getActivities(user.address);
+  //   }
+  // }, []);
 
   if (daoLoading) return <DashboadLoading />;
 

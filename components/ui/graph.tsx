@@ -60,7 +60,6 @@ const data = [
 interface IGraph {
   graphData: { title: string; value: string }[];
 }
-
 const Graph = ({ graphData }: IGraph) => {
   return (
     <ResponsiveContainer width="100%" height="100%" className="pb-14">
