@@ -17,8 +17,6 @@ const Steps = () => {
   const pathname = usePathname();
   const { newDaoInfo } = useContext(AppContext);
 
-  console.log(newDaoInfo, '->');
-
   const steps: {
     title: string;
     url: string;

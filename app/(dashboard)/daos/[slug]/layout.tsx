@@ -48,8 +48,6 @@ const Layout = ({ children }: ILayout) => {
   const domainName = typeof window !== 'undefined' && window.location.origin;
   const url = `${domainName}/daos/${daoId}`;
 
-  console.log(currentDAO, '->currentDAO');
-
   function handleView(path: string) {
     router.push(encodeURI(url, path));
   }
