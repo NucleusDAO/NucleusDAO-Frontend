@@ -36,7 +36,7 @@ const VotingProcess = ({
   setCurrentProposal,
 }: IVotingProcess) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { voteFor, voteAgainst, getActivities, fetchAllProposals, fetchDAOs } =
+  const { voteFor, voteAgainst, getActivities, setUpdate } =
     useContext(AppContext);
   const { currentDAO } = useContext(EachDaoContext);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
@@ -111,15 +111,17 @@ const VotingProcess = ({
   const handleDone = async () => {
     setIsLoading(true);
     try {
-      fetchAllProposals();
-      fetchDAOs();
-      getActivities(address);
+      // await getActivities(address)
+      // fetchAllProposals();
+      // fetchDAOs();
+      setUpdate(true);
+      await getActivities(address);
       setCurrentProposal({ ...eachProposal, id: Number(eachProposal.id) });
       setShowModal(false);
       setIsLoading(false);
     } catch (error: any) {
       console.log(error, '-> erros');
-      // toast.error(error.message);
+      toast.error(error.message);
     } finally {
       setIsLoading(false);
     }

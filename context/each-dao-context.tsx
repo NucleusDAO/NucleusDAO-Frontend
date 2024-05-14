@@ -42,6 +42,7 @@ export const EachDaoContextProvider = ({ children }: IAppProvider) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isProposalLoading, setIsProposalLoading] = useState<boolean>(true);
   const [memberLoading, setMemberLoading] = useState<boolean>(true);
+  const [updateDAO, setUpdateDAO] = useState<boolean>(false);
   const isMember = currentDAO?.members?.includes(user.address);
 
   const { getProposals, getEachDAO, getAllUsersActivities, isUserMemberOfDAO } =
@@ -50,22 +51,36 @@ export const EachDaoContextProvider = ({ children }: IAppProvider) => {
   const urlParts = pathname.split('/'); // Split the URL by "/"
   const daoId = urlParts[2];
 
+  const fetchEachDAO = async () => {
+    try {
+      const daos = await getEachDAO(daoId);
+      setCurrentDAO(daos);
+      setIsLoading(false);
+    } catch (error: any) {
+      toast.error(error.message);
+      return <ErrorFetchingComponent />;
+    } finally {
+      setIsLoading(false); // Set loading state to false after fetching data
+    }
+  };
+
   useEffect(() => {
     setIsLoading(true);
     if (urlParts.length >= 4) {
-      (async () => {
-        try {
-          const daos = await getEachDAO(daoId);
-          console.log(daos, '-> DAOL');
-          setCurrentDAO(daos);
-          setIsLoading(false);
-        } catch (error: any) {
-          toast.error(error.message);
-          return <ErrorFetchingComponent />;
-        } finally {
-          setIsLoading(false); // Set loading state to false after fetching data
-        }
-      })();
+      fetchEachDAO();
+      // (async () => {
+      // try {
+      //   const daos = await getEachDAO(daoId);
+      //   console.log(daos, '-> DAOL');
+      //   setCurrentDAO(daos);
+      //   setIsLoading(false);
+      // } catch (error: any) {
+      //   toast.error(error.message);
+      //   return <ErrorFetchingComponent />;
+      // } finally {
+      //   setIsLoading(false); // Set loading state to false after fetching data
+      // }
+      // })();
     }
   }, [daoId]);
 
@@ -147,6 +162,8 @@ export const EachDaoContextProvider = ({ children }: IAppProvider) => {
     memberLoading,
     isProposalLoading,
     setIsLoading,
+    setUpdateDAO,
+    fetchEachDAO,
   };
 
   return (

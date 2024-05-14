@@ -4,7 +4,7 @@ import { CREATE_PROPOSAL_URL } from '@/config/path';
 import { Globe, MoveLeft, Plus } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import React, { ReactNode, useContext, useState } from 'react';
+import React, { ReactNode, useContext, useEffect, useState } from 'react';
 import { CopyIcon } from '@/assets/svgs';
 import { eachDaoViews } from '@/config/dao-config';
 import {
@@ -28,6 +28,7 @@ import {
 } from '@/components/ui/dialog';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { toast } from 'sonner';
+import { AppContext } from '@/context/app-context';
 
 interface ILayout {
   children: ReactNode;
@@ -37,6 +38,7 @@ const Layout = ({ children }: ILayout) => {
   const router = useRouter();
   const pathname = usePathname();
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
+  const { setUpdate } = useContext(AppContext);
   const { isConnected } = user;
   const { isLoading, currentDAO, isMember } = useContext(EachDaoContext);
   const [routing, setRouting] = useState<boolean>(false);
@@ -69,6 +71,10 @@ const Layout = ({ children }: ILayout) => {
       setRouting(false);
     });
   }
+
+  useEffect(() => {
+    setUpdate(false);
+  }, []);
 
   if (isLoading) return <EachDaoLoading />;
 

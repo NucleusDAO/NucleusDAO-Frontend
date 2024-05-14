@@ -1,12 +1,13 @@
 'use client';
 import { ChevronUp } from 'lucide-react';
 import { dashboardTab, tabView } from './config';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { cn } from '@/libs/utils';
 import { ApiContext } from '@/context/api-context';
 import { EachDaoContext } from '@/context/each-dao-context';
 import { rate } from '@/config/dao-config';
 import { prefixedAmount } from '@aeternity/aepp-sdk';
+import { AppContext } from '@/context/app-context';
 
 const EachDaoDashboard = () => {
   const [selectedTab, setSelectTab] = useState<number>(0);

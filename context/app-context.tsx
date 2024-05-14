@@ -39,7 +39,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
   const [newDaoInfo, setNewDaoInfo] = useState<InewDaoInfo>(defaultDaoCreation);
   const [totalVotes, setTotalVotes] = useState<number>(0);
   const [totalProposals, setTotalProposals] = useState<number>(0);
-  const [completeProposal, setCompleteProposal] = useState<boolean>(false);
+  const [update, setUpdate] = useState<boolean>(false);
   const [isLoadingActivities, setIsLoadingActivities] =
     useState<boolean>(false);
   const [newProposalInfo, setNewProposalInfo] =
@@ -80,12 +80,12 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
   };
 
   useEffect(() => {
-    if (user.address || (completeProposal && user.address)) {
+    if (user.address || (update && user.address)) {
       getActivities(user.address);
     }
-  }, [user.address, completeProposal]);
+  }, [user.address, update]);
 
-  console.log(completeProposal, '->completeProposal');
+  console.log(update, '->completeProposal');
 
   const getAllDaos = async () => {
     return getDAOs().then((res: any) => {
@@ -142,7 +142,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
 
   useEffect(() => {
     fetchDAOs();
-  }, [user, completeProposal]);
+  }, [user, update]);
 
   const fetchAllProposals = async () => {
     try {
@@ -184,7 +184,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
 
   useEffect(() => {
     fetchAllProposals();
-  }, [completeProposal]);
+  }, [update]);
 
   const createDAO = async (
     name: string,
@@ -401,7 +401,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     totalProposals,
     getActivities,
     isLoadingActivities,
-    setCompleteProposal,
+    setUpdate,
     isUserMemberOfDAO,
     // getEachProposal,
   };

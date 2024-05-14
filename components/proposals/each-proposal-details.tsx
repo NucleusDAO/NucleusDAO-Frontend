@@ -1,5 +1,5 @@
 'use client';
-import { rate } from '@/config/dao-config';
+import { proposalLists, rate } from '@/config/dao-config';
 import { ApiContext } from '@/context/api-context';
 import { MoveUpRight } from 'lucide-react';
 import Link from 'next/link';
@@ -58,13 +58,25 @@ const EachProposalDetails = ({ currentProposal }: IEachProposalDetails) => {
           </p>
         </div>
       )}
-      {!!Number(value) && (
+      {proposalType === proposalLists[0].type && (
         <div className="grid grid-cols-6">
           <h1 className="col-span-2">Value:</h1>
           <p className="col-span-4 overflow-hidden">
             {Number(value)}AE ~{' '}
             {(Number(value) * (getAEPrice.price || rate)).toFixed(2)}USD
           </p>
+        </div>
+      )}
+      {proposalType === proposalLists[4].type && (
+        <div className="grid grid-cols-6">
+          <h1 className="col-span-2">New Quorum:</h1>
+          <p className="col-span-4 overflow-hidden">{Number(value)}%</p>
+        </div>
+      )}
+      {proposalType === proposalLists[3].type && (
+        <div className="grid grid-cols-6">
+          <h1 className="col-span-2">New Duration:</h1>
+          <p className="col-span-4 overflow-hidden">{Number(value)} days</p>
         </div>
       )}
       {info && info.name && (
@@ -97,7 +109,6 @@ const EachProposalDetails = ({ currentProposal }: IEachProposalDetails) => {
           </div>
         </div>
       )}
-
       {info && info.image && (
         <div className="grid grid-cols-6">
           <h1 className="col-span-2">New Image:</h1>

@@ -8,6 +8,7 @@ export const ValidateProposalForm: any = {
   6: ({ form }: any) => validateChangeDAOLogo({ form }),
   7: ({ form }: any) => validateChangeSocialMedia({ form }),
   8: ({ form }: any) => validateCustom({ form }),
+  9: ({ form }: any) => validateMember({ form }),
 };
 
 export const validateTransfer = ({ form }: any) => {
@@ -178,11 +179,12 @@ export const validateCustom = ({ form }: any) => {
   const description = form.getValues('description');
 
   if (description) {
+    return true;
+  } else {
     form.setError('description', {
       type: 'onChange',
       message: 'Field is required',
     });
-    return true;
+    return false;
   }
-  return false;
 };

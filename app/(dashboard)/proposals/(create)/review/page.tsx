@@ -32,7 +32,7 @@ const ReviewProposal = () => {
     getActivities,
     setNewProposalInfo,
     fetchDAOs,
-    setCompleteProposal,
+    setUpdate,
   } = useContext(AppContext);
   const { getAEPrice } = useContext(ApiContext);
   const [isRouting, setIsRouting] = useState<boolean>(false);
@@ -71,7 +71,7 @@ const ReviewProposal = () => {
           dao.contractAddress,
           proposalLists[Number(value.type)].type,
           value.description,
-          Number(value.value) || Number(value.maximum) || 0,
+          Number(value.value) || Number(value.maximum) || value.quorum || 0,
           value.targetWallet || address,
           {
             name: value?.newName || '',
@@ -79,12 +79,11 @@ const ReviewProposal = () => {
               ? [...(dao.Socials || []), ...updatedSocials]
               : dao.socials,
             image: logoURL || '',
-            quorum: value.quorum,
           }
         );
         setOpen(true);
         setIsCreating(false);
-        setCompleteProposal(true);
+        setUpdate(true);
       } else {
         toast.error('Contract address not found');
       }
@@ -96,6 +95,7 @@ const ReviewProposal = () => {
   };
 
   const handleGoHome = async () => {
+    // setOpen(false);
     setIsRouting(true);
     try {
       await getActivities(address);

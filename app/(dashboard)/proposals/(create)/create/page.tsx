@@ -4,10 +4,10 @@ import { AppContext } from '@/context/app-context';
 import { useContext, useEffect } from 'react';
 
 const CreateProposal = () => {
-  const { setCompleteProposal } = useContext(AppContext);
+  const { setUpdate } = useContext(AppContext);
 
   useEffect(() => {
-    setCompleteProposal(false);
+    setUpdate(false);
   }, []);
   return (
     <div className="space-y-8">
