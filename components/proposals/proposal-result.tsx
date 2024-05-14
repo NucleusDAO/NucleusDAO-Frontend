@@ -29,11 +29,13 @@ interface IProposalResult {
     status: string;
   };
   setCurrentProposal: (arg: any) => void;
+  countdownTime: string;
 }
 
 const ProposalResult = ({
   currentProposal,
   setCurrentProposal,
+  countdownTime,
 }: IProposalResult) => {
   const {
     user: { address },
@@ -143,7 +145,7 @@ const ProposalResult = ({
             </span>
             <span>Time left:</span>{' '}
             <span className="text-dark dark:text-white font-light">
-              {getTimeDifference(Number(endTime))}
+              {countdownTime}
             </span>
           </p>
         </div>

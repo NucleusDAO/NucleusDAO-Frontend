@@ -14,6 +14,7 @@ import { toast } from 'sonner';
 import DepositToken from '@/components/deposit-token';
 import { ApiContext } from '@/context/api-context';
 import { rate } from '@/config/dao-config';
+import { prefixedAmount } from '@aeternity/aepp-sdk';
 
 const EachDaoFunds = () => {
   const pathname = usePathname();
@@ -27,8 +28,8 @@ const EachDaoFunds = () => {
   const updatedUrl = pathname.substring(0, lastIndex);
   const userURL: string = `${domainName}${updatedUrl}`;
 
-  const usdValue: number =
-    Number(currentDAO.balance) * getAEPrice?.price || rate;
+  const currentBalance = prefixedAmount(currentDAO.balance).replace(' exa', '');
+  const usdValue: number = Number(currentBalance) * (getAEPrice?.price || rate);
 
   return (
     <div className="space-y-4">
@@ -49,7 +50,7 @@ const EachDaoFunds = () => {
                 <div className="space-y-1.5">
                   <div className="flex space-x-2 items-center">
                     <p className="dark:text-white text-dark font-bold text-2xl">
-                      {parseFloat(usdValue.toFixed(3))}
+                      {usdValue.toFixed(2)}
                     </p>
 
                     <div className="flex items-center space-x-2 text-[#1CA013] ">

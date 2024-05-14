@@ -17,6 +17,8 @@ const Steps = () => {
   const pathname = usePathname();
   const { newDaoInfo } = useContext(AppContext);
 
+  console.log(newDaoInfo, '->');
+
   const steps: {
     title: string;
     url: string;
@@ -39,7 +41,8 @@ const Steps = () => {
       title: 'Define Membership',
       url: DEFINE_MEMBERSHIP_URL,
       disabled: !newDaoInfo.style || validateDaoInfo(newDaoInfo),
-      completed: validateMembership(newDaoInfo.members),
+      completed:
+        validateMembership(newDaoInfo.members) && newDaoInfo.memberComplete,
     },
     {
       title: 'Governance Settings',

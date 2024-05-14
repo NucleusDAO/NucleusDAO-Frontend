@@ -3,20 +3,21 @@
 import AllDaos from '@/components/all-daos';
 import DaoLoading from '@/components/loading/dao-loading';
 import { Button } from '@/components/ui/button';
-import { SELECT_DAO_STYLE_URL, VIEW_DAO_URL } from '@/config/path';
-import { ApiContext } from '@/context/api-context';
+import { SELECT_DAO_STYLE_URL } from '@/config/path';
 import { AppContext } from '@/context/app-context';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
-import { IApiContext, IConnectWalletContext } from '@/libs/types';
+import { IConnectWalletContext } from '@/libs/types';
+import { wait } from '@/libs/utils';
 import { Plus } from 'lucide-react';
-import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
-import { useContext } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useContext, useState } from 'react';
 import { toast } from 'sonner';
 
 const Daos = () => {
+  const router = useRouter();
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { DAOsData, daoLoading } = useContext(AppContext);
+  const [isPending, setIsPending] = useState<boolean>(false);
 
   const connected: boolean = user.isConnected;
   const searchParams = useSearchParams();
@@ -45,6 +46,17 @@ const Daos = () => {
     });
   };
 
+  function handleCreaDAO() {
+    setIsPending(true);
+    wait().then(() => {
+      if (sessionStorage.getItem('new_dao')) {
+        sessionStorage.removeItem('new_dao');
+      }
+      router.push(SELECT_DAO_STYLE_URL);
+      setIsPending(false);
+    });
+  }
+
   if (daoLoading) return <DaoLoading />;
 
   return (
@@ -57,11 +69,13 @@ const Daos = () => {
           Explore DAOs
         </h1>
         {connected ? (
-          <Link href={SELECT_DAO_STYLE_URL}>
-            <Button>
-              <Plus className="mr-2 h-4 w-4" /> Create DAO
-            </Button>
-          </Link>
+          <Button
+            onClick={handleCreaDAO}
+            loading={isPending}
+            loadingText="Please wait..."
+          >
+            <Plus className="mr-2 h-4 w-4" /> Create DAO
+          </Button>
         ) : (
           <Button onClick={() => toast.error('Please connect your wallet!')}>
             <Plus className="mr-2 h-4 w-4" /> Create DAO

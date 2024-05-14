@@ -58,8 +58,8 @@ const ReviewDao = () => {
         daysToMilliseconds(newDaoInfo.duration),
         newDaoInfo.quorum
       );
-      // Deleted dao information from localStorage
-      localStorage.removeItem('new_dao');
+      // Deleted dao information from sessionStorage
+      sessionStorage.removeItem('new_dao');
       updateNewDaoInfo(defaultDaoCreation);
       setOpen(true);
     } catch (error: any) {
@@ -156,8 +156,8 @@ const ReviewDao = () => {
           <p className="dark:text-white text-dark">Members</p>
 
           <p className="text-defaultText">{`${
-            newDaoInfo.members[0].address ? newDaoInfo.members.length + 1 : '1'
-          } wallet address (es)`}</p>
+            newDaoInfo.members[0].address ? newDaoInfo.members.length : '1'
+          } wallet address(es)`}</p>
         </div>
       </div>
 

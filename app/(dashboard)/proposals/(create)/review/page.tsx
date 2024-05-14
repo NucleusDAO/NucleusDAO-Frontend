@@ -11,7 +11,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { MoveLeft, MoveUpRight } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { PROPOSALS_URL } from '@/config/path';
+import { CREATE_PROPOSAL_URL, PROPOSALS_URL } from '@/config/path';
 import { useContext, useState } from 'react';
 import { AppContext } from '@/context/app-context';
 import Lottie from 'react-lottie';
@@ -29,7 +29,10 @@ const ReviewProposal = () => {
     fetchAllProposals,
     newProposalInfo,
     getEachDAO,
+    getActivities,
     setNewProposalInfo,
+    fetchDAOs,
+    setCompleteProposal,
   } = useContext(AppContext);
   const { getAEPrice } = useContext(ApiContext);
   const [isRouting, setIsRouting] = useState<boolean>(false);
@@ -39,6 +42,7 @@ const ReviewProposal = () => {
   const { address } = user;
   const searchParams = useSearchParams();
   const daoID = searchParams.get('ct');
+  const proposalType = searchParams.get('type') || '';
   const router = useRouter();
   const { value } = newProposalInfo;
 
@@ -75,10 +79,12 @@ const ReviewProposal = () => {
               ? [...(dao.Socials || []), ...updatedSocials]
               : dao.socials,
             image: logoURL || '',
+            quorum: value.quorum,
           }
         );
         setOpen(true);
         setIsCreating(false);
+        setCompleteProposal(true);
       } else {
         toast.error('Contract address not found');
       }
@@ -92,16 +98,22 @@ const ReviewProposal = () => {
   const handleGoHome = async () => {
     setIsRouting(true);
     try {
-      await fetchAllProposals();
-      setIsRouting(false);
+      await getActivities(address);
+      router.push(PROPOSALS_URL);
       localStorage.removeItem('new_proposal');
       setNewProposalInfo(defaultProposal);
-      router.push(PROPOSALS_URL);
+      setIsRouting(false);
     } catch (error: any) {
       setIsRouting(false);
       toast.error(error.message);
+    } finally {
+      setIsRouting(false);
     }
   };
+
+  if (!daoID || !proposalType) {
+    router.back();
+  }
 
   return (
     <div className="space-y-8">
@@ -119,16 +131,18 @@ const ReviewProposal = () => {
         <h1 className="font-medium text-dark dark:text-white text-xl">
           Proposal Information
         </h1>
-        <div className="grid grid-cols-2 text-sm w-4/6">
-          <p className="dark:text-white text-dark">Title</p>
-          <p className="dark:text-[#888888] text-dark">
+        <div className="grid grid-cols-12 text-sm">
+          <p className="dark:text-white text-dark col-span-4">Title</p>
+          <p className="dark:text-[#888888] text-dark col-span-8">
             {proposalLists[Number(value.type)].title}
           </p>
         </div>
         {value.description && (
-          <div className="grid grid-cols-2 text-sm w-4/6">
-            <p className="dark:text-white text-dark">Description</p>
-            <p className="dark:text-[#888888] text-dark">{value.description}</p>
+          <div className="grid grid-cols-12 text-sm">
+            <p className="dark:text-white col-span-4 text-dark">Description</p>
+            <p className="dark:text-[#888888] col-span-8 text-dark">
+              {value.description}
+            </p>
           </div>
         )}
         {value.newName && (
@@ -140,14 +154,18 @@ const ReviewProposal = () => {
         {!!value.quorum && (
           <div className="grid grid-cols-2 text-sm w-4/6">
             <p className="dark:text-white text-dark">New Quorum</p>
-            <p className="dark:text-[#888888] text-dark">{value.quorum}</p>
+            <p className="dark:text-[#888888] text-dark">{value.quorum}%</p>
           </div>
         )}
         {value.targetWallet && (
-          <div className="grid grid-cols-2 text-sm w-4/6">
-            <p className="dark:text-white text-dark">Target Wallet</p>
-            <p className="dark:text-[#888888] text-dark">
-              {value.targetWallet}
+          <div className="grid grid-cols-12 text-sm">
+            <p className="dark:text-white col-span-4 text-dark">
+              Target Wallet
+            </p>
+            <p className="overflow-hidden col-span-8 dark:text-[#888888] text-dark">
+              <span className="whitespace-pre-wrap break-all">
+                {value.targetWallet}
+              </span>
             </p>
           </div>
         )}
@@ -229,7 +247,11 @@ const ReviewProposal = () => {
         <Button
           type="button"
           className="dark:bg-[#1E1E1E] dark:hover:bg-[#262525] bg-light dark:text-defaultText text-dark"
-          onClick={() => router.back()}
+          onClick={() =>
+            router.push(
+              `${CREATE_PROPOSAL_URL}?ct=${daoID}&enums=${proposalType}`
+            )
+          }
         >
           <MoveLeft size={20} />
         </Button>
@@ -264,6 +286,7 @@ const ReviewProposal = () => {
                 className="w-full"
                 onClick={handleGoHome}
                 loading={isRouting}
+                loadingText="Please wait ..."
               >
                 Back home
               </Button>

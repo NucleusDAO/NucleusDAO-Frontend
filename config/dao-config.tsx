@@ -37,6 +37,8 @@ const DaoTemplateList: {
   },
 ];
 
+// ["updateName", "updateSocials", "updateImage", "addMember", "removeMember", "updateQuorum", "updateVoteTime", "transfer", "join"]
+
 const proposalLists: { title: string; enums: number; type: string }[] = [
   {
     title: 'Propose a transfer',
@@ -55,12 +57,12 @@ const proposalLists: { title: string; enums: number; type: string }[] = [
   },
   {
     title: 'Propose to change voting time',
-    type: 'voteTime',
+    type: 'updateVoteTime',
     enums: 3,
   },
   {
     title: 'Propose to change the quorum',
-    type: 'quorum',
+    type: 'updateQuorum',
     enums: 4,
   },
   {
@@ -78,11 +80,16 @@ const proposalLists: { title: string; enums: number; type: string }[] = [
     type: 'updateSocials',
     enums: 7,
   },
-  // {
-  //   title: 'Other',
-  //   type: 'transfer',
-  //   enums: 8,
-  // },
+  {
+    title: 'Custom',
+    type: 'custom',
+    enums: 8,
+  },
+  {
+    title: 'New Member: Join DAO',
+    type: 'join',
+    enums: 9,
+  },
 ];
 
 interface IProposalSummary {

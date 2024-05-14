@@ -123,6 +123,7 @@ const AllDaos: any = ({
             {currentView === 'list' && (
               <DataTable columns={columns} data={dashboardTableData(28)} />
             )}
+
             {(currentView === 'grid' || currentView !== 'list') && (
               <>
                 {dashboardTableData(0).length === 0 && showDAO && (

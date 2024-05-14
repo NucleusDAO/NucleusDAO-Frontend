@@ -39,13 +39,14 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
   const [newDaoInfo, setNewDaoInfo] = useState<InewDaoInfo>(defaultDaoCreation);
   const [totalVotes, setTotalVotes] = useState<number>(0);
   const [totalProposals, setTotalProposals] = useState<number>(0);
+  const [completeProposal, setCompleteProposal] = useState<boolean>(false);
   const [isLoadingActivities, setIsLoadingActivities] =
     useState<boolean>(false);
   const [newProposalInfo, setNewProposalInfo] =
     useState<INewProposal>(defaultProposal);
 
   const getNewDaoInfo =
-    typeof window !== 'undefined' && localStorage.getItem('new_dao');
+    typeof window !== 'undefined' && sessionStorage.getItem('new_dao');
 
   const getNewProposalInfo =
     typeof window !== 'undefined' && localStorage.getItem('new_proposal');
@@ -62,12 +63,6 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     }
   }, []);
 
-  useEffect(() => {
-    if (user.address) {
-      getActivities(user.address);
-    }
-  }, [user.address]);
-
   const getActivities = async (address: string) => {
     setIsLoadingActivities(true);
     try {
@@ -83,6 +78,14 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
       setIsLoadingActivities(false);
     }
   };
+
+  useEffect(() => {
+    if (user.address || (completeProposal && user.address)) {
+      getActivities(user.address);
+    }
+  }, [user.address, completeProposal]);
+
+  console.log(completeProposal, '->completeProposal');
 
   const getAllDaos = async () => {
     return getDAOs().then((res: any) => {
@@ -139,7 +142,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
 
   useEffect(() => {
     fetchDAOs();
-  }, [user]);
+  }, [user, completeProposal]);
 
   const fetchAllProposals = async () => {
     try {
@@ -156,6 +159,10 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
             duration: getDuration(proposal.startTime, proposal.endTime),
             totalVote: `${proposal.votesFor + proposal.votesAgainst}`,
             organisation: proposal.daoName,
+            proposer:
+              proposal.proposer.slice(0, 6) +
+              '...' +
+              proposal.proposer.slice(-4),
             id: proposal?.id,
             startTime: proposal.startTime,
             endTime: proposal.endTime,
@@ -177,7 +184,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
 
   useEffect(() => {
     fetchAllProposals();
-  }, []);
+  }, [completeProposal]);
 
   const createDAO = async (
     name: string,
@@ -233,6 +240,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
 
   const getDAOs = async () => {
     const contract = await getNucleusDAO();
+    console.log({ contract });
     const res = await contract.getDAOs();
     const daos = res.decodedResult;
     return daos;
@@ -393,6 +401,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     totalProposals,
     getActivities,
     isLoadingActivities,
+    setCompleteProposal,
     isUserMemberOfDAO,
     // getEachProposal,
   };

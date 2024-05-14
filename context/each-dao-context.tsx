@@ -90,6 +90,10 @@ export const EachDaoContextProvider = ({ children }: IAppProvider) => {
                 duration: getDuration(proposal.startTime, proposal.endTime),
                 totalVote: `${proposal.votesFor + proposal.votesAgainst}`,
                 organisation: currentDAO.name,
+                proposer:
+                  proposal.proposer.slice(0, 6) +
+                  '...' +
+                  proposal.proposer.slice(-4),
                 id: Number(proposal.id).toString(),
                 startTime: proposal.startTime,
                 endTime: proposal.endTime,

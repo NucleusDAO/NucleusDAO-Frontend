@@ -39,7 +39,6 @@ export const ApiContextProvider = ({ children }: IApiProvider) => {
   } = useQuery({
     queryKey: [AE_PRICE_KEY],
     queryFn: aePrice,
-    retry: false,
   });
 
   const {

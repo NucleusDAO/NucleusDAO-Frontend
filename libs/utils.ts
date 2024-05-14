@@ -1,7 +1,6 @@
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { IProposal } from './types';
-import { toast } from 'sonner';
 import { IDAO } from '@/context/each-dao-context';
 
 export function cn(...inputs: ClassValue[]) {
@@ -38,7 +37,7 @@ export const handleChangeFormNumberInput = (
 ) => {
   form.clearErrors(fieldName);
   if (value.startsWith('0' || 0)) {
-    form.setValue('duration', value[1] === '0' ? 1 : value[1]);
+    form.setValue(fieldName, value[1] === '0' ? 1 : value[1]);
   } else {
     form.setValue(fieldName, Number(value));
   }
@@ -300,29 +299,67 @@ function formatTime(milliseconds: number): string {
   return `${hours}:${minutes}:${seconds}`;
 }
 
-export function getTimeDifference(timestamp: number): string {
-  const currentTime = Date.now();
+// export function getTimeDifference(timestamp: number): string {
+//   const currentTime = Date.now();
 
-  // Calculate the time difference
-  let timeDifference = timestamp - currentTime;
+//   // Calculate the time difference
+//   let timeDifference = timestamp - currentTime;
 
-  if (timeDifference < 0) {
-    timeDifference = 0;
-  }
+//   if (timeDifference < 0) {
+//     timeDifference = 0;
+//   }
 
-  // Convert the time difference to hours and minutes
-  const daysLeft = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-  const hoursLeft = Math.floor(
-    (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-  );
-  const minutesLeft = Math.floor(
-    (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
-  );
-  const secondsLeft = Math.floor((timeDifference % (1000 * 60)) / 1000);
+//   // Convert the time difference to hours and minutes
+//   const daysLeft = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+//   const hoursLeft = Math.floor(
+//     (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+//   );
+//   const minutesLeft = Math.floor(
+//     (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
+//   );
+//   const secondsLeft = Math.floor((timeDifference % (1000 * 60)) / 1000);
 
-  return `${daysLeft}d:${hoursLeft}h:${minutesLeft}m:${secondsLeft}s`;
+//   return `${daysLeft}d:${hoursLeft}h:${minutesLeft}m:${secondsLeft}s`;
+// }
+export function getTimeDifference(
+  timestamp: string | number,
+  setCountdownString: (arg: string) => void
+): any {
+  const intervalId = setInterval(() => {
+    const currentTime = Date.now();
+    let timeDifference = Number(timestamp) - currentTime;
+
+    // Check if the countdown has reached zero
+    if (timeDifference <= 0) {
+      clearInterval(intervalId);
+      setCountdownString('Countdown has ended!');
+      return;
+    }
+
+    // Calculate time components
+    const daysLeft = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+    const hoursLeft = Math.floor(
+      (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+    );
+    const minutesLeft = Math.floor(
+      (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
+    );
+    const secondsLeft = Math.floor((timeDifference % (1000 * 60)) / 1000);
+
+    // Format the countdown string
+    const formattedString = `${daysLeft}d:${hoursLeft}h:${minutesLeft}m:${secondsLeft}s`;
+    setCountdownString(formattedString);
+  }, 1000);
+
+  return () => clearInterval(intervalId);
 }
 
 export function wait() {
   return new Promise((resolve) => setTimeout(resolve, 1000));
 }
+
+export const capitalizeFirstLetter = (str: string) => {
+  const capitalized = str && str.charAt(0).toUpperCase() + str.slice(1);
+
+  return capitalized;
+};

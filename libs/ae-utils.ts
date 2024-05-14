@@ -12,7 +12,7 @@ import basicDAOAci from './contract/BasicDAO.json';
 import { DASHBOARD_URL } from '@/config/path';
 
 const nucleusDAOContractAddress =
-  'ct_mTvsSE1HQvPvb7DaKHXErdY98JRJZfrdw9wCE8qgtmq9vuCcw';
+  'ct_FVFpGujmmLv4UEuJczdTMG3RekDt5jJBe32H9e2PHPMn2UrBb';
 
 const TESTNET_NODE_URL = 'https://testnet.aeternity.io';
 const MAINNET_NODE_URL = 'https://mainnet.aeternity.io';

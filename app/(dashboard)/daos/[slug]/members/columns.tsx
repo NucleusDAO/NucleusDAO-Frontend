@@ -60,7 +60,8 @@ export const WalletAddressCell = ({ row }: any) => {
         alt="logo"
         className="rounded-full h-6 w-6"
       />
-      <p>{wallet}</p>
+
+      <p>{wallet.slice(0, 14) + '...' + wallet.slice(-8)}</p>
     </div>
   );
 };

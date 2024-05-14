@@ -26,6 +26,7 @@ import {
   handlePlus,
 } from '@/libs/utils';
 import { Loader, Minus, Plus, Trash2 } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
 import { ChangeEvent, useContext, useState } from 'react';
 import { useFieldArray } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -36,6 +37,8 @@ interface ISelectFormField {
 }
 
 const SelectFormField = ({ form, filterData }: ISelectFormField) => {
+  const searchParams = useSearchParams();
+  const type: string = searchParams.get('enums') || '';
   return (
     <FormField
       control={form.control}
@@ -47,6 +50,7 @@ const SelectFormField = ({ form, filterData }: ISelectFormField) => {
             onValueChange={field.onChange}
             // setNewProposalInfo({ value: {...newProposalInfo, type: field.type} });
             defaultValue={field.value}
+            disabled={type === '9'}
           >
             <FormControl>
               <SelectTrigger>
@@ -109,8 +113,18 @@ const TextFormField = ({
 };
 
 const EquivalentValueFormField = ({ form }: { form: any }) => {
-  const { loadingAePrice, getAEPrice, isAePriceError, aePriceErrorMessage } =
-    useContext(ApiContext);
+  const { loadingAePrice, getAEPrice } = useContext(ApiContext);
+  const handleBlur = (field: { value: string }) => {
+    const value = Number(field.value) * (getAEPrice?.price || rate);
+    if (Number.isNaN(value)) {
+      form.setError('value', {
+        type: 'onChange',
+        message: 'Please provide a valid amount',
+      });
+      return;
+    }
+  };
+
   console.log(getAEPrice, '->');
   return (
     <FormField
@@ -118,17 +132,22 @@ const EquivalentValueFormField = ({ form }: { form: any }) => {
       name="value"
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Value</FormLabel>
+          <FormLabel>Value (AE)</FormLabel>
           <FormControl>
             <FormGroup>
-              <Input placeholder="value" {...field} />
+              <Input
+                placeholder="value"
+                type="number"
+                {...field}
+                onBlur={() => handleBlur(field)}
+              />
 
               {loadingAePrice ? (
                 <Loader className="mr-2 h-4 w-4 animate-spin" />
               ) : (
                 <p className="text-xs font-light text-[#888888] absolute right-4">
                   {field.value
-                    ? Number(field.value) * getAEPrice?.price || rate
+                    ? Number(field.value) * (getAEPrice?.price || rate)
                     : 0}{' '}
                   <span className="text-[10px]">USD</span>
                 </p>
@@ -142,7 +161,10 @@ const EquivalentValueFormField = ({ form }: { form: any }) => {
   );
 };
 
+// proposalType === 3 ? handlePlus('duration', form) :
+// proposalType === 3 ? handleMinus('duration', form) :
 const ProposalDurationFormField = ({ form }: { form: any }) => {
+  const proposalType = Number(form.getValues('type'));
   return (
     <FormField
       control={form.control}
@@ -155,12 +177,10 @@ const ProposalDurationFormField = ({ form }: { form: any }) => {
               <div className="border dark:border-[#292929] flex items-center justify-between rounded-lg py-1 px-5 w-[90%] md:w-[50%] border-[#CCCCCC99]">
                 <div
                   className={cn(
-                    'dark:bg-[#1E1E1E] rounded-lg py-2 px-2 dark:hover:bg-[#2a2a2a] trans bg-[#D2D2D2] hover:bg-[#D2D2D2]'
+                    'dark:bg-[#1E1E1E] rounded-lg py-2 px-2 dark:hover:bg-[#2a2a2a] trans bg-[#D2D2D2] hover:bg-[#D2D2D2] cursor-not-allowed'
                   )}
                   role="button"
-                  onClick={() => {
-                    field.value === 1 ? null : handleMinus('duration', form);
-                  }}
+                  onClick={() => null}
                 >
                   <Minus size={18} />
                 </div>
@@ -170,16 +190,14 @@ const ProposalDurationFormField = ({ form }: { form: any }) => {
                   className="border-none dark:bg-[#191919] w-fit text-center bg-white"
                   readOnly
                   {...field}
-                  onChange={({ target }) =>
-                    handleChangeFormNumberInput('duration', target.value, form)
-                  }
+                  onChange={() => null}
                 />
                 <div
-                  className="dark:bg-[#1E1E1E] rounded-lg py-2 px-2 dark:hover:bg-[#2a2a2a] trans hover:bg-[#D2D2D2] bg-[#D2D2D2]"
+                  className={cn(
+                    'dark:bg-[#1E1E1E] rounded-lg py-2 px-2 dark:hover:bg-[#2a2a2a] trans hover:bg-[#D2D2D2] bg-[#D2D2D2] cursor-not-allowed'
+                  )}
                   role="button"
-                  onClick={() => {
-                    handlePlus('duration', form);
-                  }}
+                  onClick={() => null}
                 >
                   <Plus size={18} />
                 </div>

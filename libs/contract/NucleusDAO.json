@@ -264,8 +264,22 @@
           "stateful": false
         },
         {
+          "arguments": [{ "name": "_user", "type": "address" }],
+          "name": "getUserDAOs",
+          "payable": false,
+          "returns": { "list": ["DAO.info"] },
+          "stateful": false
+        },
+        {
           "arguments": [],
           "name": "getAllProposals",
+          "payable": false,
+          "returns": { "list": ["DAO.proposal"] },
+          "stateful": false
+        },
+        {
+          "arguments": [{ "name": "_user", "type": "address" }],
+          "name": "getUserProposals",
           "payable": false,
           "returns": { "list": ["DAO.proposal"] },
           "stateful": false
