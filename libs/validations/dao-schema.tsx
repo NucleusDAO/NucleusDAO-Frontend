@@ -7,7 +7,10 @@ const socialMediaSchema = z.object({
 });
 
 const member = z.object({
-  address: z.string(),
+  address: z
+    .string()
+    .min(51, { message: 'Address must be at least 51 characters long' })
+    .max(52, { message: 'Input must be at most 52 characters long' }),
 });
 
 const joinCommunitySchema = z.object({
@@ -23,7 +26,7 @@ const daoInfoSchema = z
     daoUrl: z.string(),
     // .max(51, { message: 'Must be 51 or fewer characters long' }),
     logo: z.any(),
-    about: z.string(),
+    about: z.string().min(2, { message: 'Must be 2 or more characters long' }),
     socialMedia: z.array(socialMediaSchema).optional(),
   })
   .refine((data: any) => {
@@ -71,6 +74,8 @@ const editDaoInfoSchema = z.object({
   logo: z.string(),
 });
 
+// .min(1, { message: 'Value is required' })
+
 const proposalInfoSchema = z.object({
   // title: z
   //   .string()
@@ -81,37 +86,42 @@ const proposalInfoSchema = z.object({
     .min(1, { message: 'Proposal type is required' })
     .default('0'),
   description: z.string().min(2, { message: 'Description must not be empty' }),
+  newName: z.string().optional(),
+  logo: z.any().optional(),
   targetWallet: z.string().optional(),
+  // .min(51, { message: 'Wallet should contain more than 51 characters' })
+  // .max(53, { message: 'Wallet should not contain more 53 characters' })
+  // .optional(),
   value: z.string().optional(),
-  duration: z.coerce
-    .number({
-      required_error: 'Duration value is required',
-      invalid_type_error: 'Duration value must be a number',
-    })
-    .min(1)
-    .optional(),
-  minimum: z.coerce
-    .number({
-      required_error: 'Minimum value is required',
-      invalid_type_error: 'Minimum value must be a number',
-    })
-    .optional(),
-  maximum: z.coerce
-    .number({
-      required_error: 'Maximum value is required',
-      invalid_type_error: 'Maximum value must be a number',
-    })
-    .min(1, { message: '3 days is the least expiration days' })
-    .max(7, { message: '7 days is the maximun expiration days' })
-    .optional(),
-  quorum: z.number().optional(),
+  duration: z.number().optional(),
+  // .coerce
+  //   .number({
+  //     required_error: 'Duration value is required',
+  //     invalid_type_error: 'Duration value must be a number',
+  //   })
+  //   .min(1)
+  // .optional(),
+  minimum: z.number().optional(),
+  // .number({
+  //   required_error: 'Minimum value is required',
+  //   invalid_type_error: 'Minimum value must be a number',
+  // })
+  // .optional(),
+  maximum: z.string().optional(),
+  // .string({
+  //   required_error: 'Maximum value is required',
+  //   // invalid_type_error: 'Maximum value must be a number',
+  // })
+  // .min(1, { message: '3 days is the least expiration days' })
+  // .max(7, { message: '7 days is the maximun expiration days' })
+  // .optional(),
+  quorum: z.number().optional().optional(),
   socialMedia: z.array(socialMediaSchema).optional(),
 });
 
 const defineMembershipSchema = z.object({
   members: z.array(member).refine((data: any) => {
     for (const [index, item] of data.entries()) {
-      console.log(item, '-item');
       if (item.address === '' || /^\s+$/.test(item.address)) {
         throw new z.ZodError([
           {

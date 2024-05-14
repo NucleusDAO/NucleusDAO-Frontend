@@ -17,12 +17,14 @@ import { defineMembershipSchema } from '@/libs/validations/dao-schema';
 import { MoveLeft, Plus, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { GOVERNANCE_SETTINGS_URL } from '@/config/path';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { AppContext } from '@/context/app-context';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { IConnectWalletContext } from '@/libs/types';
+import { wait } from '@/libs/utils';
 
 const AddMemberForm = () => {
+  const [isPending, setIsPending] = useState<boolean>(false);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { updateNewDaoInfo, newDaoInfo } = useContext(AppContext);
   const router = useRouter();
@@ -40,8 +42,60 @@ const AddMemberForm = () => {
 
   useEffect(() => {
     const subscription = form.watch((value, { name, type }) => {
-      const updatedData = { ...newDaoInfo, members: value.members };
-      localStorage.setItem('new_dao', JSON.stringify(updatedData));
+      const seenAddresses = new Set();
+      const duplicateAddresses: any = [];
+      const members: any = value.members || [];
+      let hasExternalAddress = false;
+      let updatedData;
+      members.forEach((item: { address: string }, index: number) => {
+        if (seenAddresses.has(item.address)) {
+          duplicateAddresses.push({ index, address: item.address });
+          // Perform operations for duplicate address
+          form.setError(`members.${index}.address`, {
+            type: 'onChange',
+            message: 'You cannot have a duplicate address',
+          });
+          updatedData = {
+            ...newDaoInfo,
+            members: value.members,
+            memberComplete: false,
+          };
+        } else if (item.address === address) {
+          hasExternalAddress = true;
+          form.setError(`members.${index}.address`, {
+            type: 'onChange',
+            message:
+              'Creator address is not allowed. It is automatically added',
+          });
+          updatedData = {
+            ...newDaoInfo,
+            members: value.members,
+            memberComplete: false,
+          };
+        } else if (item.address.length < 51 || item.address.length > 53) {
+          hasExternalAddress = true;
+          form.setError(`members.${index}.address`, {
+            type: 'onChange',
+            message: 'Valid address is required',
+          });
+          updatedData = {
+            ...newDaoInfo,
+            members: value.members,
+            memberComplete: false,
+          };
+        } else {
+          seenAddresses.add(item.address);
+          form.clearErrors(`members.${index}.address`);
+
+          // Perform operations for non-duplicate address
+          updatedData = {
+            ...newDaoInfo,
+            members: value.members,
+            memberComplete: true,
+          };
+        }
+      });
+      sessionStorage.setItem('new_dao', JSON.stringify(updatedData));
       updateNewDaoInfo(updatedData);
     });
     return () => subscription.unsubscribe();
@@ -60,7 +114,11 @@ const AddMemberForm = () => {
         message: 'Field should not be empty',
       });
     } else {
-      router.push(GOVERNANCE_SETTINGS_URL);
+      setIsPending(true);
+      wait().then(() => {
+        router.push(GOVERNANCE_SETTINGS_URL);
+        setIsPending(false);
+      });
     }
   };
   return (
@@ -92,15 +150,7 @@ const AddMemberForm = () => {
                         <Input
                           placeholder="Enter wallet address"
                           {...field}
-                          onInput={({ target }: any) =>
-                            target.value === address
-                              ? form.setError(`members.${index}.address`, {
-                                  type: 'onChange',
-                                  message:
-                                    'Creator address is not allowed. It is automatically added',
-                                })
-                              : form.clearErrors(`members.${index}.address`)
-                          }
+                          // onBlur={() => handleOnBlur(field, index)}
                         />
                       </FormControl>
                       <FormMessage>
@@ -140,7 +190,12 @@ const AddMemberForm = () => {
           >
             <MoveLeft size={20} />
           </Button>
-          <Button type="submit" className="px-12">
+          <Button
+            type="submit"
+            className="px-12"
+            loading={isPending}
+            loadingText="Please wait..."
+          >
             Next
           </Button>
         </div>

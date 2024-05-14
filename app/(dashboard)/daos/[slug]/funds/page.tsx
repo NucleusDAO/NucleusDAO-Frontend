@@ -6,7 +6,7 @@ import { columns } from './columns';
 import { data } from './data';
 import { IConnectWalletContext } from '@/libs/types';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { EachDaoContext } from '@/context/each-dao-context';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
@@ -14,11 +14,12 @@ import { toast } from 'sonner';
 import DepositToken from '@/components/deposit-token';
 import { ApiContext } from '@/context/api-context';
 import { rate } from '@/config/dao-config';
+import { prefixedAmount } from '@aeternity/aepp-sdk';
 
 const EachDaoFunds = () => {
   const pathname = usePathname();
   const domainName = typeof window !== 'undefined' && window.location.origin;
-  const { currentDAO } = useContext(EachDaoContext);
+  const { currentDAO, setUpdateDAO } = useContext(EachDaoContext);
   const { getAEPrice } = useContext(ApiContext);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { isConnected } = user;
@@ -27,8 +28,12 @@ const EachDaoFunds = () => {
   const updatedUrl = pathname.substring(0, lastIndex);
   const userURL: string = `${domainName}${updatedUrl}`;
 
-  const usdValue: number =
-    Number(currentDAO.balance) * getAEPrice?.price || rate;
+  const currentBalance = prefixedAmount(currentDAO.balance).replace(' exa', '');
+  const usdValue: number = Number(currentBalance) * (getAEPrice?.price || rate);
+
+  // useEffect(() => {
+  //   setUpdateDAO(false);
+  // }, []);
 
   return (
     <div className="space-y-4">
@@ -49,7 +54,8 @@ const EachDaoFunds = () => {
                 <div className="space-y-1.5">
                   <div className="flex space-x-2 items-center">
                     <p className="dark:text-white text-dark font-bold text-2xl">
-                      {parseFloat(usdValue.toFixed(3))}
+                      {usdValue.toFixed(3)}{' '}
+                      <span className="text-xs font-light">USD</span>
                     </p>
 
                     <div className="flex items-center space-x-2 text-[#1CA013] ">
@@ -58,7 +64,7 @@ const EachDaoFunds = () => {
                     </div>
                   </div>
                   <p className="text-[#888888] text-xs font-light">
-                    {`~${Number(currentDAO.balance)}AE`}
+                    {`~${Number(currentBalance).toFixed(2)}AE`}
                   </p>
                 </div>
               </div>

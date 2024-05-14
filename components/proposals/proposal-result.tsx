@@ -13,6 +13,8 @@ import React, { useContext, useState } from 'react';
 import { Button } from '../ui/button';
 import { AppContext } from '@/context/app-context';
 import { toast } from 'sonner';
+import { IConnectWalletContext } from '@/libs/types';
+import { ConnectWalletContext } from '@/context/connect-wallet-context';
 
 interface IProposalResult {
   currentProposal: {
@@ -27,12 +29,17 @@ interface IProposalResult {
     status: string;
   };
   setCurrentProposal: (arg: any) => void;
+  countdownTime: string;
 }
 
 const ProposalResult = ({
   currentProposal,
   setCurrentProposal,
+  countdownTime,
 }: IProposalResult) => {
+  const {
+    user: { address },
+  } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const [isExecuting, setIsExecuting] = useState<boolean>(false);
   const { startTime, endTime, votesFor, votesAgainst, votes } = currentProposal;
   const { executeProposal, fetchAllProposals, getActivities, fetchDAOs } =
@@ -56,7 +63,7 @@ const ProposalResult = ({
       toast.success('Proposal executed successfully');
       fetchDAOs();
       fetchAllProposals();
-      getActivities();
+      getActivities(address);
     } catch (error: any) {
       toast.error(error.message);
     } finally {
@@ -138,7 +145,7 @@ const ProposalResult = ({
             </span>
             <span>Time left:</span>{' '}
             <span className="text-dark dark:text-white font-light">
-              {getTimeDifference(Number(endTime))}
+              {countdownTime}
             </span>
           </p>
         </div>

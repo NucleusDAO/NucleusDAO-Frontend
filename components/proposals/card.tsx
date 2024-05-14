@@ -1,3 +1,4 @@
+'use client';
 import LegacyLogo from '@/assets/logos/legacy.png';
 import Image from 'next/image';
 import RoundedIcon from '@/assets/icons/roundedIcon.png';
@@ -7,10 +8,10 @@ import { Clock4 } from 'lucide-react';
 import { EachStatus } from './data';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { getTimeDifference } from '@/libs/utils';
+import { capitalizeFirstLetter, getTimeDifference } from '@/libs/utils';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { proposalLists } from '@/config/dao-config';
 import { PROPOSALS_URL } from '@/config/path';
 
@@ -22,6 +23,7 @@ interface IProposalCard {
   status: string;
   type: string;
   id: string;
+  proposer: string;
   daoId: string;
   endTime: string;
   organisation: string;
@@ -30,6 +32,7 @@ interface IProposalCard {
 const ProposalCard = ({
   description,
   wallet,
+  proposer,
   totalVote,
   duration,
   status,
@@ -38,11 +41,15 @@ const ProposalCard = ({
   daoId,
   endTime,
 }: IProposalCard) => {
+  const [countdownString, setCountdownString] = useState<string>('');
   const { user } = useContext<any>(ConnectWalletContext);
   const { address } = user;
   const pathname = usePathname();
   const isDesktop = useMediaQuery('(min-width: 768px)');
-  console.log(endTime, '-> end tiem');
+
+  useEffect(() => {
+    getTimeDifference(endTime, setCountdownString);
+  }, [endTime]);
   return (
     <Link
       href={`${pathname}/${id}${
@@ -53,7 +60,7 @@ const ProposalCard = ({
         className="dark:bg-gradient-to-r dark:from-[#1E1E1E] dark:via-[#1E1E1E] dark:to-[#252525] rounded-lg cursor-pointer bg-white"
         role="tablist"
       >
-        <div className="flex rounded-l space-x-2">
+        <div className="flex rounded-l space-x-">
           <div className="dark:bg-[#1E1E1E] bg-[#EEEEEE] p-3 rounded-tl-lg rounded-bl-lg">
             <Image src={LegacyLogo} alt="legacy" width={isDesktop ? 32 : 24} />
           </div>
@@ -72,7 +79,7 @@ const ProposalCard = ({
                     <p className="text-defaultText text-xs md:text-base">
                       Proposal Type
                     </p>
-                    <h3 className="dark:text-white capitalize text-dark font-medium text-sm md:text-lg max-h-[10vh]">
+                    <h3 className="dark:text-white capitalize text-dark font-medium text-sm md:text-lg h-[7vh]">
                       {
                         proposalLists.find(
                           (proposal: { type: string }) => proposal.type === type
@@ -83,8 +90,8 @@ const ProposalCard = ({
                 </div>
                 <div>{EachStatus[status]}</div>
               </div>
-              <p className="text-defaultText text-xs md:text-sm max-h-[9vh] overflow-auto">
-                {description.slice(0, 300)}
+              <p className="text-defaultText text-xs md:text-sm h-[9vh] overflow-auto">
+                {capitalizeFirstLetter(description.slice(0, 300))}
               </p>
             </div>
             <div className="space-y-3">
@@ -93,30 +100,29 @@ const ProposalCard = ({
                 <div className="flex space-x-2 items-center">
                   <img
                     src={
-                      address
-                        ? `https://avatars.z52da5wt.xyz/${address}`
+                      proposer
+                        ? `https://avatars.z52da5wt.xyz/${proposer}`
                         : RoundedIcon.src
                     }
                     alt="legacy"
                     width={isDesktop ? 22 : 14}
                     height={isDesktop ? 22 : 14}
                   />
-                  <p>{wallet}</p>
+                  <p>{proposer}</p>
                 </div>
                 <div className="flex space-x-1 md:space-x-4">
                   <div className="flex items-center space-x-2 text-defaultText">
                     <Clock4 size={isDesktop ? 18 : 9} color="#444444" />
-
-                    <p>{getTimeDifference(Number(endTime))}</p>
+                    <p>{countdownString}</p>
                   </div>
-                  <div className="flex text-xs md:text-sm items-center space-x-2 text-defaultText">
+                  <div className="flex text-xs md:text-sm items-center space-x-1 text-defaultText">
                     <Image
                       src={VoteIcon}
                       alt="legacy"
                       width={isDesktop ? 16 : 12}
                     />
                     <p className="dark:text-white text-dark">{totalVote}</p>
-                    <p>votes</p>
+                    <p>vote(s)</p>
                   </div>
                 </div>
               </div>

@@ -8,11 +8,11 @@ import {
 } from '@/components/proposals/proposal-form-element';
 import { EachDaoContext } from '@/context/each-dao-context';
 import { formatTimestamp, millisecondsToDays } from '@/libs/utils';
-import { FC, useContext } from 'react';
+import React, { FC, useContext } from 'react';
 
 export const ProposalTransfer = ({ form }: { form: any }) => {
   return (
-    <>
+    <React.Fragment>
       <div className="grid grid-cols-2 gap-6">
         <TextFormField
           form={form}
@@ -24,7 +24,7 @@ export const ProposalTransfer = ({ form }: { form: any }) => {
         <EquivalentValueFormField form={form} />
       </div>
       <ProposalDurationFormField form={form} />
-    </>
+    </React.Fragment>
   );
 };
 
@@ -36,22 +36,22 @@ export const ProposeToChangeVotingTime = ({ form }: { form: any }) => {
   return (
     <>
       <div className="grid grid-cols-2 gap-6">
-        <TextFormField
+        {/* <TextFormField
           form={form}
           name="minimum"
           type="number"
           label="From"
           placeholder="From how many days"
           props={{ disabled: true, value: initialDuration }}
-        />
+        /> */}
         <TextFormField
           form={form}
           name="maximum"
           type="number"
-          label="To"
+          label="New Proposal Duration"
           placeholder="To how many days"
           // props={{
-          //   onInput: ({ target }: any) => {
+          //   onBlur: ({ target }: any) => {
           //     if (target.value.startsWith(0)) {
           //       form.setError('maximum', {
           //         messsage: 'Duration cannot starts with 0',
@@ -63,7 +63,7 @@ export const ProposeToChangeVotingTime = ({ form }: { form: any }) => {
           // }}
         />
       </div>
-      {/* <ProposalDurationFormField form={form} /> */}
+      <ProposalDurationFormField form={form} />
     </>
   );
 };
@@ -86,7 +86,7 @@ export const ProposeToChangeQuorum = ({ form }: { form: any }) => {
   return (
     <>
       <QuorumFormField form={form} />
-      {/* <ProposalDurationFormField form={form} /> */}
+      <ProposalDurationFormField form={form} />
     </>
   );
 };
@@ -131,6 +131,23 @@ export const ProposeToUpdateOthers = ({ form }: { form: any }) => {
   );
 };
 
+export const CustomProposal = ({ form }: { form: any }) => {
+  return <>{/* <ProposalDurationFormField form={form} /> */}</>;
+};
+
+export const ProposeToJoinDAO = ({ form }: { form: any }) => {
+  return (
+    <>
+      <TextFormField
+        form={form}
+        name="targetWallet"
+        label="Target Wallet"
+        placeholder="Wallet address"
+      />
+    </>
+  );
+};
+
 // Define the type for the component function
 type ComponentType = FC<{ form: any }>;
 
@@ -148,5 +165,6 @@ export const EachProposalType: EachProposalType = {
   5: ProposeToChangeDaosName,
   6: ProposeToChangeDaosLogo,
   7: ProposeToUpdateDaosSocials,
-  8: ProposeToUpdateOthers,
+  8: CustomProposal,
+  9: ProposeToJoinDAO,
 };

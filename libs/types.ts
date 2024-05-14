@@ -105,6 +105,7 @@ export interface IProposal {
   proposalType: string;
   description: string;
   daoId: string;
+  proposer: string;
   value: number;
   target: string;
   startTime: number;
@@ -162,10 +163,18 @@ export interface IEachProposalView {
   setCurrentProposal: (arg: IProposal[]) => void;
   currentProposal: {
     wallet: string;
+    target: string;
+    value: number;
     proposalType: string;
+    daoName: string;
     description: string;
     votes: { account: string; support: boolean }[];
     type: string;
+    info: {
+      image: string;
+      name: string;
+      socials: { name: string; url: string }[];
+    };
     status: string;
     totalVote: string;
     id: string;

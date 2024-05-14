@@ -5,7 +5,7 @@ import { Button } from '../ui/button';
 import VotingProcess from '../votings/voting-process';
 import { VoteIcon } from '@/assets/svgs';
 import AllVoters from '../votings/all-voters';
-import { ReactNode, useContext, useState } from 'react';
+import { ReactNode, useContext, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import ProposalResult from './proposal-result';
 import ProposalInfo from './proposal-info';
@@ -15,7 +15,12 @@ import { EachDaoContext } from '@/context/each-dao-context';
 import { EachStatus } from './data';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { IConnectWalletContext, IEachProposalView } from '@/libs/types';
-import { getStatus } from '@/libs/utils';
+import {
+  capitalizeFirstLetter,
+  getStatus,
+  getTimeDifference,
+} from '@/libs/utils';
+import EachProposalDetails from './each-proposal-details';
 
 interface IEachTabView {
   [key: string]: ReactNode;
@@ -41,6 +46,12 @@ const EachProposalView = ({
     : null;
   const [description, _] = useState<string>(currentProposal?.description);
 
+  const [countdownTime, setCountdownTime] = useState<string>('');
+
+  useEffect(() => {
+    getTimeDifference(currentProposal.endTime, setCountdownTime);
+  }, [currentProposal.endTime]);
+
   console.log(eachDAOProposal, '-> eachDAOProposal');
   console.log(currentProposal, '-> current proposal');
   console.log(currentDAO, 'currentDAO');
@@ -52,9 +63,15 @@ const EachProposalView = ({
       <ProposalResult
         currentProposal={currentProposal}
         setCurrentProposal={setCurrentProposal}
+        countdownTime={countdownTime}
       />
     ),
-    Information: <ProposalInfo currentProposal={currentProposal} />,
+    Information: (
+      <ProposalInfo
+        currentProposal={currentProposal}
+        countdownTime={countdownTime}
+      />
+    ),
   };
 
   return (
@@ -81,7 +98,7 @@ const EachProposalView = ({
       </div>
       <div className="space-y-4">
         <p className="text-xs md:text-sm text-defaultText">
-          {description?.slice(0, 180)}
+          {capitalizeFirstLetter(description?.slice(0, 180))}
         </p>
         {description?.length > 180 && (
           <>
@@ -109,11 +126,10 @@ const EachProposalView = ({
           <div>{tabViews[currentTab]}</div>
         </div>
         <div className="space-y-8">
-          {/* {isMember && isConnected && ( */}
           <div className="rounded-lg dark:bg-[#191919] p-8 space-y-4 bg-white">
             <div className="flex justify-between border-b dark:border-[#1E1E1E] pb-4 items-center border-[#CCCCCC99]">
               <h3 className="font-medium text-xl dark:text-white text-dark">
-                {!isMember || !isConnected ? 'Proposal' : 'Cast a vote'}
+                Proposal Details
               </h3>
               <div
                 className="font-light text-sm dark:text-white text-[#0080FF] dark:text-[#0080FF1A] dark:bg-[#1E1E1E] bg-[#0080FF1A] rounded-lg px-3 py-1.5"
@@ -122,13 +138,29 @@ const EachProposalView = ({
                 {EachStatus[getStatus(currentProposal)]}
               </div>
             </div>
-            {isMember && isConnected && (
+            <EachProposalDetails currentProposal={currentProposal} />
+          </div>
+
+          {(isMember || isConnected) && (
+            <div className="rounded-lg dark:bg-[#191919] p-8 space-y-4 bg-white">
+              <div className="flex justify-between border-b dark:border-[#1E1E1E] pb-4 items-center border-[#CCCCCC99]">
+                <h3 className="font-medium text-xl dark:text-white text-dark">
+                  Cast a vote
+                </h3>
+                <div
+                  className="font-light text-sm dark:text-white text-[#0080FF] dark:text-[#0080FF1A] dark:bg-[#1E1E1E] bg-[#0080FF1A] rounded-lg px-3 py-1.5"
+                  role="status"
+                >
+                  {EachStatus[getStatus(currentProposal)]}
+                </div>
+              </div>
+
               <VotingProcess
                 currentProposal={currentProposal}
                 setCurrentProposal={setCurrentProposal}
               />
-            )}
-          </div>
+            </div>
+          )}
 
           <div className="rounded-lg dark:bg-[#191919] p-8 space-y-4 bg-white">
             <div className="flex justify-between border-b dark:border-[#1E1E1E] border-[#CCCCCC99] pb-4 items-center">

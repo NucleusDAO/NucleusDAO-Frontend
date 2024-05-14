@@ -66,7 +66,7 @@ const Layout = ({ children }: ILayout) => {
                   href={DAO_URL}
                   className="w-full"
                   onClick={() => {
-                    localStorage.removeItem('new_dao');
+                    sessionStorage.removeItem('new_dao');
                     updateNewDaoInfo(defaultDaoCreation);
                     router.push(DAO_URL);
                   }}

@@ -22,9 +22,11 @@ import { DEFINE_MEMBERSHIP_URL } from '@/config/path';
 import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import { AppContext } from '@/context/app-context';
 import { toast } from 'sonner';
+import { wait } from '@/libs/utils';
 
 const DaoInfoForm = () => {
   const { updateNewDaoInfo, newDaoInfo } = useContext(AppContext);
+  const [isPending, setIsPending] = useState<boolean>(false);
   const [logoFormData, setLogoFormData] = useState<FormData | null>(null);
   const [onUploadUrl, setOnUploadUrl] = useState<string>(
     newDaoInfo.info.logoUrl || ''
@@ -58,7 +60,7 @@ const DaoInfoForm = () => {
           logoUrl: onUploadUrl,
         },
       };
-      localStorage.setItem('new_dao', JSON.stringify(updatedData));
+      sessionStorage.setItem('new_dao', JSON.stringify(updatedData));
       updateNewDaoInfo(updatedData);
     });
     return () => subscription.unsubscribe();
@@ -94,20 +96,36 @@ const DaoInfoForm = () => {
             info: { ...newDaoInfo.info, logo: file, logoUrl: result },
           };
           updateNewDaoInfo(updatedData);
-          localStorage.setItem('new_dao', JSON.stringify(updatedData));
+          sessionStorage.setItem('new_dao', JSON.stringify(updatedData));
         };
         reader.readAsDataURL(file);
       }
     }
   };
 
+  console.log(!!Object.keys(form.formState.errors).length, '-fjkd');
+
   const onSubmit = async (data: any) => {
-    router.push(DEFINE_MEMBERSHIP_URL);
+    setIsPending(true);
+    wait().then(() => {
+      router.push(DEFINE_MEMBERSHIP_URL);
+      setIsPending(false);
+    });
   };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form
+        onSubmit={
+          form.handleSubmit(onSubmit)
+          // e.preventDefault(); // Prevent default form submission
+          // // Check if there are errors before calling onSubmit
+          // if (!Object.keys(form.formState.errors).length) {
+          //   onSubmit(form.getValues()); // Call onSubmit only if there are no errors
+          // }
+        }
+        className="space-y-8"
+      >
         <FormField
           control={form.control}
           name="daoName"
@@ -241,7 +259,18 @@ const DaoInfoForm = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <Input placeholder="https://" {...field} />
+                        <Input
+                          placeholder="https://"
+                          {...field}
+                          onBlur={() =>
+                            !field.value.startsWith('https://')
+                              ? form.setError(`socialMedia.${index}.link`, {
+                                  type: 'onChange',
+                                  message: 'Ensure to start with https',
+                                })
+                              : form.clearErrors(`socialMedia.${index}.link`)
+                          }
+                        />
                       </FormControl>
                       <p className="text-defaultText text-xs font-light">
                         Ensure to start with{' '}
@@ -283,7 +312,12 @@ const DaoInfoForm = () => {
           >
             <MoveLeft size={20} />
           </Button>
-          <Button type="submit" className="px-12">
+          <Button
+            type="submit"
+            className="px-12"
+            loading={isPending}
+            loadingText="Please wait ..."
+          >
             Next
           </Button>
         </div>

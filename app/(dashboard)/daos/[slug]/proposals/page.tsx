@@ -1,7 +1,6 @@
 'use client';
 import EachDaoLoading from '@/components/loading/each-dao-loading';
 import EachFilterTab from '@/components/proposals/each-proposal-tab';
-import { AppContext } from '@/context/app-context';
 import { EachDaoContext } from '@/context/each-dao-context';
 import { useSearchParams } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';

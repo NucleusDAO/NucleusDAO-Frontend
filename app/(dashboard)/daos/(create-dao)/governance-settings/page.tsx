@@ -5,7 +5,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { REVIEW_DAO_URL } from '@/config/path';
 import { AppContext } from '@/context/app-context';
-import { cn, handleChangeNumberInput } from '@/libs/utils';
+import { cn, handleChangeNumberInput, wait } from '@/libs/utils';
 import { Minus, MoveLeft, Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
@@ -13,15 +13,28 @@ import { useContext, useEffect, useState } from 'react';
 const GovernanceSettings = () => {
   const router = useRouter();
   const { updateNewDaoInfo, newDaoInfo } = useContext(AppContext);
+  const [isPending, setIsPending] = useState<boolean>(false);
   const [days, setDays] = useState<number | string>(newDaoInfo.duration);
   const [quorum, setQuorum] = useState<number | string>(newDaoInfo.quorum);
   const [isError, setIsError] = useState<boolean>(false);
 
   useEffect(() => {
     const updatedData = { ...newDaoInfo, quorum, duration: days };
-    localStorage.setItem('new_dao', JSON.stringify(updatedData));
+    sessionStorage.setItem('new_dao', JSON.stringify(updatedData));
     updateNewDaoInfo(updatedData);
   }, [days, quorum]);
+
+  const handleNext = () => {
+    if (!Number(days) || !Number(quorum)) {
+      setIsError(true);
+    } else {
+      setIsPending(true);
+      wait().then(() => {
+        router.push(REVIEW_DAO_URL);
+        setIsPending(false);
+      });
+    }
+  };
 
   return (
     <div className="space-y-8">
@@ -91,7 +104,11 @@ const GovernanceSettings = () => {
             <Plus size={18} />
           </div>
         </div>
-        {(days === 0 && isError) && (<p className='text-sm font-light text-destructive'>Days cannot be zero</p>)}
+        {!Number(days) && isError && (
+          <p className="text-sm font-light text-destructive">
+            Days cannot be zero
+          </p>
+        )}
       </div>
 
       <div className="space-y-6">
@@ -156,7 +173,11 @@ const GovernanceSettings = () => {
               </label>
             </div>
           </div>
-          {(quorum === 0 && isError) && (<p className='text-sm font-light text-destructive'>Quorum cannot be zero</p>)}
+          {!Number(quorum) && isError && (
+            <p className="text-sm font-light text-destructive">
+              Quorum cannot be zero
+            </p>
+          )}
         </div>
       </div>
 
@@ -171,7 +192,9 @@ const GovernanceSettings = () => {
         <Button
           type="submit"
           className="px-12"
-          onClick={() => { (days === 0 || quorum === 0) ? setIsError(true) : router.push(REVIEW_DAO_URL) }}
+          onClick={handleNext}
+          loading={isPending}
+          loadingText="Please wait..."
         >
           Next
         </Button>

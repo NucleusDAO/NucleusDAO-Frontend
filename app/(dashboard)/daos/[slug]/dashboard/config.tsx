@@ -9,7 +9,7 @@ interface ITabView {
 }
 
 interface IDashboardTab {
-  aeAmount: number;
+  aeAmount: number | string;
   usdAmount: number;
   totalProposals: number;
   totalMembers: number;

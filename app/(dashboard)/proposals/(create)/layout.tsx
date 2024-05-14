@@ -19,7 +19,7 @@ import EmptyDAO from '@/assets/icons/empty-icon.png';
 import Image from 'next/image';
 import { PROPOSALS_URL } from '@/config/path';
 import { AppContext } from '@/context/app-context';
-import { defaultProposal } from '@/libs/utils';
+import { defaultProposal, wait } from '@/libs/utils';
 import NotAuthorized from '@/components/not-authorized';
 
 interface ILayout {
@@ -31,14 +31,19 @@ const Layout = ({ children }: ILayout) => {
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { isConnected } = user;
   const [open, setOpen] = useState<boolean>(false);
+  const [isPending, setIsPending] = useState<boolean>(false);
   const router = useRouter();
   const searchParams = useSearchParams();
   const daoID = searchParams.get('ct') || '';
 
   const handleBack = () => {
+    setIsPending(true);
     setNewProposalInfo(defaultProposal);
     localStorage.removeItem('new_proposal');
-    router.push(PROPOSALS_URL);
+    wait().then(() => {
+      router.push(PROPOSALS_URL);
+      setIsPending(false);
+    });
   };
 
   if (!isConnected)
@@ -76,7 +81,13 @@ const Layout = ({ children }: ILayout) => {
               <Button variant="outline" onClick={() => setOpen(false)}>
                 No, stay
               </Button>
-              <Button onClick={handleBack}>Yes, exit</Button>
+              <Button
+                onClick={handleBack}
+                loading={isPending}
+                loadingText="Please wait..."
+              >
+                Yes, exit
+              </Button>
             </div>
           </DialogContent>
         </Dialog>

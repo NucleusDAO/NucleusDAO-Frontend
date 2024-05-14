@@ -4,10 +4,16 @@ import { CREATE_PROPOSAL_URL } from '@/config/path';
 import { Globe, MoveLeft, Plus } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import React, { ReactNode, useContext, useState } from 'react';
+import React, { ReactNode, useContext, useEffect, useState } from 'react';
 import { CopyIcon } from '@/assets/svgs';
 import { eachDaoViews } from '@/config/dao-config';
-import { cn, encodeURI, removeExistingStorageItem, wait } from '@/libs/utils';
+import {
+  capitalizeFirstLetter,
+  cn,
+  encodeURI,
+  removeExistingStorageItem,
+  wait,
+} from '@/libs/utils';
 import EachDaoLoading from '@/components/loading/each-dao-loading';
 import { EachDaoContext } from '@/context/each-dao-context';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
@@ -20,6 +26,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import CopyToClipboard from 'react-copy-to-clipboard';
+import { toast } from 'sonner';
+import { AppContext } from '@/context/app-context';
 
 interface ILayout {
   children: ReactNode;
@@ -29,6 +38,7 @@ const Layout = ({ children }: ILayout) => {
   const router = useRouter();
   const pathname = usePathname();
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
+  const { setUpdate } = useContext(AppContext);
   const { isConnected } = user;
   const { isLoading, currentDAO, isMember } = useContext(EachDaoContext);
   const [routing, setRouting] = useState<boolean>(false);
@@ -37,8 +47,6 @@ const Layout = ({ children }: ILayout) => {
   const daoId = urlParts[2];
   const domainName = typeof window !== 'undefined' && window.location.origin;
   const url = `${domainName}/daos/${daoId}`;
-
-  console.log(currentDAO, '->currentDAO');
 
   function handleView(path: string) {
     router.push(encodeURI(url, path));
@@ -52,6 +60,19 @@ const Layout = ({ children }: ILayout) => {
       setRouting(false);
     });
   }
+
+  function handlePropose() {
+    setRouting(true);
+    removeExistingStorageItem('new_proposal');
+    wait().then(() => {
+      router.push(`${CREATE_PROPOSAL_URL}?ct=${daoId}&enums=10`);
+      setRouting(false);
+    });
+  }
+
+  useEffect(() => {
+    setUpdate(false);
+  }, []);
 
   if (isLoading) return <EachDaoLoading />;
 
@@ -96,15 +117,18 @@ const Layout = ({ children }: ILayout) => {
                   className="rounded-lg object-cover h-[50px] w-[50px]"
                 />
                 <div className="space-y-4">
-                  <h2 className="font-medium text-2xl text-dark dark:text-white">
+                  <h2 className="font-medium text-2xl text-dark dark:text-white capitalize">
                     {currentDAO.name}
                   </h2>
-                  <Link href="legacy.smartdao.eth" target="_blank">
+                  <CopyToClipboard
+                    text={currentDAO.domain ?? currentDAO.account}
+                    onCopy={() => toast.success('DAO Address copied!')}
+                  >
                     <div className="flex space-x-2 mt-1.5 items-center font-light text-sm text-[#888888]">
                       <p>{currentDAO.domain ?? currentDAO.account}</p>
                       <CopyIcon />
                     </div>
-                  </Link>
+                  </CopyToClipboard>
                 </div>
               </div>
               <div className="flex items-center space-x-4">
@@ -125,12 +149,9 @@ const Layout = ({ children }: ILayout) => {
 
                     <Button
                       className="w-full"
-                      onClick={() => {
-                        removeExistingStorageItem('new_proposal');
-                        router.push(
-                          `${CREATE_PROPOSAL_URL}?ct=${daoId}&enums=1&type=new`
-                        );
-                      }}
+                      onClick={handlePropose}
+                      loading={routing}
+                      loadingText="Please wait..."
                     >
                       Propose
                     </Button>
@@ -145,7 +166,9 @@ const Layout = ({ children }: ILayout) => {
                 </div>
               </div>
             </div>
-            <p className="text-[#888888] text-sm">{currentDAO.description}</p>
+            <p className="text-[#888888] text-sm">
+              {capitalizeFirstLetter(currentDAO.description)}
+            </p>
           </div>
           <div className="pb-4 border-b dark:border-[#292929] md:flex  items-center justify-between border-[#CCCCCC99] space-y-4 md:space-y-0">
             <h2 className="font-medium text-2xl dark:text-white text-dark">

@@ -4,7 +4,6 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -29,7 +28,7 @@ const DepositToken = () => {
   const [isDeposited, setIsDeposited] = useState<boolean>(true);
   const { getAEPrice } = useContext(ApiContext);
   const { deposit } = useContext(AppContext);
-  const { currentDAO } = useContext(EachDaoContext);
+  const { currentDAO, fetchEachDAO } = useContext(EachDaoContext);
 
   const isError = Number.isNaN(usdValue) || Number.isNaN(aeValue);
 
@@ -41,19 +40,25 @@ const DepositToken = () => {
         denomination: AE_AMOUNT_FORMATS.AE,
       });
       const res = await deposit(currentDAO.contractAddress, amount);
+      setOpen(true);
+      setIsDeposited(true);
     } catch (error: any) {
       toast.error(error.message);
     } finally {
       setIsDepositing(false);
-      setIsDeposited(true);
     }
   };
 
   return (
     <Dialog onOpenChange={setOpen} open={open}>
-      <DialogTrigger asChild onClick={() => setIsDeposited(false)}>
-        <Button>Deposit Token</Button>
-      </DialogTrigger>
+      <Button
+        onClick={() => {
+          setOpen(true);
+          setIsDeposited(false);
+        }}
+      >
+        Deposit Token
+      </Button>
       <DialogContent className="">
         <DialogHeader>
           <DialogTitle className="text-[#292929] dark:text-white font-medium py-2">
@@ -81,6 +86,7 @@ const DepositToken = () => {
                     setUsdValue(0);
                     setOpen(false);
                     setIsDeposited(false);
+                    fetchEachDAO();
                   }}
                 >
                   Complete
@@ -102,8 +108,9 @@ const DepositToken = () => {
                       <Input
                         placeholder="0.00"
                         className="pr-10"
-                        defaultValue={parseFloat(aeValue.toString()).toFixed(2)}
-                        value={parseFloat(aeValue.toString()).toFixed(2)}
+                        type="number"
+                        defaultValue={parseFloat(aeValue.toString())}
+                        value={parseFloat(aeValue.toString())}
                         onChange={({ target }) => {
                           setAeValue(target.value);
                           setUsdValue(
@@ -118,11 +125,12 @@ const DepositToken = () => {
                     <div className="relative w-[40%]">
                       <Input
                         placeholder="0.00"
-                        className=""
+                        className="pr-14"
                         defaultValue={parseFloat(usdValue.toString()).toFixed(
                           2
                         )}
-                        value={parseFloat(usdValue.toString()).toFixed(2)}
+                        type="number"
+                        value={parseFloat(usdValue.toString())}
                         onChange={({ target }) => {
                           setAeValue(
                             Number(target.value) / (getAEPrice?.price || rate)

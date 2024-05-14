@@ -1,26 +1,27 @@
 'use client';
 import { ChevronUp } from 'lucide-react';
 import { dashboardTab, tabView } from './config';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { cn } from '@/libs/utils';
-import { useSearchParams } from 'next/navigation';
 import { ApiContext } from '@/context/api-context';
 import { EachDaoContext } from '@/context/each-dao-context';
 import { rate } from '@/config/dao-config';
+import { prefixedAmount } from '@aeternity/aepp-sdk';
+import { AppContext } from '@/context/app-context';
 
 const EachDaoDashboard = () => {
   const [selectedTab, setSelectTab] = useState<number>(0);
   const { getAEPrice } = useContext(ApiContext);
   const { currentDAO } = useContext(EachDaoContext);
 
-  const usdValue: number =
-    Number(currentDAO.balance) * getAEPrice?.price || rate;
+  const currentBalance = prefixedAmount(currentDAO.balance).replace(' exa', '');
+  const usdValue: number = Number(currentBalance) * (getAEPrice?.price || rate);
 
   return (
     <div className="md:flex space-x-0 md:space-x-8 space-y-4 md:space-y-0">
       <div className="md:w-[25%] space-y-4">
         {dashboardTab({
-          aeAmount: Number(currentDAO.balance),
+          aeAmount: currentBalance,
           usdAmount: parseFloat(usdValue.toFixed(3)),
           totalProposals: Number(currentDAO.totalProposals),
           totalMembers: currentDAO.members.length,

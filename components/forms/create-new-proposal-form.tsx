@@ -17,7 +17,7 @@ import { Textarea } from '../ui/textarea';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { REVIEW_PROPOSAL_URL } from '@/config/path';
 import { proposalLists } from '@/config/dao-config';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { SelectFormField } from '@/components/proposals/proposal-form-element';
 import ElementBlock from '../proposals/element-block';
 import { EachProposalType } from '@/config/proposal-config';
@@ -28,16 +28,23 @@ import {
   defaultProposal,
   getDaysFromMilliseconds,
   millisecondsToDays,
+  wait,
 } from '@/libs/utils';
 import { EachDaoContext } from '@/context/each-dao-context';
+import {
+  ValidateProposalForm,
+  // validateInfo,
+} from '@/libs/validations/validate-create-proposal';
 
 const CreateNewProposalForm = () => {
+  const [routing, setRouting] = useState<boolean>(false);
   const { setNewProposalInfo, newProposalInfo, getEachDAO } =
     useContext(AppContext);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { address } = user;
   const searchParams = useSearchParams();
-  const type: string = searchParams.get('enums') || newProposalInfo.value.type;
+  const type: string =
+    searchParams.get('enums') || newProposalInfo.value.type || '0';
   const memberType = searchParams.get('type') || '';
   const daoID = searchParams.get('ct');
   const router = useRouter();
@@ -46,6 +53,7 @@ const CreateNewProposalForm = () => {
     defaultValues: {
       ...newProposalInfo.value,
       duration: getDaysFromMilliseconds(newProposalInfo.value.duration),
+      newName: '',
       type,
     },
   });
@@ -62,8 +70,9 @@ const CreateNewProposalForm = () => {
 
   useEffect(() => {
     const subscription = form.watch((value, { name, type }) => {
-      console.log(name === 'type', '-> name');
+      console.log(name, '-> name');
       let updatedData;
+      // Remove previous selected information
       if (name === 'type') {
         updatedData = { ...defaultProposal.value, type: value.type };
         localStorage.setItem(
@@ -83,8 +92,14 @@ const CreateNewProposalForm = () => {
   }, [form.watch]);
 
   const onSubmit = async (data: any) => {
-    console.log(data, '->');
-    router.push(`${REVIEW_PROPOSAL_URL}?ct=${daoID}`);
+    const currentType = Number(form.getValues('type'));
+    if (ValidateProposalForm[currentType]({ form })) {
+      setRouting(true);
+      wait().then(() => {
+        router.push(`${REVIEW_PROPOSAL_URL}?ct=${daoID}&type=${currentType}`);
+        setRouting(false);
+      });
+    }
   };
 
   return (
@@ -131,7 +146,8 @@ const CreateNewProposalForm = () => {
           <Button
             type="submit"
             className="px-12 w-full md:w-fit"
-            // onClick={() => router.push(`${REVIEW_PROPOSAL_URL}?ct=${daoID}`)}
+            loading={routing}
+            loadingText="Please wait..."
           >
             Review
           </Button>
