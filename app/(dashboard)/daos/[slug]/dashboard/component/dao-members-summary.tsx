@@ -50,8 +50,6 @@ export const DaoMembers = () => {
     enabled: !!daoId,
   });
 
-  console.log(history, '->');
-
   if (isHistoryError)
     return <ErrorFetchingComponent className="min-h-[50vh]" />;
 

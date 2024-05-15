@@ -65,7 +65,7 @@ const Layout = ({ children }: ILayout) => {
     setRouting(true);
     removeExistingStorageItem('new_proposal');
     wait().then(() => {
-      router.push(`${CREATE_PROPOSAL_URL}?ct=${daoId}&enums=10`);
+      router.push(`${CREATE_PROPOSAL_URL}?ct=${daoId}&enums=9`);
       setRouting(false);
     });
   }

@@ -68,11 +68,9 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     try {
       const activities: { proposalsCreated: number; voteCasted: number } =
         await getAUserActivitiesAcrossDAOs(address);
-      console.log(activities, '->');
       setTotalProposals(Number(activities.proposalsCreated));
       setTotalVotes(Number(activities.voteCasted));
     } catch (error: any) {
-      console.log(error, '-> error');
       toast.error(error.message);
     } finally {
       setIsLoadingActivities(false);
@@ -84,8 +82,6 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
       getActivities(user.address);
     }
   }, [user.address, update]);
-
-  console.log(update, '->completeProposal');
 
   const getAllDaos = async () => {
     return getDAOs().then((res: any) => {
@@ -147,7 +143,6 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
   const fetchAllProposals = async () => {
     try {
       const proposals = await getAllProposals();
-      console.log(proposals, '-> prop');
       setAllProposals(
         proposals.reverse().map((proposal: IProposal) => {
           return {
@@ -209,7 +204,6 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
       votingTime,
       quorum
     );
-    console.log({ res });
     const dao = res.decodedResult;
     return dao;
   };
@@ -240,7 +234,6 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
 
   const getDAOs = async () => {
     const contract = await getNucleusDAO();
-    console.log({ contract });
     const res = await contract.getDAOs();
     const daos = res.decodedResult;
     return daos;

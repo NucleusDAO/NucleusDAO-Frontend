@@ -8,7 +8,7 @@ import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { IConnectWalletContext } from '@/libs/types';
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import { AppContext } from '@/context/app-context';
 import DashboadLoading from '@/components/loading/dashboard-loading';
 import { toast } from 'sonner';
@@ -23,7 +23,6 @@ const Dashboard = () => {
     totalProposals,
     totalVotes,
     isLoadingActivities,
-    getActivities,
   } = useContext(AppContext);
   const connected: boolean = user.isConnected;
   const searchParams = useSearchParams();
@@ -66,12 +65,6 @@ const Dashboard = () => {
       }
     });
   };
-
-  // useEffect(() => {
-  //   if (user.address) {
-  //     getActivities(user.address);
-  //   }
-  // }, []);
 
   if (daoLoading) return <DashboadLoading />;
 

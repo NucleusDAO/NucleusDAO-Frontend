@@ -332,7 +332,7 @@ export function getTimeDifference(
     // Check if the countdown has reached zero
     if (timeDifference <= 0) {
       clearInterval(intervalId);
-      setCountdownString('Countdown has ended!');
+      setCountdownString('voting time has ended!');
       return;
     }
 

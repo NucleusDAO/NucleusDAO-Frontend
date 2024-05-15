@@ -1,6 +1,12 @@
 'use client';
 
-import React, { ReactNode, createContext, useEffect, useState } from 'react';
+import React, {
+  ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import {
   IN_FRAME,
   IS_MOBILE,
@@ -16,8 +22,12 @@ import ConfirmDisconnectWallet from './component/confirm-disconnect';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { HandleWalletFunction, IConnectWalletContext } from '@/libs/types';
 import { HOME_URL } from '@/config/path';
+import { AppContext } from './app-context';
 
-export const ConnectWalletContext = createContext<IConnectWalletContext>({ user: { address: '', isConnected: false }, isConnecting: false });
+export const ConnectWalletContext = createContext<IConnectWalletContext>({
+  user: { address: '', isConnected: false },
+  isConnecting: false,
+});
 
 interface IAppProvider {
   children: ReactNode;
@@ -37,6 +47,7 @@ export const ConnectWalletProvider = ({ children }: IAppProvider) => {
   // const getUser = typeof window !== 'undefined' && localStorage.getItem('user');
   const pathname = usePathname();
   const defaultUser = { address: '', isConnected: false };
+  const { getActivities } = useContext(AppContext);
 
   const [isConnecting, setIsConnecting] = useState<boolean>(false);
   const [user, setUser] = useState<IUser>(defaultUser);
@@ -130,9 +141,8 @@ export const ConnectWalletProvider = ({ children }: IAppProvider) => {
       setConnectionError,
       setOpenModal,
       walletObj,
-      isHome
+      isHome,
     });
-
     setIsConnecting(false);
     setConnectingTo(null);
   };
