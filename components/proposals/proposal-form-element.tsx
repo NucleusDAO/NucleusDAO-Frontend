@@ -389,18 +389,24 @@ const UpdateSocialsFormField = ({ form }: { form: any }) => {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name={`socialMedia.${index}.link`}
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input placeholder="https://" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div>
+              <FormField
+                control={form.control}
+                name={`socialMedia.${index}.link`}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input placeholder="https://" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <p className="text-xs font-light text-defaultText">
+                Please ensure to start with{' '}
+                <span className="text-primary">https://</span>
+              </p>
+            </div>
           </div>
           {fields.length > 1 && (
             <div className="w-[3%]" role="button" onClick={() => remove(index)}>

@@ -37,8 +37,6 @@ const DaoTemplateList: {
   },
 ];
 
-// ["updateName", "updateSocials", "updateImage", "addMember", "removeMember", "updateQuorum", "updateVoteTime", "transfer", "join"]
-
 const proposalLists: { title: string; enums: number; type: string }[] = [
   {
     title: 'Propose a transfer',

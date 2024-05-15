@@ -6,8 +6,8 @@ import { proposalLists } from '@/config/dao-config';
 import { AppContext } from '@/context/app-context';
 import { IProposal } from '@/libs/types';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useContext, useEffect, useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
+import { useContext, useEffect, useState } from 'react';
 
 const Proposals = () => {
   const { isProposalLoading, allProposals } = useContext(AppContext);

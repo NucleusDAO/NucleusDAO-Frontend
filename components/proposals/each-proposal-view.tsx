@@ -141,7 +141,7 @@ const EachProposalView = ({
             <EachProposalDetails currentProposal={currentProposal} />
           </div>
 
-          {(isMember || isConnected) && (
+          {isMember && isConnected && (
             <div className="rounded-lg dark:bg-[#191919] p-8 space-y-4 bg-white">
               <div className="flex justify-between border-b dark:border-[#1E1E1E] pb-4 items-center border-[#CCCCCC99]">
                 <h3 className="font-medium text-xl dark:text-white text-dark">
@@ -155,10 +155,17 @@ const EachProposalView = ({
                 </div>
               </div>
 
-              <VotingProcess
-                currentProposal={currentProposal}
-                setCurrentProposal={setCurrentProposal}
-              />
+              {getStatus(currentProposal) === 'Pending' ? (
+                <p className="dark:text-white text-dark text-sm">
+                  Voting period has ended. The result will be shown if the
+                  proposal reach its quorum and executed
+                </p>
+              ) : (
+                <VotingProcess
+                  currentProposal={currentProposal}
+                  setCurrentProposal={setCurrentProposal}
+                />
+              )}
             </div>
           )}
 

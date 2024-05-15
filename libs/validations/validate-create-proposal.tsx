@@ -153,6 +153,7 @@ export const validateChangeSocialMedia = ({ form }: any) => {
   const indexType = socialMedia.findIndex(
     (item: { link: string; type: string }) => item.type === ''
   );
+
   if (isEmptySocialMediaLink) {
     form.setError(`socialMedia.${indexLink}.link`, {
       type: 'onChange',
@@ -170,6 +171,7 @@ export const validateChangeSocialMedia = ({ form }: any) => {
       type: 'onChange',
       message: 'Field should start with https://',
     });
+    // return false;
   } else {
     return true;
   }

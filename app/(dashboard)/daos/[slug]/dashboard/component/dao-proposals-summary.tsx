@@ -50,8 +50,6 @@ export const DaoProposals = () => {
     enabled: !!daoId,
   });
 
-  console.log(proposalHistory, '->');
-
   if (isProposalHistoryError)
     return <ErrorFetchingComponent className="min-h-[50vh]" />;
 
