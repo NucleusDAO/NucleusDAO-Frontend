@@ -185,7 +185,7 @@ export default function Home() {
           })`,
         }}
       >
-        <section className="space-y-8 flex-grow" id="contactUs">
+        <section className="space-y-8 mt-16 flex-grow" id="contactUs">
           <div
             className="border border-[#5E5F62B9] mx-auto text-sm bg-gradient-to-r from-[#44444433] to-[#65656533] px-6 py-2 rounded-[20px] w-fit text-[#9050E9]"
             role="heading"
