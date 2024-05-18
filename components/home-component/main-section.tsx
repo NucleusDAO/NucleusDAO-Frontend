@@ -41,24 +41,27 @@ const MainSection = () => {
     // Clear the interval on component unmount
     return () => clearInterval(intervalId);
   }, []);
-
+  // absolute bottom-0 lg:bottom-0 lg:top-0  opacity-10
   return (
     <div className="mx-auto w-full lg:w-3/5 text-center space-y-4 lg:mt-14 pt-32 lg:pt-0 relative">
-      <div className="w-full min-h-[38px] absolute bottom-0 lg:bottom-0 lg:top-0 space-y-4 opacity-10">
+      <div className="w-full min-h-[38px] space-y-4">
         <Heading
-          title={mainContent[contentIndex].title}
+          // title={mainContent[contentIndex].title}
+          title="Empowering Decentralised Governance"
           className={cn(
-            'px-6 lg:px-24 lg:text-center',
+            'px-6 lg:px-24 lg:text-[48px] lg:text-center',
             contentIndex === 1 && 'px-6 lg:px-10'
           )}
         />
-        <h3 className="font-light text-sm lg:text-normal px-6 lg:px-10">
-          {mainContent[contentIndex].description}
+        <h3 className="font-light text-sm lg:text-[18px] leading-[30px] px-6 lg:px-10">
+          {/* {mainContent[contentIndex].description} */}
+          Build a customizable, transparent organization for your community with
+          NucleusDAO on the æternity blockchain.
         </h3>
         <React.Fragment>
           <div className="flex items-center space-x-8 justify-center relative pt-2">
             <Link href={'#join'}>
-              <Button className="px-6">{mainContent[contentIndex].cta}</Button>
+              <Button className="px-6">Join Now</Button>
             </Link>
             <div className="flex items-center space-x-2">
               <div
@@ -75,7 +78,7 @@ const MainSection = () => {
         </React.Fragment>
       </div>
 
-      <div className="w-full min-h-[38px] main-animate-fade-in-out space-y-4">
+      {/* <div className="w-full min-h-[38px] main-animate-fade-in-out space-y-4">
         <Heading
           title={mainContent[contentIndex].title}
           className={cn(
@@ -104,7 +107,7 @@ const MainSection = () => {
             <AEAnimation className="left-0 top-20 w-[56px]" />
           </div>
         </React.Fragment>
-      </div>
+      </div> */}
     </div>
   );
 };

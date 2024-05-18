@@ -11,15 +11,17 @@ import {
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
-import { IConnectWalletContext, IProposal } from '@/libs/types';
+import {
+  IConnectWalletContext,
+  IEachProposalView,
+  IProposal,
+} from '@/libs/types';
 import { toast } from 'sonner';
 import Lottie from 'react-lottie';
 import { defaultSuccessOption } from '../animation-options';
 import { AppContext } from '@/context/app-context';
 import { EachDaoContext } from '@/context/each-dao-context';
-import { updateProposalEP } from '@/config/apis';
-import { PROPOSALS } from '@/libs/key';
-import { useQueryClient } from '@tanstack/react-query';
+import { cn, getStatus } from '@/libs/utils';
 
 interface IVotingProcess {
   currentProposal: {
@@ -34,9 +36,9 @@ const VotingProcess = ({
   setCurrentProposal,
 }: IVotingProcess) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { voteFor, voteAgainst, getProposal } = useContext(AppContext);
+  const { voteFor, voteAgainst, getActivities, setUpdate } =
+    useContext(AppContext);
   const { currentDAO } = useContext(EachDaoContext);
-  const queryClient: any = useQueryClient();
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { isConnected, address } = user;
   const userVote = address
@@ -55,68 +57,70 @@ const VotingProcess = ({
   const [showModal, setShowModal] = useState<boolean>(false);
   const hasVoted: boolean = !!userVote?.account;
   const [isVoting, setIsVoting] = useState<boolean>(false);
+  const [eachProposal, setEachProposal] = useState<IEachProposalView | any>(
+    null
+  );
 
   const votingOptions = ['yes', 'no'];
+  const isDisabled: boolean =
+    !!userVote?.account || getStatus(currentProposal) === 'Failed';
 
   const handleOptionChange = (option: string) => {
-    if (isConnected) {
-      setSelectedOption(option);
+    if (isDisabled) {
+      null;
     } else {
-      toast.error('Connect your wallet first!');
+      if (isConnected) {
+        setSelectedOption(option);
+      } else {
+        toast.error('Connect your wallet first!');
+      }
     }
   };
 
   const handleVote = async () => {
-    setIsVoting(true);
-    try {
-      if (selectedOption === 'yes') {
-        const vote = await voteFor(
-          Number(currentProposal.id),
-          currentDAO.contractAddress
-        );
-        for (let key in vote) {
-          if (typeof vote[key] == 'bigint') {
-            vote[key] = Number(vote[key]);
-          }
+    if (isDisabled) {
+      null;
+    } else {
+      setIsVoting(true);
+      try {
+        if (selectedOption === 'yes') {
+          const proposal = await voteFor(
+            Number(currentProposal.id),
+            currentDAO.contractAddress
+          );
+          await setShowModal(true);
+          setEachProposal(proposal);
+        } else {
+          const proposal = await voteAgainst(
+            Number(currentProposal.id),
+            currentDAO.contractAddress
+          );
+          await setShowModal(true);
+          setEachProposal(proposal);
         }
-        await updateProposalEP(currentDAO.id, Number(currentProposal.id), vote);
-        queryClient.invalidateQueries(PROPOSALS);
-      } else {
-        const vote = await voteAgainst(
-          Number(currentProposal.id),
-          currentDAO.contractAddress
-        );
-        const proposals = await getProposal(
-          currentDAO.contractAddress,
-          Number(currentProposal.id)
-        );
-        for (let key in vote) {
-          if (typeof vote[key] == 'bigint') {
-            vote[key] = Number(vote[key]);
-          }
-        }
-        await updateProposalEP(currentDAO.id, Number(currentProposal.id), vote);
-        queryClient.invalidateQueries(PROPOSALS);
+      } catch (error: any) {
+        toast.error(error.message);
+      } finally {
+        setIsVoting(false);
       }
-      setShowModal(true);
-    } catch (error: any) {
-      toast.error(error.message);
-    } finally {
-      setIsVoting(false);
     }
   };
+
+  console.log(eachProposal, '-> eachProposal');
 
   const handleDone = async () => {
     setIsLoading(true);
     try {
-      const proposal = await getProposal(
-        currentDAO.contractAddress,
-        Number(currentProposal.id)
-      );
-      setCurrentProposal(proposal);
+      // await getActivities(address)
+      // fetchAllProposals();
+      // fetchDAOs();
+      setUpdate(true);
+      // await getActivities(address);
+      setCurrentProposal({ ...eachProposal, id: Number(eachProposal.id) });
       setShowModal(false);
       setIsLoading(false);
     } catch (error: any) {
+      console.log(error, '-> erros');
       toast.error(error.message);
     } finally {
       setIsLoading(false);
@@ -138,7 +142,7 @@ const VotingProcess = ({
               defaultValue={selectedOption}
               value={selectedOption}
               key={option}
-              disabled={!!userVote?.account}
+              disabled={isDisabled}
               onValueChange={() => handleOptionChange(option)}
               role="button"
             >
@@ -149,7 +153,10 @@ const VotingProcess = ({
                 <Label
                   htmlFor={option}
                   id={option}
-                  className="capitalize dark:text-white font-medium text-dark"
+                  className={cn(
+                    'capitalize dark:text-white font-medium text-dark',
+                    isDisabled && 'opacity-40'
+                  )}
                 >
                   {option}
                 </Label>
@@ -164,7 +171,7 @@ const VotingProcess = ({
           <Dialog onOpenChange={setShowModal} open={showModal}>
             <Button
               className="w-full"
-              disabled={!selectedOption || !!userVote?.account}
+              disabled={!selectedOption || isDisabled}
               onClick={handleVote}
               loading={isVoting}
               loadingText="Voting..."
