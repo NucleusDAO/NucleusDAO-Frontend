@@ -42,6 +42,7 @@ const CreateNewProposalForm = () => {
     useContext(AppContext);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { address } = user;
+  const [daoMembers, setDaoMembers] = useState([]);
   const searchParams = useSearchParams();
   const type: string =
     searchParams.get('enums') || newProposalInfo.value.type || '0';
@@ -61,8 +62,8 @@ const CreateNewProposalForm = () => {
   useEffect(() => {
     const getDuration = async () => {
       const dao = await getEachDAO(daoID);
-      console.log(dao.votingTime, '-> dao.votingTime');
       const duration = millisecondsToDays(Number(dao.votingTime));
+      setDaoMembers(dao.members);
       form.setValue('duration', duration);
     };
     getDuration();
@@ -93,7 +94,7 @@ const CreateNewProposalForm = () => {
 
   const onSubmit = async (data: any) => {
     const currentType = Number(form.getValues('type'));
-    if (ValidateProposalForm[currentType]({ form })) {
+    if (ValidateProposalForm[currentType]({ form, daoMembers })) {
       setRouting(true);
       wait().then(() => {
         router.push(`${REVIEW_PROPOSAL_URL}?ct=${daoID}&type=${currentType}`);
@@ -101,6 +102,8 @@ const CreateNewProposalForm = () => {
       });
     }
   };
+
+  console.log(daoMembers, '->daoMembers');
 
   return (
     <Form {...form}>

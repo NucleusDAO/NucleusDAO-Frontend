@@ -22,6 +22,7 @@ import { toast } from 'sonner';
 import { uploadFile } from '@/config/apis';
 import { ApiContext } from '@/context/api-context';
 import Link from 'next/link';
+import { EachDaoContext } from '@/context/each-dao-context';
 
 const ReviewProposal = () => {
   const {
@@ -43,6 +44,7 @@ const ReviewProposal = () => {
   const searchParams = useSearchParams();
   const daoID = searchParams.get('ct');
   const proposalType = searchParams.get('type') || '';
+  const enums = searchParams.get('enums') || '';
   const router = useRouter();
   const { value } = newProposalInfo;
 

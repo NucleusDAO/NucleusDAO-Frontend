@@ -84,12 +84,12 @@ export const DaoProposals = () => {
           <div className="bg-primary h-2.5 w-2.5 rounded-full" />
           <p className="text-xs font-light text-defaultText">Proposals</p>
         </div>
-        <div className="flex space-x-1 items-center">
+        {/* <div className="flex space-x-1 items-center">
           <div className="bg-[#0080FF] h-2.5 w-2.5 rounded-full" />
           <p className="text-xs font-light text-defaultText">
             Active Proposals
           </p>
-        </div>
+        </div> */}
       </div>
       {isLoadingProposalHistory ? (
         <Skeleton className="h-[80%] dark:bg-[#1E1E1E] bg-[#F5F5F5]" />

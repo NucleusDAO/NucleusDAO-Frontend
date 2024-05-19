@@ -87,7 +87,7 @@ const EachProposalDetails = ({ currentProposal }: IEachProposalDetails) => {
           </p>
         </div>
       )}
-      {info && info.socials[0].name && (
+      {info && info?.socials[0]?.name && (
         <div className="grid grid-cols-6">
           <h1 className="col-span-2">Social Media:</h1>
 

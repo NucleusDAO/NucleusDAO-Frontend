@@ -32,8 +32,6 @@ const EachProposal = () => {
   const urlParts = pathname.split('/'); // Split the URL by "/"
   const proposalId = urlParts[2];
 
-  console.log(currentDAO, '->currentDAO');
-
   useEffect(() => {
     const getSingleProposal = async () => {
       try {
@@ -97,10 +95,10 @@ const EachProposal = () => {
 
       <div className="">
         <h1 className="dark:text-white text-dark font-medium text-[36px] lg:text-[18px]">
-          {currentDAO.name}
+          {currentDAO?.name}
         </h1>
         <p className="text-sm lg:text-normal font-light">
-          {currentDAO.description}
+          {currentDAO?.description}
         </p>
       </div>
       <Separator />

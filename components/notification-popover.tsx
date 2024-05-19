@@ -119,6 +119,7 @@ const ViewNotificationPopover = () => {
                 {notifications.map((notification: any) => (
                   <div
                     key={notification.title}
+                    onClick={() => handleView(notification)}
                     className="flex space-x-3 text-sm space-y-5 justify-start mt-3 hover:dark:bg-[#1E1E1E] hover:bg-[#F5F5F5] hover:cursor-pointer rounded-md px-4 py-1 trans"
                   >
                     <div className="mt-4">
