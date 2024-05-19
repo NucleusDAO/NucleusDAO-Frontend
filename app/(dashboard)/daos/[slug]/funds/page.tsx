@@ -16,12 +16,12 @@ import { ApiContext } from '@/context/api-context';
 import { rate } from '@/config/dao-config';
 import { prefixedAmount } from '@aeternity/aepp-sdk';
 import EachDaoLoading from '@/components/loading/each-dao-loading';
+import ErrorFetchingComponent from '@/components/error-fetching-comp';
 
 const EachDaoFunds = () => {
   const pathname = usePathname();
-  const [transactions, setTransactions] = useState([]);
   const domainName = typeof window !== 'undefined' && window.location.origin;
-  const { currentDAO, setUpdateDAO } = useContext(EachDaoContext);
+  const { currentDAO } = useContext(EachDaoContext);
   const {
     getAEPrice,
     transactionHistory,
@@ -40,10 +40,12 @@ const EachDaoFunds = () => {
   const usdValue: number = Number(currentBalance) * (getAEPrice?.price || rate);
 
   if (isLoadingTransactionHistory) return <EachDaoLoading />;
-
-  // useEffect(() => {
-  //   setUpdateDAO(false);
-  // }, []);
+  if (isTransactionHistoryError)
+    return (
+      <ErrorFetchingComponent
+        description={transactionHistoryError?.error?.message}
+      />
+    );
 
   return (
     <div className="space-y-4">

@@ -24,6 +24,7 @@ export const DaoFunds = () => {
   const timeframe = searchParams.get('q') || 'yearly';
 
   const handleSelect = useDebouncedCallback((term) => {
+    console.log(term, '-> term');
     const params = new URLSearchParams(searchParams);
 
     if (term) {
@@ -65,7 +66,7 @@ export const DaoFunds = () => {
               )}
               role="button"
               key={each.value}
-              onClick={() => handleSelect(each)}
+              onClick={() => handleSelect(each.param)}
             >
               {each.value}
             </div>

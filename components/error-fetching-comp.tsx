@@ -3,7 +3,13 @@ import { Button } from './ui/button';
 import { useRouter } from 'next/navigation';
 import { cn } from '@/libs/utils';
 
-const ErrorFetchingComponent = ({ className }: { className?: string }) => {
+const ErrorFetchingComponent = ({
+  className,
+  description,
+}: {
+  className?: string;
+  description?: string;
+}) => {
   const router = useRouter();
   return (
     <div className={cn('min-h-[80vh] w-full p-8', className)}>
@@ -12,6 +18,7 @@ const ErrorFetchingComponent = ({ className }: { className?: string }) => {
           This view can’t be reached
         </h1>
         <p>We cannot connect to the server at www.nucluesDAO.com</p>
+        <p>{description}</p>
         <p>Try again later.</p>
         <p> Check your network connection.</p>
         <p>
