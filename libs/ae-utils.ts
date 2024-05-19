@@ -11,8 +11,7 @@ import nucleusDAOAci from './contract/NucleusDAO.json';
 import basicDAOAci from './contract/BasicDAO.json';
 import { DASHBOARD_URL } from '@/config/path';
 
-const nucleusDAOContractAddress =
-  'ct_FVFpGujmmLv4UEuJczdTMG3RekDt5jJBe32H9e2PHPMn2UrBb';
+const nucleusDAOContractAddress = 'ct_DPR9rN4U7drVvzm83yhCBr6wz9vuw4y54mDcKvEp9Z13kecqE';
 
 const TESTNET_NODE_URL = 'https://testnet.aeternity.io';
 const MAINNET_NODE_URL = 'https://mainnet.aeternity.io';
