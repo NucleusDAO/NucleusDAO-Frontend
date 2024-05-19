@@ -2,7 +2,6 @@
 import { Button } from '@/components/ui/button';
 import { CREATE_PROPOSAL_URL } from '@/config/path';
 import { Globe, MoveLeft, Plus } from 'lucide-react';
-import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import React, { ReactNode, useContext, useEffect, useState } from 'react';
 import { CopyIcon } from '@/assets/svgs';
@@ -29,6 +28,7 @@ import {
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { toast } from 'sonner';
 import { AppContext } from '@/context/app-context';
+import ErrorFetchingComponent from '@/components/error-fetching-comp';
 
 interface ILayout {
   children: ReactNode;
@@ -40,7 +40,7 @@ const Layout = ({ children }: ILayout) => {
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { setUpdate } = useContext(AppContext);
   const { isConnected } = user;
-  const { isLoading, currentDAO, isMember } = useContext(EachDaoContext);
+  const { isLoading, currentDAO, isMember, error } = useContext(EachDaoContext);
   const [routing, setRouting] = useState<boolean>(false);
 
   const urlParts = pathname.split('/'); // Split the URL by "/"
@@ -75,6 +75,7 @@ const Layout = ({ children }: ILayout) => {
   }, []);
 
   if (isLoading) return <EachDaoLoading />;
+  if (error) return <ErrorFetchingComponent description={error} />;
 
   return (
     <div className="">
@@ -112,21 +113,21 @@ const Layout = ({ children }: ILayout) => {
             <div className="lg:flex items-center justify-between">
               <div className="flex space-x-4 items-center">
                 <img
-                  src={currentDAO.image}
-                  alt={currentDAO.name}
+                  src={currentDAO?.image}
+                  alt={currentDAO?.name}
                   className="rounded-lg object-cover h-[50px] w-[50px]"
                 />
                 <div className="space-y-4">
                   <h2 className="font-medium text-lg lg:text-2xl text-dark dark:text-white capitalize">
-                    {currentDAO.name}
+                    {currentDAO?.name}
                   </h2>
                   <CopyToClipboard
-                    text={currentDAO.domain ?? currentDAO.account}
+                    text={currentDAO?.domain ?? currentDAO?.account}
                     onCopy={() => toast.success('DAO Address copied!')}
                   >
                     <div className="flex space-x-2 mt-1.5 items-center font-light text-sm text-[#888888] w-[60%] lg:w-fit">
                       <p className="truncate">
-                        {currentDAO.domain ?? currentDAO.account}
+                        {currentDAO?.domain ?? currentDAO?.account}
                       </p>
                       <CopyIcon />
                     </div>
@@ -169,7 +170,7 @@ const Layout = ({ children }: ILayout) => {
               </div>
             </div>
             <p className="text-[#888888] text-sm">
-              {capitalizeFirstLetter(currentDAO.description)}
+              {capitalizeFirstLetter(currentDAO?.description)}
             </p>
           </div>
           <div className="pb-4 border-b dark:border-[#292929] md:flex  items-center justify-between border-[#CCCCCC99] space-y-4 md:space-y-0">

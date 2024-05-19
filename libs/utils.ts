@@ -382,3 +382,16 @@ export const capitalizeFirstLetter = (str: string) => {
 
   return capitalized;
 };
+
+export const percentageChangeRate = (data: any) => {
+  const lastValue = Number(data[data.length - 1]?.value) || 0;
+  const secontToLastValue = Number(data[data.length - 2]?.value) || 0;
+  let percentageChange: number;
+  if (secontToLastValue !== 0) {
+    const difference = lastValue - secontToLastValue;
+    percentageChange = (difference / Math.abs(secontToLastValue)) * 100;
+  } else {
+    percentageChange = 100;
+  }
+  return percentageChange;
+};

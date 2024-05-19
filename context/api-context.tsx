@@ -76,17 +76,6 @@ export const ApiContextProvider = ({ children }: IApiProvider) => {
   });
 
   console.log(transactionHistory, '-> transactionHistory');
-
-  const {
-    data: proposals,
-    isError: isProposalError,
-    error: proposalErrorMessage,
-    isLoading: isLoadingProposal,
-  } = useQuery({
-    queryKey: [PROPOSALS],
-    queryFn: getProposals,
-  });
-
   const {
     data: notifications,
     isError: isNotificationError,
@@ -125,10 +114,6 @@ export const ApiContextProvider = ({ children }: IApiProvider) => {
     isNotificationError,
     isLoadingNotification,
     notificationErrorMessage,
-    proposals,
-    isProposalError,
-    proposalErrorMessage,
-    isLoadingProposal,
     transactionHistory,
     transactionHistoryError,
     isTransactionHistoryError,

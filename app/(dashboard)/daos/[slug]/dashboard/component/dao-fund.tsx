@@ -8,7 +8,7 @@ import { BALANCE_HISTORY } from '@/libs/key';
 import { cn } from '@/libs/utils';
 import { useQuery } from '@tanstack/react-query';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 
 export const DaoFunds = () => {
@@ -35,7 +35,7 @@ export const DaoFunds = () => {
     replace(`${pathname}?${params.toString()}`);
   }, 300);
 
-  const { currentDAO } = useContext(EachDaoContext);
+  const { currentDAO, setFundsHistory } = useContext(EachDaoContext);
   const daoId = currentDAO.id;
 
   const {
@@ -47,6 +47,12 @@ export const DaoFunds = () => {
     queryFn: () => getHistory('balance-history', daoId, { timeframe }),
     enabled: !!daoId,
   });
+
+  useEffect(() => {
+    if (history) {
+      setFundsHistory(history);
+    }
+  }, [history]);
 
   if (isHistoryError)
     return <ErrorFetchingComponent className="min-h-[50vh]" />;
