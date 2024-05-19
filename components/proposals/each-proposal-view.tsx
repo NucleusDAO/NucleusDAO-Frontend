@@ -76,7 +76,7 @@ const EachProposalView = ({
 
   return (
     <div className="space-y-6">
-      <h1 className="dark:text-white font-medium text-xl md:text-3xl pt-6 text-dark">
+      <h1 className="dark:text-white text-dark font-medium text-xl md:text-3xl pt-6">
         {
           proposalLists.find(
             (proposal: { type: string }) =>
@@ -92,7 +92,7 @@ const EachProposalView = ({
           width={isDesktop ? 20 : 16}
           height={isDesktop ? 20 : 16}
         />
-        <p className="font-light text-xs md:text-sm dark:text-white text-dark">
+        <p className="font-light text-xs md:text-sm dark:text-white text-dark truncate">
           {currentProposal?.wallet || currentProposal?.proposer}
         </p>
       </div>

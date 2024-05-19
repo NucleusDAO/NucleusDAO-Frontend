@@ -13,6 +13,7 @@ import { getDuration, getStatus } from '@/libs/utils';
 import { IConnectWalletContext, IProposal } from '@/libs/types';
 import ErrorFetchingComponent from '@/components/error-fetching-comp';
 import { ConnectWalletContext } from './connect-wallet-context';
+import { boolean } from 'zod';
 
 export const EachDaoContext = createContext<any>({});
 
@@ -44,6 +45,10 @@ export const EachDaoContextProvider = ({ children }: IAppProvider) => {
   const [memberLoading, setMemberLoading] = useState<boolean>(true);
   const [updateDAO, setUpdateDAO] = useState<boolean>(false);
   const isMember = currentDAO?.members?.includes(user.address);
+  const [error, setError] = useState<string>('');
+  const [memberHistory, setMemberHistory] = useState([]);
+  const [proposalHistory, setProposalHistory] = useState([]);
+  const [fundsHistory, setFundsHistory] = useState([]);
 
   const { getProposals, getEachDAO, getAllUsersActivities, isUserMemberOfDAO } =
     useContext(AppContext);
@@ -58,7 +63,7 @@ export const EachDaoContextProvider = ({ children }: IAppProvider) => {
       setIsLoading(false);
     } catch (error: any) {
       toast.error(error.message);
-      return <ErrorFetchingComponent />;
+      setError(error.message);
     } finally {
       setIsLoading(false); // Set loading state to false after fetching data
     }
@@ -67,6 +72,7 @@ export const EachDaoContextProvider = ({ children }: IAppProvider) => {
   useEffect(() => {
     setIsLoading(true);
     if (urlParts.length >= 4) {
+      setError('');
       fetchEachDAO();
       // (async () => {
       // try {
@@ -83,6 +89,8 @@ export const EachDaoContextProvider = ({ children }: IAppProvider) => {
       // })();
     }
   }, [daoId]);
+
+  console.log(currentDAO, '->');
 
   useEffect(() => {
     setIsProposalLoading(true);
@@ -164,6 +172,14 @@ export const EachDaoContextProvider = ({ children }: IAppProvider) => {
     setIsLoading,
     setUpdateDAO,
     fetchEachDAO,
+    error,
+    setError,
+    setMemberHistory,
+    memberHistory,
+    proposalHistory,
+    setProposalHistory,
+    fundsHistory,
+    setFundsHistory,
   };
 
   return (

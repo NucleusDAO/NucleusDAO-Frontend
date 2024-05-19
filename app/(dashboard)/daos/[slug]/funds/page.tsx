@@ -6,7 +6,7 @@ import { columns } from './columns';
 import { data } from './data';
 import { IConnectWalletContext } from '@/libs/types';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { EachDaoContext } from '@/context/each-dao-context';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
@@ -15,12 +15,20 @@ import DepositToken from '@/components/deposit-token';
 import { ApiContext } from '@/context/api-context';
 import { rate } from '@/config/dao-config';
 import { prefixedAmount } from '@aeternity/aepp-sdk';
+import EachDaoLoading from '@/components/loading/each-dao-loading';
+import ErrorFetchingComponent from '@/components/error-fetching-comp';
 
 const EachDaoFunds = () => {
   const pathname = usePathname();
   const domainName = typeof window !== 'undefined' && window.location.origin;
-  const { currentDAO, setUpdateDAO } = useContext(EachDaoContext);
-  const { getAEPrice } = useContext(ApiContext);
+  const { currentDAO } = useContext(EachDaoContext);
+  const {
+    getAEPrice,
+    transactionHistory,
+    transactionHistoryError,
+    isTransactionHistoryError,
+    isLoadingTransactionHistory,
+  } = useContext(ApiContext);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { isConnected } = user;
 
@@ -31,9 +39,13 @@ const EachDaoFunds = () => {
   const currentBalance = prefixedAmount(currentDAO.balance).replace(' exa', '');
   const usdValue: number = Number(currentBalance) * (getAEPrice?.price || rate);
 
-  // useEffect(() => {
-  //   setUpdateDAO(false);
-  // }, []);
+  if (isLoadingTransactionHistory) return <EachDaoLoading />;
+  if (isTransactionHistoryError)
+    return (
+      <ErrorFetchingComponent
+        description={transactionHistoryError?.error?.message}
+      />
+    );
 
   return (
     <div className="space-y-4">
@@ -89,7 +101,10 @@ const EachDaoFunds = () => {
               Transaction details
             </h1>
 
-            <DataTable columns={columns} data={data} />
+            <DataTable
+              columns={columns(getAEPrice)}
+              data={transactionHistory}
+            />
           </div>
         </>
       )}

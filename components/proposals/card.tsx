@@ -64,7 +64,7 @@ const ProposalCard = ({
           <div className="dark:bg-[#1E1E1E] bg-[#EEEEEE] p-3 rounded-tl-lg rounded-bl-lg">
             <Image src={LegacyLogo} alt="legacy" width={isDesktop ? 32 : 24} />
           </div>
-          <div className="h-[30vh] w-[1px] bg-[#292929]" />
+          <div className="max-h-[300px] w-[1px] bg-[#292929]" />
           <div className="p-2 md:p-4 space-y-6 w-full">
             <div className="space-y-3">
               <div className="flex items-center justify-between space-x-4">
@@ -79,7 +79,7 @@ const ProposalCard = ({
                     <p className="text-defaultText text-xs md:text-base">
                       Proposal Type
                     </p>
-                    <h3 className="dark:text-white capitalize text-dark font-medium text-sm md:text-lg h-[7vh]">
+                    <h3 className="dark:text-white capitalize text-dark font-medium text-sm md:text-lg min-h-[50px] max-h-[50px]">
                       {
                         proposalLists.find(
                           (proposal: { type: string }) => proposal.type === type
@@ -90,7 +90,7 @@ const ProposalCard = ({
                 </div>
                 <div>{EachStatus[status]}</div>
               </div>
-              <p className="text-defaultText text-xs md:text-sm h-[9vh] overflow-auto">
+              <p className="text-defaultText text-xs md:text-sm min-h-[50px] max-h-[50px] overflow-auto">
                 {capitalizeFirstLetter(description.slice(0, 300))}
               </p>
             </div>

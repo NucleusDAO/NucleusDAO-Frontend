@@ -8,7 +8,7 @@ import { PROPOSAL_HISTORY } from '@/libs/key';
 import { cn } from '@/libs/utils';
 import { useQuery } from '@tanstack/react-query';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 
 export const DaoProposals = () => {
@@ -37,7 +37,7 @@ export const DaoProposals = () => {
     300
   );
 
-  const { currentDAO } = useContext(EachDaoContext);
+  const { currentDAO, setProposalHistory } = useContext(EachDaoContext);
   const daoId = currentDAO.id;
 
   const {
@@ -49,6 +49,12 @@ export const DaoProposals = () => {
     queryFn: () => getHistory('proposals-history', daoId, { timeframe }),
     enabled: !!daoId,
   });
+
+  useEffect(() => {
+    if (proposalHistory) {
+      setProposalHistory(proposalHistory);
+    }
+  }, [proposalHistory]);
 
   if (isProposalHistoryError)
     return <ErrorFetchingComponent className="min-h-[50vh]" />;
@@ -78,12 +84,12 @@ export const DaoProposals = () => {
           <div className="bg-primary h-2.5 w-2.5 rounded-full" />
           <p className="text-xs font-light text-defaultText">Proposals</p>
         </div>
-        <div className="flex space-x-1 items-center">
+        {/* <div className="flex space-x-1 items-center">
           <div className="bg-[#0080FF] h-2.5 w-2.5 rounded-full" />
           <p className="text-xs font-light text-defaultText">
             Active Proposals
           </p>
-        </div>
+        </div> */}
       </div>
       {isLoadingProposalHistory ? (
         <Skeleton className="h-[80%] dark:bg-[#1E1E1E] bg-[#F5F5F5]" />
