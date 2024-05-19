@@ -139,10 +139,19 @@ export const getStatus = (_proposal: IProposal | any) => {
   if (_proposal.isExecuted) {
     return 'Succeeded';
   }
+  if (
+    new Date(Number(_proposal.endTime)).valueOf() > Date.now().valueOf() &&
+    _proposal.votesFor < _proposal.votesAgainst
+  ) {
+    return 'Failed';
+  }
   if (new Date(Number(_proposal.endTime)).valueOf() > Date.now().valueOf()) {
     return 'Active';
   } else {
-    if (_proposal.votesFor > _proposal.votesAgainst) {
+    if (
+      _proposal.votesFor > _proposal.votesAgainst &&
+      new Date(Number(_proposal.endTime)).valueOf() > Date.now().valueOf()
+    ) {
       return 'Pending';
     } else {
       return 'Failed';
@@ -181,6 +190,16 @@ export function formatDate(timestamp: number) {
   const date = new Date(Number(timestamp));
   const options: any = { day: '2-digit', month: 'short', year: 'numeric' };
   return date.toLocaleDateString('en-GB', options);
+}
+
+export function formatISODate(isoDateString: string): string {
+  const date = new Date(isoDateString);
+  const options: Intl.DateTimeFormatOptions = {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  };
+  return new Intl.DateTimeFormat('en-US', options).format(date);
 }
 
 export function getDuration(startTime: number, endTime: number) {

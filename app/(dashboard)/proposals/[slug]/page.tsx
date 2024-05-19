@@ -1,6 +1,7 @@
 'use client';
 import EachDaoLoading from '@/components/loading/each-dao-loading';
 import EachProposalView from '@/components/proposals/each-proposal-view';
+import { Separator } from '@/components/ui/separator';
 import { AppContext } from '@/context/app-context';
 import { EachDaoContext } from '@/context/each-dao-context';
 import { useMediaQuery } from '@/hooks/use-media-query';
@@ -18,7 +19,7 @@ const EachProposal = () => {
     IEachProposalView | any
   >({});
   const { getEachDAO, getProposal } = useContext(AppContext);
-  const { setCurrentDAO } = useContext(EachDaoContext);
+  const { setCurrentDAO, currentDAO } = useContext(EachDaoContext);
   const isDesktop = useMediaQuery('(min-width: 768px)');
   const router = useRouter();
   const tabs: string[] = ['Result', 'Information'];
@@ -30,6 +31,8 @@ const EachProposal = () => {
   const currentTab: string = searchParams.get('q') || tabs[0];
   const urlParts = pathname.split('/'); // Split the URL by "/"
   const proposalId = urlParts[2];
+
+  console.log(currentDAO, '->currentDAO');
 
   useEffect(() => {
     const getSingleProposal = async () => {
@@ -91,6 +94,16 @@ const EachProposal = () => {
           ))}
         </div>
       </div>
+
+      <div className="">
+        <h1 className="dark:text-white text-dark font-medium text-[36px] lg:text-[18px]">
+          {currentDAO.name}
+        </h1>
+        <p className="text-sm lg:text-normal font-light">
+          {currentDAO.description}
+        </p>
+      </div>
+      <Separator />
 
       {isLoading ? (
         <EachDaoLoading />

@@ -106,10 +106,10 @@ const Layout = ({ children }: ILayout) => {
         )}
       </div>
 
-      <div className="h-[72vh] overflow-auto pt-6 pr-4">
+      <div className="h-[72vh] overflow-y-auto overflow-x-hidden pt-6 pr-4">
         <div className="space-y-8">
           <div className="space-y-6">
-            <div className="flex items-center justify-between">
+            <div className="lg:flex items-center justify-between">
               <div className="flex space-x-4 items-center">
                 <img
                   src={currentDAO.image}
@@ -117,15 +117,17 @@ const Layout = ({ children }: ILayout) => {
                   className="rounded-lg object-cover h-[50px] w-[50px]"
                 />
                 <div className="space-y-4">
-                  <h2 className="font-medium text-2xl text-dark dark:text-white capitalize">
+                  <h2 className="font-medium text-lg lg:text-2xl text-dark dark:text-white capitalize">
                     {currentDAO.name}
                   </h2>
                   <CopyToClipboard
                     text={currentDAO.domain ?? currentDAO.account}
                     onCopy={() => toast.success('DAO Address copied!')}
                   >
-                    <div className="flex space-x-2 mt-1.5 items-center font-light text-sm text-[#888888]">
-                      <p>{currentDAO.domain ?? currentDAO.account}</p>
+                    <div className="flex space-x-2 mt-1.5 items-center font-light text-sm text-[#888888] w-[60%] lg:w-fit">
+                      <p className="truncate">
+                        {currentDAO.domain ?? currentDAO.account}
+                      </p>
                       <CopyIcon />
                     </div>
                   </CopyToClipboard>
@@ -158,7 +160,7 @@ const Layout = ({ children }: ILayout) => {
                   </DialogContent>
                 </Dialog>
 
-                <div className="dark:bg-[#1E1E1E] bg-white p-4 flex items-center justify-center rounded-lg">
+                <div className="dark:bg-[#1E1E1E] bg-white p-4 items-center justify-center rounded-lg lg:flex hidden">
                   <Globe
                     className="text-primary dark:text-defaultText"
                     size={22}

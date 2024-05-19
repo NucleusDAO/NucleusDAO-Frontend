@@ -63,7 +63,7 @@ const EachProposalDetails = ({ currentProposal }: IEachProposalDetails) => {
           <h1 className="col-span-2">Value:</h1>
           <p className="col-span-4 overflow-hidden">
             {Number(value)}AE ~{' '}
-            {(Number(value) * (getAEPrice.price || rate)).toFixed(2)}USD
+            {(Number(value) * (getAEPrice?.price || rate))?.toFixed(2)}USD
           </p>
         </div>
       )}
