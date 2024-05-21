@@ -85,7 +85,7 @@ const JoinCommunityForm = () => {
       </Form>
 
       <Dialog onOpenChange={setOpen} open={open}>
-        <DialogContent className="">
+        <DialogContent className="bg-[#1E1E1E] text-white">
           <DialogHeader>
             <DialogDescription className="font-light space-y-3">
               <div className="text-center">
@@ -94,7 +94,7 @@ const JoinCommunityForm = () => {
                   height={150}
                   width={150}
                 />
-                <p className="font-medium dark:text-white pb-2 -mt-2 text-xl text-dark">
+                <p className="font-medium text-white pb-2 -mt-2 text-xl ">
                   {successMessage}
                 </p>
                 <p className="text-sm">

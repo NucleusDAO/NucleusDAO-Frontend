@@ -20,7 +20,6 @@ import Footer from '@/components/footer';
 import MainSection from '@/components/home-component/main-section';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import Link from 'next/link';
-import { DAO_URL } from '@/config/path';
 import { useState } from 'react';
 import { cn } from '@/libs/utils';
 

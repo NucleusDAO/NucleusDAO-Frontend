@@ -63,15 +63,17 @@ const MainSection = () => {
             <Link href={'#join'}>
               <Button className="px-6">Join Now</Button>
             </Link>
-            <div className="flex items-center space-x-2">
-              <div
-                role="button"
-                className="rounded-full w-[40px] h-[40px] flex justify-center items-center border trans border-[#5E5F62B9] bg-[#1E1E1E] hover:border-l-primary hover:border-l"
-              >
-                <PlayIcon />
+            <Link href="#howItWorks">
+              <div className="flex items-center space-x-2">
+                <div
+                  role="button"
+                  className="rounded-full w-[40px] h-[40px] flex justify-center items-center border trans border-[#5E5F62B9] bg-[#1E1E1E] hover:border-l-primary hover:border-l"
+                >
+                  <PlayIcon />
+                </div>
+                <p className="text-sm font-light text-white">How it works</p>
               </div>
-              <p className="text-sm font-light text-white">How it works</p>
-            </div>
+            </Link>
 
             <AEAnimation className="left-0 top-20 w-[56px]" />
           </div>

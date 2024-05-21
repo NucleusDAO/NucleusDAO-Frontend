@@ -29,7 +29,7 @@ const NavComp = ({ open, setOpen }: { open: boolean; setOpen: any }) => {
     <nav className="lg:px-16 items-center block lg:flex lg:py-6 justify-between">
       <div
         className={cn(
-          'flex justify-between items-center lg:backdrop-blur-none lg:backdrop-filter backdrop-blur-md w-full lg:w-fit fixed lg:relative z-10 px-6 lg:px-0',
+          'flex justify-between items-center lg:backdrop-blur-none lg:backdrop-filter backdrop-blur-md w-full lg:w-[10%] fixed lg:relative z-10 px-6 lg:px-0',
           open && 'backdrop-blur-none'
         )}
       >
@@ -50,30 +50,36 @@ const NavComp = ({ open, setOpen }: { open: boolean; setOpen: any }) => {
 
       {(open || isDesktop || screenWidth) && (
         <div
-          className="h-screen lg:h-fit lg:flex justify-between lg:w-[70%] xl-[50%] items-center space-y-5 lg:space-y-0 fixed lg:relative z-10 w-full mt-16 lg:mt-0"
+          className="h-screen lg:h-fit lg:flex ml-3 justify-center lg:w-[90%] xl-[50%] items-center space-y-5 lg:space-y-0 fixed lg:relative z-10 w-[100%] mt-14 lg:mt-0"
           style={{
             background: 'round',
             backgroundImage: `url(${Background.src})`,
           }}
         >
-          <div className="lg:border space-y-5 lg:space-y-0 lg:backdrop-filter lg:backdrop-blur-md pt-12 pb-0 lg:pb-1 lg:pt-1 grid lg:flex lg:fixed trans lg:border-[#5E5F62B9] lg:bg-[#1E1E1E] hover:border-t-primary hover:border-t px-6 lg:px-2 py-2 lg:py-0 lg:rounded-full text-white text-sm font-light lg:space-x-14 items-center lg:ml-3">
-            {navLinks.map((item) => (
-              <Link
-                href={item.href}
-                key={item.title}
-                className={cn(
-                  'trans lg:border lg:border-[#1E1E1E] lg:backdrop-filter lg:backdrop-blur-md hover:border-[#656565B2] rounded-full px-2 lg:px-5 py-2 trans hover:text-primary hover:bg-gradient-to-r from-[#656565B2] via-[#65656533] to-transparent font-normal',
-                  hash === item.href &&
-                    'text-primary bg-gradient-to-r border-[#656565B2]'
-                )}
-                onClick={() => {
-                  setHash(item.href);
-                  setOpen(false);
-                }}
-              >
-                {item.title}
-              </Link>
-            ))}
+          <div
+            className={cn(
+              'sm:w-[75%] base:w-full xl:w-[62%] 2xl:w-[50%] lg:-mt-10'
+            )}
+          >
+            <div className="lg:border space-y-5 lg:space-y-0 lg:backdrop-filter lg:backdrop-blur-md pt-12 pb-0 lg:pb-1 lg:pt-1 grid lg:flex lg:fixed trans lg:border-[#5E5F62B9] lg:bg-[#1E1E1E] hover:border-t-primary hover:border-t px-6 lg:px-2 py-2 lg:py-0 lg:rounded-full text-white text-sm font-light lg:space-x-14 items-center ">
+              {navLinks.map((item) => (
+                <Link
+                  href={item.href}
+                  key={item.title}
+                  className={cn(
+                    'trans lg:border lg:border-[#1E1E1E] lg:backdrop-filter lg:backdrop-blur-md hover:border-[#656565B2] rounded-full px-2 lg:px-5 py-2 trans hover:text-primary hover:bg-gradient-to-r from-[#656565B2] via-[#65656533] to-transparent font-normal',
+                    hash === item.href &&
+                      'text-primary bg-gradient-to-r border-[#656565B2]'
+                  )}
+                  onClick={() => {
+                    setHash(item.href);
+                    setOpen(false);
+                  }}
+                >
+                  {item.title}
+                </Link>
+              ))}
+            </div>
           </div>
           <div
             className={cn(
@@ -87,7 +93,6 @@ const NavComp = ({ open, setOpen }: { open: boolean; setOpen: any }) => {
                 // onClick={() => router.push(DAO_URL)}
               >
                 Join Now
-                {/* Launch DAO */}
               </Button>
             </Link>
           </div>
