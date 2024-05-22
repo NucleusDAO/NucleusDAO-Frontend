@@ -74,23 +74,8 @@ export const EachDaoContextProvider = ({ children }: IAppProvider) => {
     if (urlParts.length >= 4) {
       setError('');
       fetchEachDAO();
-      // (async () => {
-      // try {
-      //   const daos = await getEachDAO(daoId);
-      //   console.log(daos, '-> DAOL');
-      //   setCurrentDAO(daos);
-      //   setIsLoading(false);
-      // } catch (error: any) {
-      //   toast.error(error.message);
-      //   return <ErrorFetchingComponent />;
-      // } finally {
-      //   setIsLoading(false); // Set loading state to false after fetching data
-      // }
-      // })();
     }
   }, [daoId]);
-
-  console.log(currentDAO, '->');
 
   useEffect(() => {
     setIsProposalLoading(true);

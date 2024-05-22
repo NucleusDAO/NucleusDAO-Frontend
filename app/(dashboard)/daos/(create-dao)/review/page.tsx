@@ -22,8 +22,11 @@ import { toast } from 'sonner';
 import { daysToMilliseconds, defaultDaoCreation } from '@/libs/utils';
 import Lottie from 'react-lottie';
 import { defaultSuccessOption } from '@/components/animation-options';
+import { useQueryClient } from '@tanstack/react-query';
+import { NOTIFICATIONS } from '@/libs/key';
 
 const ReviewDao = () => {
+  const queryClient: any = useQueryClient();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isRouting, setIsRouting] = useState<boolean>(false);
@@ -73,6 +76,7 @@ const ReviewDao = () => {
     setIsRouting(true);
     try {
       await fetchDAOs();
+      queryClient.invalidateQueries(NOTIFICATIONS);
       setIsRouting(false);
       router.push(DAO_URL);
     } catch (error: any) {

@@ -156,7 +156,7 @@ const GovernanceSettings = () => {
                   placeholder="0"
                   pattern="[1-9][0-9]*"
                   onChange={({ target }) => {
-                    Number(target.value) < 100 &&
+                    Number(target.value) <= 100 &&
                       handleChangeNumberInput(target.value, setQuorum);
                   }}
                 />

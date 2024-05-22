@@ -4,7 +4,7 @@ import Image from 'next/image';
 import RoundedIcon from '@/assets/icons/roundedIcon.png';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { ApiContext } from '@/context/api-context';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import NotificationLoading from './loading/notification-loading';
 import { formatTimestamp } from '@/libs/utils';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -21,6 +21,7 @@ import { DAO_URL, PROPOSALS_URL } from '@/config/path';
 import { useRouter } from 'next/navigation';
 
 const ViewNotificationPopover = () => {
+  const [open, setOpen] = useState<boolean>(false);
   const router = useRouter();
   const isDesktop = useMediaQuery('(min-width: 768px)');
   const queryClient: any = useQueryClient();
@@ -47,16 +48,14 @@ const ViewNotificationPopover = () => {
     onError: (error: any) => toast.error(error.message),
   });
 
-  console.log(notifications, '-> notifications');
-
   const handleView = async (notification: {
     extra: { daoId: string; proposalId: string };
     id: string;
     read: boolean;
     title: string;
   }) => {
-    if (notification.read) {
-      await mutateSingleNotification(notification.id);
+    if (!notification.read) {
+      mutateSingleNotification(notification.id);
     }
     router.push(
       notification.title === 'New DAO Created'
@@ -65,10 +64,11 @@ const ViewNotificationPopover = () => {
         ? `${PROPOSALS_URL}/${notification.extra.proposalId}?dao=${notification.extra.daoId}`
         : '#'
     );
+    setOpen(false);
   };
 
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <div
           className="dark:bg-[#1E1E1E] bg-white h-11 w-12 justify-center rounded-lg flex items-center relative dark:text-white text-[#444444]"

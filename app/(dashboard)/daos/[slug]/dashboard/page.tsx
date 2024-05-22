@@ -2,11 +2,10 @@
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { dashboardTab, tabView } from './config';
 import { useContext, useState } from 'react';
-import { cn, percentageChangeRate } from '@/libs/utils';
+import { cn, convertCurrency, percentageChangeRate } from '@/libs/utils';
 import { ApiContext } from '@/context/api-context';
 import { EachDaoContext } from '@/context/each-dao-context';
 import { rate } from '@/config/dao-config';
-import { prefixedAmount } from '@aeternity/aepp-sdk';
 
 const EachDaoDashboard = () => {
   const [selectedTab, setSelectTab] = useState<number>(0);
@@ -14,11 +13,7 @@ const EachDaoDashboard = () => {
   const { currentDAO, memberHistory, proposalHistory, fundsHistory } =
     useContext(EachDaoContext);
 
-  const currentBalance = prefixedAmount(currentDAO?.balance).replace(
-    ' exa',
-    ''
-  );
-  const usdValue: number = Number(currentBalance) * (getAEPrice?.price || rate);
+  const price = Number(getAEPrice?.price || rate);
 
   const membersRate = percentageChangeRate(memberHistory);
   const proposalRate = percentageChangeRate(proposalHistory);
@@ -28,8 +23,8 @@ const EachDaoDashboard = () => {
     <div className="md:flex space-x-0 md:space-x-8 space-y-4 md:space-y-0">
       <div className="md:w-[25%] space-y-4">
         {dashboardTab({
-          aeAmount: currentBalance,
-          usdAmount: parseFloat(usdValue.toFixed(3)),
+          aeAmount: convertCurrency(currentDAO?.balance, price).ae,
+          usdAmount: convertCurrency(currentDAO?.balance, price).usd,
           totalProposals: Number(currentDAO?.totalProposals),
           totalMembers: currentDAO?.members.length,
           percentageIncreaseForFunds: fundsRate,

@@ -33,8 +33,6 @@ const DaoConfigurationWrapper = ({ children }: IDaoConfigurationWrapper) => {
   const daoId = urlParts[2];
   const [open, setOpen] = useState(false);
 
-  console.log(isMember, 'isMember');
-
   return (
     <div className="space-y-5">
       <div className="flex justify-between items-center">

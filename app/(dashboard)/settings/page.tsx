@@ -76,7 +76,6 @@ const Profile = () => {
         formData.append('file', data.profilePicture);
         formData.append('upload_preset', 'bqr7mcvh');
         const fileUpload = await uploadFile(formData);
-        console.log(fileUpload, '-> uplpad');
         profilePicture = fileUpload.data.url;
       }
       const updatedData = { ...data, profilePicture, address, theme: 'dark' };
