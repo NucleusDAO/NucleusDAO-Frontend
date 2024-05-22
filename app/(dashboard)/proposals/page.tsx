@@ -39,8 +39,6 @@ const Proposals = () => {
     replace(`${pathname}?${params.toString()}`);
   }, 200);
 
-  console.log(proposalLists.find((proposal) => proposal.type === 'addMember'));
-
   useEffect(() => {
     if (search) {
       setAllProposal(

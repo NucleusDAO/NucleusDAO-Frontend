@@ -2,6 +2,7 @@ import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { IProposal } from './types';
 import { IDAO } from '@/context/each-dao-context';
+import { rate } from '@/config/dao-config';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -259,7 +260,6 @@ export const updateGetProposal = async ({
     })
   );
   const members = await getUsersActivities(dao.contractAddress);
-  console.log({ members });
   setMembersActivities(members);
 };
 
@@ -386,7 +386,6 @@ export const capitalizeFirstLetter = (str: string) => {
 export const percentageChangeRate = (data: any) => {
   const lastValue = Number(data[data.length - 1]?.value) || 0;
   const secontToLastValue = Number(data[data.length - 2]?.value) || 0;
-  console.log(lastValue, secontToLastValue, '>');
   let percentageChange: number;
   if (secontToLastValue !== 0) {
     const difference = lastValue - secontToLastValue;
@@ -395,4 +394,15 @@ export const percentageChangeRate = (data: any) => {
     percentageChange = 0;
   }
   return percentageChange;
+};
+
+export const convertCurrency = (amount: number, price: number) => {
+  const formatAmount = Number(amount);
+  const ae = Number(formatAmount) / Number(1000000000000000000);
+
+  // Convert the result to a floating point number
+  const aeFloat: number = Number(ae);
+
+  const usdValue: number = aeFloat * Number(price || rate);
+  return { ae: aeFloat, usd: usdValue.toFixed(5) };
 };

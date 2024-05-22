@@ -1,10 +1,7 @@
-import { EachDaoContext } from '@/context/each-dao-context';
-import { useContext } from 'react';
-
 export const ValidateProposalForm: any = {
   0: ({ form }: any) => validateTransfer({ form }),
-  1: ({ form }: any) => validateMember({ form }),
-  2: ({ form }: any) => validateMember({ form }),
+  1: ({ form, daoMembers }: any) => validateMember({ form, daoMembers }),
+  2: ({ form, daoMembers }: any) => validateMember({ form, daoMembers }),
   3: ({ form }: any) => validateChangeVotingTime({ form }),
   4: ({ form }: any) => validateChangeQuorum({ form }),
   5: ({ form }: any) => validateChangeDAOName({ form }),
@@ -57,8 +54,6 @@ export const validateMember = ({
 }) => {
   const targetWallet = form.getValues('targetWallet');
   const type: number = Number(form.getValues('type'));
-  console.log(daoMembers?.includes(targetWallet), '->daoMembers');
-  console.log(type, '0type');
 
   if (
     (type === 9 || type === 1) &&
@@ -166,7 +161,6 @@ export const validateChangeDAOLogo = ({ form }: any) => {
 };
 
 export const validateChangeSocialMedia = ({ form }: any) => {
-  console.log(form.getValues('socialMedia'));
   const socialMedia = form.getValues('socialMedia');
 
   const isEmptySocialMediaLink = socialMedia.some(

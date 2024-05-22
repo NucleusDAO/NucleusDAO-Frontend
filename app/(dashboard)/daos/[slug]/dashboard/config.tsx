@@ -10,7 +10,7 @@ interface ITabView {
 
 interface IDashboardTab {
   aeAmount: number | string;
-  usdAmount: number;
+  usdAmount: number | string;
   totalProposals: number;
   totalMembers: number;
   percentageIncreaseForMembers: number;
@@ -30,7 +30,7 @@ const dashboardTab = ({
   title: string;
   id: string;
   rate: number;
-  amount: number;
+  amount: number | string;
   value?: string;
   increase: boolean;
   icon: ReactNode;

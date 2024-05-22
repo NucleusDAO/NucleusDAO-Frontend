@@ -30,11 +30,7 @@ import {
   millisecondsToDays,
   wait,
 } from '@/libs/utils';
-import { EachDaoContext } from '@/context/each-dao-context';
-import {
-  ValidateProposalForm,
-  // validateInfo,
-} from '@/libs/validations/validate-create-proposal';
+import { ValidateProposalForm } from '@/libs/validations/validate-create-proposal';
 
 const CreateNewProposalForm = () => {
   const [routing, setRouting] = useState<boolean>(false);
@@ -71,7 +67,6 @@ const CreateNewProposalForm = () => {
 
   useEffect(() => {
     const subscription = form.watch((value, { name, type }) => {
-      console.log(name, '-> name');
       let updatedData;
       // Remove previous selected information
       if (name === 'type') {
@@ -81,8 +76,6 @@ const CreateNewProposalForm = () => {
           JSON.stringify({ value: updatedData })
         );
         setNewProposalInfo({ value: updatedData });
-
-        console.log(updatedData, '-> upd');
       } else {
         const updatedData = { ...newProposalInfo, value };
         localStorage.setItem('new_proposal', JSON.stringify(updatedData));
@@ -94,6 +87,7 @@ const CreateNewProposalForm = () => {
 
   const onSubmit = async (data: any) => {
     const currentType = Number(form.getValues('type'));
+
     if (ValidateProposalForm[currentType]({ form, daoMembers })) {
       setRouting(true);
       wait().then(() => {
@@ -102,8 +96,6 @@ const CreateNewProposalForm = () => {
       });
     }
   };
-
-  console.log(daoMembers, '->daoMembers');
 
   return (
     <Form {...form}>

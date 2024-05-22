@@ -125,7 +125,6 @@ const EquivalentValueFormField = ({ form }: { form: any }) => {
     }
   };
 
-  console.log(getAEPrice, '->');
   return (
     <FormField
       control={form.control}

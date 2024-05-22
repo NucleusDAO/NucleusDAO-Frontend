@@ -6,7 +6,7 @@ import { columns } from './columns';
 import { data } from './data';
 import { IConnectWalletContext } from '@/libs/types';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import { usePathname } from 'next/navigation';
 import { EachDaoContext } from '@/context/each-dao-context';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
@@ -14,9 +14,9 @@ import { toast } from 'sonner';
 import DepositToken from '@/components/deposit-token';
 import { ApiContext } from '@/context/api-context';
 import { rate } from '@/config/dao-config';
-import { prefixedAmount } from '@aeternity/aepp-sdk';
 import EachDaoLoading from '@/components/loading/each-dao-loading';
 import ErrorFetchingComponent from '@/components/error-fetching-comp';
+import { convertCurrency } from '@/libs/utils';
 
 const EachDaoFunds = () => {
   const pathname = usePathname();
@@ -36,8 +36,7 @@ const EachDaoFunds = () => {
   const updatedUrl = pathname.substring(0, lastIndex);
   const userURL: string = `${domainName}${updatedUrl}`;
 
-  const currentBalance = prefixedAmount(currentDAO.balance).replace(' exa', '');
-  const usdValue: number = Number(currentBalance) * (getAEPrice?.price || rate);
+  const price: number = getAEPrice?.price || rate;
 
   if (isLoadingTransactionHistory) return <EachDaoLoading />;
   if (isTransactionHistoryError)
@@ -66,7 +65,7 @@ const EachDaoFunds = () => {
                 <div className="space-y-1.5">
                   <div className="flex space-x-2 items-center">
                     <p className="dark:text-white text-dark font-bold text-2xl">
-                      {usdValue.toFixed(3)}{' '}
+                      {convertCurrency(currentDAO?.balance, price).usd}{' '}
                       <span className="text-xs font-light">USD</span>
                     </p>
 
@@ -76,7 +75,7 @@ const EachDaoFunds = () => {
                     </div>
                   </div>
                   <p className="text-[#888888] text-xs font-light">
-                    {`~${Number(currentBalance).toFixed(2)}AE`}
+                    {`~${convertCurrency(currentDAO?.balance, price).ae}AE`}
                   </p>
                 </div>
               </div>
