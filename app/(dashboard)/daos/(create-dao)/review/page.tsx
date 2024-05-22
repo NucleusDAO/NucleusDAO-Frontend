@@ -156,7 +156,7 @@ const ReviewDao = () => {
           <p className="dark:text-white text-dark">Members</p>
 
           <p className="text-defaultText">{`${
-            newDaoInfo.members[0].address ? newDaoInfo.members.length : '1'
+            newDaoInfo.members[0].address ? newDaoInfo.members.length + 1 : '1'
           } wallet address(es)`}</p>
         </div>
       </div>

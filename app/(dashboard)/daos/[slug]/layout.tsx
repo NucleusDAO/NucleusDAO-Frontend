@@ -107,7 +107,7 @@ const Layout = ({ children }: ILayout) => {
         )}
       </div>
 
-      <div className="h-[72vh] overflow-y-auto overflow-x-hidden pt-6 pr-4">
+      <div className="min-h-[72vh] overflow-y-hidden overflow-x-hidden pt-6 pr-4">
         <div className="space-y-8">
           <div className="space-y-6">
             <div className="lg:flex items-center justify-between">
