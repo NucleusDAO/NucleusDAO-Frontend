@@ -386,12 +386,13 @@ export const capitalizeFirstLetter = (str: string) => {
 export const percentageChangeRate = (data: any) => {
   const lastValue = Number(data[data.length - 1]?.value) || 0;
   const secontToLastValue = Number(data[data.length - 2]?.value) || 0;
+  console.log(lastValue, secontToLastValue, '>');
   let percentageChange: number;
   if (secontToLastValue !== 0) {
     const difference = lastValue - secontToLastValue;
     percentageChange = (difference / Math.abs(secontToLastValue)) * 100;
   } else {
-    percentageChange = 100;
+    percentageChange = 0;
   }
   return percentageChange;
 };

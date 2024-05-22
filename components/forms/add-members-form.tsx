@@ -16,7 +16,7 @@ import { Input } from '@/components/ui/input';
 import { defineMembershipSchema } from '@/libs/validations/dao-schema';
 import { MoveLeft, Plus, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { GOVERNANCE_SETTINGS_URL } from '@/config/path';
+import { DAO_INFO_URL, GOVERNANCE_SETTINGS_URL } from '@/config/path';
 import { useContext, useEffect, useState } from 'react';
 import { AppContext } from '@/context/app-context';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
@@ -25,6 +25,7 @@ import { wait } from '@/libs/utils';
 
 const AddMemberForm = () => {
   const [isPending, setIsPending] = useState<boolean>(false);
+  const [isBack, setIsBack] = useState<boolean>(false);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { updateNewDaoInfo, newDaoInfo } = useContext(AppContext);
   const router = useRouter();
@@ -100,6 +101,14 @@ const AddMemberForm = () => {
     });
     return () => subscription.unsubscribe();
   }, [form.watch]);
+
+  const handleBack = () => {
+    setIsBack(true);
+    wait().then(() => {
+      router.push(DAO_INFO_URL);
+      setIsBack(false);
+    });
+  };
 
   const onSubmit = async (data: any) => {
     const isEmptyAddress = data.members.some(
@@ -186,7 +195,8 @@ const AddMemberForm = () => {
           <Button
             type="button"
             className="dark:bg-[#1E1E1E] bg-light dark:hover:bg-[#262525] hover:bg-light text-[#444444] dark:text-defaultText"
-            onClick={() => router.back()}
+            onClick={handleBack}
+            loading={isBack}
           >
             <MoveLeft size={20} />
           </Button>

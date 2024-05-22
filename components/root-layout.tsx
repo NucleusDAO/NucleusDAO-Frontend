@@ -40,7 +40,7 @@ export const RootLayoutsComponent = ({ children }: IRootLayouts) => {
                   className={cn(
                     'md:mx-6 p-6 rounded-lg dark:bg-foreground bg-light mt-20 overflow-auto max-w-[1600px]',
                     showNav && 'fixed',
-                    isDesktop && 'min-h-screen'
+                    isDesktop && 'min-h-screen overflow-y-hidden'
                   )}
                 >
                   {children}
