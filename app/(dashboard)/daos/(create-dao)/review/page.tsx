@@ -19,7 +19,11 @@ import { IConnectWalletContext } from '@/libs/types';
 import { AppContext } from '@/context/app-context';
 import { uploadFile } from '@/config/apis';
 import { toast } from 'sonner';
-import { daysToMilliseconds, defaultDaoCreation } from '@/libs/utils';
+import {
+  convertDays,
+  daysToMilliseconds,
+  defaultDaoCreation,
+} from '@/libs/utils';
 import Lottie from 'react-lottie';
 import { defaultSuccessOption } from '@/components/animation-options';
 import { useQueryClient } from '@tanstack/react-query';
@@ -171,7 +175,9 @@ const ReviewDao = () => {
         </h1>
         <div className="grid grid-cols-2 text-xs md:text-sm md:w-4/6">
           <p className="dark:text-white text-dark">Duration</p>
-          <p className="text-defaultText">{`${newDaoInfo.duration} day(s)`}</p>
+          <p className="text-defaultText">
+            {convertDays(Number(newDaoInfo.duration))}
+          </p>
         </div>
         <div className="grid grid-cols-2 text-xs md:text-sm md:w-4/6">
           <p className="dark:text-white text-dark">Voting threshold</p>

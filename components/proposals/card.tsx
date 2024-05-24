@@ -90,8 +90,8 @@ const ProposalCard = ({
                 </div>
                 <div>{EachStatus[status]}</div>
               </div>
-              <p className="text-defaultText text-xs md:text-sm min-h-[50px] max-h-[50px] overflow-auto">
-                {capitalizeFirstLetter(description.slice(0, 300))}
+              <p className="text-defaultText multiline-truncate h-9 text-ellipsis overflow-hidden text-xs md:text-sm min-h-[50px] max-h-[50px]">
+                {capitalizeFirstLetter(description)}
               </p>
             </div>
             <div className="space-y-3">

@@ -39,9 +39,9 @@ const DaoCard = ({
         </div>
       </div>
       <Link href={url}>
-        <div className="space-y-7">
-          <div className="text-defaultText h-9">
-            <p className="font-light text-sm">
+        <div className="space-y-4">
+          <div className="text-defaultText h-9 text-ellipsis overflow-hidden">
+            <p className="font-light text-sm multiline-truncate">
               {capitalizeFirstLetter(description)}
             </p>
           </div>

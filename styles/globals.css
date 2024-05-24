@@ -129,3 +129,10 @@ input[type="number"]::-webkit-outer-spin-button {
 .main-animate-fade-in-out {
   animation: mainFadeInOut 15s infinite;
 }
+
+.multiline-truncate {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

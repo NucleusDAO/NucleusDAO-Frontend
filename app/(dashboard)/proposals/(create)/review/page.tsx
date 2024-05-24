@@ -1,6 +1,6 @@
 'use client';
 import { proposalLists, rate } from '@/config/dao-config';
-import { defaultProposal } from '@/libs/utils';
+import { convertDays, defaultProposal } from '@/libs/utils';
 import {
   AlertDialog,
   AlertDialogContent,
@@ -186,7 +186,9 @@ const ReviewProposal = () => {
         {value.duration && (
           <div className="grid grid-cols-2 text-sm w-4/6">
             <p className="dark:text-white text-dark">Duration</p>
-            <p className="dark:text-[#888888] text-dark">{`${value.duration} day(s)`}</p>
+            <p className="dark:text-[#888888] text-dark">
+              {convertDays(Number(value.duration))}
+            </p>
           </div>
         )}
         {value.maximum && (
