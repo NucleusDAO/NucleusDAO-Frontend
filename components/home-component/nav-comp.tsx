@@ -58,7 +58,7 @@ const NavComp = ({ open, setOpen }: { open: boolean; setOpen: any }) => {
         >
           <div
             className={cn(
-              'sm:w-[75%] base:w-full xl:w-[62%] 2xl:w-[50%] lg:-mt-10'
+              'sm:w-[42%] base:w-full xl:w-[35%] 2xl:w-[30%] lg:-mt-10'
             )}
           >
             <div className="lg:border space-y-5 lg:space-y-0 lg:backdrop-filter lg:backdrop-blur-md pt-12 pb-0 lg:pb-1 lg:pt-1 grid lg:flex lg:fixed trans lg:border-[#5E5F62B9] lg:bg-[#1E1E1E] hover:border-t-primary hover:border-t px-6 lg:px-2 py-2 lg:py-0 lg:rounded-full text-white text-sm font-light lg:space-x-14 items-center ">

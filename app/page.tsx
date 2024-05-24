@@ -36,7 +36,7 @@ export default function Home() {
       <main
         className={cn(
           'bg-contain bg-no-repeat',
-          screenWidth ? 'min-h-[40vh]' : 'w-full min-h-[90vh] lg:min-h-[105vh]'
+          screenWidth ? 'min-h-[40vh]' : 'w-full min-h-[0vh] lg:min-h-[105vh]'
         )}
         style={{
           background: 'round',
@@ -44,7 +44,33 @@ export default function Home() {
         }}
       >
         <NavComp open={open} setOpen={setOpen} />
-        <MainSection />
+        {/* <MainSection /> */}
+        {/* Join Us */}
+        <section
+          className="space-y-8 pt-24 lg:pt-0 lg:mt-16 flex-grow px-10 lg:px-0"
+          id="contactUs"
+        >
+          <div
+            className="border border-[#5E5F62B9] mx-auto text-sm bg-gradient-to-r from-[#44444433] to-[#65656533] px-6 py-2 rounded-[20px] w-fit text-[#9050E9]"
+            role="heading"
+          >
+            <h2>Subscribe to our newsletter</h2>
+          </div>
+          <div className="space-y-8 w-full lg:w-[65%] text-center mx-auto">
+            <Heading
+              title="Join the Early Community"
+              className="lg:text-center"
+            />
+            <p className="font-light px-6 lg:px-12 lg:text-normal text-sm">
+              Be among the first to shape the future of decentralized
+              governance. Sign up now for exclusive access to updates, insights,
+              and a chance to participate in our launch.
+            </p>
+            <div className="w-full lg:w-[60%] mx-auto relative">
+              <JoinCommunityForm />
+            </div>
+          </div>
+        </section>
         <div className="text-center mx-auto">
           <Lottie
             options={defaultProposalOption}
@@ -53,6 +79,7 @@ export default function Home() {
           />
         </div>
       </main>
+
       <section
         className={cn(
           'bg-cover bg-no-repeat w-full p-12 lg:p-24 space-y-4 lg:space-y-8',
@@ -79,14 +106,14 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="border border-[#656565] py-8 px-6 lg:px-14 rounded-[20px] bg-gradient-to-r from-[#1E1E1E33] to-[#19191933] lg:flex-row flex-col-reverse flex justify-between items-center">
+        {/* <div className="border border-[#656565] py-8 px-6 lg:px-14 rounded-[20px] bg-gradient-to-r from-[#1E1E1E33] to-[#19191933] lg:flex-row flex-col-reverse flex justify-between items-center">
           <div className="space-y-4 lg:space-y-8 lg:pl-16">
             <h2 className="text-white font-medium text-[24px] lg:text-[28px] w-full xl:w-[60%] mt-4 lg:mt-0">
               Launch your DAO with an Inclusive Builder
             </h2>
 
             <Button className="px-8 h-9" id="features">
-              <Link href={'/#join'}>Launch your DAO</Link>
+              <Link href={'/#join'}>Join our waiting list</Link>
             </Button>
           </div>
           <Image
@@ -94,9 +121,14 @@ export default function Home() {
             alt="Nucleus DAO Template"
             width={450}
           />
-        </div>
+        </div> */}
       </section>
-      <section
+
+      <div className="lg:mt-auto mb-10 mt-20 w-full px-6 lg:px-24">
+        <Footer />
+      </div>
+
+      {/* <section
         className={cn('w-full space-y-6', screenWidth ? '' : 'lg:-mt-32')}
       >
         <div
@@ -119,9 +151,9 @@ export default function Home() {
 
       <section className="px-6 lg:px-24 pt-16 w-full lg:mt-20">
         <FeaturesComp />
-      </section>
+      </section> */}
 
-      <section
+      {/* <section
         style={{
           background: 'round',
           backgroundImage: `url(${HowItWorksBackground.src})`,
@@ -148,9 +180,9 @@ export default function Home() {
         </div>
 
         <HowItWorks />
-      </section>
+      </section> */}
 
-      <section
+      {/* <section
         style={{
           background: 'round',
           backgroundImage: `url(${SectionFourBackground.src})`,
@@ -168,9 +200,9 @@ export default function Home() {
         </div>
 
         <WhyAeternity />
-      </section>
+      </section> */}
 
-      <div
+      {/* <div
         className={cn(
           'flex flex-col bg-cover lg:bg-contain bg-no-repeat w-full px-6 lg:px-24 pb-5 ',
           Number(currentWidth) < 1440 ? 'lg:min-h-[10%]' : 'lg:min-h-[90vh]'
@@ -209,7 +241,7 @@ export default function Home() {
         <div className="lg:mt-auto mt-20">
           <Footer />
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }
