@@ -340,6 +340,17 @@ function formatTime(milliseconds: number): string {
 
 //   return `${daysLeft}d:${hoursLeft}h:${minutesLeft}m:${secondsLeft}s`;
 // }
+
+export function convertDays(days: number) {
+  const totalSeconds = days * 24 * 60 * 60;
+  const d = Math.floor(totalSeconds / (24 * 60 * 60));
+  const h = Math.floor((totalSeconds % (24 * 60 * 60)) / (60 * 60));
+  const m = Math.floor((totalSeconds % (60 * 60)) / 60);
+  const s = totalSeconds % 60;
+
+  return `${d}d:${h}h:${m}m:${s.toFixed(0)}s`;
+}
+
 export function getTimeDifference(
   timestamp: string | number,
   setCountdownString: (arg: string) => void

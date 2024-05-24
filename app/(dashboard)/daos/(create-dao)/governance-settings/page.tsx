@@ -100,10 +100,7 @@ const GovernanceSettings = () => {
             type="number"
             className="border-none bg-white dark:bg-[#191919] w-fit text-center "
             placeholder="0"
-            pattern="[1-9][0-9]*"
-            onChange={({ target }) =>
-              handleChangeNumberInput(target.value, setDays)
-            }
+            onChange={({ target }) => setDays(target.value)}
           />
           <div
             className="bg-[#D2D2D2] hover:bg-[#dddada] dark:bg-[#1E1E1E] rounded-lg py-2 px-2 dark:hover:bg-[#2a2a2a] trans"
