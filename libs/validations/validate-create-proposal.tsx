@@ -1,14 +1,14 @@
 export const ValidateProposalForm: any = {
   0: ({ form }: any) => validateTransfer({ form }),
-  1: ({ form }: any) => validateMember({ form }),
-  2: ({ form }: any) => validateMember({ form }),
+  1: ({ form, daoMembers }: any) => validateMember({ form, daoMembers }),
+  2: ({ form, daoMembers }: any) => validateMember({ form, daoMembers }),
   3: ({ form }: any) => validateChangeVotingTime({ form }),
   4: ({ form }: any) => validateChangeQuorum({ form }),
   5: ({ form }: any) => validateChangeDAOName({ form }),
   6: ({ form }: any) => validateChangeDAOLogo({ form }),
   7: ({ form }: any) => validateChangeSocialMedia({ form }),
   8: ({ form }: any) => validateCustom({ form }),
-  9: ({ form }: any) => validateMember({ form }),
+  9: ({ form, daoMembers }: any) => validateMember({ form, daoMembers }),
 };
 
 export const validateTransfer = ({ form }: any) => {
@@ -45,25 +45,54 @@ export const validateTransfer = ({ form }: any) => {
   }
 };
 
-export const validateMember = ({ form }: any) => {
+export const validateMember = ({
+  form,
+  daoMembers,
+}: {
+  form: any;
+  daoMembers?: string[];
+}) => {
   const targetWallet = form.getValues('targetWallet');
+  const type: number = Number(form.getValues('type'));
+
+  if (
+    (type === 9 || type === 1) &&
+    daoMembers &&
+    daoMembers.includes(targetWallet)
+  ) {
+    form.setError('targetWallet', {
+      type: 'onChange',
+      message: 'Member already exist in this DAO',
+    });
+    return false;
+  }
+
+  if (type === 2 && !targetWallet.includes(daoMembers)) {
+    form.setError('targetWallet', {
+      type: 'onChange',
+      message: 'Member does not exist in this DAO',
+    });
+    return false;
+  }
+
+  if (targetWallet.length < 51 || targetWallet.length > 53) {
+    form.setError('targetWallet', {
+      type: 'onChange',
+      message: 'Wallet address must be between 51 - 53 characters',
+    });
+    return false;
+  }
+
+  if (targetWallet.length < 51 || targetWallet.length > 53) {
+    form.setError('targetWallet', {
+      type: 'onChange',
+      message: 'Wallet address must be between 51 - 53 characters',
+    });
+    return false;
+  }
 
   if (targetWallet.length >= 51 && targetWallet.length <= 53) {
     return true;
-  }
-  if (targetWallet.length < 51 || targetWallet.length > 53) {
-    form.setError('targetWallet', {
-      type: 'onChange',
-      message: 'Wallet address must be between 51 - 53 characters',
-    });
-    return false;
-  }
-  if (targetWallet.length < 51 || targetWallet.length > 53) {
-    form.setError('targetWallet', {
-      type: 'onChange',
-      message: 'Wallet address must be between 51 - 53 characters',
-    });
-    return false;
   }
 };
 
@@ -132,7 +161,6 @@ export const validateChangeDAOLogo = ({ form }: any) => {
 };
 
 export const validateChangeSocialMedia = ({ form }: any) => {
-  console.log(form.getValues('socialMedia'));
   const socialMedia = form.getValues('socialMedia');
 
   const isEmptySocialMediaLink = socialMedia.some(

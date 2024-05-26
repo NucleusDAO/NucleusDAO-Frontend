@@ -6,9 +6,7 @@ import {
   UpdateSocialsFormField,
   UploadFileFormField,
 } from '@/components/proposals/proposal-form-element';
-import { EachDaoContext } from '@/context/each-dao-context';
-import { formatTimestamp, millisecondsToDays } from '@/libs/utils';
-import React, { FC, useContext } from 'react';
+import React, { FC } from 'react';
 
 export const ProposalTransfer = ({ form }: { form: any }) => {
   return (
@@ -29,10 +27,6 @@ export const ProposalTransfer = ({ form }: { form: any }) => {
 };
 
 export const ProposeToChangeVotingTime = ({ form }: { form: any }) => {
-  const { currentDAO } = useContext(EachDaoContext);
-  const initialDuration = millisecondsToDays(Number(currentDAO?.votingTime));
-  console.log(currentDAO, '->');
-  console.log(millisecondsToDays(Number(currentDAO?.votingTime)));
   return (
     <>
       <div className="grid grid-cols-2 gap-6">

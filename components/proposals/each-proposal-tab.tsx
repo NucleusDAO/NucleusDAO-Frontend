@@ -159,7 +159,6 @@ const EachFilterTab = ({
                 </div>
               </div>
             )}
-            {console.log(proposalData, '-> data, d,m')}
             <div className="grid md:grid-cols-2 gap-6">
               {proposalData?.map((proposal) => (
                 <ProposalCard key={proposal.status} {...proposal} />

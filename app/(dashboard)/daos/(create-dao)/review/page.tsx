@@ -19,11 +19,18 @@ import { IConnectWalletContext } from '@/libs/types';
 import { AppContext } from '@/context/app-context';
 import { uploadFile } from '@/config/apis';
 import { toast } from 'sonner';
-import { daysToMilliseconds, defaultDaoCreation } from '@/libs/utils';
+import {
+  convertDays,
+  daysToMilliseconds,
+  defaultDaoCreation,
+} from '@/libs/utils';
 import Lottie from 'react-lottie';
 import { defaultSuccessOption } from '@/components/animation-options';
+import { useQueryClient } from '@tanstack/react-query';
+import { NOTIFICATIONS } from '@/libs/key';
 
 const ReviewDao = () => {
+  const queryClient: any = useQueryClient();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isRouting, setIsRouting] = useState<boolean>(false);
@@ -73,6 +80,7 @@ const ReviewDao = () => {
     setIsRouting(true);
     try {
       await fetchDAOs();
+      queryClient.invalidateQueries(NOTIFICATIONS);
       setIsRouting(false);
       router.push(DAO_URL);
     } catch (error: any) {
@@ -156,7 +164,7 @@ const ReviewDao = () => {
           <p className="dark:text-white text-dark">Members</p>
 
           <p className="text-defaultText">{`${
-            newDaoInfo.members[0].address ? newDaoInfo.members.length : '1'
+            newDaoInfo.members[0].address ? newDaoInfo.members.length + 1 : '1'
           } wallet address(es)`}</p>
         </div>
       </div>
@@ -167,7 +175,9 @@ const ReviewDao = () => {
         </h1>
         <div className="grid grid-cols-2 text-xs md:text-sm md:w-4/6">
           <p className="dark:text-white text-dark">Duration</p>
-          <p className="text-defaultText">{`${newDaoInfo.duration} day(s)`}</p>
+          <p className="text-defaultText">
+            {convertDays(Number(newDaoInfo.duration))}
+          </p>
         </div>
         <div className="grid grid-cols-2 text-xs md:text-sm md:w-4/6">
           <p className="dark:text-white text-dark">Voting threshold</p>

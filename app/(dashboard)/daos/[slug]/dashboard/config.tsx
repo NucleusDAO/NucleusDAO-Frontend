@@ -10,9 +10,12 @@ interface ITabView {
 
 interface IDashboardTab {
   aeAmount: number | string;
-  usdAmount: number;
+  usdAmount: number | string;
   totalProposals: number;
   totalMembers: number;
+  percentageIncreaseForMembers: number;
+  percentageIncreaseForFunds: number;
+  percentageIncreaseForProposals: number;
 }
 
 const dashboardTab = ({
@@ -20,12 +23,16 @@ const dashboardTab = ({
   usdAmount = 0,
   totalProposals,
   totalMembers,
+  percentageIncreaseForFunds,
+  percentageIncreaseForProposals,
+  percentageIncreaseForMembers,
 }: IDashboardTab): {
   title: string;
   id: string;
-  amount: number;
+  rate: number;
+  amount: number | string;
   value?: string;
-  increase: string;
+  increase: boolean;
   icon: ReactNode;
 }[] => [
   {
@@ -33,21 +40,24 @@ const dashboardTab = ({
     id: '01',
     amount: usdAmount,
     value: `~ ${aeAmount} AE`,
-    increase: '1%',
+    rate: percentageIncreaseForFunds,
+    increase: false,
     icon: <CoinIcon size="32" />,
   },
   {
     title: 'Proposals',
     amount: totalProposals,
     id: '02',
-    increase: '2.2%',
+    rate: percentageIncreaseForProposals,
+    increase: false,
     icon: <ProposalIcon size="32" />,
   },
   {
     title: 'Members',
     amount: totalMembers,
     id: '03',
-    increase: '1.5%',
+    rate: percentageIncreaseForMembers,
+    increase: percentageIncreaseForMembers < 0 ? false : true,
     icon: <MemebersIcon size="32" />,
   },
 ];

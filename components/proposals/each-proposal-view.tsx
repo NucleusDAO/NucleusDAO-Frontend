@@ -52,12 +52,6 @@ const EachProposalView = ({
     getTimeDifference(currentProposal.endTime, setCountdownTime);
   }, [currentProposal.endTime]);
 
-  console.log(eachDAOProposal, '-> eachDAOProposal');
-  console.log(currentProposal, '-> current proposal');
-  console.log(currentDAO, 'currentDAO');
-
-  console.log(userVote, '->');
-
   const tabViews: IEachTabView = {
     Result: (
       <ProposalResult
@@ -76,7 +70,7 @@ const EachProposalView = ({
 
   return (
     <div className="space-y-6">
-      <h1 className="dark:text-white font-medium text-xl md:text-3xl pt-6 text-dark">
+      <h1 className="dark:text-white text-dark font-medium text-xl md:text-3xl pt-6">
         {
           proposalLists.find(
             (proposal: { type: string }) =>
@@ -84,17 +78,19 @@ const EachProposalView = ({
           )?.title
         }
       </h1>
-      <div className="flex space-x-3 items-center">
+      <div className="lg:flex space-x-3 items-center">
         <p className="font-light text-sm text-[#888888]">Published by</p>
-        <Image
-          src={RoundedIcon}
-          alt="logo"
-          width={isDesktop ? 20 : 16}
-          height={isDesktop ? 20 : 16}
-        />
-        <p className="font-light text-xs md:text-sm dark:text-white text-dark">
-          {currentProposal?.wallet || currentProposal?.proposer}
-        </p>
+        <div className="flex space-x-3 py-2 lg:py-0">
+          <Image
+            src={RoundedIcon}
+            alt="logo"
+            width={isDesktop ? 20 : 16}
+            height={isDesktop ? 20 : 16}
+          />
+          <p className="font-light text-xs md:text-sm dark:text-white text-dark truncate">
+            {currentProposal?.wallet || currentProposal?.proposer}
+          </p>
+        </div>
       </div>
       <div className="space-y-4">
         <p className="text-xs md:text-sm text-defaultText">

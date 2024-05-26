@@ -31,7 +31,7 @@ interface IData {
 const EachDaoMembers = () => {
   const router = useRouter();
   const pathname = usePathname();
-  const { getUsersActivities, getAllUsersActivities } = useContext(AppContext);
+  const { getAllUsersActivities } = useContext(AppContext);
   const { membersActivities, isMember, currentDAO, memberLoading } =
     useContext(EachDaoContext);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
@@ -43,21 +43,10 @@ const EachDaoMembers = () => {
   const getNewProposalInfo =
     typeof window !== 'undefined' && localStorage.getItem('new_proposal');
 
-  const removeExistingProposal = () => {
-    if (getNewProposalInfo) {
-      localStorage.removeItem('new_proposal');
-    }
-  };
-
   useEffect(() => {
     const fetchMembers = async () =>
       await getAllUsersActivities(currentDAO.contractAddress);
-    console.log(
-      fetchMembers().then((res) => console.log(res)),
-      'fetch memebrs'
-    );
   }, []);
-  console.log(currentDAO, '-> currentDAO');
 
   useEffect(() => {
     if (membersActivities) {

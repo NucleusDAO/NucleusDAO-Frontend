@@ -12,6 +12,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { convertCurrency } from '@/libs/utils';
 
 interface IEachProposalDetails {
   currentProposal: {
@@ -35,6 +36,7 @@ const EachProposalDetails = ({ currentProposal }: IEachProposalDetails) => {
   const { target, proposalType, proposer, daoName, value, info } =
     currentProposal;
   const { getAEPrice } = useContext(ApiContext);
+  const price = getAEPrice?.price || rate;
 
   return (
     <div className="text-[13px] font-light space-y-5">
@@ -62,8 +64,8 @@ const EachProposalDetails = ({ currentProposal }: IEachProposalDetails) => {
         <div className="grid grid-cols-6">
           <h1 className="col-span-2">Value:</h1>
           <p className="col-span-4 overflow-hidden">
-            {Number(value)}AE ~{' '}
-            {(Number(value) * (getAEPrice.price || rate)).toFixed(2)}USD
+            {convertCurrency(value, price).ae}AE ~{' '}
+            {convertCurrency(value, price).usd}USD
           </p>
         </div>
       )}
@@ -87,7 +89,7 @@ const EachProposalDetails = ({ currentProposal }: IEachProposalDetails) => {
           </p>
         </div>
       )}
-      {info && info.socials[0].name && (
+      {info && info?.socials[0]?.name && (
         <div className="grid grid-cols-6">
           <h1 className="col-span-2">Social Media:</h1>
 

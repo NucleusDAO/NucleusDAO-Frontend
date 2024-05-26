@@ -2,6 +2,7 @@ import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { IProposal } from './types';
 import { IDAO } from '@/context/each-dao-context';
+import { rate } from '@/config/dao-config';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -139,10 +140,19 @@ export const getStatus = (_proposal: IProposal | any) => {
   if (_proposal.isExecuted) {
     return 'Succeeded';
   }
+  if (
+    new Date(Number(_proposal.endTime)).valueOf() > Date.now().valueOf() &&
+    _proposal.votesFor < _proposal.votesAgainst
+  ) {
+    return 'Failed';
+  }
   if (new Date(Number(_proposal.endTime)).valueOf() > Date.now().valueOf()) {
     return 'Active';
   } else {
-    if (_proposal.votesFor > _proposal.votesAgainst) {
+    if (
+      _proposal.votesFor > _proposal.votesAgainst &&
+      new Date(Number(_proposal.endTime)).valueOf() > Date.now().valueOf()
+    ) {
       return 'Pending';
     } else {
       return 'Failed';
@@ -181,6 +191,16 @@ export function formatDate(timestamp: number) {
   const date = new Date(Number(timestamp));
   const options: any = { day: '2-digit', month: 'short', year: 'numeric' };
   return date.toLocaleDateString('en-GB', options);
+}
+
+export function formatISODate(isoDateString: string): string {
+  const date = new Date(isoDateString);
+  const options: Intl.DateTimeFormatOptions = {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  };
+  return new Intl.DateTimeFormat('en-US', options).format(date);
 }
 
 export function getDuration(startTime: number, endTime: number) {
@@ -240,7 +260,6 @@ export const updateGetProposal = async ({
     })
   );
   const members = await getUsersActivities(dao.contractAddress);
-  console.log({ members });
   setMembersActivities(members);
 };
 
@@ -321,6 +340,17 @@ function formatTime(milliseconds: number): string {
 
 //   return `${daysLeft}d:${hoursLeft}h:${minutesLeft}m:${secondsLeft}s`;
 // }
+
+export function convertDays(days: number) {
+  const totalSeconds = days * 24 * 60 * 60;
+  const d = Math.floor(totalSeconds / (24 * 60 * 60));
+  const h = Math.floor((totalSeconds % (24 * 60 * 60)) / (60 * 60));
+  const m = Math.floor((totalSeconds % (60 * 60)) / 60);
+  const s = totalSeconds % 60;
+
+  return `${d}d:${h}h:${m}m:${s.toFixed(0)}s`;
+}
+
 export function getTimeDifference(
   timestamp: string | number,
   setCountdownString: (arg: string) => void
@@ -362,4 +392,28 @@ export const capitalizeFirstLetter = (str: string) => {
   const capitalized = str && str.charAt(0).toUpperCase() + str.slice(1);
 
   return capitalized;
+};
+
+export const percentageChangeRate = (data: any) => {
+  const lastValue = Number(data[data.length - 1]?.value) || 0;
+  const secontToLastValue = Number(data[data.length - 2]?.value) || 0;
+  let percentageChange: number;
+  if (secontToLastValue !== 0) {
+    const difference = lastValue - secontToLastValue;
+    percentageChange = (difference / Math.abs(secontToLastValue)) * 100;
+  } else {
+    percentageChange = 0;
+  }
+  return percentageChange;
+};
+
+export const convertCurrency = (amount: number, price: number) => {
+  const formatAmount = Number(amount);
+  const ae = Number(formatAmount) / Number(1000000000000000000);
+
+  // Convert the result to a floating point number
+  const aeFloat: number = Number(ae);
+
+  const usdValue: number = aeFloat * Number(price || rate);
+  return { ae: aeFloat, usd: usdValue.toFixed(5) };
 };

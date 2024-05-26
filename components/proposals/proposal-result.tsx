@@ -7,7 +7,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { formatDate, getStatus } from '@/libs/utils';
+import { cn, formatDate, getStatus } from '@/libs/utils';
 import { EachDaoContext } from '@/context/each-dao-context';
 import React, { useContext, useState } from 'react';
 import { Button } from '../ui/button';
@@ -15,6 +15,7 @@ import { AppContext } from '@/context/app-context';
 import { toast } from 'sonner';
 import { IConnectWalletContext } from '@/libs/types';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
+import { useMediaQuery } from '@/hooks/use-media-query';
 
 interface IProposalResult {
   currentProposal: {
@@ -37,6 +38,7 @@ const ProposalResult = ({
   setCurrentProposal,
   countdownTime,
 }: IProposalResult) => {
+  const isDesktop = useMediaQuery('(min-width: 768px)');
   const {
     user: { address },
   } = useContext<IConnectWalletContext>(ConnectWalletContext);
@@ -74,7 +76,12 @@ const ProposalResult = ({
   return (
     <div className="space-y-6">
       <div className="rounded-lg dark:bg-[#191919] p-8 space-y-5 bg-white">
-        <div className="flex justify-between border-b dark:border-[#1E1E1E] pb-4 items-center border-[#CCCCCC99]">
+        <div
+          className={cn(
+            'flex justify-between border-b dark:border-[#1E1E1E] pb-4 items-center border-[#CCCCCC99]'
+            // isDesktop && 'block'
+          )}
+        >
           <h3 className="font-medium text-xl dark:text-white text-dark">
             Result
           </h3>
@@ -135,13 +142,18 @@ const ProposalResult = ({
       </div>
 
       <div className="rounded-lg dark:bg-[#191919] p-8 space-y-3 bg-white">
-        <div className="flex justify-between border-b dark:border-[#1E1E1E] pb-4 items-center border-[#CCCCCC99]">
+        <div
+          className={cn(
+            'flex justify-between border-b dark:border-[#1E1E1E] pb-4 items-center border-[#CCCCCC99]'
+            // isDesktop && 'block'
+          )}
+        >
           <h3 className="font-medium text-xl text-dark dark:text-white">
             Status
           </h3>
           <p className="text-sm font-light flex space-x-2">
             <span>
-              <Clock5 size={18} />
+              <Clock5 size={isDesktop ? 12 : 18} />
             </span>
             <span>Time left:</span>{' '}
             <span className="text-dark dark:text-white font-light">

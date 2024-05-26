@@ -1,18 +1,26 @@
 import {
   aePrice,
   createUser,
+  fetchTransactionHistory,
   getNotifications,
   getProposals,
   getUser,
   updateUser,
 } from '@/config/apis';
-import { AE_PRICE_KEY, EACH_USER, NOTIFICATIONS, PROPOSALS } from '@/libs/key';
+import {
+  AE_PRICE_KEY,
+  BALANCE_HISTORY,
+  EACH_USER,
+  NOTIFICATIONS,
+  PROPOSALS,
+} from '@/libs/key';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ReactNode, createContext, useContext, useEffect } from 'react';
 import { ConnectWalletContext } from './connect-wallet-context';
 import { IConnectWalletContext, ICreateUser } from '@/libs/types';
 import { toast } from 'sonner';
 import { AppContext } from './app-context';
+import { EachDaoContext } from './each-dao-context';
 
 export const ApiContext = createContext<any>({});
 
@@ -21,6 +29,7 @@ interface IApiProvider {
 }
 
 export const ApiContextProvider = ({ children }: IApiProvider) => {
+  const { currentDAO } = useContext(EachDaoContext);
   const queryClient: any = useQueryClient();
   const {
     user: { address },
@@ -56,13 +65,14 @@ export const ApiContextProvider = ({ children }: IApiProvider) => {
   });
 
   const {
-    data: proposals,
-    isError: isProposalError,
-    error: proposalErrorMessage,
-    isLoading: isLoadingProposal,
+    data: transactionHistory,
+    isError: isTransactionHistoryError,
+    error: transactionHistoryError,
+    isLoading: isLoadingTransactionHistory,
   } = useQuery({
-    queryKey: [PROPOSALS],
-    queryFn: getProposals,
+    queryKey: [EACH_USER, currentDAO?.id],
+    queryFn: () => fetchTransactionHistory(currentDAO?.id),
+    enabled: !!currentDAO?.id,
   });
 
   const {
@@ -103,10 +113,10 @@ export const ApiContextProvider = ({ children }: IApiProvider) => {
     isNotificationError,
     isLoadingNotification,
     notificationErrorMessage,
-    proposals,
-    isProposalError,
-    proposalErrorMessage,
-    isLoadingProposal,
+    transactionHistory,
+    transactionHistoryError,
+    isTransactionHistoryError,
+    isLoadingTransactionHistory,
   };
   return <ApiContext.Provider value={value}>{children}</ApiContext.Provider>;
 };

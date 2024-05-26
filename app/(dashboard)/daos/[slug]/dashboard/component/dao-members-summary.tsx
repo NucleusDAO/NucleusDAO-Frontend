@@ -8,7 +8,7 @@ import { MEMBER_HISTORY, PROPOSAL_HISTORY } from '@/libs/key';
 import { cn } from '@/libs/utils';
 import { useQuery } from '@tanstack/react-query';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 
 export const DaoMembers = () => {
@@ -37,7 +37,7 @@ export const DaoMembers = () => {
     300
   );
 
-  const { currentDAO } = useContext(EachDaoContext);
+  const { currentDAO, setMemberHistory } = useContext(EachDaoContext);
   const daoId = currentDAO.id;
 
   const {
@@ -49,6 +49,12 @@ export const DaoMembers = () => {
     queryFn: () => getHistory('members-history', daoId, { timeframe }),
     enabled: !!daoId,
   });
+
+  useEffect(() => {
+    if (history) {
+      setMemberHistory(history);
+    }
+  }, [history]);
 
   if (isHistoryError)
     return <ErrorFetchingComponent className="min-h-[50vh]" />;

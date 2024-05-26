@@ -1,6 +1,6 @@
 'use client';
 import { proposalLists, rate } from '@/config/dao-config';
-import { defaultProposal } from '@/libs/utils';
+import { convertDays, defaultProposal } from '@/libs/utils';
 import {
   AlertDialog,
   AlertDialogContent,
@@ -22,19 +22,21 @@ import { toast } from 'sonner';
 import { uploadFile } from '@/config/apis';
 import { ApiContext } from '@/context/api-context';
 import Link from 'next/link';
+import { formatAmount, AE_AMOUNT_FORMATS } from '@aeternity/aepp-sdk';
+import { useQueryClient } from '@tanstack/react-query';
+import { NOTIFICATIONS } from '@/libs/key';
 
 const ReviewProposal = () => {
   const {
     createProposal,
-    fetchAllProposals,
     newProposalInfo,
     getEachDAO,
     getActivities,
     setNewProposalInfo,
-    fetchDAOs,
     setUpdate,
   } = useContext(AppContext);
   const { getAEPrice } = useContext(ApiContext);
+  const queryClient: any = useQueryClient();
   const [isRouting, setIsRouting] = useState<boolean>(false);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const [isCreating, setIsCreating] = useState<boolean>(false);
@@ -43,6 +45,7 @@ const ReviewProposal = () => {
   const searchParams = useSearchParams();
   const daoID = searchParams.get('ct');
   const proposalType = searchParams.get('type') || '';
+  const enums = searchParams.get('enums') || '';
   const router = useRouter();
   const { value } = newProposalInfo;
 
@@ -50,6 +53,7 @@ const ReviewProposal = () => {
     setIsCreating(true);
     let logoURL;
     let updatedSocials;
+    let amount: any;
     try {
       if (value.logo) {
         let formData = new FormData();
@@ -65,13 +69,22 @@ const ReviewProposal = () => {
           }
         );
       }
+      if (Number(value.type) === 0) {
+        amount = formatAmount(value.value, {
+          denomination: AE_AMOUNT_FORMATS.AE,
+        });
+      } else {
+        amount =
+          Number(value.value) || Number(value.maximum) || value.quorum || 0;
+      }
+
       const dao = await getEachDAO(daoID);
       if (dao) {
         await createProposal(
           dao.contractAddress,
           proposalLists[Number(value.type)].type,
           value.description,
-          Number(value.value) || Number(value.maximum) || value.quorum || 0,
+          amount,
           value.targetWallet || address,
           {
             name: value?.newName || '',
@@ -99,6 +112,7 @@ const ReviewProposal = () => {
     setIsRouting(true);
     try {
       await getActivities(address);
+      queryClient.invalidateQueries(NOTIFICATIONS);
       router.push(PROPOSALS_URL);
       localStorage.removeItem('new_proposal');
       setNewProposalInfo(defaultProposal);
@@ -172,7 +186,9 @@ const ReviewProposal = () => {
         {value.duration && (
           <div className="grid grid-cols-2 text-sm w-4/6">
             <p className="dark:text-white text-dark">Duration</p>
-            <p className="dark:text-[#888888] text-dark">{`${value.duration} day(s)`}</p>
+            <p className="dark:text-[#888888] text-dark">
+              {convertDays(Number(value.duration))}
+            </p>
           </div>
         )}
         {value.maximum && (

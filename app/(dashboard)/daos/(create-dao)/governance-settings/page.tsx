@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
-import { REVIEW_DAO_URL } from '@/config/path';
+import { DEFINE_MEMBERSHIP_URL, REVIEW_DAO_URL } from '@/config/path';
 import { AppContext } from '@/context/app-context';
 import { cn, handleChangeNumberInput, wait } from '@/libs/utils';
 import { Minus, MoveLeft, Plus } from 'lucide-react';
@@ -14,6 +14,7 @@ const GovernanceSettings = () => {
   const router = useRouter();
   const { updateNewDaoInfo, newDaoInfo } = useContext(AppContext);
   const [isPending, setIsPending] = useState<boolean>(false);
+  const [isBack, setIsBack] = useState<boolean>(false);
   const [days, setDays] = useState<number | string>(newDaoInfo.duration);
   const [quorum, setQuorum] = useState<number | string>(newDaoInfo.quorum);
   const [isError, setIsError] = useState<boolean>(false);
@@ -23,6 +24,14 @@ const GovernanceSettings = () => {
     sessionStorage.setItem('new_dao', JSON.stringify(updatedData));
     updateNewDaoInfo(updatedData);
   }, [days, quorum]);
+
+  const handleBack = () => {
+    setIsBack(true);
+    wait().then(() => {
+      router.push(DEFINE_MEMBERSHIP_URL);
+      setIsBack(false);
+    });
+  };
 
   const handleNext = () => {
     if (!Number(days) || !Number(quorum)) {
@@ -91,10 +100,7 @@ const GovernanceSettings = () => {
             type="number"
             className="border-none bg-white dark:bg-[#191919] w-fit text-center "
             placeholder="0"
-            pattern="[1-9][0-9]*"
-            onChange={({ target }) =>
-              handleChangeNumberInput(target.value, setDays)
-            }
+            onChange={({ target }) => setDays(target.value)}
           />
           <div
             className="bg-[#D2D2D2] hover:bg-[#dddada] dark:bg-[#1E1E1E] rounded-lg py-2 px-2 dark:hover:bg-[#2a2a2a] trans"
@@ -146,9 +152,10 @@ const GovernanceSettings = () => {
                   className="border-none bg-white dark:bg-[#191919] w-fit text-center "
                   placeholder="0"
                   pattern="[1-9][0-9]*"
-                  onChange={({ target }) =>
-                    handleChangeNumberInput(target.value, setQuorum)
-                  }
+                  onChange={({ target }) => {
+                    Number(target.value) <= 100 &&
+                      handleChangeNumberInput(target.value, setQuorum);
+                  }}
                 />
                 <div
                   className="bg-[#D2D2D2] hover:bg-[#dddada] dark:bg-[#1E1E1E] rounded-lg py-2 px-2 dark:hover:bg-[#2a2a2a] trans"
@@ -185,7 +192,8 @@ const GovernanceSettings = () => {
         <Button
           type="button"
           className="dark:bg-[#1E1E1E] bg-light dark:hover:bg-[#262525] hover:bg-light text-[#444444] dark:text-defaultText"
-          onClick={() => router.back()}
+          onClick={handleBack}
+          loading={isBack}
         >
           <MoveLeft size={20} />
         </Button>

@@ -18,7 +18,7 @@ import { Textarea } from '../ui/textarea';
 import { MoveLeft, Plus, Trash2 } from 'lucide-react';
 import FormGroup from '../ui/form-group';
 import { useRouter } from 'next/navigation';
-import { DEFINE_MEMBERSHIP_URL } from '@/config/path';
+import { DEFINE_MEMBERSHIP_URL, SELECT_DAO_STYLE_URL } from '@/config/path';
 import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import { AppContext } from '@/context/app-context';
 import { toast } from 'sonner';
@@ -27,6 +27,7 @@ import { wait } from '@/libs/utils';
 const DaoInfoForm = () => {
   const { updateNewDaoInfo, newDaoInfo } = useContext(AppContext);
   const [isPending, setIsPending] = useState<boolean>(false);
+  const [isBack, setIsBack] = useState<boolean>(false);
   const [logoFormData, setLogoFormData] = useState<FormData | null>(null);
   const [onUploadUrl, setOnUploadUrl] = useState<string>(
     newDaoInfo.info.logoUrl || ''
@@ -103,7 +104,13 @@ const DaoInfoForm = () => {
     }
   };
 
-  console.log(!!Object.keys(form.formState.errors).length, '-fjkd');
+  const handleBack = () => {
+    setIsBack(true);
+    wait().then(() => {
+      router.push(SELECT_DAO_STYLE_URL);
+      setIsBack(false);
+    });
+  };
 
   const onSubmit = async (data: any) => {
     setIsPending(true);
@@ -115,17 +122,7 @@ const DaoInfoForm = () => {
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={
-          form.handleSubmit(onSubmit)
-          // e.preventDefault(); // Prevent default form submission
-          // // Check if there are errors before calling onSubmit
-          // if (!Object.keys(form.formState.errors).length) {
-          //   onSubmit(form.getValues()); // Call onSubmit only if there are no errors
-          // }
-        }
-        className="space-y-8"
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
           name="daoName"
@@ -308,7 +305,8 @@ const DaoInfoForm = () => {
           <Button
             type="button"
             className="dark:bg-[#1E1E1E] bg-light dark:hover:bg-[#262525] hover:bg-light text-[#444444] dark:text-defaultText"
-            onClick={() => router.back()}
+            onClick={handleBack}
+            loading={isBack}
           >
             <MoveLeft size={20} />
           </Button>

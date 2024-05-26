@@ -30,11 +30,7 @@ import {
   millisecondsToDays,
   wait,
 } from '@/libs/utils';
-import { EachDaoContext } from '@/context/each-dao-context';
-import {
-  ValidateProposalForm,
-  // validateInfo,
-} from '@/libs/validations/validate-create-proposal';
+import { ValidateProposalForm } from '@/libs/validations/validate-create-proposal';
 
 const CreateNewProposalForm = () => {
   const [routing, setRouting] = useState<boolean>(false);
@@ -42,6 +38,7 @@ const CreateNewProposalForm = () => {
     useContext(AppContext);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { address } = user;
+  const [daoMembers, setDaoMembers] = useState([]);
   const searchParams = useSearchParams();
   const type: string =
     searchParams.get('enums') || newProposalInfo.value.type || '0';
@@ -61,8 +58,8 @@ const CreateNewProposalForm = () => {
   useEffect(() => {
     const getDuration = async () => {
       const dao = await getEachDAO(daoID);
-      console.log(dao.votingTime, '-> dao.votingTime');
       const duration = millisecondsToDays(Number(dao.votingTime));
+      setDaoMembers(dao.members);
       form.setValue('duration', duration);
     };
     getDuration();
@@ -70,7 +67,6 @@ const CreateNewProposalForm = () => {
 
   useEffect(() => {
     const subscription = form.watch((value, { name, type }) => {
-      console.log(name, '-> name');
       let updatedData;
       // Remove previous selected information
       if (name === 'type') {
@@ -80,8 +76,6 @@ const CreateNewProposalForm = () => {
           JSON.stringify({ value: updatedData })
         );
         setNewProposalInfo({ value: updatedData });
-
-        console.log(updatedData, '-> upd');
       } else {
         const updatedData = { ...newProposalInfo, value };
         localStorage.setItem('new_proposal', JSON.stringify(updatedData));
@@ -93,7 +87,8 @@ const CreateNewProposalForm = () => {
 
   const onSubmit = async (data: any) => {
     const currentType = Number(form.getValues('type'));
-    if (ValidateProposalForm[currentType]({ form })) {
+
+    if (ValidateProposalForm[currentType]({ form, daoMembers })) {
       setRouting(true);
       wait().then(() => {
         router.push(`${REVIEW_PROPOSAL_URL}?ct=${daoID}&type=${currentType}`);
