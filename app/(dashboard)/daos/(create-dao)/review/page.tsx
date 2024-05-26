@@ -62,7 +62,7 @@ const ReviewDao = () => {
         }),
         members,
         0,
-        daysToMilliseconds(newDaoInfo.duration),
+        Math.round(daysToMilliseconds(newDaoInfo.duration)),
         newDaoInfo.quorum
       );
       // Deleted dao information from sessionStorage

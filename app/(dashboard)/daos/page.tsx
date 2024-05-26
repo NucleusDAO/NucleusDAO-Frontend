@@ -57,6 +57,8 @@ const Daos = () => {
     });
   }
 
+  console.log(DAOsData, '-> dao data');
+
   if (daoLoading) return <DaoLoading />;
 
   return (

@@ -106,6 +106,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     try {
       const allDAOs: any = await getAllDaos();
       if (allDAOs) {
+        console.log(allDAOs, '-> all dao');
         setDAOsData(
           allDAOs.map((dao: any) => {
             return {

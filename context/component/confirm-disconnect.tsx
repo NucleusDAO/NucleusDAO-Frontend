@@ -29,14 +29,14 @@ const ConfirmDisconnectWallet = ({
 }: IConfirmDisconnectWallet) => {
   const [disconnecting, _] = useState<boolean>(false);
   const handleDisconnect = async () => {
-      try {
-        localStorage.removeItem('user');
-        setUser({ address: '', isConnected: false });
-        await aeSdk.disconnectWallet(false);
-      } catch (error) {
-        console.error(error)
-      }
-      window.location.search = '';
+    try {
+      localStorage.removeItem('user');
+      setUser({ address: '', isConnected: false });
+      await aeSdk.disconnectWallet(false);
+    } catch (error) {
+      console.error(error);
+    }
+    window.location.search = '';
   };
 
   return (

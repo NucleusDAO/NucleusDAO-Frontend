@@ -140,18 +140,12 @@ export const getStatus = (_proposal: IProposal | any) => {
   if (_proposal.isExecuted) {
     return 'Succeeded';
   }
-  if (
-    new Date(Number(_proposal.endTime)).valueOf() > Date.now().valueOf() &&
-    _proposal.votesFor < _proposal.votesAgainst
-  ) {
-    return 'Failed';
-  }
   if (new Date(Number(_proposal.endTime)).valueOf() > Date.now().valueOf()) {
     return 'Active';
   } else {
     if (
       _proposal.votesFor > _proposal.votesAgainst &&
-      new Date(Number(_proposal.endTime)).valueOf() > Date.now().valueOf()
+      new Date(Number(_proposal.endTime)).valueOf() <= Date.now().valueOf()
     ) {
       return 'Pending';
     } else {
@@ -159,6 +153,15 @@ export const getStatus = (_proposal: IProposal | any) => {
     }
   }
 };
+// &&
+// new Date(Number(_proposal.endTime)).valueOf() > Date.now().valueOf()
+
+// if (
+//   new Date(Number(_proposal.endTime)).valueOf() > Date.now().valueOf() &&
+//   _proposal.votesFor < _proposal.votesAgainst
+// ) {
+//   return 'Failed';
+// }
 
 export const defaultProposal = {
   value: {
