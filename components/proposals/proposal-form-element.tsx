@@ -44,6 +44,7 @@ const SelectFormField = ({
 }: ISelectFormField) => {
   const searchParams = useSearchParams();
   const type: string = searchParams.get('enums') || '';
+
   return (
     <FormField
       control={form.control}

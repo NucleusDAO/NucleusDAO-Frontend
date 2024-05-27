@@ -20,6 +20,7 @@ import {
 } from '@/libs/utils';
 import { VIEW_DAO_URL } from '@/config/path';
 import ErrorFetchingComponent from '@/components/error-fetching-comp';
+import { useQuery } from '@tanstack/react-query';
 
 export const AppContext = createContext<any>({});
 

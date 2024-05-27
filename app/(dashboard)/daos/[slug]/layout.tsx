@@ -29,6 +29,7 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 import { toast } from 'sonner';
 import { AppContext } from '@/context/app-context';
 import ErrorFetchingComponent from '@/components/error-fetching-comp';
+import { useQuery } from '@tanstack/react-query';
 
 interface ILayout {
   children: ReactNode;
@@ -69,7 +70,6 @@ const Layout = ({ children }: ILayout) => {
       setRouting(false);
     });
   }
-
   useEffect(() => {
     setUpdate(false);
   }, []);
@@ -129,7 +129,7 @@ const Layout = ({ children }: ILayout) => {
                       <p className="truncate">
                         {currentDAO?.domain ?? currentDAO?.account}
                       </p>
-                      <CopyIcon />
+                      <CopyIcon className="cursor-pointer" />
                     </div>
                   </CopyToClipboard>
                 </div>

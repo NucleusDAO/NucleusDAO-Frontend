@@ -379,15 +379,35 @@ export const capitalizeFirstLetter = (str: string) => {
 };
 
 export const percentageChangeRate = (data: any) => {
-  const lastValue = Number(data[data.length - 1]?.value) || 0;
-  const secontToLastValue = Number(data[data.length - 2]?.value) || 0;
-  let percentageChange: number;
-  if (secontToLastValue !== 0) {
-    const difference = lastValue - secontToLastValue;
-    percentageChange = (difference / Math.abs(secontToLastValue)) * 100;
-  } else {
-    percentageChange = 0;
+  console.log(data, '-> data');
+
+  // const lastValue = Number(data[data.length - 1]?.value) || 0;
+  // const secontToLastValue = Number(data[data.length - 2]?.value) || 0;
+  // let percentageChange: number;
+  // if (secontToLastValue !== 0) {
+  //   const difference = lastValue - secontToLastValue;
+  //   percentageChange = (difference / Math.abs(secontToLastValue)) * 100;
+  // } else {
+  //   percentageChange = 0;
+  // }
+  // return percentageChange;
+
+  if (data.length < 2) {
+    // Not enough data points to calculate percentage change
+    return 0;
   }
+
+  const lastValue = Number(data[data.length - 1]?.value) || 0;
+  const secondToLastValue = Number(data[data.length - 2]?.value) || 0;
+  let percentageChange;
+
+  if (secondToLastValue !== 0) {
+    const difference = lastValue - secondToLastValue;
+    percentageChange = (difference / Math.abs(secondToLastValue)) * 100;
+  } else {
+    percentageChange = lastValue === 0 ? 0 : 100; // If the second to last value is 0 and last value is not 0, it's a 100% increase
+  }
+
   return percentageChange;
 };
 
