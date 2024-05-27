@@ -1,10 +1,4 @@
-import {
-  ReactNode,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import {
   ConnectWalletContext,
   ConnectWalletProvider,
@@ -30,7 +24,8 @@ import ErrorFetchingComponent from '@/components/error-fetching-comp';
 export const AppContext = createContext<any>({});
 
 export const AppContextProvider = ({ children }: IAppProvider) => {
-  const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
+  const { user, aeSdk } =
+    useContext<IConnectWalletContext>(ConnectWalletContext);
   const [allDAOs, setAllDAOs] = useState<any[]>();
   const [daoLoading, setDaoLoading] = useState<boolean>(true);
   const [DAOsData, setDAOsData] = useState<any[]>([]);
@@ -146,6 +141,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
       const proposals = await getAllProposals();
       setAllProposals(
         proposals.reverse().map((proposal: IProposal) => {
+          console.log(proposal, '-> props');
           return {
             type: proposal.proposalType,
             status: getStatus(proposal),
@@ -193,7 +189,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     votingTime: number,
     quorum: number
   ) => {
-    const contract = await getNucleusDAO();
+    const contract = await getNucleusDAO(aeSdk);
     const res = await contract.createDAO(
       name,
       id,
@@ -221,7 +217,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
       image: string;
     }
   ) => {
-    const contract = await getBasicDAO(daoContractAddress);
+    const contract = await getBasicDAO(daoContractAddress, aeSdk);
     const res = await contract.createProposal(
       proposalType,
       description,
@@ -234,7 +230,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
   };
 
   const getDAOs = async () => {
-    const contract = await getNucleusDAO();
+    const contract = await getNucleusDAO(aeSdk);
     const res = await contract.getDAOs();
     const daos = res.decodedResult;
     return daos;
@@ -244,20 +240,20 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     daoContractAddress: string,
     userAddress: string
   ) => {
-    const contract = await getBasicDAO(daoContractAddress);
+    const contract = await getBasicDAO(daoContractAddress, aeSdk);
     const res = await contract.isMember(userAddress);
     return res.decodedResult;
   };
 
   const getAUserActivitiesAcrossDAOs = async (userAddress: string) => {
-    const contract = await getNucleusDAO();
+    const contract = await getNucleusDAO(aeSdk);
     const res = await contract.getUserActivitiesAcrossDAOs(userAddress);
     const activities = res.decodedResult;
     return activities;
   };
 
   const getAllUsersActivities = async (daoContractAddress: string) => {
-    const contract = await getBasicDAO(daoContractAddress);
+    const contract = await getBasicDAO(daoContractAddress, aeSdk);
     const res = await contract.getAllMembersActivities();
     const activities = res.decodedResult;
     for (let i = 0; i < activities.length; i++) {
@@ -272,7 +268,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
   };
 
   const getUsersActivities = async (daoContractAddress: string) => {
-    const contract = await getBasicDAO(daoContractAddress);
+    const contract = await getBasicDAO(daoContractAddress, aeSdk);
     const res = await contract.getAllMembersActivities();
     const activities = res.decodedResult;
     for (let i = 0; i < activities.length; i++) {
@@ -287,7 +283,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
   };
 
   const getAllProposals = async () => {
-    const contract = await getNucleusDAO();
+    const contract = await getNucleusDAO(aeSdk);
     const res = await contract.getAllProposals();
     const proposals = res.decodedResult;
     for (let i = 0; i < proposals.length; i++) {
@@ -302,7 +298,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
   };
 
   const getProposals = async (daoContractAddress: string) => {
-    const contract = await getBasicDAO(daoContractAddress);
+    const contract = await getBasicDAO(daoContractAddress, aeSdk);
     const res = await contract.getProposals();
     const proposals = res.decodedResult;
     for (let i = 0; i < proposals.length; i++) {
@@ -320,7 +316,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     daoContractAddress: string,
     proposalId: string
   ) => {
-    const contract = await getBasicDAO(daoContractAddress);
+    const contract = await getBasicDAO(daoContractAddress, aeSdk);
     const res = await contract.getProposal(proposalId);
     const proposal = res.decodedResult;
 
@@ -328,21 +324,21 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
   };
 
   const getEachDAO = async (id: string) => {
-    const contract = await getNucleusDAO();
+    const contract = await getNucleusDAO(aeSdk);
     const res = await contract.getDAO(id);
     const dao = res.decodedResult;
     return dao;
   };
 
   const deposit = async (daoContractAddress: string, amount: number) => {
-    const contract = await getBasicDAO(daoContractAddress);
+    const contract = await getBasicDAO(daoContractAddress, aeSdk);
     const res = await contract.deposit({ amount });
     const response = res.decodedResult;
     return response;
   };
 
   const voteFor = async (proposalId: number, daoContractAddress: string) => {
-    const contract = await getBasicDAO(daoContractAddress);
+    const contract = await getBasicDAO(daoContractAddress, aeSdk);
     const res = await contract.voteFor(proposalId);
     const result = res.decodedResult;
     return result;
@@ -352,7 +348,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     proposalId: number,
     daoContractAddress: string
   ) => {
-    const contract = await getBasicDAO(daoContractAddress);
+    const contract = await getBasicDAO(daoContractAddress, aeSdk);
     const res = await contract.voteAgainst(proposalId);
     const result = res.decodedResult;
     return result;
@@ -362,7 +358,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     proposalId: number,
     daoContractAddress: string
   ) => {
-    const contract = await getBasicDAO(daoContractAddress);
+    const contract = await getBasicDAO(daoContractAddress, aeSdk);
     const res = await contract.executeProposal(proposalId);
     const result = res.decodedResult;
     return result;

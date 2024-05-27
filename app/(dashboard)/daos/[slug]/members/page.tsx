@@ -62,6 +62,8 @@ const EachDaoMembers = () => {
     }
   }, [membersActivities]);
 
+  console.log(data, '-says');
+
   if (memberLoading) return <EachDaoLoading />;
 
   return (

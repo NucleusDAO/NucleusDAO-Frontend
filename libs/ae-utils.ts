@@ -2,8 +2,6 @@ import {
   walletDetector,
   BrowserWindowMessageConnection,
   RpcRejectedByUserError,
-  AeSdkAepp,
-  Node,
 } from '@aeternity/aepp-sdk';
 import { ConnectWalletParams, WalletConnection } from './types';
 
@@ -12,35 +10,11 @@ import basicDAOAci from './contract/BasicDAO.json';
 import { DASHBOARD_URL } from '@/config/path';
 
 const nucleusDAOContractAddress =
-  'ct_DPR9rN4U7drVvzm83yhCBr6wz9vuw4y54mDcKvEp9Z13kecqE';
+  'ct_2nMGyyJos1nB7kBfXi7j4Uq33XkMKvqzMYhe4LDw5JabmdUXMo';
 
-const TESTNET_NODE_URL = 'https://testnet.aeternity.io';
-const MAINNET_NODE_URL = 'https://mainnet.aeternity.io';
-const COMPILER_URL = 'https://compiler.aepps.com';
-
-export const aeSdk: any = new AeSdkAepp({
-  name: 'NucleusDAO',
-  nodes: [
-    { name: 'testnet', instance: new Node(TESTNET_NODE_URL) },
-    { name: 'mainnet', instance: new Node(MAINNET_NODE_URL) },
-  ],
-  onNetworkChange: async ({ networkId }) => {
-    const [{ name }] = (await aeSdk.getNodesInPool()).filter(
-      (node: any) => node.nodeNetworkId === networkId
-    );
-    aeSdk.selectNode(name);
-  },
-  onAddressChange: ({ current }: any) => {
-    const currentAccountAddress = Object.keys(current)[0];
-    // if (!currentAccountAddress) return;
-    const user = { address: currentAccountAddress, isConnected: true };
-    // setUser(user);
-    // // localStorage.setItem('user', JSON.stringify(user));
-    // resolve?.(currentAccountAddress);
-    console.log('setAddress', Object.keys(current)[0], 'wallet change');
-  },
-  onDisconnect: () => console.log('Aepp is disconnected'),
-});
+export const TESTNET_NODE_URL = 'https://testnet.aeternity.io';
+export const MAINNET_NODE_URL = 'https://mainnet.aeternity.io';
+export const COMPILER_URL = 'https://compiler.aepps.com';
 
 export const detectWallets = async () => {
   const connection = new BrowserWindowMessageConnection();
@@ -107,6 +81,7 @@ export const connectWallet = async ({
   setOpenModal,
   isHome,
   walletObj = { info: { name: '', type: '' } },
+  aeSdk,
 }: ConnectWalletParams) => {
   setConnectingToWallet(true);
   let addressDeepLink: any;
@@ -213,7 +188,7 @@ export const connectWallet = async ({
   }
 };
 
-export const getNucleusDAO = async () => {
+export const getNucleusDAO = async (aeSdk: any) => {
   const contract = await aeSdk.initializeContract({
     aci: nucleusDAOAci,
     address: nucleusDAOContractAddress,
@@ -221,7 +196,7 @@ export const getNucleusDAO = async () => {
   return contract;
 };
 
-export const getBasicDAO = async (DAOAddress: string) => {
+export const getBasicDAO = async (DAOAddress: string, aeSdk: any) => {
   return await aeSdk.initializeContract({
     aci: basicDAOAci,
     address: DAOAddress,

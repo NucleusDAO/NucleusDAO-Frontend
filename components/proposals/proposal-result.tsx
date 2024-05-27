@@ -61,7 +61,8 @@ const ProposalResult = ({
         Number(currentProposal.id),
         currentDAO.contractAddress
       );
-      // setCurrentProposal(proposal);
+      console.log(proposal, '-> updated proposal');
+      setCurrentProposal(proposal);
       toast.success('Proposal executed successfully');
       fetchDAOs();
       fetchAllProposals();

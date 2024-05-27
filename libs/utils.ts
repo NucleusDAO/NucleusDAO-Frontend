@@ -137,9 +137,11 @@ export const defaultDaoCreation = {
 };
 
 export const getStatus = (_proposal: IProposal | any) => {
-  if (_proposal.isExecuted) {
-    return 'Succeeded';
-  }
+  console.log(
+    new Date(Number(_proposal.endTime)).valueOf() <= Date.now().valueOf(),
+    '->f'
+  );
+
   if (new Date(Number(_proposal.endTime)).valueOf() > Date.now().valueOf()) {
     return 'Active';
   } else {

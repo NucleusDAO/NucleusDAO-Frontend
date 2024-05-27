@@ -1,3 +1,5 @@
+import { isAddressValid } from '@aeternity/aepp-sdk';
+
 export const ValidateProposalForm: any = {
   0: ({ form }: any) => validateTransfer({ form }),
   1: ({ form, daoMembers }: any) => validateMember({ form, daoMembers }),
@@ -53,6 +55,7 @@ export const validateMember = ({
   daoMembers?: string[];
 }) => {
   const targetWallet = form.getValues('targetWallet');
+  const isTargetAddressValid = isAddressValid(targetWallet || '');
   const type: number = Number(form.getValues('type'));
 
   if (
@@ -67,7 +70,7 @@ export const validateMember = ({
     return false;
   }
 
-  if (type === 2 && !targetWallet.includes(daoMembers)) {
+  if (type === 2 && daoMembers && !daoMembers.includes(targetWallet)) {
     form.setError('targetWallet', {
       type: 'onChange',
       message: 'Member does not exist in this DAO',
@@ -75,23 +78,15 @@ export const validateMember = ({
     return false;
   }
 
-  if (targetWallet.length < 51 || targetWallet.length > 53) {
+  if (!isTargetAddressValid) {
     form.setError('targetWallet', {
       type: 'onChange',
-      message: 'Wallet address must be between 51 - 53 characters',
+      message: 'Valid address required',
     });
     return false;
   }
 
-  if (targetWallet.length < 51 || targetWallet.length > 53) {
-    form.setError('targetWallet', {
-      type: 'onChange',
-      message: 'Wallet address must be between 51 - 53 characters',
-    });
-    return false;
-  }
-
-  if (targetWallet.length >= 51 && targetWallet.length <= 53) {
+  if (isTargetAddressValid) {
     return true;
   }
 };

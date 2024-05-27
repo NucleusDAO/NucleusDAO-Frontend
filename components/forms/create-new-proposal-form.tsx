@@ -44,6 +44,7 @@ const CreateNewProposalForm = () => {
     searchParams.get('enums') || newProposalInfo.value.type || '0';
   const memberType = searchParams.get('type') || '';
   const daoID = searchParams.get('ct');
+  const targetAddress = searchParams.get('address');
   const router = useRouter();
   const form = useForm<z.infer<typeof proposalInfoSchema>>({
     resolver: zodResolver(proposalInfoSchema),
@@ -51,6 +52,7 @@ const CreateNewProposalForm = () => {
       ...newProposalInfo.value,
       duration: getDaysFromMilliseconds(newProposalInfo.value.duration),
       newName: '',
+      targetWallet: targetAddress,
       type,
     },
   });
@@ -103,7 +105,9 @@ const CreateNewProposalForm = () => {
         <SelectFormField
           form={form}
           filterData={
-            memberType ? [proposalLists[Number(type)]] : proposalLists
+            memberType
+              ? [proposalLists[Number(type)]]
+              : proposalLists.slice(0, proposalLists.length - 1)
           }
         />
 

@@ -214,10 +214,10 @@ const ReviewDao = () => {
                 <p className="font-medium dark:text-white text-dark pb-2 -mt-2 text-lg md:text-xl">
                   Dao Created Successfully
                 </p>
-                Congratulations! You have successfully created your DAO
+                {/* Congratulations! You have successfully created your DAO
                 (Decentralized Autonomous Organization). Your DAO is now ready
                 to embark on its mission, engage community members, and foster
-                decentralized decision-making.
+                decentralized decision-making. */}
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter className="w-full">
