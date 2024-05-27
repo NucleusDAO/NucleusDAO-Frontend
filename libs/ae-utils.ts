@@ -2,6 +2,8 @@ import {
   walletDetector,
   BrowserWindowMessageConnection,
   RpcRejectedByUserError,
+  AeSdkAepp,
+  Node,
 } from '@aeternity/aepp-sdk';
 import { ConnectWalletParams, WalletConnection } from './types';
 
@@ -10,7 +12,7 @@ import basicDAOAci from './contract/BasicDAO.json';
 import { DASHBOARD_URL } from '@/config/path';
 
 const nucleusDAOContractAddress =
-  'ct_2nMGyyJos1nB7kBfXi7j4Uq33XkMKvqzMYhe4LDw5JabmdUXMo';
+  'ct_2gG4gAoYWcTfHuZywfPHmSfoAHTjVGKL866uKXPBLLfhNszYtk';
 
 export const TESTNET_NODE_URL = 'https://testnet.aeternity.io';
 export const MAINNET_NODE_URL = 'https://mainnet.aeternity.io';
@@ -54,6 +56,29 @@ export const createDeepLinkUrl = ({
   return url;
 };
 
+const aeSdk: any = new AeSdkAepp({
+  name: 'NucleusDAO',
+  nodes: [
+    { name: 'testnet', instance: new Node(TESTNET_NODE_URL) },
+    { name: 'mainnet', instance: new Node(MAINNET_NODE_URL) },
+  ],
+  onNetworkChange: async ({ networkId }) => {
+    const [{ name }] = (await aeSdk.getNodesInPool()).filter(
+      (node: any) => node.nodeNetworkId === networkId
+    );
+    aeSdk.selectNode(name);
+  },
+  onAddressChange: ({ current }: any) => {
+    const currentAccountAddress = Object.keys(current)[0];
+    console.log(currentAccountAddress, '-> address');
+
+    // if (!currentAccountAddress) return;
+    // const user = { address: currentAccountAddress, isConnected: true };
+    // setUser(user);
+  },
+  onDisconnect: () => console.log('Aepp is disconnected'),
+});
+
 export const IN_FRAME =
   typeof window !== 'undefined' && window.parent !== window;
 export const IS_MOBILE =
@@ -81,8 +106,8 @@ export const connectWallet = async ({
   setOpenModal,
   isHome,
   walletObj = { info: { name: '', type: '' } },
-  aeSdk,
-}: ConnectWalletParams) => {
+}: // aeSdk,
+ConnectWalletParams) => {
   setConnectingToWallet(true);
   let addressDeepLink: any;
 
@@ -188,7 +213,7 @@ export const connectWallet = async ({
   }
 };
 
-export const getNucleusDAO = async (aeSdk: any) => {
+export const getNucleusDAO = async () => {
   const contract = await aeSdk.initializeContract({
     aci: nucleusDAOAci,
     address: nucleusDAOContractAddress,
@@ -196,7 +221,7 @@ export const getNucleusDAO = async (aeSdk: any) => {
   return contract;
 };
 
-export const getBasicDAO = async (DAOAddress: string, aeSdk: any) => {
+export const getBasicDAO = async (DAOAddress: string) => {
   return await aeSdk.initializeContract({
     aci: basicDAOAci,
     address: DAOAddress,

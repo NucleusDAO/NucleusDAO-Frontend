@@ -137,11 +137,9 @@ export const defaultDaoCreation = {
 };
 
 export const getStatus = (_proposal: IProposal | any) => {
-  console.log(
-    new Date(Number(_proposal.endTime)).valueOf() <= Date.now().valueOf(),
-    '->f'
-  );
-
+  if (_proposal.isExecuted) {
+    return 'Succeeded';
+  }
   if (new Date(Number(_proposal.endTime)).valueOf() > Date.now().valueOf()) {
     return 'Active';
   } else {
@@ -347,13 +345,17 @@ function formatTime(milliseconds: number): string {
 // }
 
 export function convertDays(days: number) {
-  const totalSeconds = days * 24 * 60 * 60;
-  const d = Math.floor(totalSeconds / (24 * 60 * 60));
-  const h = Math.floor((totalSeconds % (24 * 60 * 60)) / (60 * 60));
-  const m = Math.floor((totalSeconds % (60 * 60)) / 60);
-  const s = totalSeconds % 60;
+  if (days) {
+    const totalSeconds = days * 24 * 60 * 60;
+    const d = Math.floor(totalSeconds / (24 * 60 * 60));
+    const h = Math.floor((totalSeconds % (24 * 60 * 60)) / (60 * 60));
+    const m = Math.floor((totalSeconds % (60 * 60)) / 60);
+    const s = totalSeconds % 60;
 
-  return `${d}d:${h}h:${m}m:${s.toFixed(0)}s`;
+    return `${d}d:${h}h:${m}m:${s.toFixed(0)}s`;
+  } else {
+    return 0;
+  }
 }
 
 export function getTimeDifference(

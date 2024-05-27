@@ -84,9 +84,6 @@ export const ConnectWalletProvider = ({ children }: IAppProvider) => {
       if (!currentAccountAddress) return;
       const user = { address: currentAccountAddress, isConnected: true };
       setUser(user);
-      // // localStorage.setItem('user', JSON.stringify(user));
-      // resolve?.(currentAccountAddress);
-      console.log('setAddress', Object.keys(current)[0], 'wallet change');
     },
     onDisconnect: () => console.log('Aepp is disconnected'),
   });
@@ -224,6 +221,7 @@ export const ConnectWalletProvider = ({ children }: IAppProvider) => {
             open={showDisconnectModal}
             setUser={setUser}
             defaultUser={defaultUser}
+            aeSdk={aeSdk}
           />
           {children}
         </React.Fragment>

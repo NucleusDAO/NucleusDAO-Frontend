@@ -9,7 +9,7 @@ import { useDebouncedCallback } from 'use-debounce';
 import { columns } from './dashboard/columns';
 import DaoCard from './dashboard/dao-cards';
 import ConnectWalletCallToAction from './connect-wallet-cta';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import {
   Popover,
   PopoverContent,
@@ -23,6 +23,8 @@ import { SELECT_DAO_STYLE_URL } from '@/config/path';
 import Image from 'next/image';
 import EmptyDAO from '@/assets/icons/empty-icon.png';
 import { IAllDaos } from '@/libs/types';
+import Lottie from 'react-lottie';
+import { defaultProposalOption } from './animation-options';
 
 const AllDaos: any = ({
   dashboardTableData,
@@ -116,14 +118,12 @@ const AllDaos: any = ({
           </div>
         </div>
       </div>
-
       <div className="">
         {showDAO ? (
           <div className="w-full">
             {currentView === 'list' && (
               <DataTable columns={columns} data={dashboardTableData(28)} />
             )}
-
             {(currentView === 'grid' || currentView !== 'list') && (
               <>
                 {dashboardTableData(0).length === 0 && showDAO && (
