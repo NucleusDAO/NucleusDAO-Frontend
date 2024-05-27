@@ -44,6 +44,7 @@ const CreateNewProposalForm = () => {
     searchParams.get('enums') || newProposalInfo.value.type || '0';
   const memberType = searchParams.get('type') || '';
   const daoID = searchParams.get('ct');
+  const targetAddress = searchParams.get('address');
   const router = useRouter();
   const form = useForm<z.infer<typeof proposalInfoSchema>>({
     resolver: zodResolver(proposalInfoSchema),
@@ -51,6 +52,7 @@ const CreateNewProposalForm = () => {
       ...newProposalInfo.value,
       duration: getDaysFromMilliseconds(newProposalInfo.value.duration),
       newName: '',
+      targetWallet: targetAddress,
       type,
     },
   });
@@ -64,6 +66,29 @@ const CreateNewProposalForm = () => {
     };
     getDuration();
   }, []);
+
+  const handleReset = (type: string) => {
+    console.log(defaultProposal, ' defaultProposal');
+    form.setValue('description', '');
+    form.setValue('duration', 0);
+    form.setValue('logo', '');
+    form.setValue('maximum', '0');
+    form.setValue('minimum', 0);
+    form.setValue('newName', '');
+    form.setValue('quorum', 0);
+    form.setValue('socialMedia', [{ type: '', link: '' }]);
+    form.setValue('targetWallet', '');
+    form.setValue('value', '');
+    let updatedData;
+    updatedData = { ...defaultProposal.value, type: type };
+    localStorage.setItem(
+      'new_proposal',
+      JSON.stringify({ value: updatedData })
+    );
+    setNewProposalInfo({ value: updatedData });
+  };
+
+  // console.log(form.getFieldState('value'), '>? steate');
 
   useEffect(() => {
     const subscription = form.watch((value, { name, type }) => {
@@ -85,7 +110,10 @@ const CreateNewProposalForm = () => {
     return () => subscription.unsubscribe();
   }, [form.watch]);
 
-  const onSubmit = async (data: any) => {
+  console.log(form.formState);
+
+  const onSubmit = async () => {
+    // alert('i am here');
     const currentType = Number(form.getValues('type'));
 
     if (ValidateProposalForm[currentType]({ form, daoMembers })) {
@@ -96,14 +124,17 @@ const CreateNewProposalForm = () => {
       });
     }
   };
-
+  // onSubmit={form.handleSubmit(onSubmit)}
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form className="space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
         <SelectFormField
           form={form}
+          handleReset={handleReset}
           filterData={
-            memberType ? [proposalLists[Number(type)]] : proposalLists
+            memberType
+              ? [proposalLists[Number(type)]]
+              : proposalLists.slice(0, proposalLists.length - 1)
           }
         />
 
@@ -142,6 +173,7 @@ const CreateNewProposalForm = () => {
             type="submit"
             className="px-12 w-full md:w-fit"
             loading={routing}
+            // onClick={onSubmit}
             loadingText="Please wait..."
           >
             Review

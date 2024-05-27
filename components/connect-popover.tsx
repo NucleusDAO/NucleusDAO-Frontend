@@ -9,7 +9,6 @@ import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { ReactNode, useContext } from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { toast } from 'sonner';
-import { aeSdk } from '@/libs/ae-utils';
 
 interface IConnectWalletPopOver {
   callToAction: ReactNode;

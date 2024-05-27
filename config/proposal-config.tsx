@@ -6,7 +6,10 @@ import {
   UpdateSocialsFormField,
   UploadFileFormField,
 } from '@/components/proposals/proposal-form-element';
-import React, { FC } from 'react';
+import { Input } from '@/components/ui/input';
+import { cn } from '@/libs/utils';
+import { Minus, Plus } from 'lucide-react';
+import React, { FC, useEffect, useState } from 'react';
 
 export const ProposalTransfer = ({ form }: { form: any }) => {
   return (
@@ -21,43 +24,71 @@ export const ProposalTransfer = ({ form }: { form: any }) => {
 
         <EquivalentValueFormField form={form} />
       </div>
-      <ProposalDurationFormField form={form} />
+      {/* <ProposalDurationFormField form={form} /> */}
     </React.Fragment>
   );
 };
 
 export const ProposeToChangeVotingTime = ({ form }: { form: any }) => {
+  const [days, setDays] = useState<number | string>(0);
+  const error = form.formState?.errors?.maximum?.message;
+  console.log(form.formState?.errors?.maximum, '->error');
+  useEffect(() => {
+    form.setError('maximum', '');
+    form.setValue('maximum', days);
+  }, [days]);
   return (
     <>
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-2 gap-1">
         {/* <TextFormField
-          form={form}
-          name="minimum"
-          type="number"
-          label="From"
-          placeholder="From how many days"
-          props={{ disabled: true, value: initialDuration }}
-        /> */}
-        <TextFormField
           form={form}
           name="maximum"
           type="number"
           label="New Proposal Duration"
           placeholder="To how many days"
-          // props={{
-          //   onBlur: ({ target }: any) => {
-          //     if (target.value.startsWith(0)) {
-          //       form.setError('maximum', {
-          //         messsage: 'Duration cannot starts with 0',
-          //       });
-          //     } else {
-          //       form.setError('maximum', { message: '' });
-          //     }
-          //   },
-          // }}
-        />
+        /> */}
+        {/* <ProposalDurationFormField form={form} /> */}
+
+        <div className="space-y-3">
+          <label className="dark:text-white text-dark font-light text-sm">
+            New Proposal Duration
+          </label>
+          <div className="border border-[#CCCCCC99] dark:border-[#292929] flex items-center justify-between rounded-lg pt-1 px-5 dark:text-defaultText text-dark">
+            <div
+              className={cn(
+                'bg-[#D2D2D2] hover:bg-[#dddada] dark:bg-[#1E1E1E] rounded-lg py-2 px-2 dark:hover:bg-[#2a2a2a] trans',
+                days === 0 && 'cursor-default'
+              )}
+              role="button"
+              onClick={() => {
+                days === 0 ? null : setDays((prev) => Number(prev) - 1);
+              }}
+            >
+              <Minus size={18} />
+            </div>
+            <Input
+              value={days}
+              type="number"
+              className="border-none bg-white dark:bg-[#191919] w-fit text-center "
+              placeholder="0"
+              onChange={({ target }) => setDays(target.value)}
+            />
+            <div
+              className="bg-[#D2D2D2] hover:bg-[#dddada] dark:bg-[#1E1E1E] rounded-lg py-2 px-2 dark:hover:bg-[#2a2a2a] trans"
+              role="button"
+              onClick={() => setDays((prev) => Number(prev || 0) + 1)}
+            >
+              <Plus size={18} />
+            </div>
+          </div>
+        </div>
       </div>
-      <ProposalDurationFormField form={form} />
+      {error && (
+        <p className="text-sm font-light text-destructive">
+          Days cannot be zero
+        </p>
+      )}
+      {/* <ProposalDurationFormField form={form} /> */}
     </>
   );
 };
@@ -80,7 +111,7 @@ export const ProposeToChangeQuorum = ({ form }: { form: any }) => {
   return (
     <>
       <QuorumFormField form={form} />
-      <ProposalDurationFormField form={form} />
+      {/* <ProposalDurationFormField form={form} /> */}
     </>
   );
 };

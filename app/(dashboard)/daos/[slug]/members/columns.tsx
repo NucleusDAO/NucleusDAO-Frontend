@@ -18,6 +18,7 @@ import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { IConnectWalletContext } from '@/libs/types';
 import { removeExistingStorageItem } from '@/libs/utils';
 import { EachDaoContext } from '@/context/each-dao-context';
+import { useRouter } from 'next/navigation';
 
 const columns: {
   accessorKey: string;
@@ -67,10 +68,11 @@ export const WalletAddressCell = ({ row }: any) => {
 };
 
 export const ActionCell = ({ row }: any) => {
-  const { isMember } = useContext(EachDaoContext);
+  const router = useRouter();
+  const { isMember, currentDAO } = useContext(EachDaoContext);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { isConnected } = user;
-  const { id } = row.original;
+  const { id, wallet } = row.original;
 
   return (
     <>
@@ -95,12 +97,16 @@ export const ActionCell = ({ row }: any) => {
               </DialogDescription>
             </DialogHeader>
 
-            <Link
-              href={`${CREATE_PROPOSAL_URL}?enums=2`}
-              onClick={() => removeExistingStorageItem('new_proposal')}
+            <div
+              onClick={() => {
+                removeExistingStorageItem('new_proposal');
+                router.push(
+                  `${CREATE_PROPOSAL_URL}?ct=${currentDAO.id}&enums=2&address=${wallet}`
+                );
+              }}
             >
               <Button className="w-full">Propose</Button>
-            </Link>
+            </div>
           </DialogContent>
         </Dialog>
       ) : (

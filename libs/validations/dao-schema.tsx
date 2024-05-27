@@ -77,10 +77,6 @@ const editDaoInfoSchema = z.object({
 // .min(1, { message: 'Value is required' })
 
 const proposalInfoSchema = z.object({
-  // title: z
-  //   .string()
-  //   .min(2, { message: 'Must be 2 or more characters long' })
-  //   .max(50, { message: 'Must be 50 or fewer characters long' }),
   type: z
     .string()
     .min(1, { message: 'Proposal type is required' })
@@ -88,34 +84,12 @@ const proposalInfoSchema = z.object({
   description: z.string().min(2, { message: 'Description must not be empty' }),
   newName: z.string().optional(),
   logo: z.any().optional(),
-  targetWallet: z.string().optional(),
-  // .min(51, { message: 'Wallet should contain more than 51 characters' })
-  // .max(53, { message: 'Wallet should not contain more 53 characters' })
-  // .optional(),
+  targetWallet: z.any().optional(),
   value: z.string().optional(),
   duration: z.number().optional(),
-  // .coerce
-  //   .number({
-  //     required_error: 'Duration value is required',
-  //     invalid_type_error: 'Duration value must be a number',
-  //   })
-  //   .min(1)
-  // .optional(),
   minimum: z.number().optional(),
-  // .number({
-  //   required_error: 'Minimum value is required',
-  //   invalid_type_error: 'Minimum value must be a number',
-  // })
-  // .optional(),
   maximum: z.string().optional(),
-  // .string({
-  //   required_error: 'Maximum value is required',
-  //   // invalid_type_error: 'Maximum value must be a number',
-  // })
-  // .min(1, { message: '3 days is the least expiration days' })
-  // .max(7, { message: '7 days is the maximun expiration days' })
-  // .optional(),
-  quorum: z.number().optional().optional(),
+  quorum: z.number().optional(),
   socialMedia: z.array(socialMediaSchema).optional(),
 });
 

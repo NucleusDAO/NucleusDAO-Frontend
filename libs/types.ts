@@ -1,3 +1,4 @@
+import { AeSdkMethods } from '@aeternity/aepp-sdk';
 import { ReactNode } from 'react';
 
 export type WalletInfo = {
@@ -37,6 +38,7 @@ export type ConnectWalletParams = {
     info: WalletInfo;
     getConnection?: () => Promise<any> | any; // Adjust any to the actual return type of getConnection
   };
+  aeSdk: any;
 };
 
 export type HandleWalletFunction = (wallets: { [key: string]: any }) => void;
@@ -52,6 +54,7 @@ export interface IConnectWalletContext {
   user: { address: string; isConnected: boolean };
   isConnecting: boolean;
   handleDisconnect?: () => void;
+  aeSdk: AeSdkMethods | null;
 }
 
 export interface IApiContext {

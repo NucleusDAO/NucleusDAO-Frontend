@@ -22,6 +22,7 @@ import { AppContext } from '@/context/app-context';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { IConnectWalletContext } from '@/libs/types';
 import { wait } from '@/libs/utils';
+import { isAddressValid } from '@aeternity/aepp-sdk';
 
 const AddMemberForm = () => {
   const [isPending, setIsPending] = useState<boolean>(false);
@@ -49,6 +50,7 @@ const AddMemberForm = () => {
       let hasExternalAddress = false;
       let updatedData;
       members.forEach((item: { address: string }, index: number) => {
+        const isTargetAddressValid = isAddressValid(item.address || '');
         if (seenAddresses.has(item.address)) {
           duplicateAddresses.push({ index, address: item.address });
           // Perform operations for duplicate address
@@ -73,7 +75,7 @@ const AddMemberForm = () => {
             members: value.members,
             memberComplete: false,
           };
-        } else if (item.address.length < 51 || item.address.length > 53) {
+        } else if (!isTargetAddressValid) {
           hasExternalAddress = true;
           form.setError(`members.${index}.address`, {
             type: 'onChange',

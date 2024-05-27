@@ -52,6 +52,8 @@ const EachProposal = () => {
     replace(`${pathname}?${params.toString()}`);
   }, 200);
 
+  console.log(currentProposal, '->');
+
   return (
     <div>
       <div className="flex items-center justify-between border-b border-[#292929] pb-4">

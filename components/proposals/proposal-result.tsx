@@ -61,6 +61,7 @@ const ProposalResult = ({
         Number(currentProposal.id),
         currentDAO.contractAddress
       );
+      console.log(proposal, '-> updated proposal');
       setCurrentProposal(proposal);
       toast.success('Proposal executed successfully');
       fetchDAOs();
@@ -126,17 +127,16 @@ const ProposalResult = ({
         </div>
         {isMember && (
           <>
-            {getStatus(currentProposal) === 'Pending' &&
-              percentageOfVoteFor >= Number(currentDAO.quorum) && (
-                <Button
-                  className="w-full mt-1.5"
-                  onClick={handleExecuteProposal}
-                  loading={isExecuting}
-                  loadingText="Executing..."
-                >
-                  Excecute Proposal
-                </Button>
-              )}
+            {getStatus(currentProposal) === 'Pending' && (
+              <Button
+                className="w-full mt-1.5"
+                onClick={handleExecuteProposal}
+                loading={isExecuting}
+                loadingText="Executing..."
+              >
+                Excecute Proposal
+              </Button>
+            )}
           </>
         )}
       </div>

@@ -12,7 +12,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { convertCurrency } from '@/libs/utils';
+import { convertCurrency, convertDays, millisecondsToDays } from '@/libs/utils';
 
 interface IEachProposalDetails {
   currentProposal: {
@@ -78,7 +78,9 @@ const EachProposalDetails = ({ currentProposal }: IEachProposalDetails) => {
       {proposalType === proposalLists[3].type && (
         <div className="grid grid-cols-6">
           <h1 className="col-span-2">New Duration:</h1>
-          <p className="col-span-4 overflow-hidden">{Number(value)} days</p>
+          <p className="col-span-4 overflow-hidden">
+            {convertDays(millisecondsToDays(Number(value)))}
+          </p>
         </div>
       )}
       {info && info.name && (
@@ -118,7 +120,7 @@ const EachProposalDetails = ({ currentProposal }: IEachProposalDetails) => {
             <img
               src={info.image}
               alt={daoName}
-              className="rounded-lg h-[50px] w-[50px] object-cover -mt-4"
+              className="rounded-lg h-[50px] w-[50px] object-cover -pt-4"
             />
             <Dialog onOpenChange={setOpen} open={open}>
               <DialogTrigger asChild>

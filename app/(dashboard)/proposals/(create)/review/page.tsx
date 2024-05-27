@@ -1,6 +1,11 @@
 'use client';
 import { proposalLists, rate } from '@/config/dao-config';
-import { convertDays, defaultProposal } from '@/libs/utils';
+import {
+  convertDays,
+  daysToMilliseconds,
+  defaultProposal,
+  millisecondsToDays,
+} from '@/libs/utils';
 import {
   AlertDialog,
   AlertDialogContent,
@@ -12,7 +17,7 @@ import { Button } from '@/components/ui/button';
 import { MoveLeft, MoveUpRight } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { CREATE_PROPOSAL_URL, PROPOSALS_URL } from '@/config/path';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { AppContext } from '@/context/app-context';
 import Lottie from 'react-lottie';
 import { defaultSuccessOption } from '@/components/animation-options';
@@ -48,6 +53,16 @@ const ReviewProposal = () => {
   const enums = searchParams.get('enums') || '';
   const router = useRouter();
   const { value } = newProposalInfo;
+  const [duration, setDuration] = useState<number | null>(null);
+
+  useEffect(() => {
+    const getDuration = async () => {
+      const dao = await getEachDAO(daoID);
+      const duration: number = millisecondsToDays(Number(dao.votingTime));
+      setDuration(duration);
+    };
+    getDuration();
+  }, []);
 
   const handleCreateProposal = async () => {
     setIsCreating(true);
@@ -75,7 +90,10 @@ const ReviewProposal = () => {
         });
       } else {
         amount =
-          Number(value.value) || Number(value.maximum) || value.quorum || 0;
+          Number(value.value) ||
+          Math.round(daysToMilliseconds(Number(value.maximum))) ||
+          value.quorum ||
+          0;
       }
 
       const dao = await getEachDAO(daoID);
@@ -183,20 +201,15 @@ const ReviewProposal = () => {
             </p>
           </div>
         )}
-        {value.duration && (
-          <div className="grid grid-cols-2 text-sm w-4/6">
-            <p className="dark:text-white text-dark">Duration</p>
-            <p className="dark:text-[#888888] text-dark">
-              {convertDays(Number(value.duration))}
-            </p>
-          </div>
-        )}
-        {value.maximum && (
-          <div className="grid grid-cols-2 text-sm w-4/6">
-            <p className="dark:text-white text-dark">New Duration</p>
-            <p className="dark:text-[#888888] text-dark">{`${value.maximum} day(s)`}</p>
-          </div>
-        )}
+        {value.maximum !== '0' ||
+          (value.maximum && (
+            <div className="grid grid-cols-2 text-sm w-4/6">
+              <p className="dark:text-white text-dark">New Duration</p>
+              <p className="dark:text-[#888888] text-dark">{`${convertDays(
+                Number(value.maximum)
+              )}`}</p>
+            </div>
+          ))}
         {value.value && (
           <div className="grid grid-cols-2 text-sm w-4/6">
             <p className="dark:text-white text-dark">Value</p>
@@ -241,6 +254,14 @@ const ReviewProposal = () => {
               alt="logo"
               className="rounded-lg h-[50px] w-[50px] object-cover -mt-4"
             />
+          </div>
+        )}
+        {duration && (
+          <div className="grid grid-cols-2 text-sm w-4/6">
+            <p className="dark:text-white text-dark">Duration</p>
+            <p className="dark:text-[#888888] text-dark">
+              {convertDays(Number(duration))}
+            </p>
           </div>
         )}
         <div className="grid grid-cols-2 text-sm w-4/6">
