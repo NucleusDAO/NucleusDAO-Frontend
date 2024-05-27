@@ -86,7 +86,7 @@ export const EachDaoContextProvider = ({ children }: IAppProvider) => {
             currentDAO.contractAddress
           );
           setEachDAOProposal(
-            proposals.map((proposal: IProposal) => {
+            proposals.reverse().map((proposal: IProposal) => {
               return {
                 type: proposal.proposalType,
                 status: getStatus(proposal),

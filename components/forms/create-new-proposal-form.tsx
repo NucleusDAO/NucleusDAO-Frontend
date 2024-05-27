@@ -88,8 +88,6 @@ const CreateNewProposalForm = () => {
     setNewProposalInfo({ value: updatedData });
   };
 
-  // console.log(form.getFieldState('value'), '>? steate');
-
   useEffect(() => {
     const subscription = form.watch((value, { name, type }) => {
       let updatedData;
@@ -110,10 +108,7 @@ const CreateNewProposalForm = () => {
     return () => subscription.unsubscribe();
   }, [form.watch]);
 
-  console.log(form.formState);
-
   const onSubmit = async () => {
-    // alert('i am here');
     const currentType = Number(form.getValues('type'));
 
     if (ValidateProposalForm[currentType]({ form, daoMembers })) {
@@ -132,7 +127,7 @@ const CreateNewProposalForm = () => {
           form={form}
           handleReset={handleReset}
           filterData={
-            memberType
+            memberType || type === '9'
               ? [proposalLists[Number(type)]]
               : proposalLists.slice(0, proposalLists.length - 1)
           }
@@ -173,7 +168,6 @@ const CreateNewProposalForm = () => {
             type="submit"
             className="px-12 w-full md:w-fit"
             loading={routing}
-            // onClick={onSubmit}
             loadingText="Please wait..."
           >
             Review

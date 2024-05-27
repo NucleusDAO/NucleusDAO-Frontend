@@ -151,7 +151,9 @@ const EachProposalView = ({
                 </div>
               </div>
 
-              {getStatus(currentProposal) === 'Pending' ? (
+              {getStatus(currentProposal) === 'Pending' ||
+              getStatus(currentProposal) === 'Succeeded' ||
+              getStatus(currentProposal) === 'Failed' ? (
                 <p className="dark:text-white text-dark text-sm">
                   Voting period has ended. The result will be shown if the
                   proposal reach its quorum and executed
