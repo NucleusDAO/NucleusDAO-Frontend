@@ -5,31 +5,35 @@ import LegacyLogo from '@/assets/logos/legacy.png';
 import KrypLogo from '@/assets/logos/kryp.png';
 import CocacolaLogo from '@/assets/logos/cocacola.png';
 import CreativesLogo from '@/assets/logos/creatives-dao.png';
+import { TotalProposalType } from '@/libs/types';
 
 const dashboardFeedsData = (
-  connected: boolean
+  connected: boolean,
+  userDAO: any[],
+  proposal: number,
+  votes: number
 ): { title: string; value: number; icon: ReactNode }[] => [
   {
     title: 'DAOs Joined',
-    value: connected ? 10 : 0,
-    icon: <DaoIcon size='34' />,
+    value: connected ? userDAO.length : 0,
+    icon: <DaoIcon size="34" />,
   },
   {
     title: 'Total Votes',
-    value: connected ? 223 : 0,
-    icon: <DaoIcon size='34' />,
+    value: connected ? votes : 0,
+    icon: <DaoIcon size="34" />,
   },
   {
     title: 'Total Proposals',
-    value: connected ? 50 : 0,
-    icon: <DaoIcon size='34' />,
+    value: connected ? proposal : 0,
+    icon: <DaoIcon size="34" />,
   },
 ];
 
 const dashboardTableData = (width: number) => [
   {
     organisation: 'Legacy',
-    orgIcon: <Image src={LegacyLogo} alt='legacy logo' width={width} />,
+    orgIcon: <Image src={LegacyLogo} alt="legacy logo" width={width} />,
     activeMember: '27K',
     activeProposal: '5(4)',
     description:
@@ -39,7 +43,7 @@ const dashboardTableData = (width: number) => [
   },
   {
     organisation: 'Kryptokrauts',
-    orgIcon: <Image src={KrypLogo} alt='legacy logo' width={width} />,
+    orgIcon: <Image src={KrypLogo} alt="legacy logo" width={width} />,
     activeMember: '20K',
     activeProposal: '5(4)',
     description:
@@ -49,7 +53,7 @@ const dashboardTableData = (width: number) => [
   },
   {
     organisation: 'Cocacola',
-    orgIcon: <Image src={CocacolaLogo} alt='legacy logo' width={width} />,
+    orgIcon: <Image src={CocacolaLogo} alt="legacy logo" width={width} />,
     activeMember: '16K',
     activeProposal: '5(4)',
     description:
@@ -59,7 +63,7 @@ const dashboardTableData = (width: number) => [
   },
   {
     organisation: 'CreativesDao',
-    orgIcon: <Image src={CreativesLogo} alt='legacy logo' width={width} />,
+    orgIcon: <Image src={CreativesLogo} alt="legacy logo" width={width} />,
     activeMember: '26K',
     activeProposal: '5(4)',
     description:
@@ -69,7 +73,7 @@ const dashboardTableData = (width: number) => [
   },
   {
     organisation: 'Legacy',
-    orgIcon: <Image src={LegacyLogo} alt='legacy logo' width={width} />,
+    orgIcon: <Image src={LegacyLogo} alt="legacy logo" width={width} />,
     activeMember: '24K',
     description:
       'We believe in a decentralized future powered by blockchain! We are testing the DAO functionality for kryptokrauts.',
@@ -79,7 +83,7 @@ const dashboardTableData = (width: number) => [
   },
   {
     organisation: 'CreativesDao',
-    orgIcon: <Image src={CreativesLogo} alt='legacy logo' width={width} />,
+    orgIcon: <Image src={CreativesLogo} alt="legacy logo" width={width} />,
     activeMember: '17K',
     description:
       'The CreativesDAO is an overarching body for all creative contributors in the NEAR ecosystem.',
@@ -89,7 +93,7 @@ const dashboardTableData = (width: number) => [
   },
   {
     organisation: 'Kryptokrauts',
-    orgIcon: <Image src={KrypLogo} alt='legacy logo' width={width} />,
+    orgIcon: <Image src={KrypLogo} alt="legacy logo" width={width} />,
     activeMember: '6K',
     description:
       'We believe in a decentralized future powered by blockchain! We are testing the DAO functionality for kryptokrauts.',

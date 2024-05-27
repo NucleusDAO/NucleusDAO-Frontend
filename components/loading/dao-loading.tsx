@@ -13,7 +13,10 @@ const DaoLoading = () => {
           {Array(3)
             .fill(null)
             .map((_, index) => (
-              <Skeleton className="w-[60px] h-11 dark:bg-[#1E1E1E] bg-[#F5F5F5]" key={`box-${index}`} />
+              <Skeleton
+                className="w-[60px] h-11 dark:bg-[#1E1E1E] bg-[#F5F5F5]"
+                key={`box-${index}`}
+              />
             ))}
         </div>
       </div>

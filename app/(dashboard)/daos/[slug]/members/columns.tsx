@@ -16,6 +16,9 @@ import { CREATE_PROPOSAL_URL } from '@/config/path';
 import { useContext } from 'react';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { IConnectWalletContext } from '@/libs/types';
+import { removeExistingStorageItem } from '@/libs/utils';
+import { EachDaoContext } from '@/context/each-dao-context';
+import { useRouter } from 'next/navigation';
 
 const columns: {
   accessorKey: string;
@@ -53,19 +56,27 @@ export const WalletAddressCell = ({ row }: any) => {
   const { wallet } = row.original;
   return (
     <div className="flex space-x-2 items-center w-[25vw]">
-      <Image src={RoundedIcon} alt="waller" width={24} />
-      <p>{wallet}</p>
+      <img
+        src={`https://avatars.z52da5wt.xyz/${wallet}`}
+        alt="logo"
+        className="rounded-full h-6 w-6"
+      />
+
+      <p>{wallet.slice(0, 14) + '...' + wallet.slice(-8)}</p>
     </div>
   );
 };
 
 export const ActionCell = ({ row }: any) => {
+  const router = useRouter();
+  const { isMember, currentDAO } = useContext(EachDaoContext);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { isConnected } = user;
-  const { id } = row.original;
+  const { id, wallet } = row.original;
+
   return (
     <>
-      {isConnected ? (
+      {isConnected && isMember ? (
         <Dialog>
           <DialogTrigger asChild>
             <Button
@@ -86,9 +97,16 @@ export const ActionCell = ({ row }: any) => {
               </DialogDescription>
             </DialogHeader>
 
-            <Link href={`${CREATE_PROPOSAL_URL}?enums=2`}>
+            <div
+              onClick={() => {
+                removeExistingStorageItem('new_proposal');
+                router.push(
+                  `${CREATE_PROPOSAL_URL}?ct=${currentDAO.id}&enums=2&address=${wallet}`
+                );
+              }}
+            >
               <Button className="w-full">Propose</Button>
-            </Link>
+            </div>
           </DialogContent>
         </Dialog>
       ) : (

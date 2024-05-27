@@ -12,28 +12,11 @@ import basicDAOAci from './contract/BasicDAO.json';
 import { DASHBOARD_URL } from '@/config/path';
 
 const nucleusDAOContractAddress =
-  'ct_2nKgdeCv9dnLBHCEscVduQzRc8CLjJhh8uJb98az5hhQ8SJS5q';
+  'ct_2gG4gAoYWcTfHuZywfPHmSfoAHTjVGKL866uKXPBLLfhNszYtk';
 
-const TESTNET_NODE_URL = 'https://testnet.aeternity.io';
-const MAINNET_NODE_URL = 'https://mainnet.aeternity.io';
-const COMPILER_URL = 'https://compiler.aepps.com';
-
-export const aeSdk: any = new AeSdkAepp({
-  name: 'NucleusDAO',
-  nodes: [
-    { name: 'testnet', instance: new Node(TESTNET_NODE_URL) },
-    { name: 'mainnet', instance: new Node(MAINNET_NODE_URL) },
-  ],
-  onNetworkChange: async ({ networkId }) => {
-    const [{ name }] = (await aeSdk.getNodesInPool()).filter(
-      (node: any) => node.nodeNetworkId === networkId
-    );
-    aeSdk.selectNode(name);
-  },
-  onAddressChange: ({ current }: any) =>
-    console.log('setAddress', Object.keys(current)[0]),
-  onDisconnect: () => console.log('Aepp is disconnected'),
-});
+export const TESTNET_NODE_URL = 'https://testnet.aeternity.io';
+export const MAINNET_NODE_URL = 'https://mainnet.aeternity.io';
+export const COMPILER_URL = 'https://compiler.aepps.com';
 
 export const detectWallets = async () => {
   const connection = new BrowserWindowMessageConnection();
@@ -73,6 +56,29 @@ export const createDeepLinkUrl = ({
   return url;
 };
 
+const aeSdk: any = new AeSdkAepp({
+  name: 'NucleusDAO',
+  nodes: [
+    { name: 'testnet', instance: new Node(TESTNET_NODE_URL) },
+    { name: 'mainnet', instance: new Node(MAINNET_NODE_URL) },
+  ],
+  onNetworkChange: async ({ networkId }) => {
+    const [{ name }] = (await aeSdk.getNodesInPool()).filter(
+      (node: any) => node.nodeNetworkId === networkId
+    );
+    aeSdk.selectNode(name);
+  },
+  onAddressChange: ({ current }: any) => {
+    const currentAccountAddress = Object.keys(current)[0];
+    console.log(currentAccountAddress, '-> address');
+
+    // if (!currentAccountAddress) return;
+    // const user = { address: currentAccountAddress, isConnected: true };
+    // setUser(user);
+  },
+  onDisconnect: () => console.log('Aepp is disconnected'),
+});
+
 export const IN_FRAME =
   typeof window !== 'undefined' && window.parent !== window;
 export const IS_MOBILE =
@@ -100,7 +106,8 @@ export const connectWallet = async ({
   setOpenModal,
   isHome,
   walletObj = { info: { name: '', type: '' } },
-}: ConnectWalletParams) => {
+}: // aeSdk,
+ConnectWalletParams) => {
   setConnectingToWallet(true);
   let addressDeepLink: any;
 
@@ -110,7 +117,8 @@ export const connectWallet = async ({
       return;
     }
     if (isHome) {
-      const domainName = typeof window !== 'undefined' && window.location.origin;
+      const domainName =
+        typeof window !== 'undefined' && window.location.origin;
       const dashboardURL = `${domainName}/${DASHBOARD_URL}/`;
       addressDeepLink = createDeepLinkUrl({
         type: 'address',

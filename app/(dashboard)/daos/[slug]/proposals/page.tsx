@@ -1,26 +1,38 @@
 'use client';
+import EachDaoLoading from '@/components/loading/each-dao-loading';
 import EachFilterTab from '@/components/proposals/each-proposal-tab';
-import { AppContext } from '@/context/app-context';
 import { EachDaoContext } from '@/context/each-dao-context';
 import { useSearchParams } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
 
 const EachDaoProposals = () => {
-  const { eachDAOProposal } = useContext(EachDaoContext);
+  const { eachDAOProposal, isProposalLoading } = useContext(EachDaoContext);
   const searchParams = useSearchParams();
+  const [proposals, setProposals] = useState(eachDAOProposal);
   const search = searchParams.get('search') || '';
   const filter = searchParams.get('filter') || '';
-  const [proposals, setProposals] = useState(eachDAOProposal);
 
   useEffect(() => {
     if (search) {
-      setProposals(eachDAOProposal?.filter((item: { wallet: string; type: string; }) =>  item?.wallet?.toLowerCase().includes(search.toLowerCase()) || item?.type?.toLocaleLowerCase()?.includes(search.toLowerCase())))
+      setProposals(
+        eachDAOProposal?.filter(
+          (item: { wallet: string; type: string }) =>
+            item?.wallet?.toLowerCase().includes(search.toLowerCase()) ||
+            item?.type?.toLocaleLowerCase()?.includes(search.toLowerCase())
+        )
+      );
     } else if (filter) {
-      setProposals(eachDAOProposal?.filter((item: { status: string }) =>  item?.status?.toLowerCase().includes(filter.toLowerCase())))
+      setProposals(
+        eachDAOProposal?.filter((item: { status: string }) =>
+          item?.status?.toLowerCase().includes(filter.toLowerCase())
+        )
+      );
     } else {
       setProposals(eachDAOProposal);
     }
-  }, [search, filter]);
+  }, [search, filter, eachDAOProposal]);
+
+  if (isProposalLoading) return <EachDaoLoading />;
 
   return (
     <div className="-mt-4">

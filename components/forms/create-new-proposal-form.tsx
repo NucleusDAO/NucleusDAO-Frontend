@@ -3,9 +3,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import RoundedIcon from '@/assets/icons/roundedIcon.png';
-import Image from 'next/image';
-
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -20,47 +17,121 @@ import { Textarea } from '../ui/textarea';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { REVIEW_PROPOSAL_URL } from '@/config/path';
 import { proposalLists } from '@/config/dao-config';
-import { useEffect, useState } from 'react';
-import {
-  SelectFormField,
-} from '@/components/proposals/proposal-form-element';
+import { useContext, useEffect, useState } from 'react';
+import { SelectFormField } from '@/components/proposals/proposal-form-element';
 import ElementBlock from '../proposals/element-block';
 import { EachProposalType } from '@/config/proposal-config';
+import { AppContext } from '@/context/app-context';
+import { IConnectWalletContext } from '@/libs/types';
+import { ConnectWalletContext } from '@/context/connect-wallet-context';
+import {
+  defaultProposal,
+  getDaysFromMilliseconds,
+  millisecondsToDays,
+  wait,
+} from '@/libs/utils';
+import { ValidateProposalForm } from '@/libs/validations/validate-create-proposal';
 
 const CreateNewProposalForm = () => {
+  const [routing, setRouting] = useState<boolean>(false);
+  const { setNewProposalInfo, newProposalInfo, getEachDAO } =
+    useContext(AppContext);
+  const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
+  const { address } = user;
+  const [daoMembers, setDaoMembers] = useState([]);
   const searchParams = useSearchParams();
-  const enums: string = searchParams.get('enums') || '0'
+  const type: string =
+    searchParams.get('enums') || newProposalInfo.value.type || '0';
+  const memberType = searchParams.get('type') || '';
+  const daoID = searchParams.get('ct');
+  const targetAddress = searchParams.get('address');
   const router = useRouter();
-  const [showEl, setShowEl] = useState<boolean>(false);
   const form = useForm<z.infer<typeof proposalInfoSchema>>({
     resolver: zodResolver(proposalInfoSchema),
     defaultValues: {
-      // title: '',
-      type: enums,
-      description: '',
-      targetWallet: '',
-      value: '0.000067 AE',
-      duration: 0,
-      quorum: 0,
-      socialMedia: [{ type: '', link: '' }],
+      ...newProposalInfo.value,
+      duration: getDaysFromMilliseconds(newProposalInfo.value.duration),
+      newName: '',
+      targetWallet: targetAddress,
+      type,
     },
   });
 
-  const selectedTitle = form.watch('type');
-
   useEffect(() => {
-    setShowEl(!!selectedTitle); // Display the element if watchedInputValue is truthy
-  }, [selectedTitle]);
+    const getDuration = async () => {
+      const dao = await getEachDAO(daoID);
+      const duration = millisecondsToDays(Number(dao.votingTime));
+      setDaoMembers(dao.members);
+      form.setValue('duration', duration);
+    };
+    getDuration();
+  }, []);
 
-  const onSubmit = async (data: any) => {
-    console.log(data);
-    router.push(REVIEW_PROPOSAL_URL);
+  const handleReset = (type: string) => {
+    console.log(defaultProposal, ' defaultProposal');
+    form.setValue('description', '');
+    form.setValue('duration', 0);
+    form.setValue('logo', '');
+    form.setValue('maximum', '0');
+    form.setValue('minimum', 0);
+    form.setValue('newName', '');
+    form.setValue('quorum', 0);
+    form.setValue('socialMedia', [{ type: '', link: '' }]);
+    form.setValue('targetWallet', '');
+    form.setValue('value', '');
+    let updatedData;
+    updatedData = { ...defaultProposal.value, type: type };
+    localStorage.setItem(
+      'new_proposal',
+      JSON.stringify({ value: updatedData })
+    );
+    setNewProposalInfo({ value: updatedData });
   };
 
+  useEffect(() => {
+    const subscription = form.watch((value, { name, type }) => {
+      let updatedData;
+      // Remove previous selected information
+      if (name === 'type') {
+        updatedData = { ...defaultProposal.value, type: value.type };
+        localStorage.setItem(
+          'new_proposal',
+          JSON.stringify({ value: updatedData })
+        );
+        setNewProposalInfo({ value: updatedData });
+      } else {
+        const updatedData = { ...newProposalInfo, value };
+        localStorage.setItem('new_proposal', JSON.stringify(updatedData));
+        setNewProposalInfo(updatedData);
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [form.watch]);
+
+  const onSubmit = async () => {
+    const currentType = Number(form.getValues('type'));
+
+    if (ValidateProposalForm[currentType]({ form, daoMembers })) {
+      setRouting(true);
+      wait().then(() => {
+        router.push(`${REVIEW_PROPOSAL_URL}?ct=${daoID}&type=${currentType}`);
+        setRouting(false);
+      });
+    }
+  };
+  // onSubmit={form.handleSubmit(onSubmit)}
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <SelectFormField form={form} filterData={proposalLists} />
+      <form className="space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
+        <SelectFormField
+          form={form}
+          handleReset={handleReset}
+          filterData={
+            memberType || type === '9'
+              ? [proposalLists[Number(type)]]
+              : proposalLists.slice(0, proposalLists.length - 1)
+          }
+        />
 
         <FormField
           control={form.control}
@@ -84,11 +155,22 @@ const CreateNewProposalForm = () => {
         <div className="md:flex space-y-3 md:space-y-0 justify-between">
           <div className="flex space-x-3 items-center">
             <p className="font-light text-sm text-[#888888]">Published by</p>
-            <Image src={RoundedIcon} alt="logo" width={20} height={20} />
-            <p className="text-sm dark:text-white text-dark">9xfDAO...ntY897</p>
+            <img
+              src={`https://avatars.z52da5wt.xyz/${address}`}
+              alt="logo"
+              width={20}
+            />
+            <p className="text-sm dark:text-white text-dark">
+              {address.slice(0, 15)}...
+            </p>
           </div>
-          <Button type="submit" className="px-12 w-full md:w-fit">
-            Publish
+          <Button
+            type="submit"
+            className="px-12 w-full md:w-fit"
+            loading={routing}
+            loadingText="Please wait..."
+          >
+            Review
           </Button>
         </div>
       </form>

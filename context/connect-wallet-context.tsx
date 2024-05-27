@@ -1,9 +1,17 @@
 'use client';
 
-import React, { ReactNode, createContext, useEffect, useState } from 'react';
+import React, {
+  ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import {
   IN_FRAME,
   IS_MOBILE,
+  MAINNET_NODE_URL,
+  TESTNET_NODE_URL,
   connectWallet,
   resolveWithTimeout,
 } from '@/libs/ae-utils';
@@ -16,8 +24,14 @@ import ConfirmDisconnectWallet from './component/confirm-disconnect';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { HandleWalletFunction, IConnectWalletContext } from '@/libs/types';
 import { HOME_URL } from '@/config/path';
+import { AppContext } from './app-context';
+import { AeSdkAepp, Node } from '@aeternity/aepp-sdk';
 
-export const ConnectWalletContext = createContext<IConnectWalletContext>({ user: { address: '', isConnected: false }, isConnecting: false });
+export const ConnectWalletContext = createContext<IConnectWalletContext>({
+  user: { address: '', isConnected: false },
+  isConnecting: false,
+  aeSdk: null,
+});
 
 interface IAppProvider {
   children: ReactNode;
@@ -37,6 +51,7 @@ export const ConnectWalletProvider = ({ children }: IAppProvider) => {
   // const getUser = typeof window !== 'undefined' && localStorage.getItem('user');
   const pathname = usePathname();
   const defaultUser = { address: '', isConnected: false };
+  const { getActivities } = useContext(AppContext);
 
   const [isConnecting, setIsConnecting] = useState<boolean>(false);
   const [user, setUser] = useState<IUser>(defaultUser);
@@ -51,6 +66,27 @@ export const ConnectWalletProvider = ({ children }: IAppProvider) => {
   const [_, setConnectingTo] = useState<any>(null);
   const [__, setConnectingToWallet] = useState<boolean>(false);
   const [___, setEnableIFrameWallet] = useState<boolean>(false);
+
+  const aeSdk: any = new AeSdkAepp({
+    name: 'NucleusDAO',
+    nodes: [
+      { name: 'testnet', instance: new Node(TESTNET_NODE_URL) },
+      { name: 'mainnet', instance: new Node(MAINNET_NODE_URL) },
+    ],
+    onNetworkChange: async ({ networkId }) => {
+      const [{ name }] = (await aeSdk.getNodesInPool()).filter(
+        (node: any) => node.nodeNetworkId === networkId
+      );
+      aeSdk.selectNode(name);
+    },
+    onAddressChange: ({ current }: any) => {
+      const currentAccountAddress = Object.keys(current)[0];
+      if (!currentAccountAddress) return;
+      const user = { address: currentAccountAddress, isConnected: true };
+      setUser(user);
+    },
+    onDisconnect: () => console.log('Aepp is disconnected'),
+  });
 
   const [connectionError, setConnectionError] = useState<{
     message: string;
@@ -130,9 +166,9 @@ export const ConnectWalletProvider = ({ children }: IAppProvider) => {
       setConnectionError,
       setOpenModal,
       walletObj,
-      isHome
+      isHome,
+      aeSdk,
     });
-
     setIsConnecting(false);
     setConnectingTo(null);
   };
@@ -162,6 +198,8 @@ export const ConnectWalletProvider = ({ children }: IAppProvider) => {
     user,
     isConnecting,
     handleDisconnect,
+    setUser,
+    aeSdk,
   };
 
   return (
@@ -183,6 +221,7 @@ export const ConnectWalletProvider = ({ children }: IAppProvider) => {
             open={showDisconnectModal}
             setUser={setUser}
             defaultUser={defaultUser}
+            aeSdk={aeSdk}
           />
           {children}
         </React.Fragment>

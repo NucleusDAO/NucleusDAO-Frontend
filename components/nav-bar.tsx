@@ -25,7 +25,7 @@ const Navbar = ({ handleShowNav, showNav }: INavbar) => {
   const isDesktop = useMediaQuery('(min-width: 768px)');
   const connected: boolean = user.isConnected;
   return (
-    <nav className="flex dark:bg-foreground bg-light w-full md:w-[82%] py-4 px-4 md:px-8 justify-between items-center fixed z-[100] max-w-[1500px]">
+    <nav className="flex dark:bg-foreground bg-light w-full md:w-[82%] py-4 px-4 md:px-8 justify-between items-center fixed z-[100] max-w-[1620px]">
       <div className="relative w-[40%] hidden md:flex">
         {/* <SearchInput
           placeholder="Search anything here"
@@ -56,7 +56,7 @@ const Navbar = ({ handleShowNav, showNav }: INavbar) => {
               />
 
               <div
-                className="dark:bg-[#1E1E1E] bg-white h-11 w-12 justify-center rounded-lg md:hidden flex items-center relative dark:text-white text-[#444444]"
+                className="dark:bg-gradient-to-r dark:from-[#1E1E1E] dark:via-[#1E1E1E] dark:to-[#252525] bg-white h-11 w-12 justify-center rounded-lg md:hidden flex items-center relative dark:text-white text-[#444444]"
                 role="button"
                 onClick={() => handleShowNav((prev: boolean) => !prev)}
               >
@@ -66,7 +66,7 @@ const Navbar = ({ handleShowNav, showNav }: INavbar) => {
             <ConnectWalletPopOver
               callToAction={
                 <div
-                  className="dark:bg-[#1E1E1E] w-[280px] hidden bg-white h-11 justify-center rounded-lg md:flex items-center relative dark:text-[#888888] p-3 text-[12px] space-x-3 text-dark"
+                  className="dark:bg-gradient-to-r dark:from-[#1E1E1E] dark:via-[#1E1E1E] dark:to-[#252525] w-[280px] hidden bg-white h-11 justify-center rounded-lg md:flex items-center relative dark:text-[#888888] p-3 text-[12px] space-x-3 text-dark"
                   role="button"
                 >
                   <img

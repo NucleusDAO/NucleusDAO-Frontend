@@ -1,29 +1,59 @@
 'use client';
+import EachDaoLoading from '@/components/loading/each-dao-loading';
 import EachProposalView from '@/components/proposals/each-proposal-view';
+import { AppContext } from '@/context/app-context';
+import { IEachProposalView } from '@/libs/types';
 import { cn } from '@/libs/utils';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useContext, useEffect, useState } from 'react';
+import { toast } from 'sonner';
 import { useDebouncedCallback } from 'use-debounce';
 
 const EachProposal = () => {
-    const tabs: string[] = ['Result', 'Information'];
-    const searchParams = useSearchParams();
-    const { replace } = useRouter();
-    const pathname = usePathname();
-  
-    const currentTab: string = searchParams.get('q') || tabs[0];
-  
-    const handleSwitch = useDebouncedCallback((term) => {
-      console.log(`Searching... ${term}`);
-  
-      const params = new URLSearchParams(searchParams);
-  
-      if (term) {
-        params.set('q', term);
-      } else {
-        params.delete('q');
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const tabs: string[] = ['Result', 'Information'];
+  const { getEachDAO, getProposal } = useContext(AppContext);
+  const searchParams = useSearchParams();
+  const { replace } = useRouter();
+  const pathname = usePathname();
+  const urlParts = pathname.split('/');
+  const [currentProposal, setCurrentProposal] = useState<
+    IEachProposalView | any
+  >({});
+
+  const currentTab: string = searchParams.get('q') || tabs[0];
+  const proposalId = urlParts[4];
+  const daoId = urlParts[2];
+
+  useEffect(() => {
+    const getSingleProposal = async () => {
+      try {
+        const dao: { contractAddress: string } = await getEachDAO(daoId);
+        const proposal = await getProposal(dao.contractAddress, proposalId);
+        setCurrentProposal(proposal);
+        setIsLoading(false);
+      } catch (error: any) {
+        toast.error(error.message);
+      } finally {
+        setIsLoading(false);
       }
-      replace(`${pathname}?${params.toString()}`);
-    }, 200);
+    };
+    getSingleProposal();
+  }, [proposalId]);
+
+  const handleSwitch = useDebouncedCallback((term) => {
+    const params = new URLSearchParams(searchParams);
+
+    if (term) {
+      params.set('q', term);
+    } else {
+      params.delete('q');
+    }
+    replace(`${pathname}?${params.toString()}`);
+  }, 200);
+
+  console.log(currentProposal, '->');
+
   return (
     <div>
       <div className="flex items-center justify-between border-b border-[#292929] pb-4">
@@ -44,7 +74,15 @@ const EachProposal = () => {
           ))}
         </div>
       </div>
-      <EachProposalView tabs={tabs} />
+      {isLoading ? (
+        <EachDaoLoading />
+      ) : (
+        <EachProposalView
+          tabs={tabs}
+          currentProposal={currentProposal}
+          setCurrentProposal={setCurrentProposal}
+        />
+      )}
     </div>
   );
 };

@@ -19,38 +19,78 @@ import { IConnectWalletContext } from '@/libs/types';
 import { AppContext } from '@/context/app-context';
 import { uploadFile } from '@/config/apis';
 import { toast } from 'sonner';
-import { defaultDaoCreation } from '@/libs/utils';
+import {
+  convertDays,
+  daysToMilliseconds,
+  defaultDaoCreation,
+} from '@/libs/utils';
 import Lottie from 'react-lottie';
 import { defaultSuccessOption } from '@/components/animation-options';
+import { useQueryClient } from '@tanstack/react-query';
+import { NOTIFICATIONS } from '@/libs/key';
 
 const ReviewDao = () => {
+  const queryClient: any = useQueryClient();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isRouting, setIsRouting] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
-  const { createDAO, updateNewDaoInfo, newDaoInfo } = useContext(AppContext);
+  const { createDAO, updateNewDaoInfo, newDaoInfo, fetchDAOs } =
+    useContext(AppContext);
 
   const handleCreateDAO = async () => {
     setIsLoading(true);
     try {
-      const fileUpload = await uploadFile(newDaoInfo.info.logo);
+      let formData = new FormData();
+      formData.append('file', newDaoInfo.info.logoUrl);
+      formData.append('upload_preset', 'bqr7mcvh');
+      const fileUpload = await uploadFile(formData);
       const logoURL = fileUpload.data.url;
-      // user newDaoInfo to get other info
-      await createDAO(
-        'Legacy DAO',
-        'This is a sample DAO',
+      const name = newDaoInfo.info.daoName;
+      const id = newDaoInfo.info.daoName.replace(/\s+/g, '-').toLowerCase();
+      const members = newDaoInfo.members.map((m: any) => {
+        return m.address;
+      });
+      const dao = await createDAO(
+        name,
+        id,
+        newDaoInfo.info.about,
         logoURL,
-        ['https://twitter.com/legacy'],
-        ['ak_F7ZzN6kMcst2rFo7s3QEPjD5Frgy36NPeL32Wf9Cx4SnC8oPn'],
-        0
+        newDaoInfo.info.socialMedia.map((s: any) => {
+          return { name: s.type, url: s.link };
+        }),
+        members,
+        0,
+        Math.round(daysToMilliseconds(newDaoInfo.duration)),
+        newDaoInfo.quorum
       );
-      setIsLoading(false);
+      // Deleted dao information from sessionStorage
+      sessionStorage.removeItem('new_dao');
+      updateNewDaoInfo(defaultDaoCreation);
       setOpen(true);
     } catch (error: any) {
-      setIsLoading(false);
       toast.error(error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
+
+  const handleGoHome = async () => {
+    setIsRouting(true);
+    try {
+      await fetchDAOs();
+      queryClient.invalidateQueries(NOTIFICATIONS);
+      setIsRouting(false);
+      router.push(DAO_URL);
+    } catch (error: any) {
+      setIsRouting(false);
+      toast.error(error.message);
+    } finally {
+      setIsRouting(false);
+    }
+  };
+
   return (
     <div className="space-y-8">
       <div className="space-y-2">
@@ -93,21 +133,25 @@ const ReviewDao = () => {
         <div className="grid grid-cols-2 text-xs md:text-sm md:w-4/6">
           <p className="dark:text-white text-dark">Links</p>
           {!newDaoInfo.info.socialMedia[0].type && 'None'}
-          {newDaoInfo.info.socialMedia.map(
-            (socialMedia: { link: string; type: string }) => (
-              <Link
-                href={socialMedia.link}
-                key={socialMedia.type}
-                target="_blank"
-              >
-                <div className="flex items-center space-x-2 text-primary">
-                  <p className="">{socialMedia.type}</p>
-                  <div className="border border-primary rounded-sm p-0.5">
-                    <MoveUpRight size={10} />
-                  </div>
-                </div>
-              </Link>
-            )
+          {newDaoInfo.info.socialMedia[0].type && (
+            <div className="flex space-x-4">
+              {newDaoInfo.info.socialMedia.map(
+                (socialMedia: { link: string; type: string }) => (
+                  <Link
+                    href={socialMedia.link}
+                    key={socialMedia.type}
+                    target="_blank"
+                  >
+                    <div className="flex items-center space-x-2 text-primary">
+                      <p className="">{socialMedia.type}</p>
+                      <div className="border border-primary rounded-sm p-0.5">
+                        <MoveUpRight size={10} />
+                      </div>
+                    </div>
+                  </Link>
+                )
+              )}
+            </div>
           )}
         </div>
       </div>
@@ -118,9 +162,10 @@ const ReviewDao = () => {
         </h1>
         <div className="grid grid-cols-2 text-xs md:text-sm md:w-4/6">
           <p className="dark:text-white text-dark">Members</p>
+
           <p className="text-defaultText">{`${
-            newDaoInfo.members[0].address ? newDaoInfo.members.length : '0'
-          } wallet address (es`}</p>
+            newDaoInfo.members[0].address ? newDaoInfo.members.length + 1 : '1'
+          } wallet address(es)`}</p>
         </div>
       </div>
 
@@ -130,7 +175,9 @@ const ReviewDao = () => {
         </h1>
         <div className="grid grid-cols-2 text-xs md:text-sm md:w-4/6">
           <p className="dark:text-white text-dark">Duration</p>
-          <p className="text-defaultText">{`${newDaoInfo.duration} day(s)`}</p>
+          <p className="text-defaultText">
+            {convertDays(Number(newDaoInfo.duration))}
+          </p>
         </div>
         <div className="grid grid-cols-2 text-xs md:text-sm md:w-4/6">
           <p className="dark:text-white text-dark">Voting threshold</p>
@@ -165,22 +212,19 @@ const ReviewDao = () => {
                   width={150}
                 />
                 <p className="font-medium dark:text-white text-dark pb-2 -mt-2 text-lg md:text-xl">
-                  Dao Created
+                  Dao Created Successfully
                 </p>
-                Congratulations! You have successfully created your DAO
+                {/* Congratulations! You have successfully created your DAO
                 (Decentralized Autonomous Organization). Your DAO is now ready
                 to embark on its mission, engage community members, and foster
-                decentralized decision-making.
+                decentralized decision-making. */}
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter className="w-full">
               <Button
                 className="w-full"
-                onClick={() => {
-                  localStorage.removeItem('new_dao');
-                  updateNewDaoInfo(defaultDaoCreation);
-                  router.push(DAO_URL);
-                }}
+                onClick={handleGoHome}
+                loading={isRouting}
               >
                 Back home
               </Button>

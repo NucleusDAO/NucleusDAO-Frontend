@@ -1,6 +1,6 @@
 import { Info } from 'lucide-react';
 import { Button } from './ui/button';
-import { ReactNode, useContext } from 'react';
+import { ReactNode, useContext, useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -13,26 +13,42 @@ import Link from 'next/link';
 import { CREATE_PROPOSAL_URL } from '@/config/path';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { IConnectWalletContext } from '@/libs/types';
-import { useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { removeExistingStorageItem } from '@/libs/utils';
+import { EachDaoContext } from '@/context/each-dao-context';
 
 interface IDaoConfigurationWrapper {
   children: ReactNode;
 }
 
 const DaoConfigurationWrapper = ({ children }: IDaoConfigurationWrapper) => {
+  const router = useRouter();
+  const { isMember } = useContext(EachDaoContext);
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { isConnected } = user;
   const currentPage = searchParams.get('q');
+  const urlParts = pathname.split('/'); // Split the URL by "/"
+  const daoId = urlParts[2];
+  const [open, setOpen] = useState(false);
+
   return (
     <div className="space-y-5">
       <div className="flex justify-between items-center">
         <h2 className="text-dark dark:text-white text-xl font-medium">
           Profile
         </h2>
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
-            {isConnected && <Button>Edit Settings</Button>}
+            {isConnected && (
+              <>
+                {' '}
+                {isMember && (
+                  <Button onClick={() => setOpen(true)}>Edit Settings</Button>
+                )}
+              </>
+            )}
           </DialogTrigger>
           <DialogContent className="">
             <DialogHeader>
@@ -45,9 +61,19 @@ const DaoConfigurationWrapper = ({ children }: IDaoConfigurationWrapper) => {
               </DialogDescription>
             </DialogHeader>
 
-            <Link href={`${CREATE_PROPOSAL_URL}?enums=${currentPage === 'Profile' ? '5' : '7'}`}>
-              <Button className="w-full">Propose</Button>
-            </Link>
+            <Button
+              className="w-full"
+              onClick={() => {
+                removeExistingStorageItem('new_proposal');
+                router.push(
+                  `${CREATE_PROPOSAL_URL}?enums=${
+                    currentPage === 'Profile' ? '5' : '7'
+                  }&ct=${daoId}`
+                );
+              }}
+            >
+              Propose
+            </Button>
           </DialogContent>
         </Dialog>
       </div>

@@ -3,19 +3,24 @@ import { Button } from '@/components/ui/button';
 import { DaoTemplateList } from '@/config/dao-config';
 import { DAO_INFO_URL } from '@/config/path';
 import { AppContext } from '@/context/app-context';
-import { cn } from '@/libs/utils';
+import { cn, wait } from '@/libs/utils';
 import { useRouter } from 'next/navigation';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 
 const CreateNewDao = () => {
   const router = useRouter();
   const { updateNewDaoInfo, newDaoInfo } = useContext(AppContext);
+  const [isPending, setIsPending] = useState<boolean>(false);
 
   const handleProceed = (template: string) => {
+    setIsPending(true);
     const updatedDaoInfo = { ...newDaoInfo, style: template };
     updateNewDaoInfo(updatedDaoInfo);
-    localStorage.setItem('new_dao', JSON.stringify(updatedDaoInfo));
-    router.push(DAO_INFO_URL);
+    wait().then(() => {
+      sessionStorage.setItem('new_dao', JSON.stringify(updatedDaoInfo));
+      router.push(DAO_INFO_URL);
+      setIsPending(false);
+    });
   };
 
   return (
@@ -62,11 +67,13 @@ const CreateNewDao = () => {
               type="button"
               className={cn(
                 'w-full',
-                template.status === 'Coming Soon' &&
+                template.status === 'Coming Soon !' &&
                   'dark:bg-[#191919] dark:text-[#444444] bg-white text-dark font-normal'
               )}
               disabled={!!template.status}
               onClick={() => handleProceed(template.title)}
+              loading={!!template.status ? false : isPending}
+              loadingText="Please wait..."
             >
               Proceed
             </Button>

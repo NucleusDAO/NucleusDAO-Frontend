@@ -8,34 +8,56 @@ interface ITabView {
   [key: string]: ReactNode;
 }
 
-const dashboardTab: {
+interface IDashboardTab {
+  aeAmount: number | string;
+  usdAmount: number | string;
+  totalProposals: number;
+  totalMembers: number;
+  percentageIncreaseForMembers: number;
+  percentageIncreaseForFunds: number;
+  percentageIncreaseForProposals: number;
+}
+
+const dashboardTab = ({
+  aeAmount = 0,
+  usdAmount = 0,
+  totalProposals,
+  totalMembers,
+  percentageIncreaseForFunds,
+  percentageIncreaseForProposals,
+  percentageIncreaseForMembers,
+}: IDashboardTab): {
   title: string;
   id: string;
-  amount: string;
+  rate: number;
+  amount: number | string;
   value?: string;
-  increase: string;
+  increase: boolean;
   icon: ReactNode;
-}[] = [
+}[] => [
   {
     title: 'Dao Funds',
     id: '01',
-    amount: '$254.08',
-    value: '~ 0.052693 AE',
-    increase: '16.59%',
+    amount: usdAmount,
+    value: `~ ${aeAmount} AE`,
+    rate: percentageIncreaseForFunds,
+    increase: false,
     icon: <CoinIcon size="32" />,
   },
   {
     title: 'Proposals',
-    amount: '16',
+    amount: totalProposals,
     id: '02',
-    increase: '16.59%',
+    rate: percentageIncreaseForProposals,
+    increase: false,
     icon: <ProposalIcon size="32" />,
   },
   {
     title: 'Members',
-    amount: '2365',
+    amount: totalMembers,
     id: '03',
-    increase: '16.59%',
+    rate: percentageIncreaseForMembers,
+    increase: percentageIncreaseForMembers < 0 ? false : true,
     icon: <MemebersIcon size="32" />,
   },
 ];
