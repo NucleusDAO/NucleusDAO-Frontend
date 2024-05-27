@@ -321,29 +321,6 @@ function formatTime(milliseconds: number): string {
   return `${hours}:${minutes}:${seconds}`;
 }
 
-// export function getTimeDifference(timestamp: number): string {
-//   const currentTime = Date.now();
-
-//   // Calculate the time difference
-//   let timeDifference = timestamp - currentTime;
-
-//   if (timeDifference < 0) {
-//     timeDifference = 0;
-//   }
-
-//   // Convert the time difference to hours and minutes
-//   const daysLeft = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-//   const hoursLeft = Math.floor(
-//     (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-//   );
-//   const minutesLeft = Math.floor(
-//     (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
-//   );
-//   const secondsLeft = Math.floor((timeDifference % (1000 * 60)) / 1000);
-
-//   return `${daysLeft}d:${hoursLeft}h:${minutesLeft}m:${secondsLeft}s`;
-// }
-
 export function convertDays(days: number) {
   if (days) {
     const totalSeconds = days * 24 * 60 * 60;

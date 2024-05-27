@@ -97,20 +97,6 @@ const ReviewProposal = () => {
       }
 
       const dao = await getEachDAO(daoID);
-      console.log(
-        dao.contractAddress,
-        proposalLists[Number(value.type)].type,
-        value.description,
-        amount,
-        value.targetWallet || address,
-        {
-          name: value?.newName || '',
-          socials: updatedSocials
-            ? [...(dao.Socials || []), ...updatedSocials]
-            : dao.socials,
-          image: logoURL || '',
-        }
-      );
       if (dao) {
         await createProposal(
           dao.contractAddress,
