@@ -34,11 +34,17 @@ import { toast } from 'sonner';
 interface ISelectFormField {
   form: any;
   filterData: { title: string; enums: number }[];
+  handleReset: (arg: string) => void;
 }
 
-const SelectFormField = ({ form, filterData }: ISelectFormField) => {
+const SelectFormField = ({
+  form,
+  filterData,
+  handleReset,
+}: ISelectFormField) => {
   const searchParams = useSearchParams();
   const type: string = searchParams.get('enums') || '';
+
   return (
     <FormField
       control={form.control}
@@ -47,7 +53,10 @@ const SelectFormField = ({ form, filterData }: ISelectFormField) => {
         <FormItem>
           <FormLabel>Title</FormLabel>
           <Select
-            onValueChange={field.onChange}
+            onValueChange={(value) => {
+              field.onChange(value);
+              handleReset(value);
+            }}
             // setNewProposalInfo({ value: {...newProposalInfo, type: field.type} });
             defaultValue={field.value}
             disabled={type === '9'}
@@ -160,8 +169,6 @@ const EquivalentValueFormField = ({ form }: { form: any }) => {
   );
 };
 
-// proposalType === 3 ? handlePlus('duration', form) :
-// proposalType === 3 ? handleMinus('duration', form) :
 const ProposalDurationFormField = ({ form }: { form: any }) => {
   const proposalType = Number(form.getValues('type'));
   return (

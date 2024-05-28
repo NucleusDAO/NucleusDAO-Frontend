@@ -140,18 +140,12 @@ export const getStatus = (_proposal: IProposal | any) => {
   if (_proposal.isExecuted) {
     return 'Succeeded';
   }
-  if (
-    new Date(Number(_proposal.endTime)).valueOf() > Date.now().valueOf() &&
-    _proposal.votesFor < _proposal.votesAgainst
-  ) {
-    return 'Failed';
-  }
   if (new Date(Number(_proposal.endTime)).valueOf() > Date.now().valueOf()) {
     return 'Active';
   } else {
     if (
       _proposal.votesFor > _proposal.votesAgainst &&
-      new Date(Number(_proposal.endTime)).valueOf() > Date.now().valueOf()
+      new Date(Number(_proposal.endTime)).valueOf() <= Date.now().valueOf()
     ) {
       return 'Pending';
     } else {
@@ -159,6 +153,15 @@ export const getStatus = (_proposal: IProposal | any) => {
     }
   }
 };
+// &&
+// new Date(Number(_proposal.endTime)).valueOf() > Date.now().valueOf()
+
+// if (
+//   new Date(Number(_proposal.endTime)).valueOf() > Date.now().valueOf() &&
+//   _proposal.votesFor < _proposal.votesAgainst
+// ) {
+//   return 'Failed';
+// }
 
 export const defaultProposal = {
   value: {
@@ -318,37 +321,18 @@ function formatTime(milliseconds: number): string {
   return `${hours}:${minutes}:${seconds}`;
 }
 
-// export function getTimeDifference(timestamp: number): string {
-//   const currentTime = Date.now();
-
-//   // Calculate the time difference
-//   let timeDifference = timestamp - currentTime;
-
-//   if (timeDifference < 0) {
-//     timeDifference = 0;
-//   }
-
-//   // Convert the time difference to hours and minutes
-//   const daysLeft = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-//   const hoursLeft = Math.floor(
-//     (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-//   );
-//   const minutesLeft = Math.floor(
-//     (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
-//   );
-//   const secondsLeft = Math.floor((timeDifference % (1000 * 60)) / 1000);
-
-//   return `${daysLeft}d:${hoursLeft}h:${minutesLeft}m:${secondsLeft}s`;
-// }
-
 export function convertDays(days: number) {
-  const totalSeconds = days * 24 * 60 * 60;
-  const d = Math.floor(totalSeconds / (24 * 60 * 60));
-  const h = Math.floor((totalSeconds % (24 * 60 * 60)) / (60 * 60));
-  const m = Math.floor((totalSeconds % (60 * 60)) / 60);
-  const s = totalSeconds % 60;
+  if (days) {
+    const totalSeconds = days * 24 * 60 * 60;
+    const d = Math.floor(totalSeconds / (24 * 60 * 60));
+    const h = Math.floor((totalSeconds % (24 * 60 * 60)) / (60 * 60));
+    const m = Math.floor((totalSeconds % (60 * 60)) / 60);
+    const s = totalSeconds % 60;
 
-  return `${d}d:${h}h:${m}m:${s.toFixed(0)}s`;
+    return `${d}d:${h}h:${m}m:${s.toFixed(0)}s`;
+  } else {
+    return 0;
+  }
 }
 
 export function getTimeDifference(
@@ -395,15 +379,35 @@ export const capitalizeFirstLetter = (str: string) => {
 };
 
 export const percentageChangeRate = (data: any) => {
-  const lastValue = Number(data[data.length - 1]?.value) || 0;
-  const secontToLastValue = Number(data[data.length - 2]?.value) || 0;
-  let percentageChange: number;
-  if (secontToLastValue !== 0) {
-    const difference = lastValue - secontToLastValue;
-    percentageChange = (difference / Math.abs(secontToLastValue)) * 100;
-  } else {
-    percentageChange = 0;
+  console.log(data, '-> data');
+
+  // const lastValue = Number(data[data.length - 1]?.value) || 0;
+  // const secontToLastValue = Number(data[data.length - 2]?.value) || 0;
+  // let percentageChange: number;
+  // if (secontToLastValue !== 0) {
+  //   const difference = lastValue - secontToLastValue;
+  //   percentageChange = (difference / Math.abs(secontToLastValue)) * 100;
+  // } else {
+  //   percentageChange = 0;
+  // }
+  // return percentageChange;
+
+  if (data.length < 2) {
+    // Not enough data points to calculate percentage change
+    return 0;
   }
+
+  const lastValue = Number(data[data.length - 1]?.value) || 0;
+  const secondToLastValue = Number(data[data.length - 2]?.value) || 0;
+  let percentageChange;
+
+  if (secondToLastValue !== 0) {
+    const difference = lastValue - secondToLastValue;
+    percentageChange = (difference / Math.abs(secondToLastValue)) * 100;
+  } else {
+    percentageChange = lastValue === 0 ? 0 : 100; // If the second to last value is 0 and last value is not 0, it's a 100% increase
+  }
+
   return percentageChange;
 };
 

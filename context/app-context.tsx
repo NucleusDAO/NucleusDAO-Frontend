@@ -1,10 +1,4 @@
-import {
-  ReactNode,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import {
   ConnectWalletContext,
   ConnectWalletProvider,
@@ -26,11 +20,13 @@ import {
 } from '@/libs/utils';
 import { VIEW_DAO_URL } from '@/config/path';
 import ErrorFetchingComponent from '@/components/error-fetching-comp';
+import { useQuery } from '@tanstack/react-query';
 
 export const AppContext = createContext<any>({});
 
 export const AppContextProvider = ({ children }: IAppProvider) => {
-  const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
+  const { user, aeSdk } =
+    useContext<IConnectWalletContext>(ConnectWalletContext);
   const [allDAOs, setAllDAOs] = useState<any[]>();
   const [daoLoading, setDaoLoading] = useState<boolean>(true);
   const [DAOsData, setDAOsData] = useState<any[]>([]);
@@ -106,6 +102,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     try {
       const allDAOs: any = await getAllDaos();
       if (allDAOs) {
+        console.log(allDAOs, '-> all dao');
         setDAOsData(
           allDAOs.map((dao: any) => {
             return {
@@ -149,6 +146,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
             type: proposal.proposalType,
             status: getStatus(proposal),
             description: proposal.description,
+            isExecuted: proposal.isExecuted,
             wallet:
               proposal.target.slice(0, 6) + '...' + proposal.target.slice(-4),
             duration: getDuration(proposal.startTime, proposal.endTime),

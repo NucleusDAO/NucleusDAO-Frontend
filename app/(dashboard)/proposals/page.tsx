@@ -18,6 +18,8 @@ const Proposals = () => {
   const search = searchParams.get('search') || '';
   const filter = searchParams.get('filter') || '';
 
+  console.log(allProposal, '-> all');
+
   const tabs: { title: string; value: string }[] = [
     { value: 'All', title: 'All' },
     { value: 'Active', title: 'Active' },
