@@ -29,8 +29,8 @@ interface IEachTabView {
 const EachProposalView = ({
   tabs,
   currentProposal,
-  setCurrentProposal,
-}: IEachProposalView) => {
+}: // setCurrentProposal,
+IEachProposalView) => {
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { address, isConnected } = user;
   const { currentDAO, eachDAOProposal, isMember } = useContext(EachDaoContext);
@@ -56,7 +56,7 @@ const EachProposalView = ({
     Result: (
       <ProposalResult
         currentProposal={currentProposal}
-        setCurrentProposal={setCurrentProposal}
+        // setCurrentProposal={setCurrentProposal}
         countdownTime={countdownTime}
       />
     ),
@@ -161,7 +161,7 @@ const EachProposalView = ({
               ) : (
                 <VotingProcess
                   currentProposal={currentProposal}
-                  setCurrentProposal={setCurrentProposal}
+                  // setCurrentProposal={setCurrentProposal}
                 />
               )}
             </div>

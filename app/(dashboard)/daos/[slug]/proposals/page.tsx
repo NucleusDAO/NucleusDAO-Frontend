@@ -1,4 +1,5 @@
 'use client';
+import ErrorFetchingComponent from '@/components/error-fetching-comp';
 import EachDaoLoading from '@/components/loading/each-dao-loading';
 import EachFilterTab from '@/components/proposals/each-proposal-tab';
 import { EachDaoContext } from '@/context/each-dao-context';
@@ -6,7 +7,8 @@ import { useSearchParams } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
 
 const EachDaoProposals = () => {
-  const { eachDAOProposal, isProposalLoading } = useContext(EachDaoContext);
+  const { eachDAOProposal, isProposalLoading, isProposalError, proposalError } =
+    useContext(EachDaoContext);
   const searchParams = useSearchParams();
   const [proposals, setProposals] = useState(eachDAOProposal);
   const search = searchParams.get('search') || '';
@@ -33,6 +35,8 @@ const EachDaoProposals = () => {
   }, [search, filter, eachDAOProposal]);
 
   if (isProposalLoading) return <EachDaoLoading />;
+  if (isProposalError)
+    return <ErrorFetchingComponent description={proposalError.message} />;
 
   return (
     <div className="-mt-4">

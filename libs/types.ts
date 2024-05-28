@@ -163,7 +163,7 @@ export type ICreateUser = {
 
 export interface IEachProposalView {
   tabs: string[];
-  setCurrentProposal: (arg: IProposal[]) => void;
+  // setCurrentProposal: (arg: IProposal[]) => void;
   currentProposal: {
     wallet: string;
     target: string;

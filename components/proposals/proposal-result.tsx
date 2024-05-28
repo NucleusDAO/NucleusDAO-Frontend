@@ -29,13 +29,13 @@ interface IProposalResult {
     id: string;
     status: string;
   };
-  setCurrentProposal: (arg: any) => void;
+  // setCurrentProposal: (arg: any) => void;
   countdownTime: string;
 }
 
 const ProposalResult = ({
   currentProposal,
-  setCurrentProposal,
+  // setCurrentProposal,
   countdownTime,
 }: IProposalResult) => {
   const isDesktop = useMediaQuery('(min-width: 768px)');
@@ -62,7 +62,7 @@ const ProposalResult = ({
         currentDAO.contractAddress
       );
       console.log(proposal, '-> updated proposal');
-      setCurrentProposal(proposal);
+      // setCurrentProposal(proposal);
       toast.success('Proposal executed successfully');
       fetchDAOs();
       fetchAllProposals();

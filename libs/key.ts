@@ -10,3 +10,7 @@ export const BALANCE_HISTORY: string = 'balance-history';
 export const DAOS_KEY: string = 'daos';
 export const USER_ACTIVITIES_KEY: string = 'user-activities';
 export const PROPOSAL_KEY: string = 'proposals';
+export const EACH_DAO_KEY: string = 'each-dao';
+export const EACH_DAO_PROPOSAL: string = 'each-dao-proposal';
+export const EACH_PROPOSAL_INFO: string = 'proposal-info';
+export const MEMBER_ACTIVIES: string = 'member-activities';

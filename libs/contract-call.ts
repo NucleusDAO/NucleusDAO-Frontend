@@ -1,4 +1,4 @@
-import { getNucleusDAO } from './ae-utils';
+import { getBasicDAO, getNucleusDAO } from './ae-utils';
 
 interface ICreateDAO {
   name: string;
@@ -42,8 +42,6 @@ const getAUserActivitiesAcrossDAOs = async (userAddress: string) => {
 };
 
 const createDAO = async (payload: ICreateDAO) => {
-  console.log(payload, '->payload');
-
   const contract = await getNucleusDAO();
   const res = await contract.createDAO(
     payload.name,
@@ -60,4 +58,61 @@ const createDAO = async (payload: ICreateDAO) => {
   return dao;
 };
 
-export { getDAOs, getAllProposals, getAUserActivitiesAcrossDAOs, createDAO };
+const getEachDAO = async (id: string) => {
+  const contract = await getNucleusDAO();
+  const res = await contract.getDAO(id);
+  const dao = res.decodedResult;
+  return dao;
+};
+
+const getProposals = async (daoContractAddress: string) => {
+  const contract = await getBasicDAO(daoContractAddress);
+  const res = await contract.getProposals();
+  const proposals = res.decodedResult;
+  for (let i = 0; i < proposals.length; i++) {
+    let proposal = proposals[i];
+    for (let key in proposal) {
+      if (typeof proposal[key] == 'bigint') {
+        proposal[key] = Number(proposal[key]);
+      }
+    }
+  }
+  return proposals;
+};
+
+const getAllUsersActivities = async (daoContractAddress: string) => {
+  const contract = await getBasicDAO(daoContractAddress);
+  const res = await contract.getAllMembersActivities();
+  const activities = res.decodedResult;
+  for (let i = 0; i < activities.length; i++) {
+    let activity = activities[i];
+    for (let key in activity) {
+      if (typeof activity[key] == 'bigint') {
+        activity[key] = Number(activity[key]);
+      }
+    }
+  }
+  return activities;
+};
+
+const getProposalDetails = async (
+  daoContractAddress: string,
+  proposalId: string
+) => {
+  const contract = await getBasicDAO(daoContractAddress);
+  const res = await contract.getProposal(proposalId);
+  const proposal = res.decodedResult;
+
+  return proposal;
+};
+
+export {
+  getDAOs,
+  getAllProposals,
+  getAUserActivitiesAcrossDAOs,
+  createDAO,
+  getEachDAO,
+  getProposals,
+  getAllUsersActivities,
+  getProposalDetails,
+};

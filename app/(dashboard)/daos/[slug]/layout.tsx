@@ -14,7 +14,10 @@ import {
   wait,
 } from '@/libs/utils';
 import EachDaoLoading from '@/components/loading/each-dao-loading';
-import { EachDaoContext } from '@/context/each-dao-context';
+import {
+  EachDaoContext,
+  EachDaoContextProvider,
+} from '@/context/each-dao-context';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { IConnectWalletContext } from '@/libs/types';
 import {
@@ -41,7 +44,8 @@ const Layout = ({ children }: ILayout) => {
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { setUpdate } = useContext(AppContext);
   const { isConnected } = user;
-  const { isLoading, currentDAO, isMember, error } = useContext(EachDaoContext);
+  const { isLoading, currentDAO, isMember, error, isError } =
+    useContext(EachDaoContext);
   const [routing, setRouting] = useState<boolean>(false);
 
   const urlParts = pathname.split('/'); // Split the URL by "/"
@@ -74,11 +78,13 @@ const Layout = ({ children }: ILayout) => {
     setUpdate(false);
   }, []);
 
+  console.log(currentDAO, '0>');
+
   if (isLoading) return <EachDaoLoading />;
-  if (error) return <ErrorFetchingComponent description={error} />;
+  if (isError) return <ErrorFetchingComponent description={error.message} />;
 
   return (
-    <div className="">
+    <div>
       <div className="flex justify-between border-b dark:border-b-[#292929] pb-6 border-b-[#CCCCCC99]">
         <div className="md:flex space-x-4 items-center space-y-5 md:space-y-0">
           <div

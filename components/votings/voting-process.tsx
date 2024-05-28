@@ -28,13 +28,13 @@ interface IVotingProcess {
     id: string;
     votes: { account: string; support: boolean }[];
   };
-  setCurrentProposal: (arg: IProposal[]) => void;
+  // setCurrentProposal: (arg: IProposal[]) => void;
 }
 
 const VotingProcess = ({
   currentProposal,
-  setCurrentProposal,
-}: IVotingProcess) => {
+}: // setCurrentProposal,
+IVotingProcess) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { voteFor, voteAgainst, getActivities, setUpdate } =
     useContext(AppContext);
@@ -111,7 +111,7 @@ const VotingProcess = ({
     try {
       setUpdate(true);
       await getActivities(address);
-      setCurrentProposal({ ...eachProposal, id: Number(eachProposal.id) });
+      // setCurrentProposal({ ...eachProposal, id: Number(eachProposal.id) });
       setShowModal(false);
       setIsLoading(false);
     } catch (error: any) {

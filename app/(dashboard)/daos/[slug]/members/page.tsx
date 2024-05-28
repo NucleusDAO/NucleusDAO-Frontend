@@ -21,6 +21,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { removeExistingStorageItem } from '@/libs/utils';
 import { AppContext } from '@/context/app-context';
 import EachDaoLoading from '@/components/loading/each-dao-loading';
+import ErrorFetchingComponent from '@/components/error-fetching-comp';
 
 interface IData {
   wallet: string;
@@ -32,8 +33,13 @@ const EachDaoMembers = () => {
   const router = useRouter();
   const pathname = usePathname();
   const { getAllUsersActivities } = useContext(AppContext);
-  const { membersActivities, isMember, currentDAO, memberLoading } =
-    useContext(EachDaoContext);
+  const {
+    membersActivities,
+    isMember,
+    currentDAO,
+    memberError,
+    memberLoading,
+  } = useContext(EachDaoContext);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { isConnected } = user;
   const [data, setData] = useState<IData[]>([]);
@@ -65,6 +71,7 @@ const EachDaoMembers = () => {
   console.log(data, '-says');
 
   if (memberLoading) return <EachDaoLoading />;
+  if (memberError) return <ErrorFetchingComponent />;
 
   return (
     <div className="space-y-4 dark:bg-gradient-to-r dark:from-[#1E1E1E] dark:via-[#1E1E1E] dark:to-[#252525] p-4 rounded-lg bg-white">
