@@ -14,8 +14,6 @@ import {
 } from '@/components/ui/alert-dialog';
 import { DAO_URL } from '@/config/path';
 import { useContext, useState } from 'react';
-import { ConnectWalletContext } from '@/context/connect-wallet-context';
-import { IConnectWalletContext } from '@/libs/types';
 import { AppContext } from '@/context/app-context';
 import { uploadFile } from '@/config/apis';
 import { toast } from 'sonner';
@@ -23,72 +21,80 @@ import {
   convertDays,
   daysToMilliseconds,
   defaultDaoCreation,
+  wait,
 } from '@/libs/utils';
 import Lottie from 'react-lottie';
 import { defaultSuccessOption } from '@/components/animation-options';
-import { useQueryClient } from '@tanstack/react-query';
-import { NOTIFICATIONS } from '@/libs/key';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  DAOS_KEY,
+  NOTIFICATIONS,
+  PROPOSAL_KEY,
+  USER_ACTIVITIES_KEY,
+} from '@/libs/key';
+import { createDAO } from '@/libs/contract-call';
 
 const ReviewDao = () => {
   const queryClient: any = useQueryClient();
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isRouting, setIsRouting] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
-  const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
-  const { createDAO, updateNewDaoInfo, newDaoInfo, fetchDAOs } =
-    useContext(AppContext);
+  const { updateNewDaoInfo, newDaoInfo, fetchDAOs } = useContext(AppContext);
 
-  const handleCreateDAO = async () => {
-    setIsLoading(true);
-    try {
-      let formData = new FormData();
-      formData.append('file', newDaoInfo.info.logoUrl);
-      formData.append('upload_preset', 'bqr7mcvh');
-      const fileUpload = await uploadFile(formData);
-      const logoURL = fileUpload.data.url;
+  const { mutate, isPending } = useMutation({
+    mutationFn: createDAO,
+    onSuccess: () => {
+      queryClient.invalidateQueries(DAOS_KEY);
+      queryClient.invalidateQueries(PROPOSAL_KEY);
+      queryClient.invalidateQueries(USER_ACTIVITIES_KEY);
+      queryClient.invalidateQueries(NOTIFICATIONS);
+
+      sessionStorage.removeItem('new_dao');
+      updateNewDaoInfo(defaultDaoCreation);
+      setOpen(true);
+    },
+    onError: (error: any) => toast.error(error.message),
+  });
+
+  const { mutate: mutateUploadImage, isPending: isUploading } = useMutation({
+    mutationFn: uploadFile,
+    onSuccess: (response) => {
+      const logoURL = response.data.url;
       const name = newDaoInfo.info.daoName;
       const id = newDaoInfo.info.daoName.replace(/\s+/g, '-').toLowerCase();
       const members = newDaoInfo.members.map((m: any) => {
         return m.address;
       });
-      const dao = await createDAO(
+      mutate({
         name,
         id,
-        newDaoInfo.info.about,
-        logoURL,
-        newDaoInfo.info.socialMedia.map((s: any) => {
+        description: newDaoInfo.info.about,
+        image: logoURL,
+        socials: newDaoInfo.info.socialMedia.map((s: any) => {
           return { name: s.type, url: s.link };
         }),
-        members,
-        0,
-        Math.round(daysToMilliseconds(newDaoInfo.duration)),
-        newDaoInfo.quorum
-      );
-      // Deleted dao information from sessionStorage
-      sessionStorage.removeItem('new_dao');
-      updateNewDaoInfo(defaultDaoCreation);
-      setOpen(true);
-    } catch (error: any) {
-      toast.error(error.message);
-    } finally {
-      setIsLoading(false);
-    }
+        startingBalance: 0,
+        initialMembers: members,
+        votingTime: Math.round(daysToMilliseconds(newDaoInfo.duration)),
+        quorum: newDaoInfo.quorum,
+      });
+    },
+    onError: (error: any) => toast.error(error.message),
+  });
+
+  const handleCreateDAO = async () => {
+    let formData = new FormData();
+    formData.append('file', newDaoInfo.info.logoUrl);
+    formData.append('upload_preset', 'bqr7mcvh');
+    mutateUploadImage(formData);
   };
 
   const handleGoHome = async () => {
     setIsRouting(true);
-    try {
-      await fetchDAOs();
-      queryClient.invalidateQueries(NOTIFICATIONS);
-      setIsRouting(false);
+    wait().then(() => {
       router.push(DAO_URL);
-    } catch (error: any) {
       setIsRouting(false);
-      toast.error(error.message);
-    } finally {
-      setIsRouting(false);
-    }
+    });
   };
 
   return (
@@ -198,7 +204,7 @@ const ReviewDao = () => {
             type="submit"
             className="px-12"
             onClick={handleCreateDAO}
-            loading={isLoading}
+            loading={isPending || isUploading}
             loadingText="Creating..."
           >
             Create DAO

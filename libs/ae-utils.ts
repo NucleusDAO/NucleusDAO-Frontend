@@ -104,10 +104,9 @@ export const connectWallet = async ({
   address,
   setConnectionError,
   setOpenModal,
-  isHome,
+  // isHome,
   walletObj = { info: { name: '', type: '' } },
-}: // aeSdk,
-ConnectWalletParams) => {
+}: ConnectWalletParams) => {
   setConnectingToWallet(true);
   let addressDeepLink: any;
 
@@ -116,29 +115,29 @@ ConnectWalletParams) => {
       setConnectingToWallet(false);
       return;
     }
-    if (isHome) {
-      const domainName =
-        typeof window !== 'undefined' && window.location.origin;
-      const dashboardURL = `${domainName}/${DASHBOARD_URL}/`;
-      addressDeepLink = createDeepLinkUrl({
-        type: 'address',
-        'x-success': `${
-          dashboardURL.split('?')[0]
-        }?address={address}&networkId={networkId}`,
-        'x-cancel': dashboardURL.split('?')[0],
-      });
-    } else {
-      addressDeepLink = createDeepLinkUrl({
-        type: 'address',
-        'x-success': `${
-          window.location.href.split('?')[0]
-        }?address={address}&networkId={networkId}`,
-        'x-cancel': window.location.href.split('?')[0],
-      });
-    }
-    if (typeof window !== 'undefined') {
-      window.location.replace(addressDeepLink);
-    }
+    // if (isHome) {
+    //   const domainName =
+    //     typeof window !== 'undefined' && window.location.origin;
+    //   const dashboardURL = `${domainName}/${DASHBOARD_URL}/`;
+    //   addressDeepLink = createDeepLinkUrl({
+    //     type: 'address',
+    //     'x-success': `${
+    //       dashboardURL.split('?')[0]
+    //     }?address={address}&networkId={networkId}`,
+    //     'x-cancel': dashboardURL.split('?')[0],
+    //   });
+    // } else {
+    //   addressDeepLink = createDeepLinkUrl({
+    //     type: 'address',
+    //     'x-success': `${
+    //       window.location.href.split('?')[0]
+    //     }?address={address}&networkId={networkId}`,
+    //     'x-cancel': window.location.href.split('?')[0],
+    //   });
+    // }
+    // if (typeof window !== 'undefined') {
+    //   window.location.replace(addressDeepLink);
+    // }
   } else {
     try {
       await resolveWithTimeout(30000, async () => {

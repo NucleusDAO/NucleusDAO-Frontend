@@ -361,7 +361,7 @@ export function getTimeDifference(
     const secondsLeft = Math.floor((timeDifference % (1000 * 60)) / 1000);
 
     // Format the countdown string
-    const formattedString = `${daysLeft}d:${hoursLeft}h:${minutesLeft}m:${secondsLeft}s`;
+    const formattedString = `${daysLeft}d ${hoursLeft}h ${minutesLeft}m ${secondsLeft}s`;
     setCountdownString(formattedString);
   }, 1000);
 

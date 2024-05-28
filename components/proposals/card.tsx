@@ -31,10 +31,8 @@ interface IProposalCard {
 
 const ProposalCard = ({
   description,
-  wallet,
   proposer,
   totalVote,
-  duration,
   status,
   type,
   id,
@@ -43,7 +41,6 @@ const ProposalCard = ({
 }: IProposalCard) => {
   const [countdownString, setCountdownString] = useState<string>('');
   const { user } = useContext<any>(ConnectWalletContext);
-  const { address } = user;
   const pathname = usePathname();
   const isDesktop = useMediaQuery('(min-width: 768px)');
 
@@ -68,29 +65,20 @@ const ProposalCard = ({
           <div className="p-2 md:p-4 space-y-6 w-full">
             <div className="space-y-3">
               <div className="flex items-center justify-between space-x-4">
-                <div className="flex space-x-4 items-center">
-                  <Image
-                    src={RoundedIcon}
-                    alt="proposal title"
-                    width={isDesktop ? 40 : 20}
-                    height={isDesktop ? 40 : 20}
-                  />
-                  <div className="space-y-1">
-                    <p className="text-defaultText text-xs md:text-base">
-                      Proposal Type
-                    </p>
-                    <h3 className="dark:text-white capitalize text-dark font-medium text-sm md:text-lg min-h-[50px] max-h-[50px]">
-                      {
-                        proposalLists.find(
-                          (proposal: { type: string }) => proposal.type === type
-                        )?.title
-                      }
-                    </h3>
-                  </div>
+                <div className="space-y-1">
+                  <p className="text-defaultText text-xs">Proposal Type</p>
+                  <h3 className="dark:text-white capitalize text-dark font-medium text-sm md:text-lg multiline-truncate text-ellipsis overflow-hidden">
+                    {
+                      proposalLists.find(
+                        (proposal: { type: string }) => proposal.type === type
+                      )?.title
+                    }
+                  </h3>
                 </div>
+
                 <div>{EachStatus[status]}</div>
               </div>
-              <p className="text-defaultText multiline-truncate h-9 text-ellipsis overflow-hidden text-xs md:text-sm min-h-[50px] max-h-[50px]">
+              <p className="text-defaultText multiline-truncate text-ellipsis overflow-hidden h-9 text-xs md:text-sm min-h-[60px] max-h-[60px]">
                 {capitalizeFirstLetter(description)}
               </p>
             </div>

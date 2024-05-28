@@ -113,7 +113,7 @@ const defineMembershipSchema = z.object({
 
 const editProfile = z.object({
   username: z.string(),
-  email: z.string().email({ message: 'Email is compulsory' }),
+  email: z.string(),
   about: z.string(),
   profilePicture: z.string(),
 });

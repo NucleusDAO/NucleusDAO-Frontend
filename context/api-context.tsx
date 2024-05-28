@@ -34,13 +34,13 @@ export const ApiContextProvider = ({ children }: IApiProvider) => {
   const {
     user: { address },
   } = useContext<IConnectWalletContext>(ConnectWalletContext);
-  const { getActivities } = useContext(AppContext);
+  // const { getActivities } = useContext(AppContext);
 
-  useEffect(() => {
-    if (address) {
-      getActivities(address);
-    }
-  }, [address]);
+  // useEffect(() => {
+  //   if (address) {
+  //     getActivities(address);
+  //   }
+  // }, [address]);
 
   const {
     data: getAEPrice,

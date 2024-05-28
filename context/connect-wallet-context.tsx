@@ -1,12 +1,6 @@
 'use client';
 
-import React, {
-  ReactNode,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import React, { ReactNode, createContext, useEffect, useState } from 'react';
 import {
   IN_FRAME,
   IS_MOBILE,
@@ -21,10 +15,8 @@ import {
 } from '@aeternity/aepp-sdk';
 import ConfirmWalletDialog from './component/confirm-wallet';
 import ConfirmDisconnectWallet from './component/confirm-disconnect';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { HandleWalletFunction, IConnectWalletContext } from '@/libs/types';
-import { HOME_URL } from '@/config/path';
-import { AppContext } from './app-context';
 import { AeSdkAepp, Node } from '@aeternity/aepp-sdk';
 
 export const ConnectWalletContext = createContext<IConnectWalletContext>({
@@ -49,9 +41,7 @@ export interface IContext {
 
 export const ConnectWalletProvider = ({ children }: IAppProvider) => {
   // const getUser = typeof window !== 'undefined' && localStorage.getItem('user');
-  const pathname = usePathname();
   const defaultUser = { address: '', isConnected: false };
-  const { getActivities } = useContext(AppContext);
 
   const [isConnecting, setIsConnecting] = useState<boolean>(false);
   const [user, setUser] = useState<IUser>(defaultUser);
@@ -107,8 +97,6 @@ export const ConnectWalletProvider = ({ children }: IAppProvider) => {
       },
     ]);
   };
-
-  const isHome = pathname === HOME_URL;
 
   const handleConnectWallet = async () => {
     setOpenModal(true);
@@ -166,7 +154,6 @@ export const ConnectWalletProvider = ({ children }: IAppProvider) => {
       setConnectionError,
       setOpenModal,
       walletObj,
-      isHome,
       aeSdk,
     });
     setIsConnecting(false);
