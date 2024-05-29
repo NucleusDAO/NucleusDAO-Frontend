@@ -9,6 +9,7 @@ import { ConnectWalletParams, WalletConnection } from './types';
 
 import nucleusDAOAci from './contract/NucleusDAO.json';
 import basicDAOAci from './contract/BasicDAO.json';
+import { DASHBOARD_URL } from '@/config/path';
 
 const nucleusDAOContractAddress =
   'ct_yu1VWgPe3FrQTE1QesiiEB48Gw1dmrJTj8MSciNS5aoFTz6NY';
@@ -19,7 +20,6 @@ export const COMPILER_URL = 'https://compiler.aepps.com';
 
 export const detectWallets = async () => {
   const connection = new BrowserWindowMessageConnection();
-  alert(connection);
   return new Promise<WalletConnection>((resolve, reject) => {
     const stopDetection = walletDetector(
       connection,
@@ -106,17 +106,16 @@ export const connectWallet = async ({
   setOpenModal,
   // isHome,
   walletObj = { info: { name: '', type: '' } },
-}: ConnectWalletParams) => {
+}: // aeSdk,
+ConnectWalletParams) => {
   setConnectingToWallet(true);
   let addressDeepLink: any;
 
   if ((IS_MOBILE || isSafariBrowser()) && !IN_FRAME) {
-    // if (address) {
-    //   setConnectingToWallet(false);
-    //   return;
-    // }
-    const wallet = await detectWallets();
-    alert('i am here');
+    if (address) {
+      setConnectingToWallet(false);
+      return;
+    }
     // if (isHome) {
     //   const domainName =
     //     typeof window !== 'undefined' && window.location.origin;
@@ -137,9 +136,9 @@ export const connectWallet = async ({
     //     'x-cancel': window.location.href.split('?')[0],
     //   });
     // }
-    // if (typeof window !== 'undefined') {
-    //   window.location.replace(addressDeepLink);
-    // }
+    if (typeof window !== 'undefined') {
+      window.location.replace(addressDeepLink);
+    }
   } else {
     try {
       await resolveWithTimeout(30000, async () => {
@@ -178,8 +177,7 @@ export const connectWallet = async ({
           }
         };
         if (walletObj.getConnection) {
-          console.log(walletObj, '-> waller objext');
-          // await connectWallet(walletObj);
+          await connectWallet(walletObj);
         } else {
           const handleWallet = async ({ wallets }: any) => {
             const detectedWalletObject = Object.values(wallets).find(
