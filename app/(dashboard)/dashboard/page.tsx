@@ -13,18 +13,16 @@ import { AppContext } from '@/context/app-context';
 import DashboadLoading from '@/components/loading/dashboard-loading';
 import { toast } from 'sonner';
 import { useSearchParams } from 'next/navigation';
-import { Skeleton } from '@/components/ui/skeleton';
+import ErrorFetchingComponent from '@/components/error-fetching-comp';
+import { useQuery } from '@tanstack/react-query';
+import { USER_ACTIVITIES_KEY } from '@/libs/key';
+import { getAUserActivitiesAcrossDAOs } from '@/libs/contract-call';
 
 const Dashboard = () => {
-  const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const {
-    DAOsData,
-    daoLoading,
-    totalProposals,
-    totalVotes,
-    isLoadingActivities,
-  } = useContext(AppContext);
-  const connected: boolean = user.isConnected;
+    user: { address, isConnected },
+  } = useContext<IConnectWalletContext>(ConnectWalletContext);
+  const { DAOsData, daoLoading, isDaoError } = useContext(AppContext);
   const searchParams = useSearchParams();
   const currentSearch = searchParams.get('q');
   let userDAO: any[] = [];
@@ -33,7 +31,7 @@ const Dashboard = () => {
     let individualDAOs;
 
     individualDAOs = DAOsData?.filter((dao: any) => {
-      if (dao.members.includes(user.address)) {
+      if (dao.members.includes(address)) {
         dao.orgIcon = (
           <img
             src={dao.image}
@@ -58,15 +56,31 @@ const Dashboard = () => {
     }
   };
 
+  const {
+    data: activities,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryFn: () => getAUserActivitiesAcrossDAOs(address),
+    queryKey: [USER_ACTIVITIES_KEY],
+    enabled: !!address,
+  });
+
+  const totalProposals = activities && Number(activities.proposalsCreated);
+  const totalVotes = activities && Number(activities.voteCasted);
+
   const getUserTotalDao = () => {
     return DAOsData?.filter((dao: any) => {
-      if (dao.members.includes(user.address)) {
+      if (dao.members.includes(address)) {
         return dao;
       }
     });
   };
 
-  if (daoLoading) return <DashboadLoading />;
+  if (daoLoading || isLoading) return <DashboadLoading />;
+  if (isDaoError) return <ErrorFetchingComponent />;
+  if (isError) return toast.error(error.message);
 
   return (
     <div className="space-y-8 min-h-[80vh]">
@@ -77,7 +91,7 @@ const Dashboard = () => {
         >
           Global Feed
         </h1>
-        {connected ? (
+        {isConnected ? (
           <Link href={SELECT_DAO_STYLE_URL}>
             <Button>
               <Plus className="mr-2 h-4 w-4" /> Create DAO
@@ -90,34 +104,21 @@ const Dashboard = () => {
         )}
       </div>
 
-      {isLoadingActivities ? (
-        <div className="gap-6 md:grid-cols-3 grid">
-          {Array(3)
-            .fill(null)
-            .map((_, index) => (
-              <Skeleton
-                className="w-full h-20 dark:bg-[#1E1E1E] bg-[#F5F5F5]"
-                key={`card-${index}`}
-              />
-            ))}
-        </div>
-      ) : (
-        <div className="gap-6 md:grid-cols-3 grid">
-          {dashboardFeedsData(
-            connected,
-            getUserTotalDao(),
-            totalProposals,
-            totalVotes
-          ).map((feed) => (
-            <Cards key={feed.title} {...feed} />
-          ))}
-        </div>
-      )}
+      <div className="gap-6 md:grid-cols-3 grid">
+        {dashboardFeedsData(
+          isConnected,
+          getUserTotalDao(),
+          totalProposals,
+          totalVotes
+        ).map((feed) => (
+          <Cards key={feed.title} {...feed} />
+        ))}
+      </div>
 
       <AllDaos
         dashboardTableData={getDAOsData}
         connectWalletDescription="Connect your wallet to be able to see your dashboard"
-        showDAO={connected}
+        showDAO={isConnected}
       />
     </div>
   );

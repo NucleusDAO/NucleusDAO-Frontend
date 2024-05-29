@@ -1,19 +1,12 @@
 'use client';
 
-import React, {
-  ReactNode,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import React, { ReactNode, createContext, useEffect, useState } from 'react';
 import {
   IN_FRAME,
   IS_MOBILE,
   MAINNET_NODE_URL,
   TESTNET_NODE_URL,
   connectWallet,
-  resolveWithTimeout,
 } from '@/libs/ae-utils';
 import {
   BrowserWindowMessageConnection,
@@ -21,10 +14,8 @@ import {
 } from '@aeternity/aepp-sdk';
 import ConfirmWalletDialog from './component/confirm-wallet';
 import ConfirmDisconnectWallet from './component/confirm-disconnect';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { HandleWalletFunction, IConnectWalletContext } from '@/libs/types';
-import { HOME_URL } from '@/config/path';
-import { AppContext } from './app-context';
 import { AeSdkAepp, Node } from '@aeternity/aepp-sdk';
 
 export const ConnectWalletContext = createContext<IConnectWalletContext>({
@@ -49,9 +40,7 @@ export interface IContext {
 
 export const ConnectWalletProvider = ({ children }: IAppProvider) => {
   // const getUser = typeof window !== 'undefined' && localStorage.getItem('user');
-  const pathname = usePathname();
   const defaultUser = { address: '', isConnected: false };
-  const { getActivities } = useContext(AppContext);
 
   const [isConnecting, setIsConnecting] = useState<boolean>(false);
   const [user, setUser] = useState<IUser>(defaultUser);
@@ -108,39 +97,37 @@ export const ConnectWalletProvider = ({ children }: IAppProvider) => {
     ]);
   };
 
-  const isHome = pathname === HOME_URL;
+  console.log(wallets, '-> wallets');
 
   const handleConnectWallet = async () => {
     setOpenModal(true);
-    if (IS_MOBILE && !IN_FRAME) {
+    // if (IS_MOBILE && !IN_FRAME) {
+    // } else {
+    setScanningForWallets(true);
+    const scannerConnection = new BrowserWindowMessageConnection();
+
+    let stopScan: any = null;
+
+    const walletScanningTimeout = setTimeout(() => {
+      stopScan?.();
       addDefaultWallet();
-    } else {
-      setScanningForWallets(true);
-      const scannerConnection = new BrowserWindowMessageConnection();
+      setScanningForWallets(false);
+    }, 5000);
 
-      let stopScan: any = null;
+    const handleWallet: HandleWalletFunction = async ({ wallets }: any) => {
+      const updatedWallets = Object.values(wallets).map((wallet: any) => ({
+        ...wallet,
+        description: 'Superhero Wallet', // Change this to your desired value
+      }));
+      setWallets(updatedWallets);
+      setScanningForWallets(false);
 
-      const walletScanningTimeout = setTimeout(() => {
-        stopScan?.();
-        addDefaultWallet();
-        setScanningForWallets(false);
-      }, 5000);
-
-      const handleWallet: HandleWalletFunction = async ({ wallets }: any) => {
-        const updatedWallets = Object.values(wallets).map((wallet: any) => ({
-          ...wallet,
-          description: 'Superhero Wallet', // Change this to your desired value
-        }));
-        setWallets(updatedWallets);
-        setScanningForWallets(false);
-
-        clearTimeout(walletScanningTimeout);
-        stopScan?.();
-        setScanningForWallets(false);
-      };
-
-      stopScan = walletDetector(scannerConnection, handleWallet);
-    }
+      clearTimeout(walletScanningTimeout);
+      stopScan?.();
+      setScanningForWallets(false);
+    };
+    stopScan = walletDetector(scannerConnection, handleWallet);
+    // }
   };
 
   const handleConnect = async (walletObj: any) => {
@@ -149,14 +136,14 @@ export const ConnectWalletProvider = ({ children }: IAppProvider) => {
     setConnectingTo(walletObj.info.id);
     let watchUntilTruly: any = null;
 
-    try {
-      await resolveWithTimeout(5000, async () => {});
-    } catch (error) {
-      alert('connect wallet timeout');
-      setIsConnecting(false);
-      setConnectingTo(null);
-      return;
-    }
+    // try {
+    //   await resolveWithTimeout(5000, async () => {});
+    // } catch (error) {
+    //   alert('connect wallet timeout');
+    //   setIsConnecting(false);
+    //   setConnectingTo(null);
+    //   return;
+    // }
 
     await connectWallet({
       setConnectingToWallet,
@@ -166,7 +153,6 @@ export const ConnectWalletProvider = ({ children }: IAppProvider) => {
       setConnectionError,
       setOpenModal,
       walletObj,
-      isHome,
       aeSdk,
     });
     setIsConnecting(false);

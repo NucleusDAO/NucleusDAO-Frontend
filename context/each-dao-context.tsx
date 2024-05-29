@@ -1,19 +1,17 @@
 'use client';
-import {
-  ReactNode,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
-import { AppContext } from './app-context';
-import { usePathname } from 'next/navigation';
-import { toast } from 'sonner';
+import { ReactNode, createContext, useContext, useState } from 'react';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { getDuration, getStatus } from '@/libs/utils';
 import { IConnectWalletContext, IProposal } from '@/libs/types';
-import ErrorFetchingComponent from '@/components/error-fetching-comp';
 import { ConnectWalletContext } from './connect-wallet-context';
-import { boolean } from 'zod';
+import { useQuery } from '@tanstack/react-query';
+import { EACH_DAO_KEY, EACH_DAO_PROPOSAL, MEMBER_ACTIVIES } from '@/libs/key';
+import {
+  getAllUsersActivities,
+  getEachDAO,
+  getProposals,
+} from '@/libs/contract-call';
+import { PROPOSALS_URL } from '@/config/path';
 
 export const EachDaoContext = createContext<any>({});
 
@@ -37,128 +35,84 @@ export interface IDAO {
 export const EachDaoContextProvider = ({ children }: IAppProvider) => {
   const pathname = usePathname();
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
-  const [eachDAOProposal, setEachDAOProposal] = useState<any | null>(null);
-  const [currentDAO, setCurrentDAO] = useState<IDAO | null>(null);
-  const [membersActivities, setMembersActivities] = useState<any | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [isProposalLoading, setIsProposalLoading] = useState<boolean>(true);
-  const [memberLoading, setMemberLoading] = useState<boolean>(true);
-  const [updateDAO, setUpdateDAO] = useState<boolean>(false);
-  const isMember = currentDAO?.members?.includes(user.address);
-  const [error, setError] = useState<string>('');
   const [memberHistory, setMemberHistory] = useState([]);
   const [proposalHistory, setProposalHistory] = useState([]);
   const [fundsHistory, setFundsHistory] = useState([]);
-
-  const { getProposals, getEachDAO, getAllUsersActivities, isUserMemberOfDAO } =
-    useContext(AppContext);
+  const searchParams = useSearchParams();
+  const getDaoId = searchParams.get('dao') || searchParams.get('ct') || '';
 
   const urlParts = pathname.split('/'); // Split the URL by "/"
-  const daoId = urlParts[2];
+  const daoId = pathname.startsWith(PROPOSALS_URL) ? getDaoId : urlParts[2];
 
-  const fetchEachDAO = async () => {
-    try {
-      const daos = await getEachDAO(daoId);
-      setCurrentDAO(daos);
-      setIsLoading(false);
-    } catch (error: any) {
-      toast.error(error.message);
-      setError(error.message);
-    } finally {
-      setIsLoading(false); // Set loading state to false after fetching data
-    }
-  };
+  const {
+    data: currentDAO,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: [EACH_DAO_KEY, daoId],
+    queryFn: () => getEachDAO(daoId),
+    enabled: !!daoId,
+  });
 
-  useEffect(() => {
-    setIsLoading(true);
-    if (urlParts.length >= 4) {
-      setError('');
-      fetchEachDAO();
-    }
-  }, [daoId]);
+  console.log(currentDAO, '-> current DAO');
 
-  useEffect(() => {
-    setIsProposalLoading(true);
-    if (!!currentDAO) {
-      (async () => {
-        try {
-          const proposals: IProposal[] = await getProposals(
-            currentDAO.contractAddress
-          );
-          setEachDAOProposal(
-            proposals.reverse().map((proposal: IProposal) => {
-              return {
-                type: proposal.proposalType,
-                status: getStatus(proposal),
-                description: proposal.description,
-                wallet:
-                  proposal.target.slice(0, 6) +
-                  '...' +
-                  proposal.target.slice(-4),
-                duration: getDuration(proposal.startTime, proposal.endTime),
-                totalVote: `${proposal.votesFor + proposal.votesAgainst}`,
-                organisation: currentDAO.name,
-                proposer:
-                  proposal.proposer.slice(0, 6) +
-                  '...' +
-                  proposal.proposer.slice(-4),
-                id: Number(proposal.id).toString(),
-                startTime: proposal.startTime,
-                endTime: proposal.endTime,
-                votesAgainst: proposal.votesAgainst,
-                votesFor: proposal.votesFor,
-                votes: proposal.votes,
-                hasVoted: proposal.hasVoted,
-              };
-            })
-          );
-          setIsProposalLoading(false);
-        } catch (error: any) {
-          toast.error(error.message);
-          return <ErrorFetchingComponent />;
-        } finally {
-          setIsProposalLoading(false); // Set loading state to false after fetching data
-        }
-      })();
-    }
-  }, [currentDAO]);
+  const isMember = currentDAO?.members?.includes(user.address);
 
-  useEffect(() => {
-    setMemberLoading(true);
-    if (!!currentDAO) {
-      (async () => {
-        try {
-          const members = await getAllUsersActivities(
-            currentDAO.contractAddress
-          );
-          setMembersActivities(members);
-          setMemberLoading(false);
-        } catch (error: any) {
-          toast.error(error.message);
-          return <ErrorFetchingComponent />;
-        } finally {
-          setMemberLoading(false); // Set loading state to false after fetching data
-        }
-      })();
-    }
-  }, [currentDAO]);
+  const {
+    data: proposals,
+    isLoading: isProposalLoading,
+    isError: isProposalError,
+    error: proposalError,
+  } = useQuery({
+    queryKey: [EACH_DAO_PROPOSAL, daoId, currentDAO?.contractAddress],
+    queryFn: () => getProposals(currentDAO.contractAddress),
+    enabled: !!currentDAO?.contractAddress,
+  });
+
+  const eachDAOProposal =
+    proposals &&
+    proposals.reverse().map((proposal: IProposal) => {
+      return {
+        ...proposal,
+        type: proposal.proposalType,
+        status: getStatus(proposal),
+        wallet: proposal.target.slice(0, 6) + '...' + proposal.target.slice(-4),
+        duration: getDuration(proposal.startTime, proposal.endTime),
+        totalVote: `${proposal.votesFor + proposal.votesAgainst}`,
+        organisation: currentDAO.name,
+        proposer:
+          proposal.proposer.slice(0, 6) + '...' + proposal.proposer.slice(-4),
+        id: Number(proposal.id).toString(),
+      };
+    });
+
+  const {
+    data: membersActivities,
+    isLoading: memberLoading,
+    error: memberError,
+  } = useQuery({
+    queryKey: [MEMBER_ACTIVIES, daoId, currentDAO?.contractAddress],
+    queryFn: () => getAllUsersActivities(currentDAO.contractAddress),
+    enabled: !!currentDAO?.contractAddress,
+  });
 
   const value = {
     eachDAOProposal,
     membersActivities,
     isLoading,
     currentDAO,
-    setCurrentDAO,
-    setMembersActivities,
-    setEachDAOProposal,
+    isProposalError,
+    proposalError,
+    memberError,
+
     isMember,
     memberLoading,
     isProposalLoading,
-    setIsLoading,
-    setUpdateDAO,
-    fetchEachDAO,
+
     error,
-    setError,
+    isError,
+
     setMemberHistory,
     memberHistory,
     proposalHistory,

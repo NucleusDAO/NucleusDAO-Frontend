@@ -26,14 +26,10 @@ interface IEachTabView {
   [key: string]: ReactNode;
 }
 
-const EachProposalView = ({
-  tabs,
-  currentProposal,
-  setCurrentProposal,
-}: IEachProposalView) => {
+const EachProposalView = ({ tabs, currentProposal }: IEachProposalView) => {
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { address, isConnected } = user;
-  const { currentDAO, eachDAOProposal, isMember } = useContext(EachDaoContext);
+  const { isMember } = useContext(EachDaoContext);
   const isDesktop = useMediaQuery('(min-width: 768px)');
   const [showFullProposal, setShowFullProposal] = useState<boolean>(false);
   const searchParams = useSearchParams();
@@ -56,7 +52,6 @@ const EachProposalView = ({
     Result: (
       <ProposalResult
         currentProposal={currentProposal}
-        setCurrentProposal={setCurrentProposal}
         countdownTime={countdownTime}
       />
     ),
@@ -150,19 +145,27 @@ const EachProposalView = ({
                   {EachStatus[getStatus(currentProposal)]}
                 </div>
               </div>
-
-              {getStatus(currentProposal) === 'Pending' ||
-              getStatus(currentProposal) === 'Succeeded' ||
-              getStatus(currentProposal) === 'Failed' ? (
+              {getStatus(currentProposal) === 'Pending' && (
                 <p className="dark:text-white text-dark text-sm">
                   Voting period has ended. The result will be shown if the
                   proposal reach its quorum and executed
                 </p>
-              ) : (
-                <VotingProcess
-                  currentProposal={currentProposal}
-                  setCurrentProposal={setCurrentProposal}
-                />
+              )}
+              {getStatus(currentProposal) === 'Succeeded' && (
+                <p className="dark:text-white text-dark text-sm">
+                  Voting period has ended. The result of the proposal reach its
+                  quorum and it's succeeded.
+                </p>
+              )}
+              {getStatus(currentProposal) === 'Failed' && (
+                <p className="dark:text-white text-dark text-sm">
+                  Voting period has ended. The result of the proposal did not
+                  reach its quorum and it failed.
+                </p>
+              )}
+
+              {getStatus(currentProposal) === 'Active' && (
+                <VotingProcess currentProposal={currentProposal} />
               )}
             </div>
           )}

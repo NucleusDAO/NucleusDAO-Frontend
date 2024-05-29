@@ -3,6 +3,14 @@ import { twMerge } from 'tailwind-merge';
 import { IProposal } from './types';
 import { IDAO } from '@/context/each-dao-context';
 import { rate } from '@/config/dao-config';
+import {
+  EACH_DAO_KEY,
+  EACH_DAO_PROPOSAL,
+  EACH_PROPOSAL_INFO,
+  MEMBER_ACTIVIES,
+  NOTIFICATIONS,
+  PROPOSAL_KEY,
+} from './key';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -153,15 +161,6 @@ export const getStatus = (_proposal: IProposal | any) => {
     }
   }
 };
-// &&
-// new Date(Number(_proposal.endTime)).valueOf() > Date.now().valueOf()
-
-// if (
-//   new Date(Number(_proposal.endTime)).valueOf() > Date.now().valueOf() &&
-//   _proposal.votesFor < _proposal.votesAgainst
-// ) {
-//   return 'Failed';
-// }
 
 export const defaultProposal = {
   value: {
@@ -228,43 +227,43 @@ interface IUpdateProposal {
   setCurrentProposal?: (arg: IProposal[]) => void;
 }
 
-export const updateGetProposal = async ({
-  getEachDAO,
-  daoId,
-  setCurrentDAO,
-  getProposals,
-  setEachDAOProposal,
-  getUsersActivities,
-  setMembersActivities,
-  setCurrentProposal,
-}: IUpdateProposal) => {
-  const dao = await getEachDAO(daoId);
-  setCurrentDAO(dao);
-  const proposals: IProposal[] = await getProposals(dao.contractAddress);
-  setCurrentProposal && setCurrentProposal(proposals);
-  setEachDAOProposal(
-    proposals.map((proposal: IProposal) => {
-      return {
-        type: proposal.proposalType,
-        status: getStatus(proposal),
-        description: proposal.description,
-        wallet: proposal.target.slice(0, 6) + '...' + proposal.target.slice(-4),
-        duration: getDuration(proposal.startTime, proposal.endTime),
-        totalVote: `${proposal.votesFor + proposal.votesAgainst}`,
-        organisation: dao.name,
-        id: Number(proposal.id).toString(),
-        startTime: proposal.startTime,
-        endTime: proposal.endTime,
-        votesAgainst: proposal.votesAgainst,
-        votesFor: proposal.votesFor,
-        votes: proposal.votes,
-        hasVoted: proposal.hasVoted,
-      };
-    })
-  );
-  const members = await getUsersActivities(dao.contractAddress);
-  setMembersActivities(members);
-};
+// export const updateGetProposal = async ({
+//   getEachDAO,
+//   daoId,
+//   setCurrentDAO,
+//   getProposals,
+//   setEachDAOProposal,
+//   getUsersActivities,
+//   setMembersActivities,
+//   setCurrentProposal,
+// }: IUpdateProposal) => {
+//   const dao = await getEachDAO(daoId);
+//   setCurrentDAO(dao);
+//   const proposals: IProposal[] = await getProposals(dao.contractAddress);
+//   setCurrentProposal && setCurrentProposal(proposals);
+//   setEachDAOProposal(
+//     proposals.map((proposal: IProposal) => {
+//       return {
+//         type: proposal.proposalType,
+//         status: getStatus(proposal),
+//         description: proposal.description,
+//         wallet: proposal.target.slice(0, 6) + '...' + proposal.target.slice(-4),
+//         duration: getDuration(proposal.startTime, proposal.endTime),
+//         totalVote: `${proposal.votesFor + proposal.votesAgainst}`,
+//         organisation: dao.name,
+//         id: Number(proposal.id).toString(),
+//         startTime: proposal.startTime,
+//         endTime: proposal.endTime,
+//         votesAgainst: proposal.votesAgainst,
+//         votesFor: proposal.votesFor,
+//         votes: proposal.votes,
+//         hasVoted: proposal.hasVoted,
+//       };
+//     })
+//   );
+//   const members = await getUsersActivities(dao.contractAddress);
+//   setMembersActivities(members);
+// };
 
 export const activities: { title: string; color: string; url: string }[] = [
   {
@@ -361,7 +360,7 @@ export function getTimeDifference(
     const secondsLeft = Math.floor((timeDifference % (1000 * 60)) / 1000);
 
     // Format the countdown string
-    const formattedString = `${daysLeft}d:${hoursLeft}h:${minutesLeft}m:${secondsLeft}s`;
+    const formattedString = `${daysLeft}d ${hoursLeft}h ${minutesLeft}m ${secondsLeft}s`;
     setCountdownString(formattedString);
   }, 1000);
 

@@ -1,9 +1,9 @@
 import { LinkIcon } from '@/assets/svgs';
 import { EachDaoContext } from '@/context/each-dao-context';
-import { formatDate, getTimeDifference } from '@/libs/utils';
+import { formatDate } from '@/libs/utils';
 import { Clock5 } from 'lucide-react';
 import Link from 'next/link';
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 
 interface IProposalInfo {
   currentProposal: {
@@ -21,7 +21,7 @@ interface IProposalInfo {
 
 const ProposalInfo = ({ currentProposal, countdownTime }: IProposalInfo) => {
   const { currentDAO } = useContext(EachDaoContext);
-  const { duration, startTime, endTime } = currentProposal;
+  const { startTime, endTime } = currentProposal;
   const domainName = typeof window !== 'undefined' && window.location.origin;
 
   return (

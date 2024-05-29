@@ -2,23 +2,22 @@
 import DashboadLoading from '@/components/loading/dashboard-loading';
 import EachFilterTab from '@/components/proposals/each-proposal-tab';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { proposalLists } from '@/config/dao-config';
-import { AppContext } from '@/context/app-context';
 import { IProposal } from '@/libs/types';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useDebouncedCallback } from 'use-debounce';
 import { useContext, useEffect, useState } from 'react';
+import ErrorFetchingComponent from '@/components/error-fetching-comp';
+import { AppContext } from '@/context/app-context';
 
 const Proposals = () => {
-  const { isProposalLoading, allProposals } = useContext(AppContext);
+  const { isLoadingProposal, proposals, isProposalError } =
+    useContext(AppContext);
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { replace } = useRouter();
-  const [allProposal, setAllProposal] = useState<IProposal[]>(allProposals);
+  const [allProposal, setAllProposal] = useState<IProposal[]>([]);
   const search = searchParams.get('search') || '';
   const filter = searchParams.get('filter') || '';
-
-  console.log(allProposal, '-> all');
 
   const tabs: { title: string; value: string }[] = [
     { value: 'All', title: 'All' },
@@ -44,22 +43,23 @@ const Proposals = () => {
   useEffect(() => {
     if (search) {
       setAllProposal(
-        allProposals?.filter((item: { wallet: string; type: string }) =>
+        proposals?.filter((item: { wallet: string; type: string }) =>
           item?.type?.toLocaleLowerCase()?.includes(search.toLowerCase())
         )
       );
     } else if (filter) {
       setAllProposal(
-        allProposals?.filter((item: { status: string }) =>
+        proposals?.filter((item: { status: string }) =>
           item?.status?.toLowerCase().includes(filter.toLowerCase())
         )
       );
     } else {
-      setAllProposal(allProposals);
+      setAllProposal(proposals);
     }
-  }, [search, filter, isProposalLoading]);
+  }, [search, filter, isLoadingProposal]);
 
-  if (isProposalLoading) return <DashboadLoading />;
+  if (isLoadingProposal) return <DashboadLoading />;
+  if (isProposalError) return <ErrorFetchingComponent />;
 
   return (
     <div className="space-y-8 min-h-[80vh]">

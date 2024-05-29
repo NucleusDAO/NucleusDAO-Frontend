@@ -33,7 +33,7 @@ export type ConnectWalletParams = {
   setConnectionError: (error: ConnectionError) => void;
   address?: string;
   setOpenModal: (arg: boolean) => void;
-  isHome: boolean;
+  // isHome: boolean;
   walletObj?: {
     info: WalletInfo;
     getConnection?: () => Promise<any> | any; // Adjust any to the actual return type of getConnection
@@ -163,13 +163,14 @@ export type ICreateUser = {
 
 export interface IEachProposalView {
   tabs: string[];
-  setCurrentProposal: (arg: IProposal[]) => void;
+  // setCurrentProposal: (arg: IProposal[]) => void;
   currentProposal: {
     wallet: string;
     target: string;
     value: number;
     proposalType: string;
     daoName: string;
+    quorum: number;
     description: string;
     votes: { account: string; support: boolean }[];
     type: string;
@@ -181,11 +182,37 @@ export interface IEachProposalView {
     status: string;
     totalVote: string;
     id: string;
+    currentMembers: number;
     duration: string;
     startTime: number;
     endTime: number;
     proposer: string;
     votesFor: number;
     votesAgainst: number;
+  };
+}
+
+export interface ICreateDAOS {
+  name: string;
+  id: string;
+  description: string;
+  image: string;
+  socials: string[];
+  initialMembers: string[];
+  startingBalance: number;
+  votingTime: number;
+  quorum: number;
+}
+
+export interface ICreateProposal {
+  daoContractAddress: string;
+  proposalType: string;
+  description: string;
+  value: number;
+  target: string;
+  info: {
+    name: string;
+    socials: { name: string; url: string }[];
+    image: string;
   };
 }

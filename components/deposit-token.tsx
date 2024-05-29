@@ -12,42 +12,54 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { cn } from '@/libs/utils';
 import { ApiContext } from '@/context/api-context';
 import { rate } from '@/config/dao-config';
-import { AppContext } from '@/context/app-context';
 import { toast } from 'sonner';
 import { EachDaoContext } from '@/context/each-dao-context';
 import Lottie from 'react-lottie';
 import { defaultSuccessOption } from './animation-options';
 import { formatAmount, AE_AMOUNT_FORMATS } from '@aeternity/aepp-sdk';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { deposit } from '@/libs/contract-call';
+import {
+  BALANCE_HISTORY,
+  DAOS_KEY,
+  EACH_DAO_KEY,
+  EACH_PROPOSAL_INFO,
+  MEMBER_HISTORY,
+  PROPOSAL_HISTORY,
+  USER_ACTIVITIES_KEY,
+} from '@/libs/key';
 
 const DepositToken = () => {
+  const queryClient: any = useQueryClient();
   const [open, setOpen] = useState<boolean>(false);
   const [aeValue, setAeValue] = useState<number | string>(0);
   const [usdValue, setUsdValue] = useState<number | string>(0);
   const [termsChecked, setTermsChecked] = useState<boolean>(false);
-  const [isDepositing, setIsDepositing] = useState<boolean>(false);
   const [isDeposited, setIsDeposited] = useState<boolean>(true);
   const { getAEPrice } = useContext(ApiContext);
-  const { deposit } = useContext(AppContext);
-  const { currentDAO, fetchEachDAO } = useContext(EachDaoContext);
+
+  const { currentDAO } = useContext(EachDaoContext);
 
   const isError = Number.isNaN(usdValue) || Number.isNaN(aeValue);
+  const amount: string = formatAmount(aeValue, {
+    denomination: AE_AMOUNT_FORMATS.AE,
+  });
 
-  const handleDeposit = async () => {
-    setIsDepositing(true);
-    setIsDeposited(false);
-    try {
-      const amount = formatAmount(aeValue, {
-        denomination: AE_AMOUNT_FORMATS.AE,
-      });
-      const res = await deposit(currentDAO.contractAddress, amount);
+  const { mutate, isPending } = useMutation({
+    mutationFn: () => deposit(currentDAO.contractAddress, amount),
+    onSuccess: () => {
+      queryClient.invalidateQueries(DAOS_KEY);
+      queryClient.invalidateQueries(EACH_DAO_KEY);
+      queryClient.invalidateQueries(EACH_PROPOSAL_INFO);
+      queryClient.invalidateQueries(USER_ACTIVITIES_KEY);
+      queryClient.invalidateQueries(BALANCE_HISTORY);
+      queryClient.invalidateQueries(PROPOSAL_HISTORY);
+      queryClient.invalidateQueries(MEMBER_HISTORY);
       setOpen(true);
       setIsDeposited(true);
-    } catch (error: any) {
-      toast.error(error.message);
-    } finally {
-      setIsDepositing(false);
-    }
-  };
+    },
+    onError: (error: any) => toast.error(error.message),
+  });
 
   return (
     <Dialog onOpenChange={setOpen} open={open}>
@@ -75,18 +87,15 @@ const DepositToken = () => {
                 <p className="font-medium dark:text-white pb-2 -mt-2 text-xl text-dark">
                   Fund Deposit Success
                 </p>
-                <p>
+                <p className="px-8">
                   Congratulations! You have successfully deposited a sum of{' '}
                   {aeValue} AE to {currentDAO.name}
                 </p>
                 <Button
                   className="px-16 mt-4"
                   onClick={() => {
-                    setAeValue(0);
-                    setUsdValue(0);
                     setOpen(false);
                     setIsDeposited(false);
-                    fetchEachDAO();
                   }}
                 >
                   Complete
@@ -164,9 +173,14 @@ const DepositToken = () => {
                   </div>
                   <Button
                     className="w-full"
-                    disabled={!termsChecked || Number(aeValue) <= 0 || isError}
-                    onClick={handleDeposit}
-                    loading={isDepositing}
+                    disabled={
+                      !termsChecked ||
+                      Number(aeValue) <= 0 ||
+                      isError ||
+                      isPending
+                    }
+                    onClick={() => mutate()}
+                    loading={isPending}
                     loadingText="Depositing..."
                   >{`Deposit ${Number(aeValue).toFixed(2)} AE`}</Button>
                 </div>

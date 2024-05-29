@@ -15,8 +15,6 @@ import Steps from './component/steps';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { IConnectWalletContext } from '@/libs/types';
-import EmptyDAO from '@/assets/icons/empty-icon.png';
-import Image from 'next/image';
 import { PROPOSALS_URL } from '@/config/path';
 import { AppContext } from '@/context/app-context';
 import { defaultProposal, wait } from '@/libs/utils';
@@ -41,7 +39,7 @@ const Layout = ({ children }: ILayout) => {
     setNewProposalInfo(defaultProposal);
     localStorage.removeItem('new_proposal');
     wait().then(() => {
-      router.push(PROPOSALS_URL);
+      router.back();
       setIsPending(false);
     });
   };

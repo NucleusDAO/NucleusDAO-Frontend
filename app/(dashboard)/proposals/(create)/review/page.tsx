@@ -5,6 +5,7 @@ import {
   daysToMilliseconds,
   defaultProposal,
   millisecondsToDays,
+  wait,
 } from '@/libs/utils';
 import {
   AlertDialog,
@@ -17,7 +18,7 @@ import { Button } from '@/components/ui/button';
 import { MoveLeft, MoveUpRight } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { CREATE_PROPOSAL_URL, PROPOSALS_URL } from '@/config/path';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { AppContext } from '@/context/app-context';
 import Lottie from 'react-lottie';
 import { defaultSuccessOption } from '@/components/animation-options';
@@ -28,124 +29,175 @@ import { uploadFile } from '@/config/apis';
 import { ApiContext } from '@/context/api-context';
 import Link from 'next/link';
 import { formatAmount, AE_AMOUNT_FORMATS } from '@aeternity/aepp-sdk';
-import { useQueryClient } from '@tanstack/react-query';
-import { NOTIFICATIONS } from '@/libs/key';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  BALANCE_HISTORY,
+  EACH_DAO_KEY,
+  EACH_DAO_PROPOSAL,
+  EACH_PROPOSAL_INFO,
+  MEMBER_ACTIVIES,
+  MEMBER_HISTORY,
+  NOTIFICATIONS,
+  PROPOSAL_HISTORY,
+  PROPOSAL_KEY,
+} from '@/libs/key';
+import { createProposal, getEachDAO } from '@/libs/contract-call';
+import { EachDaoContext } from '@/context/each-dao-context';
+import EachDaoLoading from '@/components/loading/each-dao-loading';
 
 const ReviewProposal = () => {
-  const {
-    createProposal,
-    newProposalInfo,
-    getEachDAO,
-    getActivities,
-    setNewProposalInfo,
-    setUpdate,
-  } = useContext(AppContext);
+  const { newProposalInfo, setNewProposalInfo } = useContext(AppContext);
+  const { currentDAO, isLoading } = useContext(EachDaoContext);
   const { getAEPrice } = useContext(ApiContext);
   const queryClient: any = useQueryClient();
   const [isRouting, setIsRouting] = useState<boolean>(false);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
-  const [isCreating, setIsCreating] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
   const { address } = user;
   const searchParams = useSearchParams();
-  const daoID = searchParams.get('ct');
+  const daoID: string = searchParams.get('ct') || '';
   const proposalType = searchParams.get('type') || '';
-  const enums = searchParams.get('enums') || '';
   const router = useRouter();
   const { value } = newProposalInfo;
-  const [duration, setDuration] = useState<number | null>(null);
 
-  useEffect(() => {
-    const getDuration = async () => {
-      const dao = await getEachDAO(daoID);
-      const duration: number = millisecondsToDays(Number(dao.votingTime));
-      setDuration(duration);
-    };
-    getDuration();
-  }, []);
+  const duration = millisecondsToDays(Number(currentDAO.votingTime));
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: createProposal,
+    onSuccess: () => {
+      queryClient.invalidateQueries(NOTIFICATIONS);
+      queryClient.invalidateQueries(PROPOSAL_KEY);
+      queryClient.invalidateQueries(EACH_DAO_KEY);
+      queryClient.invalidateQueries(EACH_DAO_PROPOSAL);
+      queryClient.invalidateQueries(EACH_PROPOSAL_INFO);
+      queryClient.invalidateQueries(MEMBER_ACTIVIES);
+      queryClient.invalidateQueries(BALANCE_HISTORY);
+      queryClient.invalidateQueries(PROPOSAL_HISTORY);
+      queryClient.invalidateQueries(MEMBER_HISTORY);
+      localStorage.removeItem('new_proposal');
+      setNewProposalInfo(defaultProposal);
+      setOpen(true);
+    },
+    onError: (error: any) => toast.error(error.message),
+  });
 
   const handleCreateProposal = async () => {
-    setIsCreating(true);
     let logoURL;
     let updatedSocials;
     let amount: any;
-    try {
-      if (value.logo) {
-        let formData = new FormData();
-        formData.append('file', value.logo);
-        formData.append('upload_preset', 'bqr7mcvh');
-        const fileUpload = await uploadFile(formData);
-        logoURL = fileUpload.data.url;
-      }
-      if (value.socialMedia[0].type && value.socialMedia[0].link) {
-        updatedSocials = value.socialMedia.map(
-          (social: { type: string; link: string }) => {
-            return { name: social.type, url: social.link };
-          }
-        );
-      }
-      if (Number(value.type) === 0) {
-        amount = formatAmount(value.value, {
-          denomination: AE_AMOUNT_FORMATS.AE,
-        });
-      } else {
-        amount =
-          Number(value.value) ||
-          Math.round(daysToMilliseconds(Number(value.maximum))) ||
-          value.quorum ||
-          0;
-      }
 
-      const dao = await getEachDAO(daoID);
-      if (dao) {
-        await createProposal(
-          dao.contractAddress,
-          proposalLists[Number(value.type)].type,
-          value.description,
-          amount,
-          value.targetWallet || address,
-          {
-            name: value?.newName || '',
-            socials: updatedSocials
-              ? [...(dao.Socials || []), ...updatedSocials]
-              : dao.socials,
-            image: logoURL || '',
-          }
-        );
-        setOpen(true);
-        setIsCreating(false);
-        setUpdate(true);
-      } else {
-        toast.error('Contract address not found');
-      }
-    } catch (error: any) {
-      setIsCreating(false);
-      toast.error(error.message);
-      console.error({ error });
+    if (value.logo) {
+      let formData = new FormData();
+      formData.append('file', value.logo);
+      formData.append('upload_preset', 'bqr7mcvh');
+      const fileUpload = await uploadFile(formData);
+      logoURL = fileUpload.data.url;
     }
+    if (value.socialMedia[0].type && value.socialMedia[0].link) {
+      updatedSocials = value.socialMedia.map(
+        (social: { type: string; link: string }) => {
+          return { name: social.type, url: social.link };
+        }
+      );
+    }
+    if (Number(value.type) === 0) {
+      amount = formatAmount(value.value, {
+        denomination: AE_AMOUNT_FORMATS.AE,
+      });
+    } else {
+      amount =
+        Number(value.value) ||
+        Math.round(daysToMilliseconds(Number(value.maximum))) ||
+        value.quorum ||
+        0;
+    }
+
+    mutate({
+      daoContractAddress: currentDAO.contractAddress,
+      proposalType: proposalLists[Number(value.type)].type,
+      description: value.description,
+      value: amount,
+      target: value.targetWallet || address,
+      info: {
+        name: value?.newName || '',
+        socials: updatedSocials
+          ? [...(currentDAO.Socials || []), ...updatedSocials]
+          : currentDAO.socials,
+        image: logoURL || '',
+      },
+    });
+
+    // try {
+    //   if (value.logo) {
+    //     let formData = new FormData();
+    //     formData.append('file', value.logo);
+    //     formData.append('upload_preset', 'bqr7mcvh');
+    //     const fileUpload = await uploadFile(formData);
+    //     logoURL = fileUpload.data.url;
+    //   }
+    //   if (value.socialMedia[0].type && value.socialMedia[0].link) {
+    //     updatedSocials = value.socialMedia.map(
+    //       (social: { type: string; link: string }) => {
+    //         return { name: social.type, url: social.link };
+    //       }
+    //     );
+    //   }
+    //   if (Number(value.type) === 0) {
+    //     amount = formatAmount(value.value, {
+    //       denomination: AE_AMOUNT_FORMATS.AE,
+    //     });
+    //   } else {
+    //     amount =
+    //       Number(value.value) ||
+    //       Math.round(daysToMilliseconds(Number(value.maximum))) ||
+    //       value.quorum ||
+    //       0;
+    //   }
+
+    //   const dao = await getEachDAO(daoID);
+    //   if (dao) {
+    //     await createProposal(
+    //       dao.contractAddress,
+    //       proposalLists[Number(value.type)].type,
+    //       value.description,
+    //       amount,
+    //       value.targetWallet || address,
+    //       {
+    //         name: value?.newName || '',
+    //         socials: updatedSocials
+    //           ? [...(dao.Socials || []), ...updatedSocials]
+    //           : dao.socials,
+    //         image: logoURL || '',
+    //       }
+    //     );
+    //     setOpen(true);
+    //     setIsCreating(false);
+    //     setUpdate(true);
+    //   } else {
+    //     toast.error('Contract address not found');
+    //   }
+    // } catch (error: any) {
+    //   setIsCreating(false);
+    //   toast.error(error.message);
+    //   console.error({ error });
+    // }
   };
 
+  console.log(value, '-> value');
+
   const handleGoHome = async () => {
-    // setOpen(false);
     setIsRouting(true);
-    try {
-      await getActivities(address);
-      queryClient.invalidateQueries(NOTIFICATIONS);
+    wait().then(() => {
       router.push(PROPOSALS_URL);
-      localStorage.removeItem('new_proposal');
-      setNewProposalInfo(defaultProposal);
       setIsRouting(false);
-    } catch (error: any) {
-      setIsRouting(false);
-      toast.error(error.message);
-    } finally {
-      setIsRouting(false);
-    }
+    });
   };
 
   if (!daoID || !proposalType) {
     router.back();
   }
+
+  if (isLoading) return <EachDaoLoading />;
 
   return (
     <div className="space-y-8">
@@ -201,15 +253,14 @@ const ReviewProposal = () => {
             </p>
           </div>
         )}
-        {value.maximum !== '0' ||
-          (value.maximum && (
-            <div className="grid grid-cols-2 text-sm w-4/6">
-              <p className="dark:text-white text-dark">New Duration</p>
-              <p className="dark:text-[#888888] text-dark">{`${convertDays(
-                Number(value.maximum)
-              )}`}</p>
-            </div>
-          ))}
+        {value.maximum !== '0' && value.maximum && (
+          <div className="grid grid-cols-2 text-sm w-4/6">
+            <p className="dark:text-white text-dark">New Duration</p>
+            <p className="dark:text-[#888888] text-dark">{`${convertDays(
+              Number(value.maximum)
+            )}`}</p>
+          </div>
+        )}
         {value.value && (
           <div className="grid grid-cols-2 text-sm w-4/6">
             <p className="dark:text-white text-dark">Value</p>
@@ -258,7 +309,7 @@ const ReviewProposal = () => {
         )}
         {duration && (
           <div className="grid grid-cols-2 text-sm w-4/6">
-            <p className="dark:text-white text-dark">Duration</p>
+            <p className="dark:text-white text-dark">Current Duration</p>
             <p className="dark:text-[#888888] text-dark">
               {convertDays(Number(duration))}
             </p>
@@ -297,7 +348,7 @@ const ReviewProposal = () => {
             type="submit"
             className="px-12"
             onClick={handleCreateProposal}
-            loading={isCreating}
+            loading={isPending}
             loadingText="Publishing..."
           >
             Publish Proposal

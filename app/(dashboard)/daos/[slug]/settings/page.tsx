@@ -14,13 +14,13 @@ interface ITabView {
 
 const Settings = () => {
   const { currentDAO, isMember } = useContext(EachDaoContext);
-  const { name, image, socials } = currentDAO;
+  const { socials } = currentDAO;
 
   const searchParams = useSearchParams();
   const activeSidebar =
     searchParams.get('q') || daoSettingsSidebarLinks[0].title;
   const tabs: ITabView = {
-    Profile: <Profile name={name} image={image} />,
+    Profile: <Profile />,
     Links: <Links socials={socials} />,
   };
   return (

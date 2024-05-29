@@ -2,6 +2,7 @@
 
 import AllDaos from '@/components/all-daos';
 import { defaultProposalOption } from '@/components/animation-options';
+import ErrorFetchingComponent from '@/components/error-fetching-comp';
 import DaoLoading from '@/components/loading/dao-loading';
 import { Button } from '@/components/ui/button';
 import { SELECT_DAO_STYLE_URL } from '@/config/path';
@@ -19,8 +20,10 @@ import { toast } from 'sonner';
 const Daos = () => {
   const router = useRouter();
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
-  const { DAOsData, daoLoading } = useContext(AppContext);
+  const { DAOsData, daoLoading, isDaoError } = useContext(AppContext);
   const [isPending, setIsPending] = useState<boolean>(false);
+
+  console.log(DAOsData, '->DAOsData');
 
   const connected: boolean = user.isConnected;
   const searchParams = useSearchParams();
@@ -60,9 +63,8 @@ const Daos = () => {
     });
   }
 
-  console.log(DAOsData, '->DAOsData');
-
   if (daoLoading) return <DaoLoading />;
+  if (isDaoError) return <ErrorFetchingComponent />;
 
   return (
     <div className="space-y-2 min-h-[80vh]">
@@ -96,11 +98,6 @@ const Daos = () => {
               Begin by setting up governance mechanisms, defining roles and
               responsibilities, and establishing rules for participation.
             </p>
-            <Link href={SELECT_DAO_STYLE_URL}>
-              <Button>
-                <Plus className="mr-2 h-4 w-4" /> Create DAO
-              </Button>
-            </Link>
           </div>
         </div>
       )}

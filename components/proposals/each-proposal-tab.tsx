@@ -62,6 +62,8 @@ const EachFilterTab = ({
     replace(`${pathname}?${params.toString()}`);
   }, 300);
 
+  console.log(proposalData, '-> proposalData');
+
   return (
     <div className="space-y-6">
       <div className="border-b dark:border-b-[#292929] pb-6 pt-4 mt-4 md:flex space-y-4 md:space-y-0 justify-between items-center border-b-[#CCCCCC99]">
@@ -159,7 +161,7 @@ const EachFilterTab = ({
                 </div>
               </div>
             )}
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid lg:grid-cols-2 gap-7">
               {proposalData?.map((proposal) => (
                 <ProposalCard key={proposal.status} {...proposal} />
               ))}

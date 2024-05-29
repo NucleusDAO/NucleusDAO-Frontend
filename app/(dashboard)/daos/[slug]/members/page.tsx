@@ -13,14 +13,14 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { CREATE_PROPOSAL_URL } from '@/config/path';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { IConnectWalletContext } from '@/libs/types';
 import { EachDaoContext } from '@/context/each-dao-context';
 import { usePathname, useRouter } from 'next/navigation';
-import { removeExistingStorageItem } from '@/libs/utils';
-import { AppContext } from '@/context/app-context';
+import { removeExistingStorageItem, wait } from '@/libs/utils';
 import EachDaoLoading from '@/components/loading/each-dao-loading';
+import ErrorFetchingComponent from '@/components/error-fetching-comp';
 
 interface IData {
   wallet: string;
@@ -31,40 +31,30 @@ interface IData {
 const EachDaoMembers = () => {
   const router = useRouter();
   const pathname = usePathname();
-  const { getAllUsersActivities } = useContext(AppContext);
-  const { membersActivities, isMember, currentDAO, memberLoading } =
-    useContext(EachDaoContext);
+  const {
+    membersActivities,
+    isMember,
+    currentDAO,
+    memberError,
+    memberLoading,
+  } = useContext(EachDaoContext);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { isConnected } = user;
-  const [data, setData] = useState<IData[]>([]);
-  const urlParts = pathname.split('/'); // Split the URL by "/"
-  const daoId = urlParts[2];
+  const [isPending, setIsPending] = useState<boolean>(false);
 
-  const getNewProposalInfo =
-    typeof window !== 'undefined' && localStorage.getItem('new_proposal');
+  const handlePropose = () => {
+    setIsPending(true);
+    wait().then(() => {
+      removeExistingStorageItem('new_proposal');
+      router.push(`${CREATE_PROPOSAL_URL}?ct=${currentDAO.id}&enums=1`);
+      setIsPending(false);
+    });
+  };
 
-  useEffect(() => {
-    const fetchMembers = async () =>
-      await getAllUsersActivities(currentDAO.contractAddress);
-  }, []);
-
-  useEffect(() => {
-    if (membersActivities) {
-      setData(
-        membersActivities.map((member: any) => {
-          return {
-            wallet: member.account,
-            proposals: member.proposalsCreated.toString(),
-            votes: member.voteCasted.toString(),
-          };
-        })
-      );
-    }
-  }, [membersActivities]);
-
-  console.log(data, '-says');
+  console.log(memberLoading, '-> memberLoading');
 
   if (memberLoading) return <EachDaoLoading />;
+  if (memberError) return <ErrorFetchingComponent />;
 
   return (
     <div className="space-y-4 dark:bg-gradient-to-r dark:from-[#1E1E1E] dark:via-[#1E1E1E] dark:to-[#252525] p-4 rounded-lg bg-white">
@@ -89,10 +79,9 @@ const EachDaoMembers = () => {
 
             <Button
               className="w-full"
-              onClick={() => {
-                removeExistingStorageItem('new_proposal');
-                router.push(`${CREATE_PROPOSAL_URL}?ct=${daoId}&enums=1`);
-              }}
+              onClick={handlePropose}
+              loading={isPending}
+              loadingText="Please wait..."
             >
               Propose
             </Button>
@@ -100,7 +89,7 @@ const EachDaoMembers = () => {
         </Dialog>
       </div>
 
-      <DataTable columns={columns} data={data} />
+      <DataTable columns={columns} data={membersActivities} />
     </div>
   );
 };
