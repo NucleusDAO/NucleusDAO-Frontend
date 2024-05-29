@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { CREATE_PROPOSAL_URL } from '@/config/path';
 import { Globe, MoveLeft, Plus } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
-import React, { ReactNode, useContext, useEffect, useState } from 'react';
+import React, { ReactNode, useContext, useState } from 'react';
 import { CopyIcon } from '@/assets/svgs';
 import { eachDaoViews } from '@/config/dao-config';
 import {
@@ -27,7 +27,6 @@ import {
 } from '@/components/ui/dialog';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { toast } from 'sonner';
-import { AppContext } from '@/context/app-context';
 import ErrorFetchingComponent from '@/components/error-fetching-comp';
 
 interface ILayout {
@@ -38,7 +37,6 @@ const Layout = ({ children }: ILayout) => {
   const router = useRouter();
   const pathname = usePathname();
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
-  const { setUpdate } = useContext(AppContext);
   const { isConnected } = user;
   const { isLoading, currentDAO, isMember, error, isError } =
     useContext(EachDaoContext);
@@ -70,11 +68,6 @@ const Layout = ({ children }: ILayout) => {
       setRouting(false);
     });
   }
-  useEffect(() => {
-    setUpdate(false);
-  }, []);
-
-  console.log(isError, error, '0> error');
 
   if (isLoading) return <EachDaoLoading />;
   if (isError) return <ErrorFetchingComponent description={error.message} />;

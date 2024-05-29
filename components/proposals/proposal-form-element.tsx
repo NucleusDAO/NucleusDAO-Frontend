@@ -220,7 +220,13 @@ const ProposalDurationFormField = ({ form }: { form: any }) => {
   );
 };
 
-const QuorumFormField = ({ form }: { form: any }) => {
+const QuorumFormField = ({
+  form,
+  isDisabled,
+}: {
+  form: any;
+  isDisabled?: boolean;
+}) => {
   return (
     <FormField
       control={form.control}
@@ -237,7 +243,11 @@ const QuorumFormField = ({ form }: { form: any }) => {
                   )}
                   role="button"
                   onClick={() => {
-                    field.value === 1 ? null : handleMinus('quorum', form);
+                    !isDisabled
+                      ? field.value === 1
+                        ? null
+                        : handleMinus('quorum', form)
+                      : null;
                   }}
                 >
                   <Minus size={18} />
@@ -246,15 +256,24 @@ const QuorumFormField = ({ form }: { form: any }) => {
                   placeholder="value"
                   type="number"
                   className="border-none dark:bg-[#191919] w-fit text-center bg-white"
+                  readOnly={isDisabled}
                   {...field}
                   onChange={({ target }) =>
-                    handleChangeFormNumberInput('quorum', target.value, form)
+                    !isDisabled
+                      ? handleChangeFormNumberInput(
+                          'quorum',
+                          target.value,
+                          form
+                        )
+                      : null
                   }
                 />
                 <div
                   className="dark:bg-[#1E1E1E] rounded-lg py-2 px-2 dark:hover:bg-[#2a2a2a] trans bg-[#D2D2D2]"
                   role="button"
-                  onClick={() => handlePlus('quorum', form)}
+                  onClick={() =>
+                    !isDisabled ? handlePlus('quorum', form) : null
+                  }
                 >
                   <Plus size={18} />
                 </div>
