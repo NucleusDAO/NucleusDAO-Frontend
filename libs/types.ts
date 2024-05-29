@@ -170,6 +170,7 @@ export interface IEachProposalView {
     value: number;
     proposalType: string;
     daoName: string;
+    quorum: number;
     description: string;
     votes: { account: string; support: boolean }[];
     type: string;

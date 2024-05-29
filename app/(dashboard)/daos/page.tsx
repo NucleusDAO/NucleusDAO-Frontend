@@ -98,11 +98,6 @@ const Daos = () => {
               Begin by setting up governance mechanisms, defining roles and
               responsibilities, and establishing rules for participation.
             </p>
-            <Link href={SELECT_DAO_STYLE_URL}>
-              <Button>
-                <Plus className="mr-2 h-4 w-4" /> Create DAO
-              </Button>
-            </Link>
           </div>
         </div>
       )}

@@ -31,11 +31,14 @@ import Link from 'next/link';
 import { formatAmount, AE_AMOUNT_FORMATS } from '@aeternity/aepp-sdk';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
+  BALANCE_HISTORY,
   EACH_DAO_KEY,
   EACH_DAO_PROPOSAL,
   EACH_PROPOSAL_INFO,
   MEMBER_ACTIVIES,
+  MEMBER_HISTORY,
   NOTIFICATIONS,
+  PROPOSAL_HISTORY,
   PROPOSAL_KEY,
 } from '@/libs/key';
 import { createProposal, getEachDAO } from '@/libs/contract-call';
@@ -57,12 +60,6 @@ const ReviewProposal = () => {
   const router = useRouter();
   const { value } = newProposalInfo;
 
-  // const { data } = useQuery({
-  //   queryKey: [EACH_DAO_KEY, daoID],
-  //   queryFn: () => getEachDAO(daoID),
-  //   enabled: !!daoID,
-  // });
-
   const duration = millisecondsToDays(Number(currentDAO.votingTime));
 
   const { mutate, isPending } = useMutation({
@@ -74,6 +71,9 @@ const ReviewProposal = () => {
       queryClient.invalidateQueries(EACH_DAO_PROPOSAL);
       queryClient.invalidateQueries(EACH_PROPOSAL_INFO);
       queryClient.invalidateQueries(MEMBER_ACTIVIES);
+      queryClient.invalidateQueries(BALANCE_HISTORY);
+      queryClient.invalidateQueries(PROPOSAL_HISTORY);
+      queryClient.invalidateQueries(MEMBER_HISTORY);
       localStorage.removeItem('new_proposal');
       setNewProposalInfo(defaultProposal);
       setOpen(true);

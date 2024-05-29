@@ -20,9 +20,12 @@ import { formatAmount, AE_AMOUNT_FORMATS } from '@aeternity/aepp-sdk';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { deposit } from '@/libs/contract-call';
 import {
+  BALANCE_HISTORY,
   DAOS_KEY,
   EACH_DAO_KEY,
   EACH_PROPOSAL_INFO,
+  MEMBER_HISTORY,
+  PROPOSAL_HISTORY,
   USER_ACTIVITIES_KEY,
 } from '@/libs/key';
 
@@ -49,6 +52,9 @@ const DepositToken = () => {
       queryClient.invalidateQueries(EACH_DAO_KEY);
       queryClient.invalidateQueries(EACH_PROPOSAL_INFO);
       queryClient.invalidateQueries(USER_ACTIVITIES_KEY);
+      queryClient.invalidateQueries(BALANCE_HISTORY);
+      queryClient.invalidateQueries(PROPOSAL_HISTORY);
+      queryClient.invalidateQueries(MEMBER_HISTORY);
       setOpen(true);
       setIsDeposited(true);
     },

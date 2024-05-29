@@ -39,6 +39,7 @@ interface IProposalResult {
     id: string;
     currentMembers: number;
     status: string;
+    quorum: number;
   };
   countdownTime: string;
 }
@@ -194,7 +195,7 @@ const ProposalResult = ({
             </TooltipProvider>
           </div>
           <p className="font-light text-sm text-dark dark:text-white">{`${Number(
-            currentDAO.quorum
+            Number(currentProposal.quorum)
           )}%`}</p>
         </div>
       </div>

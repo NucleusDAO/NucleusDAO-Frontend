@@ -21,23 +21,12 @@ import {
   getTimeDifference,
 } from '@/libs/utils';
 import EachProposalDetails from './each-proposal-details';
-import {
-  DAOS_KEY,
-  EACH_DAO_KEY,
-  EACH_DAO_PROPOSAL,
-  EACH_PROPOSAL_INFO,
-  MEMBER_ACTIVIES,
-  PROPOSAL_KEY,
-  USER_ACTIVITIES_KEY,
-} from '@/libs/key';
-import { useQueryClient } from '@tanstack/react-query';
 
 interface IEachTabView {
   [key: string]: ReactNode;
 }
 
 const EachProposalView = ({ tabs, currentProposal }: IEachProposalView) => {
-  const queryClient: any = useQueryClient();
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { address, isConnected } = user;
   const { isMember } = useContext(EachDaoContext);

@@ -89,7 +89,6 @@ export const ProposeToUpdateMember = ({ form }: { form: any }) => {
         name="targetWallet"
         label="Target Wallet"
         placeholder="Wallet address"
-        onChange={() => address && null}
         disabled={!!address}
       />
       <ProposalDurationFormField form={form} />

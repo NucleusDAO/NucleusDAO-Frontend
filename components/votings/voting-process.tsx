@@ -97,50 +97,9 @@ const VotingProcess = ({ currentProposal }: IVotingProcess) => {
     onError: (error: any) => toast.error(error.message),
   });
 
-  // const handleVote = async () => {
-  //   if (isDisabled) {
-  //     null;
-  //   } else {
-  //     setIsVoting(true);
-  //     try {
-  //       if (selectedOption === 'yes') {
-  //         const proposal = await voteFor(
-  //           Number(currentProposal.id),
-  //           currentDAO.contractAddress
-  //         );
-  //         await setShowModal(true);
-  //         setEachProposal(proposal);
-  //       } else {
-  //         const proposal = await voteAgainst(
-  //           Number(currentProposal.id),
-  //           currentDAO.contractAddress
-  //         );
-  //         await setShowModal(true);
-  //         setEachProposal(proposal);
-  //       }
-  //     } catch (error: any) {
-  //       toast.error(error.message);
-  //     } finally {
-  //       setIsVoting(false);
-  //     }
-  //   }
-  // };
-
   const handleDone = async () => {
     setShowModal(false);
     setIsLoading(false);
-    // setIsLoading(true);
-    // try {
-    //   setUpdate(true);
-    //   await getActivities(address);
-    //   // setCurrentProposal({ ...eachProposal, id: Number(eachProposal.id) });
-    //   setShowModal(false);
-    //   setIsLoading(false);
-    // } catch (error: any) {
-    //   toast.error(error.message);
-    // } finally {
-    //   setIsLoading(false);
-    // }
   };
 
   return (
@@ -187,7 +146,7 @@ const VotingProcess = ({ currentProposal }: IVotingProcess) => {
           <Dialog onOpenChange={setShowModal} open={showModal}>
             <Button
               className="w-full"
-              disabled={!selectedOption || isDisabled}
+              disabled={!selectedOption || isDisabled || isDisabled}
               onClick={() => {
                 !selectedOption || isDisabled ? null : mutate();
               }}

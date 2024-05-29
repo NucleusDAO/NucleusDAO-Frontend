@@ -3,6 +3,14 @@ import { twMerge } from 'tailwind-merge';
 import { IProposal } from './types';
 import { IDAO } from '@/context/each-dao-context';
 import { rate } from '@/config/dao-config';
+import {
+  EACH_DAO_KEY,
+  EACH_DAO_PROPOSAL,
+  EACH_PROPOSAL_INFO,
+  MEMBER_ACTIVIES,
+  NOTIFICATIONS,
+  PROPOSAL_KEY,
+} from './key';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -329,7 +337,6 @@ export function convertDays(days: number) {
 export function getTimeDifference(
   timestamp: string | number,
   setCountdownString: (arg: string) => void
-  // invalidateAllQueries: () => void
 ): any {
   const intervalId = setInterval(() => {
     const currentTime = Date.now();

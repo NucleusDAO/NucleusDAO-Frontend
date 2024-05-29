@@ -14,10 +14,7 @@ import {
   wait,
 } from '@/libs/utils';
 import EachDaoLoading from '@/components/loading/each-dao-loading';
-import {
-  EachDaoContext,
-  EachDaoContextProvider,
-} from '@/context/each-dao-context';
+import { EachDaoContext } from '@/context/each-dao-context';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { IConnectWalletContext } from '@/libs/types';
 import {
