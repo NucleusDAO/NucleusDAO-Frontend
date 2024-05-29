@@ -8,7 +8,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import FormGroup from '@/components/ui/form-group';
-import { Input } from '@/components/ui/input';
+import { Input, InputProps as OriginalInputProps } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
@@ -28,7 +28,7 @@ import {
 import { Loader, Minus, Plus, Trash2 } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { ChangeEvent, useContext, useState } from 'react';
-import { useFieldArray } from 'react-hook-form';
+import { FieldValues, UseFormReturn, useFieldArray } from 'react-hook-form';
 import { toast } from 'sonner';
 
 interface ISelectFormField {
@@ -83,21 +83,23 @@ const SelectFormField = ({
     />
   );
 };
+type InputProps = Omit<OriginalInputProps, 'form'>;
 
-const TextFormField = ({
+interface TextFormFieldProps extends InputProps {
+  form: UseFormReturn<FieldValues>;
+  name: string;
+  label: string;
+  placeholder: string;
+  type?: string;
+}
+
+const TextFormField: React.FC<TextFormFieldProps> = ({
   form,
   name,
   label,
   placeholder,
   type,
-  props,
-}: {
-  form: any;
-  name: string;
-  label: string;
-  placeholder: string;
-  type?: string;
-  props?: any;
+  ...props
 }) => {
   return (
     <FormField

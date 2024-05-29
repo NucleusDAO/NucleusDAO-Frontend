@@ -31,26 +31,37 @@ import {
   wait,
 } from '@/libs/utils';
 import { ValidateProposalForm } from '@/libs/validations/validate-create-proposal';
+import { useQuery } from '@tanstack/react-query';
+import { EACH_DAO_KEY } from '@/libs/key';
+import { getEachDAO } from '@/libs/contract-call';
+import { EachDaoContext } from '@/context/each-dao-context';
 
 const CreateNewProposalForm = () => {
   const [routing, setRouting] = useState<boolean>(false);
-  const { setNewProposalInfo, newProposalInfo, getEachDAO } =
-    useContext(AppContext);
+  const { setNewProposalInfo, newProposalInfo } = useContext(AppContext);
+  const { currentDAO } = useContext(EachDaoContext);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { address } = user;
-  const [daoMembers, setDaoMembers] = useState([]);
+  // const [daoMembers, setDaoMembers] = useState([]);
   const searchParams = useSearchParams();
   const type: string =
     searchParams.get('enums') || newProposalInfo.value.type || '0';
   const memberType = searchParams.get('type') || '';
-  const daoID = searchParams.get('ct');
+  const daoID: string = searchParams.get('ct') || '';
   const targetAddress = searchParams.get('address');
   const router = useRouter();
+
+  const { data } = useQuery({
+    queryKey: [EACH_DAO_KEY, daoID],
+    queryFn: () => getEachDAO(daoID),
+    enabled: !!daoID,
+  });
+
   const form = useForm<z.infer<typeof proposalInfoSchema>>({
     resolver: zodResolver(proposalInfoSchema),
     defaultValues: {
       ...newProposalInfo.value,
-      duration: getDaysFromMilliseconds(newProposalInfo.value.duration),
+      duration: data && millisecondsToDays(Number(data.votingTime)),
       newName: '',
       targetWallet: targetAddress,
       type,
@@ -58,17 +69,16 @@ const CreateNewProposalForm = () => {
   });
 
   useEffect(() => {
-    const getDuration = async () => {
-      const dao = await getEachDAO(daoID);
-      const duration = millisecondsToDays(Number(dao.votingTime));
-      setDaoMembers(dao.members);
-      form.setValue('duration', duration);
-    };
-    getDuration();
-  }, []);
+    if (data) {
+      form.setValue('duration', millisecondsToDays(Number(data.votingTime)));
+    }
+  }, [data]);
+  const daoMembers = data.members;
+
+  console.log(currentDAO, '-> currentDAO');
 
   const handleReset = (type: string) => {
-    console.log(defaultProposal, ' defaultProposal');
+    // console.log(defaultProposal, ' defaultProposal');
     form.setValue('description', '');
     form.setValue('duration', 0);
     form.setValue('logo', '');
@@ -119,7 +129,7 @@ const CreateNewProposalForm = () => {
       });
     }
   };
-  // onSubmit={form.handleSubmit(onSubmit)}
+
   return (
     <Form {...form}>
       <form className="space-y-8" onSubmit={form.handleSubmit(onSubmit)}>

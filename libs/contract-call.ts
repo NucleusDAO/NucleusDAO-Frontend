@@ -1,16 +1,5 @@
 import { getBasicDAO, getNucleusDAO } from './ae-utils';
-
-interface ICreateDAO {
-  name: string;
-  id: string;
-  description: string;
-  image: string;
-  socials: string[];
-  initialMembers: string[];
-  startingBalance: number;
-  votingTime: number;
-  quorum: number;
-}
+import { ICreateDAOS, ICreateProposal } from './types';
 
 const getDAOs = async () => {
   const contract = await getNucleusDAO();
@@ -41,7 +30,7 @@ const getAUserActivitiesAcrossDAOs = async (userAddress: string) => {
   return activities;
 };
 
-const createDAO = async (payload: ICreateDAO) => {
+const createDAO = async (payload: ICreateDAOS) => {
   const contract = await getNucleusDAO();
   const res = await contract.createDAO(
     payload.name,
@@ -56,6 +45,19 @@ const createDAO = async (payload: ICreateDAO) => {
   );
   const dao = res.decodedResult;
   return dao;
+};
+
+const createProposal = async (payload: ICreateProposal) => {
+  const contract = await getBasicDAO(payload.daoContractAddress);
+  const res = await contract.createProposal(
+    payload.proposalType,
+    payload.description,
+    payload.value,
+    payload.target,
+    payload.info
+  );
+  const proposal = res.decodedResult;
+  return proposal;
 };
 
 const getEachDAO = async (id: string) => {
@@ -106,6 +108,37 @@ const getProposalDetails = async (
   return proposal;
 };
 
+const deposit = async (daoContractAddress: string, amount: string) => {
+  const contract = await getBasicDAO(daoContractAddress);
+  const res = await contract.deposit({ amount });
+  const response = res.decodedResult;
+  return response;
+};
+
+const executeProposal = async (
+  proposalId: number,
+  daoContractAddress: string
+) => {
+  const contract = await getBasicDAO(daoContractAddress);
+  const res = await contract.executeProposal(proposalId);
+  const result = res.decodedResult;
+  return result;
+};
+
+const voteFor = async (proposalId: number, daoContractAddress: string) => {
+  const contract = await getBasicDAO(daoContractAddress);
+  const res = await contract.voteFor(proposalId);
+  const result = res.decodedResult;
+  return result;
+};
+
+const voteAgainst = async (proposalId: number, daoContractAddress: string) => {
+  const contract = await getBasicDAO(daoContractAddress);
+  const res = await contract.voteAgainst(proposalId);
+  const result = res.decodedResult;
+  return result;
+};
+
 export {
   getDAOs,
   getAllProposals,
@@ -115,4 +148,9 @@ export {
   getProposals,
   getAllUsersActivities,
   getProposalDetails,
+  deposit,
+  createProposal,
+  executeProposal,
+  voteAgainst,
+  voteFor,
 };

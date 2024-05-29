@@ -9,6 +9,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { cn } from '@/libs/utils';
 import { Minus, Plus } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
 import React, { FC, useEffect, useState } from 'react';
 
 export const ProposalTransfer = ({ form }: { form: any }) => {
@@ -24,7 +25,7 @@ export const ProposalTransfer = ({ form }: { form: any }) => {
 
         <EquivalentValueFormField form={form} />
       </div>
-      {/* <ProposalDurationFormField form={form} /> */}
+      <ProposalDurationFormField form={form} />
     </React.Fragment>
   );
 };
@@ -32,7 +33,6 @@ export const ProposalTransfer = ({ form }: { form: any }) => {
 export const ProposeToChangeVotingTime = ({ form }: { form: any }) => {
   const [days, setDays] = useState<number | string>(0);
   const error = form.formState?.errors?.maximum?.message;
-  console.log(form.formState?.errors?.maximum, '->error');
   useEffect(() => {
     form.setError('maximum', '');
     form.setValue('maximum', days);
@@ -40,15 +40,6 @@ export const ProposeToChangeVotingTime = ({ form }: { form: any }) => {
   return (
     <>
       <div className="grid grid-cols-2 gap-1">
-        {/* <TextFormField
-          form={form}
-          name="maximum"
-          type="number"
-          label="New Proposal Duration"
-          placeholder="To how many days"
-        /> */}
-        {/* <ProposalDurationFormField form={form} /> */}
-
         <div className="space-y-3">
           <label className="dark:text-white text-dark font-light text-sm">
             New Proposal Duration
@@ -83,17 +74,14 @@ export const ProposeToChangeVotingTime = ({ form }: { form: any }) => {
           </div>
         </div>
       </div>
-      {error && (
-        <p className="text-sm font-light text-destructive">
-          Days cannot be zero
-        </p>
-      )}
-      {/* <ProposalDurationFormField form={form} /> */}
+      {error && <p className="text-sm font-light text-destructive">{error}</p>}
     </>
   );
 };
 
 export const ProposeToUpdateMember = ({ form }: { form: any }) => {
+  const searchPararms = useSearchParams();
+  const address = searchPararms.get('address');
   return (
     <>
       <TextFormField
@@ -101,8 +89,10 @@ export const ProposeToUpdateMember = ({ form }: { form: any }) => {
         name="targetWallet"
         label="Target Wallet"
         placeholder="Wallet address"
+        onChange={() => address && null}
+        disabled={!!address}
       />
-      {/* <ProposalDurationFormField form={form} /> */}
+      <ProposalDurationFormField form={form} />
     </>
   );
 };
@@ -111,7 +101,7 @@ export const ProposeToChangeQuorum = ({ form }: { form: any }) => {
   return (
     <>
       <QuorumFormField form={form} />
-      {/* <ProposalDurationFormField form={form} /> */}
+      <ProposalDurationFormField form={form} />
     </>
   );
 };
@@ -125,7 +115,7 @@ export const ProposeToChangeDaosName = ({ form }: { form: any }) => {
         label="New DAO Name"
         placeholder="Enter DAO New Name"
       />
-      {/* <ProposalDurationFormField form={form} /> */}
+      <ProposalDurationFormField form={form} />
     </>
   );
 };
@@ -134,7 +124,7 @@ export const ProposeToChangeDaosLogo = ({ form }: { form: any }) => {
   return (
     <>
       <UploadFileFormField form={form} />
-      {/* <ProposalDurationFormField form={form} /> */}
+      <ProposalDurationFormField form={form} />
     </>
   );
 };
@@ -143,7 +133,7 @@ export const ProposeToUpdateDaosSocials = ({ form }: { form: any }) => {
   return (
     <>
       <UpdateSocialsFormField form={form} />
-      {/* <ProposalDurationFormField form={form} /> */}
+      <ProposalDurationFormField form={form} />
     </>
   );
 };

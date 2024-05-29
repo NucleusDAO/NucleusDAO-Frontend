@@ -15,7 +15,7 @@ import {
   PROPOSALS,
 } from '@/libs/key';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { ReactNode, createContext, useContext, useEffect } from 'react';
+import { ReactNode, createContext, useContext } from 'react';
 import { ConnectWalletContext } from './connect-wallet-context';
 import { IConnectWalletContext, ICreateUser } from '@/libs/types';
 import { toast } from 'sonner';

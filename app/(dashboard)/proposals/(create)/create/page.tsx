@@ -1,14 +1,7 @@
 'use client';
 import CreateNewProposalForm from '@/components/forms/create-new-proposal-form';
-import { AppContext } from '@/context/app-context';
-import { useContext, useEffect } from 'react';
 
 const CreateProposal = () => {
-  const { setUpdate } = useContext(AppContext);
-
-  useEffect(() => {
-    setUpdate(false);
-  }, []);
   return (
     <div className="space-y-8">
       <div className="space-y-2">

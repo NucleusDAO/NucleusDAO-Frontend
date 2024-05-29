@@ -9,10 +9,9 @@ import { ConnectWalletParams, WalletConnection } from './types';
 
 import nucleusDAOAci from './contract/NucleusDAO.json';
 import basicDAOAci from './contract/BasicDAO.json';
-import { DASHBOARD_URL } from '@/config/path';
 
 const nucleusDAOContractAddress =
-  'ct_2gG4gAoYWcTfHuZywfPHmSfoAHTjVGKL866uKXPBLLfhNszYtk';
+  'ct_3U6UAyaUZb3wPp7wd213hC3jJbNE63AUc7Q333tucHff5sLrB';
 
 export const TESTNET_NODE_URL = 'https://testnet.aeternity.io';
 export const MAINNET_NODE_URL = 'https://mainnet.aeternity.io';

@@ -1,5 +1,4 @@
 'use client';
-import Image from 'next/image';
 import {
   Dialog,
   DialogContent,
@@ -10,8 +9,6 @@ import {
 } from '@/components/ui/dialog';
 
 import { Button } from '@/components/ui/button';
-import RoundedIcon from '@/assets/icons/roundedIcon.png';
-import Link from 'next/link';
 import { CREATE_PROPOSAL_URL } from '@/config/path';
 import { useContext } from 'react';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
@@ -27,18 +24,18 @@ const columns: {
   cell?: any;
 }[] = [
   {
-    accessorKey: 'wallet',
+    accessorKey: 'account',
     header: 'Wallet Address',
     key: 'wallet',
     cell: ({ row }: any) => <WalletAddressCell row={row} />,
   },
   {
-    accessorKey: 'proposals',
+    accessorKey: 'proposalsCreated',
     header: 'Proposals',
     key: 'proposals',
   },
   {
-    accessorKey: 'votes',
+    accessorKey: 'votesCasted',
     header: 'Votes',
     key: 'votes',
   },
@@ -53,16 +50,16 @@ const columns: {
 export { columns };
 
 export const WalletAddressCell = ({ row }: any) => {
-  const { wallet } = row.original;
+  const { account } = row.original;
   return (
     <div className="flex space-x-2 items-center w-[25vw]">
       <img
-        src={`https://avatars.z52da5wt.xyz/${wallet}`}
+        src={`https://avatars.z52da5wt.xyz/${account}`}
         alt="logo"
         className="rounded-full h-6 w-6"
       />
 
-      <p>{wallet.slice(0, 14) + '...' + wallet.slice(-8)}</p>
+      <p>{account.slice(0, 14) + '...' + account.slice(-8)}</p>
     </div>
   );
 };
@@ -72,7 +69,7 @@ export const ActionCell = ({ row }: any) => {
   const { isMember, currentDAO } = useContext(EachDaoContext);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { isConnected } = user;
-  const { id, wallet } = row.original;
+  const { account } = row.original;
 
   return (
     <>
@@ -101,7 +98,7 @@ export const ActionCell = ({ row }: any) => {
               onClick={() => {
                 removeExistingStorageItem('new_proposal');
                 router.push(
-                  `${CREATE_PROPOSAL_URL}?ct=${currentDAO.id}&enums=2&address=${wallet}`
+                  `${CREATE_PROPOSAL_URL}?ct=${currentDAO.id}&enums=2&address=${account}`
                 );
               }}
             >

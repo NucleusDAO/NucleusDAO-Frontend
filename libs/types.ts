@@ -181,11 +181,37 @@ export interface IEachProposalView {
     status: string;
     totalVote: string;
     id: string;
+    currentMembers: number;
     duration: string;
     startTime: number;
     endTime: number;
     proposer: string;
     votesFor: number;
     votesAgainst: number;
+  };
+}
+
+export interface ICreateDAOS {
+  name: string;
+  id: string;
+  description: string;
+  image: string;
+  socials: string[];
+  initialMembers: string[];
+  startingBalance: number;
+  votingTime: number;
+  quorum: number;
+}
+
+export interface ICreateProposal {
+  daoContractAddress: string;
+  proposalType: string;
+  description: string;
+  value: number;
+  target: string;
+  info: {
+    name: string;
+    socials: { name: string; url: string }[];
+    image: string;
   };
 }

@@ -85,6 +85,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
   } = useQuery({
     queryKey: [DAOS_KEY],
     queryFn: getDAOs,
+    retry: false,
   });
 
   const DAOsData =
@@ -111,6 +112,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
   } = useQuery({
     queryFn: getAllProposals,
     queryKey: [PROPOSAL_KEY],
+    retry: false,
   });
 
   const proposals =
@@ -316,39 +318,39 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
   //   return dao;
   // };
 
-  const deposit = async (daoContractAddress: string, amount: number) => {
-    const contract = await getBasicDAO(daoContractAddress);
-    const res = await contract.deposit({ amount });
-    const response = res.decodedResult;
-    return response;
-  };
+  // const deposit = async (daoContractAddress: string, amount: number) => {
+  //   const contract = await getBasicDAO(daoContractAddress);
+  //   const res = await contract.deposit({ amount });
+  //   const response = res.decodedResult;
+  //   return response;
+  // };
 
-  const voteFor = async (proposalId: number, daoContractAddress: string) => {
-    const contract = await getBasicDAO(daoContractAddress);
-    const res = await contract.voteFor(proposalId);
-    const result = res.decodedResult;
-    return result;
-  };
+  // const voteFor = async (proposalId: number, daoContractAddress: string) => {
+  //   const contract = await getBasicDAO(daoContractAddress);
+  //   const res = await contract.voteFor(proposalId);
+  //   const result = res.decodedResult;
+  //   return result;
+  // };
 
-  const voteAgainst = async (
-    proposalId: number,
-    daoContractAddress: string
-  ) => {
-    const contract = await getBasicDAO(daoContractAddress);
-    const res = await contract.voteAgainst(proposalId);
-    const result = res.decodedResult;
-    return result;
-  };
+  // const voteAgainst = async (
+  //   proposalId: number,
+  //   daoContractAddress: string
+  // ) => {
+  //   const contract = await getBasicDAO(daoContractAddress);
+  //   const res = await contract.voteAgainst(proposalId);
+  //   const result = res.decodedResult;
+  //   return result;
+  // };
 
-  const executeProposal = async (
-    proposalId: number,
-    daoContractAddress: string
-  ) => {
-    const contract = await getBasicDAO(daoContractAddress);
-    const res = await contract.executeProposal(proposalId);
-    const result = res.decodedResult;
-    return result;
-  };
+  // const executeProposal = async (
+  //   proposalId: number,
+  //   daoContractAddress: string
+  // ) => {
+  //   const contract = await getBasicDAO(daoContractAddress);
+  //   const res = await contract.executeProposal(proposalId);
+  //   const result = res.decodedResult;
+  //   return result;
+  // };
   const value = {
     createDAO,
     createProposal,
@@ -366,11 +368,11 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
 
     newProposalInfo,
     setNewProposalInfo,
-    voteFor,
-    voteAgainst,
+    // voteFor,
+    // voteAgainst,
 
-    executeProposal,
-    deposit,
+    // executeProposal,
+    // deposit,
 
     isProposalLoading,
 

@@ -1,6 +1,6 @@
 'use client';
 import { ReactNode, createContext, useContext, useState } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { getDuration, getStatus } from '@/libs/utils';
 import { IConnectWalletContext, IProposal } from '@/libs/types';
 import { ConnectWalletContext } from './connect-wallet-context';
@@ -11,6 +11,7 @@ import {
   getEachDAO,
   getProposals,
 } from '@/libs/contract-call';
+import { PROPOSALS_URL } from '@/config/path';
 
 export const EachDaoContext = createContext<any>({});
 
@@ -34,13 +35,14 @@ export interface IDAO {
 export const EachDaoContextProvider = ({ children }: IAppProvider) => {
   const pathname = usePathname();
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
-  const [updateDAO, setUpdateDAO] = useState<boolean>(false);
   const [memberHistory, setMemberHistory] = useState([]);
   const [proposalHistory, setProposalHistory] = useState([]);
   const [fundsHistory, setFundsHistory] = useState([]);
+  const searchParams = useSearchParams();
+  const getDaoId = searchParams.get('dao') || searchParams.get('ct') || '';
 
   const urlParts = pathname.split('/'); // Split the URL by "/"
-  const daoId = urlParts[2];
+  const daoId = pathname.startsWith(PROPOSALS_URL) ? getDaoId : urlParts[2];
 
   const {
     data: currentDAO,
@@ -107,7 +109,7 @@ export const EachDaoContextProvider = ({ children }: IAppProvider) => {
     isMember,
     memberLoading,
     isProposalLoading,
-    setUpdateDAO,
+
     error,
     isError,
 

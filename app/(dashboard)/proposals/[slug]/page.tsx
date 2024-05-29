@@ -1,25 +1,31 @@
 'use client';
+import ErrorFetchingComponent from '@/components/error-fetching-comp';
 import EachDaoLoading from '@/components/loading/each-dao-loading';
 import EachProposalView from '@/components/proposals/each-proposal-view';
 import { Separator } from '@/components/ui/separator';
 import { AppContext } from '@/context/app-context';
 import { EachDaoContext } from '@/context/each-dao-context';
 import { useMediaQuery } from '@/hooks/use-media-query';
+import { getEachDAO, getProposalDetails } from '@/libs/contract-call';
+import { EACH_DAO_KEY, EACH_PROPOSAL_INFO } from '@/libs/key';
 import { IEachProposalView } from '@/libs/types';
 import { cn } from '@/libs/utils';
+import { useQuery } from '@tanstack/react-query';
 import { MoveLeft } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+
 import { useDebouncedCallback } from 'use-debounce';
 
 const EachProposal = () => {
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [currentProposal, setCurrentProposal] = useState<
-    IEachProposalView | any
-  >({});
-  const { getEachDAO, getProposal } = useContext(AppContext);
-  const { setCurrentDAO, currentDAO } = useContext(EachDaoContext);
+  // const [isLoading, setIsLoading] = useState<boolean>(true);
+  // const [currentProposal, setCurrentProposal] = useState<
+  //   IEachProposalView | any
+  // >({});
+  // const { getEachDAO, getProposal } = useContext(AppContext);
+  const { currentDAO, isLoading, isError, error } = useContext(EachDaoContext);
   const isDesktop = useMediaQuery('(min-width: 768px)');
   const router = useRouter();
   const tabs: string[] = ['Result', 'Information'];
@@ -32,22 +38,46 @@ const EachProposal = () => {
   const urlParts = pathname.split('/'); // Split the URL by "/"
   const proposalId = urlParts[2];
 
-  useEffect(() => {
-    const getSingleProposal = async () => {
-      try {
-        const dao: { contractAddress: string } = await getEachDAO(daoId);
-        setCurrentDAO(dao);
-        const proposal = await getProposal(dao.contractAddress, proposalId);
-        setCurrentProposal(proposal);
-        setIsLoading(false);
-      } catch (error: any) {
-        toast.error(error.message);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    getSingleProposal();
-  }, [proposalId]);
+  // const {
+  //   data: currentDAO,
+  //   isLoading,
+  //   isError,
+  //   error,
+  // } = useQuery({
+  //   queryKey: [EACH_DAO_KEY, daoId],
+  //   queryFn: () => getEachDAO(daoId),
+  //   enabled: !!daoId,
+  // });
+
+  const {
+    data: currentProposal,
+    isLoading: isProposalLoading,
+    isError: isProposalError,
+    error: proposalError,
+  } = useQuery({
+    queryKey: [EACH_PROPOSAL_INFO, currentDAO?.contractAddress, proposalId],
+    queryFn: () => getProposalDetails(currentDAO?.contractAddress, proposalId),
+    enabled: !!proposalId && !!currentDAO?.contractAddress,
+  });
+
+  // useEffect(() => {
+  //   const getSingleProposal = async () => {
+  //     try {
+  //       const dao: { contractAddress: string } = await getEachDAO(daoId);
+  //       setCurrentDAO(dao);
+  //       const proposal = await getProposal(dao.contractAddress, proposalId);
+  //       setCurrentProposal(proposal);
+  //       setIsLoading(false);
+  //     } catch (error: any) {
+  //       toast.error(error.message);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
+  //   getSingleProposal();
+  // }, [proposalId]);
+
+  console.log(currentDAO);
 
   const handleSwitch = useDebouncedCallback((term) => {
     const params = new URLSearchParams(searchParams);
@@ -59,6 +89,14 @@ const EachProposal = () => {
     }
     replace(`${pathname}?${params.toString()}`);
   }, 200);
+
+  if (isLoading) return <EachDaoLoading />;
+  if (isError || isProposalError)
+    return (
+      <ErrorFetchingComponent
+        description={error?.message || proposalError?.message}
+      />
+    );
 
   return (
     <div className="space-y-4">
@@ -93,24 +131,27 @@ const EachProposal = () => {
         </div>
       </div>
 
-      <div className="">
-        <h1 className="dark:text-white text-dark font-medium text-[36px] lg:text-[18px]">
-          {currentDAO?.name}
-        </h1>
-        <p className="text-sm lg:text-normal font-light">
-          {currentDAO?.description}
-        </p>
+      <div className="flex space-x-3 justify-start">
+        <Avatar>
+          <AvatarImage src={currentDAO.image} />
+          <AvatarFallback>CN</AvatarFallback>
+        </Avatar>
+
+        <div className="">
+          <h1 className="dark:text-white text-dark font-medium text-[36px] lg:text-[18px]">
+            {currentDAO && currentDAO?.name}
+          </h1>
+          <p className="text-sm lg:text-normal font-light leading-[30px]">
+            {currentDAO && currentDAO?.description}
+          </p>
+        </div>
       </div>
       <Separator />
 
-      {isLoading ? (
+      {isProposalLoading ? (
         <EachDaoLoading />
       ) : (
-        <EachProposalView
-          tabs={tabs}
-          currentProposal={currentProposal}
-          setCurrentProposal={setCurrentProposal}
-        />
+        <EachProposalView tabs={tabs} currentProposal={currentProposal} />
       )}
     </div>
   );

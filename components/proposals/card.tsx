@@ -1,5 +1,4 @@
 'use client';
-import LegacyLogo from '@/assets/logos/legacy.png';
 import Image from 'next/image';
 import RoundedIcon from '@/assets/icons/roundedIcon.png';
 import VoteIcon from '@/assets/icons/voteIcon.png';
@@ -10,8 +9,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { capitalizeFirstLetter, getTimeDifference } from '@/libs/utils';
 import { useMediaQuery } from '@/hooks/use-media-query';
-import { ConnectWalletContext } from '@/context/connect-wallet-context';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { proposalLists } from '@/config/dao-config';
 import { PROPOSALS_URL } from '@/config/path';
 
@@ -26,6 +24,7 @@ interface IProposalCard {
   proposer: string;
   daoId: string;
   endTime: string;
+  daoImage: string;
   organisation: string;
 }
 
@@ -38,15 +37,16 @@ const ProposalCard = ({
   id,
   daoId,
   endTime,
+  daoImage,
 }: IProposalCard) => {
   const [countdownString, setCountdownString] = useState<string>('');
-  const { user } = useContext<any>(ConnectWalletContext);
   const pathname = usePathname();
   const isDesktop = useMediaQuery('(min-width: 768px)');
 
   useEffect(() => {
     getTimeDifference(endTime, setCountdownString);
   }, [endTime]);
+
   return (
     <Link
       href={`${pathname}/${id}${
@@ -59,7 +59,12 @@ const ProposalCard = ({
       >
         <div className="flex rounded-l space-x-">
           <div className="dark:bg-[#1E1E1E] bg-[#EEEEEE] p-3 rounded-tl-lg rounded-bl-lg">
-            <Image src={LegacyLogo} alt="legacy" width={isDesktop ? 32 : 24} />
+            <img
+              src={daoImage}
+              alt="legacy"
+              width={isDesktop ? 32 : 24}
+              className="rounded-full object-cover"
+            />
           </div>
           <div className="max-h-[300px] w-[1px] bg-[#292929]" />
           <div className="p-2 md:p-4 space-y-6 w-full">

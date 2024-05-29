@@ -32,7 +32,6 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 import { toast } from 'sonner';
 import { AppContext } from '@/context/app-context';
 import ErrorFetchingComponent from '@/components/error-fetching-comp';
-import { useQuery } from '@tanstack/react-query';
 
 interface ILayout {
   children: ReactNode;
@@ -78,7 +77,7 @@ const Layout = ({ children }: ILayout) => {
     setUpdate(false);
   }, []);
 
-  console.log(currentDAO, '0>');
+  console.log(isError, error, '0> error');
 
   if (isLoading) return <EachDaoLoading />;
   if (isError) return <ErrorFetchingComponent description={error.message} />;
@@ -175,7 +174,7 @@ const Layout = ({ children }: ILayout) => {
                 </div>
               </div>
             </div>
-            <p className="text-[#888888] text-sm">
+            <p className="text-[#888888] text-sm leading-[28px]">
               {capitalizeFirstLetter(currentDAO?.description)}
             </p>
           </div>
