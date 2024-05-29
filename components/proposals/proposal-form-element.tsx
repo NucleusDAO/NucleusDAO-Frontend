@@ -181,8 +181,8 @@ const ProposalDurationFormField = ({ form }: { form: any }) => {
         <FormItem>
           <FormLabel>Proposal Duration</FormLabel>
           <FormControl>
-            <FormGroup className="md:space-x-6 space-x-3">
-              <div className="border dark:border-[#292929] flex items-center justify-between rounded-lg py-1 px-5 w-[90%] md:w-[50%] border-[#CCCCCC99]">
+            <FormGroup className="lg:space-x-6 space-x-3">
+              <div className="border dark:border-[#292929] flex items-center justify-between rounded-lg py-1 px-5 w-[80%] lg:w-[50%] border-[#CCCCCC99]">
                 <div
                   className={cn(
                     'dark:bg-[#1E1E1E] rounded-lg py-2 px-2 dark:hover:bg-[#2a2a2a] trans bg-[#D2D2D2] hover:bg-[#D2D2D2] cursor-not-allowed'
@@ -195,7 +195,7 @@ const ProposalDurationFormField = ({ form }: { form: any }) => {
                 <Input
                   placeholder="value"
                   type="number"
-                  className="border-none dark:bg-[#191919] w-fit text-center bg-white"
+                  className="border-none dark:bg-[#191919] w-[50%] lg:w-fit text-center bg-white"
                   readOnly
                   {...field}
                   onChange={() => null}
@@ -235,8 +235,8 @@ const QuorumFormField = ({
         <FormItem>
           <FormLabel>Proposal Quorum</FormLabel>
           <FormControl>
-            <FormGroup className="space-x-6">
-              <div className="border dark:border-[#292929] md:flex items-center justify-between rounded-lg py-1 px-5 w-[50%] border-[#CCCCCC99]">
+            <FormGroup className="lg:space-x-6 lg:flex block space-y-2 lg:space-y-0">
+              <div className="border dark:border-[#292929] flex items-center justify-between rounded-lg py-1 px-5 w-[50%] border-[#CCCCCC99]">
                 <div
                   className={cn(
                     'dark:bg-[#1E1E1E] rounded-lg py-2 px-2 dark:hover:bg-[#2a2a2a] trans bg-[#D2D2D2]'
@@ -255,7 +255,7 @@ const QuorumFormField = ({
                 <Input
                   placeholder="value"
                   type="number"
-                  className="border-none dark:bg-[#191919] w-fit text-center bg-white"
+                  className="border-none dark:bg-[#191919] w-[50%] lg:w-fit text-center bg-white"
                   readOnly={isDisabled}
                   {...field}
                   onChange={({ target }) =>

@@ -75,7 +75,7 @@ const Layout = ({ children }: ILayout) => {
   return (
     <div>
       <div className="flex justify-between border-b dark:border-b-[#292929] pb-6 border-b-[#CCCCCC99]">
-        <div className="md:flex space-x-4 items-center space-y-5 md:space-y-0">
+        <div className="md:flex lg:space-x-4 items-center space-y-5 md:space-y-0">
           <div
             className="rounded-lg flex w-fit items-center justify-center p-2 dark:bg-[#1E1E1E] bg-white dark:hover:bg-[#262525] hover:bg-white text-[#444444] dark:text-defaultText"
             role="button"
@@ -102,7 +102,7 @@ const Layout = ({ children }: ILayout) => {
         )}
       </div>
 
-      <div className="min-h-[72vh] overflow-y-hidden overflow-x-hidden pt-6 pr-4">
+      <div className="min-h-[72vh] overflow-y-hidden overflow-x-hidden pt-6 lg:pr-4">
         <div className="space-y-8">
           <div className="space-y-6">
             <div className="lg:flex items-center justify-between">

@@ -19,6 +19,7 @@ export const COMPILER_URL = 'https://compiler.aepps.com';
 
 export const detectWallets = async () => {
   const connection = new BrowserWindowMessageConnection();
+  alert(connection);
   return new Promise<WalletConnection>((resolve, reject) => {
     const stopDetection = walletDetector(
       connection,
@@ -110,10 +111,12 @@ export const connectWallet = async ({
   let addressDeepLink: any;
 
   if ((IS_MOBILE || isSafariBrowser()) && !IN_FRAME) {
-    if (address) {
-      setConnectingToWallet(false);
-      return;
-    }
+    // if (address) {
+    //   setConnectingToWallet(false);
+    //   return;
+    // }
+    const wallet = await detectWallets();
+    alert('i am here');
     // if (isHome) {
     //   const domainName =
     //     typeof window !== 'undefined' && window.location.origin;
@@ -175,7 +178,8 @@ export const connectWallet = async ({
           }
         };
         if (walletObj.getConnection) {
-          await connectWallet(walletObj);
+          console.log(walletObj, '-> waller objext');
+          // await connectWallet(walletObj);
         } else {
           const handleWallet = async ({ wallets }: any) => {
             const detectedWalletObject = Object.values(wallets).find(

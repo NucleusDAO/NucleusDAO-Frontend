@@ -63,8 +63,8 @@ const ProposalCard = ({
         className="dark:bg-gradient-to-r dark:from-[#1E1E1E] dark:via-[#1E1E1E] dark:to-[#252525] rounded-lg cursor-pointer bg-white"
         role="tablist"
       >
-        <div className="flex rounded-l p-4 space-x-5 justify-between">
-          <div className="w-[6%]">
+        <div className="flex rounded-l p-4 space-x-5 justify-between w-full">
+          <div className="w-[6%] lg:block hidden">
             <Avatar className="w-8 h-6 rounded-sm">
               <AvatarImage src={daoImage} className="rounded-sm" />
               <AvatarFallback>CN</AvatarFallback>
@@ -76,17 +76,23 @@ const ProposalCard = ({
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <div className="space-y-7 w-[100%]">
-                  <div className="flex justify-between items-center w-full">
-                    <div>
-                      <p className="dark:text-white capitalize text-dark font-medium text-sm md:text-normal truncate text-ellipsis overflow-hidden">
-                        {daoName}
-                      </p>
+                  <div className="flex space-y-2 justify-between items-center w-full">
+                    <div className="space-y-2">
+                      <div className="flex space-x-2">
+                        <Avatar className="w-6 h-6 rounded-full lg:hidden block">
+                          <AvatarImage src={daoImage} className="rounded-sm" />
+                          <AvatarFallback>CN</AvatarFallback>
+                        </Avatar>
+                        <p className="dark:text-white capitalize text-dark font-medium text-sm md:text-normal truncate text-ellipsis overflow-hidden">
+                          {daoName}
+                        </p>
+                      </div>
                       <Link href={url}>
                         <div className="space-x-1 flex items-center">
                           <p className="text-xs font-light text-defaultText">
                             {url}
                           </p>
-                          <LinkIcon className="text-[#DCC5FD] dark:text-[#292D32]" />
+                          <LinkIcon className="text-[#DCC5FD] dark:text-[#292D32] lg:flex hidden" />
                         </div>
                       </Link>
                     </div>

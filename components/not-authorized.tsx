@@ -22,9 +22,9 @@ const NotAuthorized = ({ description }: INotAuthorized) => {
         'min-h-[80vh] w-full p-8 text-center flex items-center justify-center'
       )}
     >
-      <div className="w-[90%] space-y-8 font-light text-sm">
+      <div className="w-[90%] space-y-6 font-light text-sm">
         <Image src={EmptyDAO} alt="DAO empty" width={100} className="mx-auto" />
-        <h1 className="dark:text-white text-dark text-[28px]">
+        <h1 className="dark:text-white text-dark text-[18px] lg:text-[28px]">
           User Not Authorized...
         </h1>
         <p>{description}</p>

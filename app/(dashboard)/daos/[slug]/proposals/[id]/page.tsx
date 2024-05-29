@@ -9,47 +9,25 @@ import { IEachProposalView } from '@/libs/types';
 import { cn } from '@/libs/utils';
 import { useQuery } from '@tanstack/react-query';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useContext, useEffect, useState } from 'react';
-import { toast } from 'sonner';
+import { useContext } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 
 const EachProposal = () => {
-  // const [isLoading, setIsLoading] = useState<boolean>(true);
   const tabs: string[] = ['Result', 'Information'];
   const { currentDAO } = useContext(EachDaoContext);
   const searchParams = useSearchParams();
   const { replace } = useRouter();
   const pathname = usePathname();
   const urlParts = pathname.split('/');
-  // const [currentProposal, setCurrentProposal] = useState<
-  //   IEachProposalView | any
-  // >({});
 
   const currentTab: string = searchParams.get('q') || tabs[0];
   const proposalId = urlParts[4];
-  // const daoId = urlParts[2];
 
   const { data: currentProposal, isLoading } = useQuery({
     queryKey: [EACH_PROPOSAL_INFO, currentDAO.contractAddress, proposalId],
     queryFn: () => getProposalDetails(currentDAO.contractAddress, proposalId),
     enabled: !!proposalId,
   });
-
-  // useEffect(() => {
-  //   const getSingleProposal = async () => {
-  //     try {
-  //       const dao: { contractAddress: string } = await getEachDAO(daoId);
-  //       const proposal = await getProposal(dao.contractAddress, proposalId);
-  //       setCurrentProposal(proposal);
-  //       setIsLoading(false);
-  //     } catch (error: any) {
-  //       toast.error(error.message);
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
-  //   getSingleProposal();
-  // }, [proposalId]);
 
   const handleSwitch = useDebouncedCallback((term) => {
     const params = new URLSearchParams(searchParams);
@@ -87,11 +65,7 @@ const EachProposal = () => {
       {isLoading ? (
         <EachDaoLoading />
       ) : (
-        <EachProposalView
-          tabs={tabs}
-          currentProposal={currentProposal}
-          // setCurrentProposal={setCurrentProposal}
-        />
+        <EachProposalView tabs={tabs} currentProposal={currentProposal} />
       )}
     </div>
   );
