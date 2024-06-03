@@ -1,11 +1,9 @@
 'use client';
 import EachDaoLoading from '@/components/loading/each-dao-loading';
 import EachProposalView from '@/components/proposals/each-proposal-view';
-import { AppContext } from '@/context/app-context';
 import { EachDaoContext } from '@/context/each-dao-context';
 import { getProposalDetails } from '@/libs/contract-call';
 import { EACH_PROPOSAL_INFO } from '@/libs/key';
-import { IEachProposalView } from '@/libs/types';
 import { cn } from '@/libs/utils';
 import { useQuery } from '@tanstack/react-query';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -39,8 +37,6 @@ const EachProposal = () => {
     }
     replace(`${pathname}?${params.toString()}`);
   }, 200);
-
-  console.log(currentProposal, '->');
 
   return (
     <div>

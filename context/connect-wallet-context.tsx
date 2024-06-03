@@ -166,7 +166,7 @@ export const ConnectWalletProvider = ({ children }: IAppProvider) => {
       setConnectionError,
       setOpenModal,
       walletObj,
-      // isHome,
+      isHome,
       aeSdk,
     });
     setIsConnecting(false);

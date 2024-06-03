@@ -9,12 +9,14 @@ import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { ReactNode, useContext } from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { toast } from 'sonner';
+import { useMediaQuery } from '@/hooks/use-media-query';
 
 interface IConnectWalletPopOver {
   callToAction: ReactNode;
 }
 
 const ConnectWalletPopOver = ({ callToAction }: IConnectWalletPopOver) => {
+  const isDesktop = useMediaQuery('(min-width: 768px)');
   const { handleConnectWallet, user, isConnecting, handleDisconnect } =
     useContext<any>(ConnectWalletContext);
   const connected: boolean = user.isConnected;
@@ -23,7 +25,7 @@ const ConnectWalletPopOver = ({ callToAction }: IConnectWalletPopOver) => {
     <Popover>
       <PopoverTrigger asChild>{callToAction}</PopoverTrigger>
       <PopoverContent
-        className="mt-2 px-6 pt-3 pb-8 md:w-[80%]"
+        className="mt-2 px-6 pt-3 pb-8 lg:w-[80%]"
         style={{ boxShadow: '0px 4px 10px 0px #00000040' }}
       >
         <div className=" space-y-3">
@@ -36,7 +38,7 @@ const ConnectWalletPopOver = ({ callToAction }: IConnectWalletPopOver) => {
                 <img
                   src={`https://avatars.z52da5wt.xyz/${user.address}`}
                   alt="logo"
-                  width={28}
+                  width={isDesktop ? 28 : 20}
                 />
                 <p className="overflow-hidden text-ellipsis">{user.address}</p>
                 <CopyToClipboard

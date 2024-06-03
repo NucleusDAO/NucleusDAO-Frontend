@@ -83,7 +83,7 @@ export const DaoFunds = () => {
         <p className="text-xs font-light text-defaultText">DAO Funds</p>
       </div>
       {isLoadingHistory ? (
-        <Skeleton className="h-[80%] dark:bg-[#1E1E1E] bg-[#F5F5F5]" />
+        <Skeleton className="h-[50vh] lg:h-[80%] dark:bg-[#1E1E1E] bg-[#d6d2d2]" />
       ) : (
         <Graph
           graphData={
