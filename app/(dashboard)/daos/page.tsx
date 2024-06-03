@@ -11,7 +11,6 @@ import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { IConnectWalletContext } from '@/libs/types';
 import { wait } from '@/libs/utils';
 import { Plus } from 'lucide-react';
-import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useContext, useState } from 'react';
 import Lottie from 'react-lottie';
@@ -22,8 +21,6 @@ const Daos = () => {
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { DAOsData, daoLoading, isDaoError } = useContext(AppContext);
   const [isPending, setIsPending] = useState<boolean>(false);
-
-  console.log(DAOsData, '->DAOsData');
 
   const connected: boolean = user.isConnected;
   const searchParams = useSearchParams();

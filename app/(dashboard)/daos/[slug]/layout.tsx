@@ -132,7 +132,9 @@ const Layout = ({ children }: ILayout) => {
               <div className="flex items-center space-x-4">
                 <Dialog>
                   <DialogTrigger asChild>
-                    {!isMember && isConnected && <Button>Join DAO</Button>}
+                    {!isMember && isConnected && (
+                      <Button className="mt-4 lg:mt-0">Join DAO</Button>
+                    )}
                   </DialogTrigger>
                   <DialogContent className="dark:bg-gradient-to-r dark:from-[#1E1E1E] dark:via-[#1E1E1E]">
                     <DialogHeader>

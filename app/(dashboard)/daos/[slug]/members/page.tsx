@@ -51,8 +51,6 @@ const EachDaoMembers = () => {
     });
   };
 
-  console.log(memberLoading, '-> memberLoading');
-
   if (memberLoading) return <EachDaoLoading />;
   if (memberError) return <ErrorFetchingComponent />;
 

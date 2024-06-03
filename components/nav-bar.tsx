@@ -1,5 +1,4 @@
 'use client';
-import SearchInput from './ui/search-input';
 import { Button } from './ui/button';
 import { ModeToggle } from './themes/mode-toggle';
 import Image from 'next/image';

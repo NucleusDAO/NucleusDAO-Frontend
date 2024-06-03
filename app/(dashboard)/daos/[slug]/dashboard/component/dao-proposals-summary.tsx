@@ -92,7 +92,7 @@ export const DaoProposals = () => {
         </div> */}
       </div>
       {isLoadingProposalHistory ? (
-        <Skeleton className="h-[80%] dark:bg-[#1E1E1E] bg-[#F5F5F5]" />
+        <Skeleton className="h-[50vh] lg:h-[80%] dark:bg-[#1E1E1E] bg-[#d8d3d3]" />
       ) : (
         <Graph
           graphData={

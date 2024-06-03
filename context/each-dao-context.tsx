@@ -55,8 +55,6 @@ export const EachDaoContextProvider = ({ children }: IAppProvider) => {
     enabled: !!daoId,
   });
 
-  console.log(currentDAO, '-> current DAO');
-
   const isMember = currentDAO?.members?.includes(user.address);
 
   const {

@@ -65,8 +65,6 @@ const CreateNewProposalForm = () => {
 
   const daoMembers = currentDAO && currentDAO.members;
 
-  console.log(currentDAO, '-> currentDAO');
-
   const handleReset = (type: string) => {
     form.setValue('description', '');
     form.setValue('duration', 0);

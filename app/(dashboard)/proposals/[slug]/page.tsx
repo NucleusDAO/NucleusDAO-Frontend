@@ -3,28 +3,20 @@ import ErrorFetchingComponent from '@/components/error-fetching-comp';
 import EachDaoLoading from '@/components/loading/each-dao-loading';
 import EachProposalView from '@/components/proposals/each-proposal-view';
 import { Separator } from '@/components/ui/separator';
-import { AppContext } from '@/context/app-context';
 import { EachDaoContext } from '@/context/each-dao-context';
 import { useMediaQuery } from '@/hooks/use-media-query';
-import { getEachDAO, getProposalDetails } from '@/libs/contract-call';
-import { EACH_DAO_KEY, EACH_PROPOSAL_INFO } from '@/libs/key';
-import { IEachProposalView } from '@/libs/types';
+import { getProposalDetails } from '@/libs/contract-call';
+import { EACH_PROPOSAL_INFO } from '@/libs/key';
 import { cn } from '@/libs/utils';
 import { useQuery } from '@tanstack/react-query';
 import { MoveLeft } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useContext, useEffect, useState } from 'react';
-import { toast } from 'sonner';
+import { useContext } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 import { useDebouncedCallback } from 'use-debounce';
 
 const EachProposal = () => {
-  // const [isLoading, setIsLoading] = useState<boolean>(true);
-  // const [currentProposal, setCurrentProposal] = useState<
-  //   IEachProposalView | any
-  // >({});
-  // const { getEachDAO, getProposal } = useContext(AppContext);
   const { currentDAO, isLoading, isError, error } = useContext(EachDaoContext);
   const isDesktop = useMediaQuery('(min-width: 768px)');
   const router = useRouter();
@@ -38,17 +30,6 @@ const EachProposal = () => {
   const urlParts = pathname.split('/'); // Split the URL by "/"
   const proposalId = urlParts[2];
 
-  // const {
-  //   data: currentDAO,
-  //   isLoading,
-  //   isError,
-  //   error,
-  // } = useQuery({
-  //   queryKey: [EACH_DAO_KEY, daoId],
-  //   queryFn: () => getEachDAO(daoId),
-  //   enabled: !!daoId,
-  // });
-
   const {
     data: currentProposal,
     isLoading: isProposalLoading,
@@ -59,25 +40,6 @@ const EachProposal = () => {
     queryFn: () => getProposalDetails(currentDAO?.contractAddress, proposalId),
     enabled: !!proposalId && !!currentDAO?.contractAddress,
   });
-
-  // useEffect(() => {
-  //   const getSingleProposal = async () => {
-  //     try {
-  //       const dao: { contractAddress: string } = await getEachDAO(daoId);
-  //       setCurrentDAO(dao);
-  //       const proposal = await getProposal(dao.contractAddress, proposalId);
-  //       setCurrentProposal(proposal);
-  //       setIsLoading(false);
-  //     } catch (error: any) {
-  //       toast.error(error.message);
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
-  //   getSingleProposal();
-  // }, [proposalId]);
-
-  console.log(currentDAO);
 
   const handleSwitch = useDebouncedCallback((term) => {
     const params = new URLSearchParams(searchParams);

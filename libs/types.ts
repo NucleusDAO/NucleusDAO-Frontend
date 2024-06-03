@@ -33,7 +33,7 @@ export type ConnectWalletParams = {
   setConnectionError: (error: ConnectionError) => void;
   address?: string;
   setOpenModal: (arg: boolean) => void;
-  // isHome: boolean;
+  isHome: boolean;
   walletObj?: {
     info: WalletInfo;
     getConnection?: () => Promise<any> | any; // Adjust any to the actual return type of getConnection

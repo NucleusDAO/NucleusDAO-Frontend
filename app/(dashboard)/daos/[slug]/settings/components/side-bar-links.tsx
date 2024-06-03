@@ -66,8 +66,6 @@ const SidebarLinksComp = ({ activeSidebar, isMember }: ISidebarLinksComp) => {
     });
   };
 
-  console.log(currentDAO, '0> currentDAO');
-
   return (
     <div className="md:space-y-4 text-[#888888] text-sm flex md:block">
       {daoSettingsSidebarLinks

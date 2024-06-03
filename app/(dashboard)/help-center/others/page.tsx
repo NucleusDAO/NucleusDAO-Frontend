@@ -22,8 +22,8 @@ const Others = () => {
     resolver: zodResolver(newFeatureSchema),
     defaultValues: {
       email: '',
-      idea: '',
-      further_details: '',
+      descriptions: '',
+      subject: '',
       image: '',
     },
   });
@@ -35,7 +35,10 @@ const Others = () => {
   return (
     <div className="space-y-6">
       <div className="space-y-2">
-        <h2 className="dark:text-white text-dark font-medium text-xl" role="heading">
+        <h2
+          className="dark:text-white text-dark font-medium text-xl"
+          role="heading"
+        >
           Others
         </h2>
         <p className="text-defaultText text-sm font-light">
@@ -66,7 +69,7 @@ const Others = () => {
           />
           <FormField
             control={form.control}
-            name="idea"
+            name="descriptions"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>
@@ -83,7 +86,7 @@ const Others = () => {
 
           <FormField
             control={form.control}
-            name="further_details"
+            name="subject"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>
@@ -108,13 +111,13 @@ const Others = () => {
                 </FormLabel>
                 <FormControl>
                   <FormGroup>
-                  <div
+                    <div
                       className="bg-light dark:bg-[#1E1E1E] py-8 w-full rounded-lg text-center dark:text-white text-dark text-sm border-dashed dark:border-[#292929] border-[#CCCCCC99]"
                       role="button"
                     >
                       <p>Drag and Drop file</p>
                       <p>or</p>
-                      <p className='text-primary'>Browse</p>
+                      <p className="text-primary">Browse</p>
                     </div>
                     <Input
                       type="file"

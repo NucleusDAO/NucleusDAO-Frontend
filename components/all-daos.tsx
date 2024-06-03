@@ -73,7 +73,7 @@ const AllDaos: any = ({
             <PopoverContent className="dark:text-[#888888] text-dark border dark:border-[#292929] border-[#CCCCCC] w-[150px] py-2 text-sm space-y-3 font-light">
               <div
                 role="button"
-                className="hover:bg-[#1E1E1E] py-2 px-2 rounded-md"
+                className="hover:dark:bg-[#1E1E1E] py-2 px-2 rounded-md"
                 onClick={() => setOpenPopover(false)}
               >
                 Basic DAO
@@ -81,7 +81,7 @@ const AllDaos: any = ({
               <Separator />
               <div
                 role="button"
-                className="hover:bg-[#1E1E1E] py-2 px-2 rounded-md"
+                className="dark:hover:bg-[#1E1E1E] py-2 px-2 rounded-md"
                 onClick={() => {
                   toast.info('Coming soon !');
                   setOpenPopover(false);

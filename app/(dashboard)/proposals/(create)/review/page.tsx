@@ -29,7 +29,7 @@ import { uploadFile } from '@/config/apis';
 import { ApiContext } from '@/context/api-context';
 import Link from 'next/link';
 import { formatAmount, AE_AMOUNT_FORMATS } from '@aeternity/aepp-sdk';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   BALANCE_HISTORY,
   EACH_DAO_KEY,
@@ -41,7 +41,7 @@ import {
   PROPOSAL_HISTORY,
   PROPOSAL_KEY,
 } from '@/libs/key';
-import { createProposal, getEachDAO } from '@/libs/contract-call';
+import { createProposal } from '@/libs/contract-call';
 import { EachDaoContext } from '@/context/each-dao-context';
 import EachDaoLoading from '@/components/loading/each-dao-loading';
 
@@ -126,64 +126,7 @@ const ReviewProposal = () => {
         image: logoURL || '',
       },
     });
-
-    // try {
-    //   if (value.logo) {
-    //     let formData = new FormData();
-    //     formData.append('file', value.logo);
-    //     formData.append('upload_preset', 'bqr7mcvh');
-    //     const fileUpload = await uploadFile(formData);
-    //     logoURL = fileUpload.data.url;
-    //   }
-    //   if (value.socialMedia[0].type && value.socialMedia[0].link) {
-    //     updatedSocials = value.socialMedia.map(
-    //       (social: { type: string; link: string }) => {
-    //         return { name: social.type, url: social.link };
-    //       }
-    //     );
-    //   }
-    //   if (Number(value.type) === 0) {
-    //     amount = formatAmount(value.value, {
-    //       denomination: AE_AMOUNT_FORMATS.AE,
-    //     });
-    //   } else {
-    //     amount =
-    //       Number(value.value) ||
-    //       Math.round(daysToMilliseconds(Number(value.maximum))) ||
-    //       value.quorum ||
-    //       0;
-    //   }
-
-    //   const dao = await getEachDAO(daoID);
-    //   if (dao) {
-    //     await createProposal(
-    //       dao.contractAddress,
-    //       proposalLists[Number(value.type)].type,
-    //       value.description,
-    //       amount,
-    //       value.targetWallet || address,
-    //       {
-    //         name: value?.newName || '',
-    //         socials: updatedSocials
-    //           ? [...(dao.Socials || []), ...updatedSocials]
-    //           : dao.socials,
-    //         image: logoURL || '',
-    //       }
-    //     );
-    //     setOpen(true);
-    //     setIsCreating(false);
-    //     setUpdate(true);
-    //   } else {
-    //     toast.error('Contract address not found');
-    //   }
-    // } catch (error: any) {
-    //   setIsCreating(false);
-    //   toast.error(error.message);
-    //   console.error({ error });
-    // }
   };
-
-  console.log(value, '-> value');
 
   const handleGoHome = async () => {
     setIsRouting(true);
