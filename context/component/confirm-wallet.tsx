@@ -13,7 +13,6 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
 import ErrorIcon from '@/assets/icons/error-icon-1.png';
-import { createDeepLinkUrl } from '@/libs/ae-utils';
 import { usePathname } from 'next/navigation';
 import { DASHBOARD_URL, HOME_URL } from '@/config/path';
 
@@ -26,6 +25,7 @@ interface IConfirmWalletDialog {
   handleConnect: (arg: any) => void;
   wallets: any[];
   connectionError: { type: string; message: string };
+  handleConnectWallet: any;
 }
 
 const ConfirmWalletDialog = ({ ...props }: IConfirmWalletDialog) => {
@@ -33,29 +33,29 @@ const ConfirmWalletDialog = ({ ...props }: IConfirmWalletDialog) => {
   const dashboardURL = `${domainName}/${DASHBOARD_URL}/`;
   const pathname = usePathname();
   const isHome = pathname === HOME_URL;
-  const handleConnectAgain = () => {
-    let addressDeepLink: any;
-    if (isHome) {
-      addressDeepLink = createDeepLinkUrl({
-        type: 'address',
-        'x-success': `${
-          dashboardURL.split('?')[0]
-        }?address={address}&networkId={networkId}`,
-        'x-cancel': dashboardURL.split('?')[0],
-      });
-    } else {
-      addressDeepLink = createDeepLinkUrl({
-        type: 'address',
-        'x-success': `${
-          window.location.href.split('?')[0]
-        }?address={address}&networkId={networkId}`,
-        'x-cancel': window.location.href.split('?')[0],
-      });
-    }
-    if (typeof window !== 'undefined') {
-      window.location.replace(addressDeepLink);
-    }
-  };
+  // const handleConnectAgain = () => {
+  //   let addressDeepLink: any;
+  //   if (isHome) {
+  //     addressDeepLink = createDeepLinkUrl({
+  //       type: 'address',
+  //       'x-success': `${
+  //         dashboardURL.split('?')[0]
+  //       }?address={address}&networkId={networkId}`,
+  //       'x-cancel': dashboardURL.split('?')[0],
+  //     });
+  //   } else {
+  //     addressDeepLink = createDeepLinkUrl({
+  //       type: 'address',
+  //       'x-success': `${
+  //         window.location.href.split('?')[0]
+  //       }?address={address}&networkId={networkId}`,
+  //       'x-cancel': window.location.href.split('?')[0],
+  //     });
+  //   }
+  //   if (typeof window !== 'undefined') {
+  //     window.location.replace(addressDeepLink);
+  //   }
+  // };
 
   return (
     <Dialog onOpenChange={props.setOpen} open={props.open}>
@@ -97,9 +97,14 @@ const ConfirmWalletDialog = ({ ...props }: IConfirmWalletDialog) => {
                   className="mx-auto"
                 />
                 <p className="px-8">{props.connectionError.message}</p>
-                <Button className="w-full" onClick={handleConnectAgain}>
-                  Try again!
-                </Button>
+                {props.wallets.map((wallet) => (
+                  <Button
+                    className="w-full"
+                    onClick={() => props.handleConnectWallet(wallet)}
+                  >
+                    Try again!
+                  </Button>
+                ))}
               </div>
             ) : (
               <div

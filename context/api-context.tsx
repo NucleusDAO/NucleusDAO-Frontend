@@ -75,8 +75,6 @@ export const ApiContextProvider = ({ children }: IApiProvider) => {
     enabled: !!currentDAO?.id,
   });
 
-  console.log(currentDAO, '->currentDAO');
-
   const {
     data: notifications,
     isError: isNotificationError,
