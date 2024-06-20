@@ -14,7 +14,10 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { newFeatureSchema, reportSchema } from '@/libs/validations/help-center-schema';
+import {
+  newFeatureSchema,
+  reportSchema,
+} from '@/libs/validations/help-center-schema';
 import FormGroup from '@/components/ui/form-group';
 
 const Report = () => {
@@ -23,8 +26,8 @@ const Report = () => {
     defaultValues: {
       email: '',
       bug: '',
-      further_details: '',
-      image: ''
+      descriptions: '',
+      image: '',
     },
   });
 
@@ -35,11 +38,14 @@ const Report = () => {
   return (
     <div className="space-y-6">
       <div className="space-y-2">
-        <h2 className="text-dark dark:text-white font-medium text-xl" role="heading">
+        <h2
+          className="text-dark dark:text-white font-medium text-xl"
+          role="heading"
+        >
           Report
         </h2>
         <p className="text-defaultText text-sm font-light">
-        Submit a bug report by explaining the issue you're encountering.
+          Submit a bug report by explaining the issue you're encountering.
         </p>
       </div>
 
@@ -83,7 +89,7 @@ const Report = () => {
 
           <FormField
             control={form.control}
-            name="further_details"
+            name="descriptions"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>
@@ -98,7 +104,7 @@ const Report = () => {
             )}
           />
 
-<FormField
+          <FormField
             control={form.control}
             name="image"
             render={({ field }) => (
@@ -108,13 +114,13 @@ const Report = () => {
                 </FormLabel>
                 <FormControl>
                   <FormGroup>
-                  <div
+                    <div
                       className="bg-light dark:bg-[#1E1E1E] py-8 w-full rounded-lg text-center dark:text-white text-dark text-sm border-dashed dark:border-[#292929] border-[#CCCCCC99]"
                       role="button"
                     >
                       <p>Drag and Drop file</p>
                       <p>or</p>
-                      <p className='text-primary'>Browse</p>
+                      <p className="text-primary">Browse</p>
                     </div>
                     <Input
                       type="file"

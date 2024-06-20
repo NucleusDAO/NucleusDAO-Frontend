@@ -153,15 +153,6 @@ export const getStatus = (_proposal: IProposal | any) => {
     }
   }
 };
-// &&
-// new Date(Number(_proposal.endTime)).valueOf() > Date.now().valueOf()
-
-// if (
-//   new Date(Number(_proposal.endTime)).valueOf() > Date.now().valueOf() &&
-//   _proposal.votesFor < _proposal.votesAgainst
-// ) {
-//   return 'Failed';
-// }
 
 export const defaultProposal = {
   value: {
@@ -215,56 +206,6 @@ export function getDuration(startTime: number, endTime: number) {
 
   return `${days}d ${hours}h ${minutes}m`;
 }
-
-interface IUpdateProposal {
-  daoId: string;
-  setCurrentDAO: (arg: IDAO) => void;
-  getProposals: (arg: string) => any;
-  getEachDAO: (arg: string) => any;
-  setEachDAOProposal: any;
-  getUsersActivities: (arg: string) => void;
-  setMembersActivities: (arg: any) => void;
-  proposal?: any;
-  setCurrentProposal?: (arg: IProposal[]) => void;
-}
-
-export const updateGetProposal = async ({
-  getEachDAO,
-  daoId,
-  setCurrentDAO,
-  getProposals,
-  setEachDAOProposal,
-  getUsersActivities,
-  setMembersActivities,
-  setCurrentProposal,
-}: IUpdateProposal) => {
-  const dao = await getEachDAO(daoId);
-  setCurrentDAO(dao);
-  const proposals: IProposal[] = await getProposals(dao.contractAddress);
-  setCurrentProposal && setCurrentProposal(proposals);
-  setEachDAOProposal(
-    proposals.map((proposal: IProposal) => {
-      return {
-        type: proposal.proposalType,
-        status: getStatus(proposal),
-        description: proposal.description,
-        wallet: proposal.target.slice(0, 6) + '...' + proposal.target.slice(-4),
-        duration: getDuration(proposal.startTime, proposal.endTime),
-        totalVote: `${proposal.votesFor + proposal.votesAgainst}`,
-        organisation: dao.name,
-        id: Number(proposal.id).toString(),
-        startTime: proposal.startTime,
-        endTime: proposal.endTime,
-        votesAgainst: proposal.votesAgainst,
-        votesFor: proposal.votesFor,
-        votes: proposal.votes,
-        hasVoted: proposal.hasVoted,
-      };
-    })
-  );
-  const members = await getUsersActivities(dao.contractAddress);
-  setMembersActivities(members);
-};
 
 export const activities: { title: string; color: string; url: string }[] = [
   {
@@ -361,7 +302,7 @@ export function getTimeDifference(
     const secondsLeft = Math.floor((timeDifference % (1000 * 60)) / 1000);
 
     // Format the countdown string
-    const formattedString = `${daysLeft}d:${hoursLeft}h:${minutesLeft}m:${secondsLeft}s`;
+    const formattedString = `${daysLeft}d ${hoursLeft}h ${minutesLeft}m ${secondsLeft}s`;
     setCountdownString(formattedString);
   }, 1000);
 
@@ -379,19 +320,6 @@ export const capitalizeFirstLetter = (str: string) => {
 };
 
 export const percentageChangeRate = (data: any) => {
-  console.log(data, '-> data');
-
-  // const lastValue = Number(data[data.length - 1]?.value) || 0;
-  // const secontToLastValue = Number(data[data.length - 2]?.value) || 0;
-  // let percentageChange: number;
-  // if (secontToLastValue !== 0) {
-  //   const difference = lastValue - secontToLastValue;
-  //   percentageChange = (difference / Math.abs(secontToLastValue)) * 100;
-  // } else {
-  //   percentageChange = 0;
-  // }
-  // return percentageChange;
-
   if (data.length < 2) {
     // Not enough data points to calculate percentage change
     return 0;
@@ -408,7 +336,7 @@ export const percentageChangeRate = (data: any) => {
     percentageChange = lastValue === 0 ? 0 : 100; // If the second to last value is 0 and last value is not 0, it's a 100% increase
   }
 
-  return percentageChange;
+  return Math.ceil(percentageChange);
 };
 
 export const convertCurrency = (amount: number, price: number) => {

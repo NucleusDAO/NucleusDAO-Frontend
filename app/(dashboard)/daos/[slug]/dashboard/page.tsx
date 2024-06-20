@@ -78,7 +78,7 @@ const EachDaoDashboard = () => {
           </div>
         ))}
       </div>
-      <div className="w-full md:w-[75%] dark:bg-gradient-to-r dark:from-[#1E1E1E] dark:via-[#1E1E1E] dark:to-[#252525] bg-white p-4 rounded-lg h-[60vh]">
+      <div className="w-full md:w-[75%] dark:bg-gradient-to-r dark:from-[#1E1E1E] dark:via-[#1E1E1E] dark:to-[#252525] bg-white p-4 rounded-lg h-full lg:h-[60vh]">
         {tabView[selectedTab]}
       </div>
     </div>

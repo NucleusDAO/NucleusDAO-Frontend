@@ -92,14 +92,13 @@ export const validateMember = ({
 };
 
 export const validateChangeVotingTime = ({ form }: any) => {
-  console.log(form.getValues('maximum'), '-> form');
   if (Number(form.getValues('maximum')) > 0) {
     return true;
   } else {
-    if (form.getValues('maximum') === '0') {
+    if (Number(form.getValues('maximum')) <= 0) {
       form.setError('maximum', {
         type: 'onChange',
-        message: 'Field must not be 0',
+        message: 'Field must not be less than 0',
       });
     } else if (!form.getValues('maximum')) {
       form.setError('maximum', {

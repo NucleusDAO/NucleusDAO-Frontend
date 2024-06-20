@@ -24,33 +24,30 @@ import { EachProposalType } from '@/config/proposal-config';
 import { AppContext } from '@/context/app-context';
 import { IConnectWalletContext } from '@/libs/types';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
-import {
-  defaultProposal,
-  getDaysFromMilliseconds,
-  millisecondsToDays,
-  wait,
-} from '@/libs/utils';
+import { defaultProposal, millisecondsToDays, wait } from '@/libs/utils';
 import { ValidateProposalForm } from '@/libs/validations/validate-create-proposal';
+import { EachDaoContext } from '@/context/each-dao-context';
+import EachDaoLoading from '../loading/each-dao-loading';
 
 const CreateNewProposalForm = () => {
   const [routing, setRouting] = useState<boolean>(false);
-  const { setNewProposalInfo, newProposalInfo, getEachDAO } =
-    useContext(AppContext);
+  const { setNewProposalInfo, newProposalInfo } = useContext(AppContext);
+  const { currentDAO, isLoading } = useContext(EachDaoContext);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { address } = user;
-  const [daoMembers, setDaoMembers] = useState([]);
   const searchParams = useSearchParams();
   const type: string =
     searchParams.get('enums') || newProposalInfo.value.type || '0';
   const memberType = searchParams.get('type') || '';
-  const daoID = searchParams.get('ct');
-  const targetAddress = searchParams.get('address');
+  const daoID: string = searchParams.get('ct') || '';
+  const targetAddress = searchParams.get('address') || '';
   const router = useRouter();
+
   const form = useForm<z.infer<typeof proposalInfoSchema>>({
     resolver: zodResolver(proposalInfoSchema),
     defaultValues: {
       ...newProposalInfo.value,
-      duration: getDaysFromMilliseconds(newProposalInfo.value.duration),
+      duration: millisecondsToDays(Number(currentDAO?.votingTime)),
       newName: '',
       targetWallet: targetAddress,
       type,
@@ -58,17 +55,17 @@ const CreateNewProposalForm = () => {
   });
 
   useEffect(() => {
-    const getDuration = async () => {
-      const dao = await getEachDAO(daoID);
-      const duration = millisecondsToDays(Number(dao.votingTime));
-      setDaoMembers(dao.members);
-      form.setValue('duration', duration);
-    };
-    getDuration();
-  }, []);
+    if (currentDAO) {
+      form.setValue(
+        'duration',
+        millisecondsToDays(Number(currentDAO.votingTime))
+      );
+    }
+  }, [currentDAO, isLoading, form.getValues('type')]);
+
+  const daoMembers = currentDAO && currentDAO.members;
 
   const handleReset = (type: string) => {
-    console.log(defaultProposal, ' defaultProposal');
     form.setValue('description', '');
     form.setValue('duration', 0);
     form.setValue('logo', '');
@@ -119,7 +116,9 @@ const CreateNewProposalForm = () => {
       });
     }
   };
-  // onSubmit={form.handleSubmit(onSubmit)}
+
+  if (isLoading) return <EachDaoLoading />;
+
   return (
     <Form {...form}>
       <form className="space-y-8" onSubmit={form.handleSubmit(onSubmit)}>

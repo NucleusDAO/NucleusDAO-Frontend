@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { CREATE_PROPOSAL_URL } from '@/config/path';
 import { Globe, MoveLeft, Plus } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
-import React, { ReactNode, useContext, useEffect, useState } from 'react';
+import React, { ReactNode, useContext, useState } from 'react';
 import { CopyIcon } from '@/assets/svgs';
 import { eachDaoViews } from '@/config/dao-config';
 import {
@@ -27,9 +27,7 @@ import {
 } from '@/components/ui/dialog';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { toast } from 'sonner';
-import { AppContext } from '@/context/app-context';
 import ErrorFetchingComponent from '@/components/error-fetching-comp';
-import { useQuery } from '@tanstack/react-query';
 
 interface ILayout {
   children: ReactNode;
@@ -39,9 +37,9 @@ const Layout = ({ children }: ILayout) => {
   const router = useRouter();
   const pathname = usePathname();
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
-  const { setUpdate } = useContext(AppContext);
   const { isConnected } = user;
-  const { isLoading, currentDAO, isMember, error } = useContext(EachDaoContext);
+  const { isLoading, currentDAO, isMember, error, isError } =
+    useContext(EachDaoContext);
   const [routing, setRouting] = useState<boolean>(false);
 
   const urlParts = pathname.split('/'); // Split the URL by "/"
@@ -70,17 +68,14 @@ const Layout = ({ children }: ILayout) => {
       setRouting(false);
     });
   }
-  useEffect(() => {
-    setUpdate(false);
-  }, []);
 
   if (isLoading) return <EachDaoLoading />;
-  if (error) return <ErrorFetchingComponent description={error} />;
+  if (isError) return <ErrorFetchingComponent description={error.message} />;
 
   return (
-    <div className="">
+    <div>
       <div className="flex justify-between border-b dark:border-b-[#292929] pb-6 border-b-[#CCCCCC99]">
-        <div className="md:flex space-x-4 items-center space-y-5 md:space-y-0">
+        <div className="md:flex lg:space-x-4 items-center space-y-5 md:space-y-0">
           <div
             className="rounded-lg flex w-fit items-center justify-center p-2 dark:bg-[#1E1E1E] bg-white dark:hover:bg-[#262525] hover:bg-white text-[#444444] dark:text-defaultText"
             role="button"
@@ -107,7 +102,7 @@ const Layout = ({ children }: ILayout) => {
         )}
       </div>
 
-      <div className="min-h-[72vh] overflow-y-hidden overflow-x-hidden pt-6 pr-4">
+      <div className="min-h-[72vh] overflow-y-hidden overflow-x-hidden pt-6 lg:pr-4">
         <div className="space-y-8">
           <div className="space-y-6">
             <div className="lg:flex items-center justify-between">
@@ -137,7 +132,9 @@ const Layout = ({ children }: ILayout) => {
               <div className="flex items-center space-x-4">
                 <Dialog>
                   <DialogTrigger asChild>
-                    {!isMember && isConnected && <Button>Join DAO</Button>}
+                    {!isMember && isConnected && (
+                      <Button className="mt-4 lg:mt-0">Join DAO</Button>
+                    )}
                   </DialogTrigger>
                   <DialogContent className="dark:bg-gradient-to-r dark:from-[#1E1E1E] dark:via-[#1E1E1E]">
                     <DialogHeader>
@@ -169,7 +166,7 @@ const Layout = ({ children }: ILayout) => {
                 </div>
               </div>
             </div>
-            <p className="text-[#888888] text-sm">
+            <p className="text-[#888888] text-sm leading-[28px]">
               {capitalizeFirstLetter(currentDAO?.description)}
             </p>
           </div>

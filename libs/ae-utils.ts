@@ -10,6 +10,7 @@ import { ConnectWalletParams, WalletConnection } from './types';
 import nucleusDAOAci from './contract/NucleusDAO.json';
 import basicDAOAci from './contract/BasicDAO.json';
 import { DASHBOARD_URL } from '@/config/path';
+import { toast } from 'sonner';
 
 const nucleusDAOContractAddress =
   'ct_tty8uyUaw1LCCveugDympVzdWmcJntGG1wbFPiurqYR5m3iss';
@@ -56,27 +57,26 @@ export const createDeepLinkUrl = ({
   return url;
 };
 
-const aeSdk: any = new AeSdkAepp({
+let aeSdks: any = new AeSdkAepp({
   name: 'NucleusDAO',
   nodes: [
     { name: 'testnet', instance: new Node(TESTNET_NODE_URL) },
     { name: 'mainnet', instance: new Node(MAINNET_NODE_URL) },
   ],
   onNetworkChange: async ({ networkId }) => {
-    const [{ name }] = (await aeSdk.getNodesInPool()).filter(
+    const [{ name }] = (await aeSdks.getNodesInPool()).filter(
       (node: any) => node.nodeNetworkId === networkId
     );
-    aeSdk.selectNode(name);
+    aeSdks.selectNode(name);
   },
   onAddressChange: ({ current }: any) => {
     const currentAccountAddress = Object.keys(current)[0];
-    console.log(currentAccountAddress, '-> address');
-
-    // if (!currentAccountAddress) return;
-    // const user = { address: currentAccountAddress, isConnected: true };
-    // setUser(user);
+    const user = { address: currentAccountAddress, isConnected: true };
+    localStorage.setItem('user', JSON.stringify(user));
   },
-  onDisconnect: () => console.log('Aepp is disconnected'),
+  onDisconnect: () => {
+    localStorage.removeItem('user');
+  },
 });
 
 export const IN_FRAME =
@@ -106,8 +106,8 @@ export const connectWallet = async ({
   setOpenModal,
   isHome,
   walletObj = { info: { name: '', type: '' } },
-}: // aeSdk,
-ConnectWalletParams) => {
+  aeSdk,
+}: ConnectWalletParams) => {
   setConnectingToWallet(true);
   let addressDeepLink: any;
 
@@ -166,13 +166,23 @@ ConnectWalletParams) => {
             stopScan?.();
             const user = { address: currentAccountAddress, isConnected: true };
             setUser(user);
+            aeSdks = aeSdk;
             // localStorage.setItem('user', JSON.stringify(user));
             resolve?.(currentAccountAddress);
             setOpenModal(false);
-          } catch (e) {
+          } catch (e: any) {
             if (!(e instanceof RpcRejectedByUserError)) {
               alert('error occured');
             }
+            if (e.message === 'Operation rejected by user') {
+              toast.error(e.message);
+              resolve = null;
+              rejected = (e: any) => {
+                throw e;
+              };
+              stopScan = null;
+            }
+            console.log(e.message);
             rejected(e);
           }
         };
@@ -214,7 +224,7 @@ ConnectWalletParams) => {
 };
 
 export const getNucleusDAO = async () => {
-  const contract = await aeSdk.initializeContract({
+  const contract = await aeSdks.initializeContract({
     aci: nucleusDAOAci,
     address: nucleusDAOContractAddress,
   });
@@ -222,7 +232,7 @@ export const getNucleusDAO = async () => {
 };
 
 export const getBasicDAO = async (DAOAddress: string) => {
-  return await aeSdk.initializeContract({
+  return await aeSdks.initializeContract({
     aci: basicDAOAci,
     address: DAOAddress,
   });

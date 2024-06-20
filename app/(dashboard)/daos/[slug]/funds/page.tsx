@@ -36,8 +36,6 @@ const EachDaoFunds = () => {
   const updatedUrl = pathname.substring(0, lastIndex);
   const userURL: string = `${domainName}${updatedUrl}`;
 
-  console.log(transactionHistory, '0>transactionHistory');
-
   const price: number = getAEPrice?.price || rate;
 
   if (isLoadingTransactionHistory) return <EachDaoLoading />;

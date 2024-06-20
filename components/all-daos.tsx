@@ -23,8 +23,6 @@ import { SELECT_DAO_STYLE_URL } from '@/config/path';
 import Image from 'next/image';
 import EmptyDAO from '@/assets/icons/empty-icon.png';
 import { IAllDaos } from '@/libs/types';
-import Lottie from 'react-lottie';
-import { defaultProposalOption } from './animation-options';
 
 const AllDaos: any = ({
   dashboardTableData,
@@ -75,7 +73,7 @@ const AllDaos: any = ({
             <PopoverContent className="dark:text-[#888888] text-dark border dark:border-[#292929] border-[#CCCCCC] w-[150px] py-2 text-sm space-y-3 font-light">
               <div
                 role="button"
-                className="hover:bg-[#1E1E1E] py-2 px-2 rounded-md"
+                className="hover:dark:bg-[#1E1E1E] py-2 px-2 rounded-md"
                 onClick={() => setOpenPopover(false)}
               >
                 Basic DAO
@@ -83,7 +81,7 @@ const AllDaos: any = ({
               <Separator />
               <div
                 role="button"
-                className="hover:bg-[#1E1E1E] py-2 px-2 rounded-md"
+                className="dark:hover:bg-[#1E1E1E] py-2 px-2 rounded-md"
                 onClick={() => {
                   toast.info('Coming soon !');
                   setOpenPopover(false);
@@ -158,7 +156,7 @@ const AllDaos: any = ({
                     </div>
                   </div>
                 )}
-                <div className="grid md:grid-cols-2 gap-8">
+                <div className="grid lg:grid-cols-2 gap-8">
                   {dashboardTableData(40).map((data: any) => (
                     <DaoCard key={data.organisation} {...data} />
                   ))}

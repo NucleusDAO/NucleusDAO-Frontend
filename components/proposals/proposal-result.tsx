@@ -9,13 +9,23 @@ import {
 } from '@/components/ui/tooltip';
 import { cn, formatDate, getStatus } from '@/libs/utils';
 import { EachDaoContext } from '@/context/each-dao-context';
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { Button } from '../ui/button';
-import { AppContext } from '@/context/app-context';
 import { toast } from 'sonner';
 import { IConnectWalletContext } from '@/libs/types';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { useMediaQuery } from '@/hooks/use-media-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { executeProposal } from '@/libs/contract-call';
+import {
+  DAOS_KEY,
+  EACH_DAO_KEY,
+  EACH_DAO_PROPOSAL,
+  EACH_PROPOSAL_INFO,
+  MEMBER_ACTIVIES,
+  PROPOSAL_KEY,
+  USER_ACTIVITIES_KEY,
+} from '@/libs/key';
 
 interface IProposalResult {
   currentProposal: {
@@ -27,52 +37,45 @@ interface IProposalResult {
     votesAgainst: number;
     totalVote: string;
     id: string;
+    currentMembers: number;
     status: string;
+    quorum: number;
   };
-  setCurrentProposal: (arg: any) => void;
   countdownTime: string;
 }
 
 const ProposalResult = ({
   currentProposal,
-  setCurrentProposal,
   countdownTime,
 }: IProposalResult) => {
+  const queryClient: any = useQueryClient();
   const isDesktop = useMediaQuery('(min-width: 768px)');
-  const {
-    user: { address },
-  } = useContext<IConnectWalletContext>(ConnectWalletContext);
-  const [isExecuting, setIsExecuting] = useState<boolean>(false);
   const { startTime, endTime, votesFor, votesAgainst, votes } = currentProposal;
-  const { executeProposal, fetchAllProposals, getActivities, fetchDAOs } =
-    useContext(AppContext);
   const { currentDAO, isMember } = useContext(EachDaoContext);
   const percentageOfVoteFor: number =
-    votes.length > 0 ? (Number(votesFor) / currentDAO.members.length) * 100 : 0;
+    votes.length > 0
+      ? (Number(votesFor) / Number(currentProposal.currentMembers)) * 100
+      : 0;
   const percentageOfVoteAgainst: number =
     votes.length > 0
-      ? (Number(votesAgainst) / currentDAO.members.length) * 100
+      ? (Number(votesAgainst) / Number(currentProposal.currentMembers)) * 100
       : 0;
 
-  const handleExecuteProposal = async () => {
-    setIsExecuting(true);
-    try {
-      const proposal = await executeProposal(
-        Number(currentProposal.id),
-        currentDAO.contractAddress
-      );
-      console.log(proposal, '-> updated proposal');
-      setCurrentProposal(proposal);
+  const { mutate, isPending } = useMutation({
+    mutationFn: () =>
+      executeProposal(Number(currentProposal.id), currentDAO.contractAddress),
+    onSuccess: () => {
+      queryClient.invalidateQueries(DAOS_KEY);
+      queryClient.invalidateQueries(PROPOSAL_KEY);
+      queryClient.invalidateQueries(USER_ACTIVITIES_KEY);
+      queryClient.invalidateQueries(EACH_DAO_KEY);
+      queryClient.invalidateQueries(EACH_DAO_PROPOSAL);
+      queryClient.invalidateQueries(EACH_PROPOSAL_INFO);
+      queryClient.invalidateQueries(MEMBER_ACTIVIES);
       toast.success('Proposal executed successfully');
-      fetchDAOs();
-      fetchAllProposals();
-      getActivities(address);
-    } catch (error: any) {
-      toast.error(error.message);
-    } finally {
-      setIsExecuting(false);
-    }
-  };
+    },
+    onError: (error: any) => toast.error(error.message),
+  });
 
   return (
     <div className="space-y-6">
@@ -80,7 +83,6 @@ const ProposalResult = ({
         <div
           className={cn(
             'flex justify-between border-b dark:border-[#1E1E1E] pb-4 items-center border-[#CCCCCC99]'
-            // isDesktop && 'block'
           )}
         >
           <h3 className="font-medium text-xl dark:text-white text-dark">
@@ -130,8 +132,8 @@ const ProposalResult = ({
             {getStatus(currentProposal) === 'Pending' && (
               <Button
                 className="w-full mt-1.5"
-                onClick={handleExecuteProposal}
-                loading={isExecuting}
+                onClick={() => mutate()}
+                loading={isPending}
                 loadingText="Executing..."
               >
                 Excecute Proposal
@@ -193,7 +195,7 @@ const ProposalResult = ({
             </TooltipProvider>
           </div>
           <p className="font-light text-sm text-dark dark:text-white">{`${Number(
-            currentDAO.quorum
+            Number(currentProposal.quorum)
           )}%`}</p>
         </div>
       </div>
