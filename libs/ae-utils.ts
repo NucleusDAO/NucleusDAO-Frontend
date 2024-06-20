@@ -13,7 +13,7 @@ import { DASHBOARD_URL } from '@/config/path';
 import { toast } from 'sonner';
 
 const nucleusDAOContractAddress =
-  'ct_yu1VWgPe3FrQTE1QesiiEB48Gw1dmrJTj8MSciNS5aoFTz6NY';
+  'ct_tty8uyUaw1LCCveugDympVzdWmcJntGG1wbFPiurqYR5m3iss';
 
 export const TESTNET_NODE_URL = 'https://testnet.aeternity.io';
 export const MAINNET_NODE_URL = 'https://mainnet.aeternity.io';
