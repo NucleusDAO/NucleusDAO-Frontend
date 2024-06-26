@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@aeternity/aepp-sdk": "^13.2.2",
+    "@aeternity/aepp-sdk": "^13.3.2",
     "@aeternity/argon2": "^0.0.1",
     "@hookform/resolvers": "^3.3.4",
     "@radix-ui/react-alert-dialog": "^1.0.5",

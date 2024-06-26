@@ -21,7 +21,7 @@ import { toast } from 'sonner';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/libs/utils';
 import { useMutation } from '@tanstack/react-query';
-import { createTicket } from '@/config/apis';
+import { createTicket, uploadFile } from '@/config/apis';
 
 const NewFeature = () => {
   const form = useForm<z.infer<typeof newFeatureSchema>>({
@@ -29,43 +29,54 @@ const NewFeature = () => {
     defaultValues: {
       email: '',
       subject: '',
-      descriptions: '',
-      image: '',
+      body: '',
+      imageUrl: '',
     },
+  });
+
+  const { mutate: mutateUploadImage, isPending: isUploading } = useMutation({
+    mutationFn: uploadFile,
+    onError: (error: any) => toast.error(error.message),
   });
 
   const { mutate, isPending } = useMutation({
     mutationFn: createTicket,
-    onSuccess: (response: any) => toast.success(response.message),
+    onSuccess: (response: any) => {
+      toast.success(response.message);
+      form.reset();
+    },
     onError: (error) => toast.error(error.message),
   });
 
   const onSubmit = async (data: any) => {
-    const payload = {
-      subject: 'New Feature Suggestion',
-      channel: 'Email',
-      category: 'New Feature',
-      priority: 'Medium',
-      webUrl: data.image,
-      email: data.email,
-      description: data.descriptions,
-      // ...data,
-    };
-    mutate(payload);
+    if (data.imageUrl) {
+      let formData = new FormData();
+      formData.append('file', data.imageUrl);
+      formData.append('upload_preset', 'bqr7mcvh');
+      mutateUploadImage(formData, {
+        onSuccess: (response) => {
+          const imageUrl = response.data.url;
+          mutate({ ...data, imageUrl });
+        },
+      });
+    } else {
+      const { imageUrl, ...others } = data;
+      mutate(others);
+    }
   };
 
   const handleUpload = async (e: ChangeEvent<HTMLInputElement>) => {
-    const maxSize: number = 3 * 2048 * 2048;
+    const maxSize: number = 3 * 1024 * 1024;
     const file: any = e.target.files?.[0];
     if (file.size >= maxSize) {
-      toast.error('File is too large. Max size of 6mb');
+      toast.error('File is too large. Max size of 3MB');
     } else {
       if (file) {
         const reader = new FileReader();
         reader.onloadend = () => {
           const result = reader.result as string;
-          form.setValue('image', result);
-          form.setError('image', { message: '' });
+          form.setValue('imageUrl', result);
+          form.setError('imageUrl', { message: '' });
         };
         reader.readAsDataURL(file);
       }
@@ -126,7 +137,7 @@ const NewFeature = () => {
 
           <FormField
             control={form.control}
-            name="descriptions"
+            name="body"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>
@@ -143,7 +154,7 @@ const NewFeature = () => {
 
           <FormField
             control={form.control}
-            name="image"
+            name="imageUrl"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>
@@ -195,7 +206,7 @@ const NewFeature = () => {
             <Button
               type="submit"
               className="px-12"
-              loading={isPending}
+              loading={isPending || isUploading}
               loadingText="Sending..."
             >
               Send
