@@ -86,14 +86,5 @@ export const fetchTransactionHistory = (id: string) =>
     .get(`/daos/${id}/transactions-history`)
     .then((response: any) => response.data);
 
-const headers = {
-  orgId: '854342068',
-  Authorization:
-    'Zoho-oauthtoken 1000.SCA726ELO2P9MYRTBP4ORQRKXZDF6J.fc545b8df544d3a900c626ef878cf157a78147ba43',
-  'Content-Type': 'application/json',
-};
-
 export const createTicket = (payload: any) =>
-  client
-    .post('https://desk.zoho.com/api/v1/tickets', payload, { headers })
-    .then((response) => response.data);
+  client.post('/app/contact-us', payload).then((response) => response.data);

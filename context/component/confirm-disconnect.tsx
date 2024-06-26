@@ -46,7 +46,9 @@ const ConfirmDisconnectWallet = ({
       <AlertDialogContent className="dark:bg-[#191919] bg-light">
         <AlertDialogHeader>
           <AlertDialogTitle
-            className={cn('font-medium py-3 text-white text-center')}
+            className={cn(
+              'font-medium py-3 dark:text-white text-[#000] text-center'
+            )}
           >
             Disconnect Wallet
           </AlertDialogTitle>
