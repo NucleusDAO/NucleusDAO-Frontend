@@ -111,7 +111,10 @@ const Profile = () => {
                         alt="logo"
                         className="rounded-full object-cover border w-[60px] h-[60px] relative"
                       />
-                      <p className="text-[10px] absolute top-16 left-2">
+                      <p
+                        className="text-[10px] absolute top-16 left-2"
+                        role="button"
+                      >
                         Change
                       </p>
                       <Input
@@ -164,8 +167,6 @@ const Profile = () => {
                 <FormControl>
                   <Input
                     placeholder="Enter email address"
-                    readOnly={eachUser?.email}
-                    disabled={eachUser?.email}
                     {...field}
                     type="email"
                   />
