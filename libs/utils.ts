@@ -172,8 +172,10 @@ export function daysToMilliseconds(days: number) {
 }
 
 export function millisecondsToDays(milliseconds: number) {
-  const millisecondsInADay = 1000 * 60 * 60 * 24;
-  return milliseconds / millisecondsInADay;
+  if (milliseconds) {
+    const millisecondsInADay = 1000 * 60 * 60 * 24;
+    return milliseconds / millisecondsInADay;
+  }
 }
 
 export function getDaysFromMilliseconds(days: number): number {
@@ -349,3 +351,9 @@ export const convertCurrency = (amount: number, price: number) => {
   const usdValue: number = aeFloat * Number(price || rate);
   return { ae: aeFloat, usd: usdValue.toFixed(5) };
 };
+
+export function isMobile() {
+  const regex =
+    /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
+  return regex.test(navigator.userAgent);
+}

@@ -88,8 +88,8 @@ const VotingProcess = ({ currentProposal }: IVotingProcess) => {
   const { mutate, isPending } = useMutation({
     mutationFn: () =>
       selectedOption === 'yes'
-        ? voteFor(Number(currentProposal.id), currentDAO.contractAddress)
-        : voteAgainst(Number(currentProposal.id), currentDAO.contractAddress),
+        ? voteFor(Number(currentProposal.id), currentDAO?.contractAddress)
+        : voteAgainst(Number(currentProposal.id), currentDAO?.contractAddress),
     onSuccess: () => {
       invalidateAllQueries();
       setShowModal(true);

@@ -44,6 +44,7 @@ import {
 import { createProposal } from '@/libs/contract-call';
 import { EachDaoContext } from '@/context/each-dao-context';
 import EachDaoLoading from '@/components/loading/each-dao-loading';
+import { contractInterract } from '@/libs/ae-func';
 
 const ReviewProposal = () => {
   const { newProposalInfo, setNewProposalInfo } = useContext(AppContext);
@@ -60,7 +61,10 @@ const ReviewProposal = () => {
   const router = useRouter();
   const { value } = newProposalInfo;
 
-  const duration = millisecondsToDays(Number(currentDAO.votingTime));
+  const [pending, setPending] = useState(false);
+  const [pendingg, setPendingg] = useState(false);
+
+  const duration = millisecondsToDays(Number(currentDAO?.votingTime || 0));
 
   const { mutate, isPending } = useMutation({
     mutationFn: createProposal,
@@ -112,8 +116,8 @@ const ReviewProposal = () => {
         0;
     }
 
-    mutate({
-      daoContractAddress: currentDAO.contractAddress,
+    const payload = {
+      daoContractAddress: currentDAO?.contractAddress,
       proposalType: proposalLists[Number(value.type)].type,
       description: value.description,
       value: amount,
@@ -121,11 +125,25 @@ const ReviewProposal = () => {
       info: {
         name: value?.newName || '',
         socials: updatedSocials
-          ? [...(currentDAO.Socials || []), ...updatedSocials]
-          : currentDAO.socials,
+          ? [...(currentDAO?.Socials || []), ...updatedSocials]
+          : currentDAO?.socials,
         image: logoURL || '',
       },
-    });
+    };
+    console.log(payload);
+
+    setPending(true);
+    const response = await contractInterract(payload, address);
+    setPending(false);
+    console.log(response);
+    // if (typeof window !== 'undefined') {
+    //   window.location = response;
+    // }
+
+    typeof window !== 'undefined' && window.open(response, '_self');
+    // typeof window !== 'undefined' && window.location.replace(response);
+
+    // mutate(payload);
   };
 
   const handleGoHome = async () => {
@@ -291,7 +309,8 @@ const ReviewProposal = () => {
             type="submit"
             className="px-12"
             onClick={handleCreateProposal}
-            loading={isPending}
+            loading={pending}
+            // loading={isPending}
             loadingText="Publishing..."
           >
             Publish Proposal

@@ -8,7 +8,6 @@ import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { IConnectWalletContext } from '@/libs/types';
 import ConnectWalletCallToAction from '@/components/connect-wallet-cta';
 import { ApiContext } from '@/context/api-context';
-import { toast } from 'sonner';
 import ProfileLoading from '@/components/loading/profile-loading';
 
 interface ILayout {
@@ -16,8 +15,7 @@ interface ILayout {
 }
 
 const Layout = ({ children }: ILayout) => {
-  const { isEachUserError, eachUserErrorMessage, isLoadingEachUser } =
-    useContext(ApiContext);
+  const { isLoadingEachUser } = useContext(ApiContext);
   const pathname = usePathname();
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const connected: boolean = user.isConnected;

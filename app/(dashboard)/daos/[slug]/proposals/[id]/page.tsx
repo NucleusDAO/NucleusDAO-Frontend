@@ -22,8 +22,8 @@ const EachProposal = () => {
   const proposalId = urlParts[4];
 
   const { data: currentProposal, isLoading } = useQuery({
-    queryKey: [EACH_PROPOSAL_INFO, currentDAO.contractAddress, proposalId],
-    queryFn: () => getProposalDetails(currentDAO.contractAddress, proposalId),
+    queryKey: [EACH_PROPOSAL_INFO, currentDAO?.contractAddress, proposalId],
+    queryFn: () => getProposalDetails(currentDAO?.contractAddress, proposalId),
     enabled: !!proposalId,
   });
 

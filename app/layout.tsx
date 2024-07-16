@@ -60,7 +60,7 @@ export default function RootLayout({
               <TanstackProvider>{children}</TanstackProvider>
             </ConnectWalletProvider>
           </Suspense>
-          <Sonner richColors />
+          <Sonner richColors duration={2000} />
         </ThemeProvider>
       </body>
     </html>

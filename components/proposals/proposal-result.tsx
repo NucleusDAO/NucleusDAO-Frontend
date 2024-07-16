@@ -63,7 +63,7 @@ const ProposalResult = ({
 
   const { mutate, isPending } = useMutation({
     mutationFn: () =>
-      executeProposal(Number(currentProposal.id), currentDAO.contractAddress),
+      executeProposal(Number(currentProposal.id), currentDAO?.contractAddress),
     onSuccess: () => {
       queryClient.invalidateQueries(DAOS_KEY);
       queryClient.invalidateQueries(PROPOSAL_KEY);

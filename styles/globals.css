@@ -132,7 +132,24 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .multiline-truncate {
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 2; /* Number of lines you want to show */
   -webkit-box-orient: vertical;
   overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.truncate {
+  display: -webkit-box;
+  -webkit-line-clamp: 1; /* Number of lines you want to show */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.multiline-truncate-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* Number of lines you want to show */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

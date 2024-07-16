@@ -4,6 +4,7 @@ import {
   RpcRejectedByUserError,
   AeSdkAepp,
   Node,
+  AeSdk,
 } from '@aeternity/aepp-sdk';
 import { ConnectWalletParams, WalletConnection } from './types';
 
@@ -11,6 +12,7 @@ import nucleusDAOAci from './contract/NucleusDAO.json';
 import basicDAOAci from './contract/BasicDAO.json';
 import { DASHBOARD_URL } from '@/config/path';
 import { toast } from 'sonner';
+import { createProposal } from './contract-call';
 
 const nucleusDAOContractAddress =
   'ct_yu1VWgPe3FrQTE1QesiiEB48Gw1dmrJTj8MSciNS5aoFTz6NY';
@@ -33,7 +35,7 @@ export const detectWallets = async () => {
 };
 
 interface DeepLinkParams {
-  type: string;
+  type?: string;
   callbackUrl?: string;
   [key: string]: string | undefined; // Allow any additional parameters as strings
 }
@@ -57,7 +59,7 @@ export const createDeepLinkUrl = ({
   return url;
 };
 
-let aeSdks: any = new AeSdkAepp({
+export let aeSdks: any = new AeSdkAepp({
   name: 'NucleusDAO',
   nodes: [
     { name: 'testnet', instance: new Node(TESTNET_NODE_URL) },
@@ -116,28 +118,30 @@ export const connectWallet = async ({
       setConnectingToWallet(false);
       return;
     }
-    if (isHome) {
-      const domainName =
-        typeof window !== 'undefined' && window.location.origin;
-      const dashboardURL = `${domainName}/${DASHBOARD_URL}/`;
-      addressDeepLink = createDeepLinkUrl({
-        type: 'address',
-        'x-success': `${
-          dashboardURL.split('?')[0]
-        }?address={address}&networkId={networkId}`,
-        'x-cancel': dashboardURL.split('?')[0],
-      });
-    } else {
-      addressDeepLink = createDeepLinkUrl({
-        type: 'address',
-        'x-success': `${
-          window.location.href.split('?')[0]
-        }?address={address}&networkId={networkId}`,
-        'x-cancel': window.location.href.split('?')[0],
-      });
-    }
+    // if (isHome) {
+    const domainName = typeof window !== 'undefined' && window.location.origin;
+    const baseURL = window.location.href;
+    addressDeepLink = createDeepLinkUrl({
+      type: 'address',
+      'x-success': `${
+        baseURL.split('?')[0]
+      }?address={address}&networkId={networkId}`,
+      'x-cancel': baseURL.split('?')[0],
+    });
+    // } else {
+    //   addressDeepLink = createDeepLinkUrl({
+    //     type: 'address',
+    //     'x-success': `${
+    //       window.location.href.split('?')[0]
+    //     }?address={address}&networkId={networkId}`,
+    //     'x-cancel': window.location.href.split('?')[0],
+    //   });
+    // }
     if (typeof window !== 'undefined') {
-      window.location.replace(addressDeepLink);
+      console.log(addressDeepLink);
+
+      typeof window !== 'undefined' && window.open(addressDeepLink, '_self');
+      // window.location.replace(addressDeepLink);
     }
   } else {
     try {

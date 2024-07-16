@@ -12,7 +12,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
 } from '@/components/ui/alert-dialog';
-import { DAO_URL } from '@/config/path';
+import { DAO_URL, DASHBOARD_URL } from '@/config/path';
 import { useContext, useState } from 'react';
 import { AppContext } from '@/context/app-context';
 import { uploadFile } from '@/config/apis';
@@ -65,7 +65,7 @@ const ReviewDao = () => {
       const members = newDaoInfo.members.map((m: any) => {
         return m.address;
       });
-      mutate({
+      const payload = {
         name,
         id,
         description: newDaoInfo.info.about,
@@ -77,7 +77,8 @@ const ReviewDao = () => {
         initialMembers: members,
         votingTime: Math.round(daysToMilliseconds(newDaoInfo.duration)),
         quorum: newDaoInfo.quorum,
-      });
+      };
+      mutate(payload);
     },
     onError: (error: any) => toast.error(error.message),
   });
@@ -130,11 +131,15 @@ const ReviewDao = () => {
         </div>
         <div className="grid grid-cols-2 text-xs md:text-sm md:w-4/6">
           <p className="dark:text-white text-dark">DAO Url</p>
-          <p className="text-defaultText">{newDaoInfo.info.daoUrl}</p>
+          <p className="text-defaultText multiline-truncate-3">
+            {newDaoInfo.info.daoUrl}
+          </p>
         </div>
         <div className="grid grid-cols-2 text-xs md:text-sm md:w-4/6">
           <p className="dark:text-white text-dark">About</p>
-          <p className="text-defaultText w-[200%]">{newDaoInfo.info.about}</p>
+          <p className="text-defaultText w-[200%] multiline-truncate-3">
+            {newDaoInfo.info.about}
+          </p>
         </div>
         <div className="grid grid-cols-2 text-xs md:text-sm md:w-4/6">
           <p className="dark:text-white text-dark">Links</p>

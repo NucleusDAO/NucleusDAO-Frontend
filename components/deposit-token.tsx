@@ -46,7 +46,7 @@ const DepositToken = () => {
   });
 
   const { mutate, isPending } = useMutation({
-    mutationFn: () => deposit(currentDAO.contractAddress, amount),
+    mutationFn: () => deposit(currentDAO?.contractAddress, amount),
     onSuccess: () => {
       queryClient.invalidateQueries(DAOS_KEY);
       queryClient.invalidateQueries(EACH_DAO_KEY);
