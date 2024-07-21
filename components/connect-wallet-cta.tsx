@@ -10,14 +10,14 @@ interface IConnectWalletCTA {
 }
 
 const ConnectWalletCallToAction = ({ description }: IConnectWalletCTA) => {
-  const { handleConnectWallet } =
+  const { handleSearchWallet } =
     useContext<IConnectWalletContext>(ConnectWalletContext);
   return (
     <div className="text-center space-y-4 items-center">
       <Image src={EmptyDAO} alt="DAO empty" width={100} className="mx-auto" />
       <h1 className="dark:text-white text-dark text-[16px]">{description}</h1>
 
-      <Button onClick={handleConnectWallet}>Connect Wallet</Button>
+      <Button onClick={handleSearchWallet}>Connect Wallet</Button>
     </div>
   );
 };

@@ -35,7 +35,7 @@ const Profile = () => {
       daoName: name,
       logo: image,
       description,
-      duration: millisecondsToDays(Number(currentDAO.votingTime)),
+      duration: millisecondsToDays(Number(currentDAO?.votingTime)),
       quorum: Number(quorum),
     },
   });

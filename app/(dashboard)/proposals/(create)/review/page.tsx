@@ -4,6 +4,8 @@ import {
   convertDays,
   daysToMilliseconds,
   defaultProposal,
+  executeAction,
+  isMobile,
   millisecondsToDays,
   wait,
 } from '@/libs/utils';
@@ -41,7 +43,7 @@ import {
   PROPOSAL_HISTORY,
   PROPOSAL_KEY,
 } from '@/libs/key';
-import { createProposal } from '@/libs/contract-call';
+import { createProposal, mobileCreateProposal } from '@/libs/contract-call';
 import { EachDaoContext } from '@/context/each-dao-context';
 import EachDaoLoading from '@/components/loading/each-dao-loading';
 
@@ -60,7 +62,9 @@ const ReviewProposal = () => {
   const router = useRouter();
   const { value } = newProposalInfo;
 
-  const duration = millisecondsToDays(Number(currentDAO.votingTime));
+  const [pending, setPending] = useState(false);
+
+  const duration = millisecondsToDays(Number(currentDAO?.votingTime || 0));
 
   const { mutate, isPending } = useMutation({
     mutationFn: createProposal,
@@ -112,8 +116,8 @@ const ReviewProposal = () => {
         0;
     }
 
-    mutate({
-      daoContractAddress: currentDAO.contractAddress,
+    const payload = {
+      daoContractAddress: currentDAO?.contractAddress,
       proposalType: proposalLists[Number(value.type)].type,
       description: value.description,
       value: amount,
@@ -121,10 +125,18 @@ const ReviewProposal = () => {
       info: {
         name: value?.newName || '',
         socials: updatedSocials
-          ? [...(currentDAO.Socials || []), ...updatedSocials]
-          : currentDAO.socials,
+          ? [...(currentDAO?.Socials || []), ...updatedSocials]
+          : currentDAO?.socials,
         image: logoURL || '',
       },
+    };
+
+    await executeAction({
+      setPending,
+      action: mobileCreateProposal,
+      payload,
+      address,
+      mutate,
     });
   };
 
@@ -215,11 +227,11 @@ const ReviewProposal = () => {
           </div>
         )}
         {value.socialMedia[0].type && (
-          <div className="grid grid-cols-2 text-xs md:text-sm md:w-4/6">
-            <p className="dark:text-white text-dark">Links</p>
+          <div className="grid grid-cols-12 text-xs md:text-sm md:w-4/6">
+            <p className="dark:text-white text-dark col-span-4">Links</p>
             {!value.socialMedia[0].type && 'None'}
             {value.socialMedia[0].type && (
-              <div className="flex space-x-4">
+              <div className="flex space-x-4 col-span-8">
                 {value.socialMedia.map(
                   (socialMedia: { link: string; type: string }) => (
                     <Link
@@ -291,7 +303,7 @@ const ReviewProposal = () => {
             type="submit"
             className="px-12"
             onClick={handleCreateProposal}
-            loading={isPending}
+            loading={isPending || pending}
             loadingText="Publishing..."
           >
             Publish Proposal

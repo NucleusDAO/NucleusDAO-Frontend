@@ -98,7 +98,9 @@ const Dashboard = () => {
             </Button>
           </Link>
         ) : (
-          <Button onClick={() => toast.error('Please connect your wallet!')}>
+          <Button
+            onClick={() => toast.error('Please connect your wallet first!')}
+          >
             <Plus className="mr-2 h-4 w-4" /> Create DAO
           </Button>
         )}

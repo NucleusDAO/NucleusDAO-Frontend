@@ -138,7 +138,7 @@ const Layout = ({ children }: ILayout) => {
                   </DialogTrigger>
                   <DialogContent className="dark:bg-gradient-to-r dark:from-[#1E1E1E] dark:via-[#1E1E1E]">
                     <DialogHeader>
-                      <DialogTitle className="text-white font-medium py-3">
+                      <DialogTitle className="dark:text-white font-medium py-3 ">
                         Join DAO
                       </DialogTitle>
                       <DialogDescription className="font-light py-2">

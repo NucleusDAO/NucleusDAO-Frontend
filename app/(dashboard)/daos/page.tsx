@@ -81,7 +81,9 @@ const Daos = () => {
             <Plus className="mr-2 h-4 w-4" /> Create DAO
           </Button>
         ) : (
-          <Button onClick={() => toast.error('Please connect your wallet!')}>
+          <Button
+            onClick={() => toast.error('Please connect your wallet first!')}
+          >
             <Plus className="mr-2 h-4 w-4" /> Create DAO
           </Button>
         )}
@@ -90,7 +92,7 @@ const Daos = () => {
       {!currentSearch && DAOsData?.length === 0 && (
         <div className="text-center mx-auto pt-10 space-y-4">
           <Lottie options={defaultProposalOption} height={150} width={150} />
-          <div className="text-center w-2/5 mx-auto">
+          <div className="text-center lg:w-2/5 mx-auto">
             <p className="pb-3 font-light text-sm">
               Begin by setting up governance mechanisms, defining roles and
               responsibilities, and establishing rules for participation.

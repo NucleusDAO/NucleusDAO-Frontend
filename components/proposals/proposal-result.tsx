@@ -7,16 +7,16 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { cn, formatDate, getStatus } from '@/libs/utils';
+import { cn, formatDate, getStatus, isMobile } from '@/libs/utils';
 import { EachDaoContext } from '@/context/each-dao-context';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Button } from '../ui/button';
 import { toast } from 'sonner';
 import { IConnectWalletContext } from '@/libs/types';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { executeProposal } from '@/libs/contract-call';
+import { executeMobileProposal, executeProposal } from '@/libs/contract-call';
 import {
   DAOS_KEY,
   EACH_DAO_KEY,
@@ -26,6 +26,7 @@ import {
   PROPOSAL_KEY,
   USER_ACTIVITIES_KEY,
 } from '@/libs/key';
+import { isSafariBrowser } from '@/libs/ae-utils';
 
 interface IProposalResult {
   currentProposal: {
@@ -48,6 +49,8 @@ const ProposalResult = ({
   currentProposal,
   countdownTime,
 }: IProposalResult) => {
+  const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
+  const [pending, setPending] = useState<boolean>(false);
   const queryClient: any = useQueryClient();
   const isDesktop = useMediaQuery('(min-width: 768px)');
   const { startTime, endTime, votesFor, votesAgainst, votes } = currentProposal;
@@ -63,7 +66,7 @@ const ProposalResult = ({
 
   const { mutate, isPending } = useMutation({
     mutationFn: () =>
-      executeProposal(Number(currentProposal.id), currentDAO.contractAddress),
+      executeProposal(Number(currentProposal.id), currentDAO?.contractAddress),
     onSuccess: () => {
       queryClient.invalidateQueries(DAOS_KEY);
       queryClient.invalidateQueries(PROPOSAL_KEY);
@@ -76,6 +79,25 @@ const ProposalResult = ({
     },
     onError: (error: any) => toast.error(error.message),
   });
+
+  const handleExecuteProposal = async () => {
+    if (isMobile() || isSafariBrowser()) {
+      setPending(true);
+      try {
+        await executeMobileProposal(
+          Number(currentProposal.id),
+          currentDAO?.contractAddress,
+          user.address
+        );
+      } catch (error: any) {
+        toast.error(error.message);
+      } finally {
+        setPending(false);
+      }
+    } else {
+      mutate();
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -132,8 +154,8 @@ const ProposalResult = ({
             {getStatus(currentProposal) === 'Pending' && (
               <Button
                 className="w-full mt-1.5"
-                onClick={() => mutate()}
-                loading={isPending}
+                onClick={handleExecuteProposal}
+                loading={isPending || pending}
                 loadingText="Executing..."
               >
                 Excecute Proposal

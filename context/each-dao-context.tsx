@@ -64,7 +64,7 @@ export const EachDaoContextProvider = ({ children }: IAppProvider) => {
     error: proposalError,
   } = useQuery({
     queryKey: [EACH_DAO_PROPOSAL, daoId, currentDAO?.contractAddress],
-    queryFn: () => getProposals(currentDAO.contractAddress),
+    queryFn: () => getProposals(currentDAO?.contractAddress),
     enabled: !!currentDAO?.contractAddress,
   });
 
@@ -91,7 +91,7 @@ export const EachDaoContextProvider = ({ children }: IAppProvider) => {
     error: memberError,
   } = useQuery({
     queryKey: [MEMBER_ACTIVIES, daoId, currentDAO?.contractAddress],
-    queryFn: () => getAllUsersActivities(currentDAO.contractAddress),
+    queryFn: () => getAllUsersActivities(currentDAO?.contractAddress),
     enabled: !!currentDAO?.contractAddress,
   });
 
