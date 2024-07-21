@@ -1,24 +1,10 @@
-import {
-  walletDetector,
-  BrowserWindowMessageConnection,
-  RpcRejectedByUserError,
-  AeSdkAepp,
-  Node,
-  AeSdk,
-  MemoryAccount,
-  generateKeyPair,
-} from '@aeternity/aepp-sdk';
-import { ConnectWalletParams, WalletConnection } from './types';
+import { Node, AeSdk, MemoryAccount } from '@aeternity/aepp-sdk';
 
 import nucleusDAOAci from './contract/NucleusDAO.json';
 import basicDAOAci from './contract/BasicDAO.json';
-import { DASHBOARD_URL, PROPOSALS_URL } from '@/config/path';
-import { toast } from 'sonner';
-import { createProposal } from './contract-call';
+import { PROPOSALS_URL } from '@/config/path';
 import CryptoJS from 'crypto-js';
-
-const nucleusDAOContractAddress =
-  'ct_yu1VWgPe3FrQTE1QesiiEB48Gw1dmrJTj8MSciNS5aoFTz6NY';
+import { nucleusDAOContractAddress } from './ae-utils';
 
 export const TESTNET_NODE_URL = 'https://testnet.aeternity.io';
 export const MAINNET_NODE_URL = 'https://mainnet.aeternity.io';
@@ -74,16 +60,8 @@ const createDeepLinkUrl2 = async ({ type, callbackUrl, ...params }: any) => {
   Object.entries(params)
     .filter(([, value]) => value !== undefined && value !== null) // Filter out undefined and null values
     .forEach(([name, value]) => url.searchParams.set(name, value as string)); // Assert value as string
-  // Object.entries(params)
-  //   .filter(([, value]) => ![undefined, null].includes(value))
-  //   .forEach(([name, value]) => url.searchParams.set(name, value));
   return url;
 };
-
-// const createOnAccountObject = () => {
-//   const accountObject = aeSdk.addresses()[0];
-//   return accountObject;
-// };
 
 export const createOnAccountObject = (address: string) => ({
   address,
@@ -121,7 +99,6 @@ export const contractInterract = async (payload: any, userAddress: string) => {
 
   // append transaction parameter for success case
   const successUrl = new URL(currentUrl.href);
-  console.log(successUrl, '-success');
 
   successUrl.searchParams.set('transaction', '{transaction}');
 
@@ -138,6 +115,49 @@ export const contractInterract = async (payload: any, userAddress: string) => {
     'x-success': decodeURI(successUrl.href),
     'x-cancel': decodeURI(cancelUrl.href),
   });
+};
+
+interface IMobileInterract {
+  redirectUrl: string;
+  result: any;
+}
+
+export const mobileContractInterract = async ({
+  redirectUrl,
+  result,
+}: IMobileInterract) => {
+  const encodedTx = await result.rawTx;
+
+  const domainName = typeof window !== 'undefined' && window.location.origin;
+
+  const baseUrl = `${domainName}/${redirectUrl}/`;
+
+  const currentUrl = new URL(baseUrl);
+  // reset url
+  currentUrl.searchParams.delete('transaction');
+  currentUrl.searchParams.delete('transaction-status');
+
+  // append transaction parameter for success case
+  const successUrl = new URL(currentUrl.href);
+
+  successUrl.searchParams.set('transaction', '{transaction}');
+
+  // append transaction parameter for failed case
+  const cancelUrl = new URL(currentUrl.href);
+  cancelUrl.searchParams.set('transaction-status', 'cancelled');
+
+  const response = await createDeepLinkUrl2({
+    type: 'sign-transaction',
+    transaction: encodedTx,
+    networkId: 'ae_uat',
+    broadcast: true,
+    // decode these urls because they will be encoded again
+    'x-success': decodeURI(successUrl.href),
+    'x-cancel': decodeURI(cancelUrl.href),
+  });
+  if (typeof window !== 'undefined') {
+    window.open(response, '_self');
+  }
 };
 
 export const getNucleusDAO = async () => {

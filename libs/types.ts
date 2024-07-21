@@ -1,5 +1,5 @@
 import { AeSdkMethods } from '@aeternity/aepp-sdk';
-import { ReactNode } from 'react';
+import { Dispatch, ReactNode, SetStateAction } from 'react';
 
 export type WalletInfo = {
   name: string;
@@ -50,7 +50,7 @@ export type WalletScanningParams = {
 };
 
 export interface IConnectWalletContext {
-  handleConnectWallet?: () => void;
+  handleSearchWallet?: () => void;
   user: { address: string; isConnected: boolean };
   isConnecting: boolean;
   handleDisconnect?: () => void;
@@ -215,4 +215,26 @@ export interface ICreateProposal {
     socials: { name: string; url: string }[];
     image: string;
   };
+}
+
+type SetPendingType = Dispatch<SetStateAction<boolean>>;
+
+// Define the type for action function
+type ActionType = (payload: any, address: string) => Promise<void>;
+
+// Define the type for mutate function
+type MutateType = (payload: any) => void;
+
+// Define the interface for the function parameters
+export interface IExecuteAction {
+  setPending: SetPendingType;
+  action: ActionType;
+  payload: any;
+  address: string;
+  mutate: MutateType;
+}
+
+export interface IMobileDeposit {
+  daoContractAddress: string;
+  amount: string;
 }

@@ -4,6 +4,8 @@ import {
   convertDays,
   daysToMilliseconds,
   defaultProposal,
+  executeAction,
+  isMobile,
   millisecondsToDays,
   wait,
 } from '@/libs/utils';
@@ -41,10 +43,9 @@ import {
   PROPOSAL_HISTORY,
   PROPOSAL_KEY,
 } from '@/libs/key';
-import { createProposal } from '@/libs/contract-call';
+import { createProposal, mobileCreateProposal } from '@/libs/contract-call';
 import { EachDaoContext } from '@/context/each-dao-context';
 import EachDaoLoading from '@/components/loading/each-dao-loading';
-import { contractInterract } from '@/libs/ae-func';
 
 const ReviewProposal = () => {
   const { newProposalInfo, setNewProposalInfo } = useContext(AppContext);
@@ -62,7 +63,6 @@ const ReviewProposal = () => {
   const { value } = newProposalInfo;
 
   const [pending, setPending] = useState(false);
-  const [pendingg, setPendingg] = useState(false);
 
   const duration = millisecondsToDays(Number(currentDAO?.votingTime || 0));
 
@@ -130,20 +130,14 @@ const ReviewProposal = () => {
         image: logoURL || '',
       },
     };
-    console.log(payload);
 
-    setPending(true);
-    const response = await contractInterract(payload, address);
-    setPending(false);
-    console.log(response);
-    // if (typeof window !== 'undefined') {
-    //   window.location = response;
-    // }
-
-    typeof window !== 'undefined' && window.open(response, '_self');
-    // typeof window !== 'undefined' && window.location.replace(response);
-
-    // mutate(payload);
+    await executeAction({
+      setPending,
+      action: mobileCreateProposal,
+      payload,
+      address,
+      mutate,
+    });
   };
 
   const handleGoHome = async () => {
@@ -233,11 +227,11 @@ const ReviewProposal = () => {
           </div>
         )}
         {value.socialMedia[0].type && (
-          <div className="grid grid-cols-2 text-xs md:text-sm md:w-4/6">
-            <p className="dark:text-white text-dark">Links</p>
+          <div className="grid grid-cols-12 text-xs md:text-sm md:w-4/6">
+            <p className="dark:text-white text-dark col-span-4">Links</p>
             {!value.socialMedia[0].type && 'None'}
             {value.socialMedia[0].type && (
-              <div className="flex space-x-4">
+              <div className="flex space-x-4 col-span-8">
                 {value.socialMedia.map(
                   (socialMedia: { link: string; type: string }) => (
                     <Link
@@ -309,8 +303,7 @@ const ReviewProposal = () => {
             type="submit"
             className="px-12"
             onClick={handleCreateProposal}
-            loading={pending}
-            // loading={isPending}
+            loading={isPending || pending}
             loadingText="Publishing..."
           >
             Publish Proposal

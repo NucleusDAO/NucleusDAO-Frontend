@@ -1,8 +1,9 @@
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { IProposal } from './types';
-import { IDAO } from '@/context/each-dao-context';
+import { IExecuteAction, IProposal } from './types';
 import { rate } from '@/config/dao-config';
+import { isSafariBrowser } from './ae-utils';
+import { toast } from 'sonner';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -175,6 +176,8 @@ export function millisecondsToDays(milliseconds: number) {
   if (milliseconds) {
     const millisecondsInADay = 1000 * 60 * 60 * 24;
     return milliseconds / millisecondsInADay;
+  } else {
+    return 0;
   }
 }
 
@@ -356,4 +359,39 @@ export function isMobile() {
   const regex =
     /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
   return regex.test(navigator.userAgent);
+}
+
+function isObjectEmpty<T extends object>(obj: T): boolean {
+  return Object.keys(obj).length === 0;
+}
+
+export function getIsConnected() {
+  if (typeof window !== 'undefined') {
+    const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+    if (isObjectEmpty(currentUser) || !isMobile() || !isSafariBrowser()) {
+      return null;
+    }
+    return currentUser;
+  }
+}
+
+export async function executeAction({
+  setPending,
+  action,
+  payload,
+  address,
+  mutate,
+}: IExecuteAction) {
+  if (isMobile() || isSafariBrowser()) {
+    setPending(true);
+    try {
+      await action(payload, address);
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      setPending(false);
+    }
+  } else {
+    mutate(payload);
+  }
 }

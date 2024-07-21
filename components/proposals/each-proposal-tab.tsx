@@ -148,7 +148,7 @@ const EachFilterTab = ({
                       Proposal could not be found
                     </p>
                   ) : (
-                    <div className="text-center w-2/5">
+                    <div className="text-center lg:w-2/5">
                       <p className="pb-3 font-light">
                         Engage with the community, address any questions or
                         concerns, and monitor the progress of the proposal as it

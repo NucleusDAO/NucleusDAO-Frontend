@@ -14,7 +14,7 @@ interface INotAuthorized {
 
 const NotAuthorized = ({ description }: INotAuthorized) => {
   const router = useRouter();
-  const { handleConnectWallet } =
+  const { handleSearchWallet } =
     useContext<IConnectWalletContext>(ConnectWalletContext);
   return (
     <div
@@ -37,7 +37,7 @@ const NotAuthorized = ({ description }: INotAuthorized) => {
           >
             Go Back
           </Button>
-          <Button onClick={handleConnectWallet}>Connect Wallet</Button>
+          <Button onClick={handleSearchWallet}>Connect Wallet</Button>
         </div>
       </div>
     </div>

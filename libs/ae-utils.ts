@@ -4,18 +4,16 @@ import {
   RpcRejectedByUserError,
   AeSdkAepp,
   Node,
-  AeSdk,
 } from '@aeternity/aepp-sdk';
 import { ConnectWalletParams, WalletConnection } from './types';
 
 import nucleusDAOAci from './contract/NucleusDAO.json';
 import basicDAOAci from './contract/BasicDAO.json';
-import { DASHBOARD_URL } from '@/config/path';
 import { toast } from 'sonner';
-import { createProposal } from './contract-call';
+import { isMobile } from './utils';
 
-const nucleusDAOContractAddress =
-  'ct_yu1VWgPe3FrQTE1QesiiEB48Gw1dmrJTj8MSciNS5aoFTz6NY';
+export const nucleusDAOContractAddress =
+  'ct_tty8uyUaw1LCCveugDympVzdWmcJntGG1wbFPiurqYR5m3iss';
 
 export const TESTNET_NODE_URL = 'https://testnet.aeternity.io';
 export const MAINNET_NODE_URL = 'https://mainnet.aeternity.io';
@@ -106,20 +104,18 @@ export const connectWallet = async ({
   address,
   setConnectionError,
   setOpenModal,
-  isHome,
   walletObj = { info: { name: '', type: '' } },
   aeSdk,
 }: ConnectWalletParams) => {
   setConnectingToWallet(true);
   let addressDeepLink: any;
 
-  if ((IS_MOBILE || isSafariBrowser()) && !IN_FRAME) {
+  if ((isMobile() || isSafariBrowser()) && !IN_FRAME) {
     if (address) {
       setConnectingToWallet(false);
       return;
     }
-    // if (isHome) {
-    const domainName = typeof window !== 'undefined' && window.location.origin;
+
     const baseURL = window.location.href;
     addressDeepLink = createDeepLinkUrl({
       type: 'address',
@@ -128,27 +124,15 @@ export const connectWallet = async ({
       }?address={address}&networkId={networkId}`,
       'x-cancel': baseURL.split('?')[0],
     });
-    // } else {
-    //   addressDeepLink = createDeepLinkUrl({
-    //     type: 'address',
-    //     'x-success': `${
-    //       window.location.href.split('?')[0]
-    //     }?address={address}&networkId={networkId}`,
-    //     'x-cancel': window.location.href.split('?')[0],
-    //   });
-    // }
-    if (typeof window !== 'undefined') {
-      console.log(addressDeepLink);
 
-      typeof window !== 'undefined' && window.open(addressDeepLink, '_self');
-      // window.location.replace(addressDeepLink);
-    }
+    typeof window !== 'undefined' && window.open(addressDeepLink, '_self');
   } else {
     try {
       await resolveWithTimeout(30000, async () => {
-        const webWalletTimeout = IS_MOBILE
-          ? 0
-          : setTimeout(() => setEnableIFrameWallet(true), 15000);
+        const webWalletTimeout =
+          IS_MOBILE || isMobile()
+            ? 0
+            : setTimeout(() => setEnableIFrameWallet(true), 15000);
 
         let resolve: any = null;
         let rejected = (e: any) => {
@@ -186,7 +170,6 @@ export const connectWallet = async ({
               };
               stopScan = null;
             }
-            console.log(e.message);
             rejected(e);
           }
         };

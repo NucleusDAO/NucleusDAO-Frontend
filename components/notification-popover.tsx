@@ -83,7 +83,7 @@ const ViewNotificationPopover = () => {
         </div>
       </PopoverTrigger>
       <PopoverContent
-        className="mt-2 md:px-6 pt-3 pb-8 md:w-[430px] dark:bg-gradient-to-r dark:via-[#1E1E1E] dark:from-[#1E1E1E] dark:to-[#252525]"
+        className="mt-8 lg:mt-2 md:px-6 pt-3 pb-8 md:w-[430px] dark:bg-gradient-to-r dark:via-[#1E1E1E] dark:from-[#1E1E1E] dark:to-[#252525]"
         style={{ boxShadow: '0px 4px 10px 0px #00000040' }}
       >
         <div className="flex justify-between items-center text-sm border-b pb-3 dark:border-b-[#292929] border-b-[#CCCCCC99] font-light">
@@ -98,7 +98,7 @@ const ViewNotificationPopover = () => {
               role="button"
               onClick={() => mutate()}
             >
-              <p>Mark All as Read</p>
+              <p>Mark all as Read</p>
               {isPending && <Loader className="mr-2 h-4 w-4 animate-spin" />}
             </div>
           )}

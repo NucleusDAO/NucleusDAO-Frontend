@@ -9,7 +9,7 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import React, { useContext, useState } from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
-import { cn } from '@/libs/utils';
+import { cn, isMobile } from '@/libs/utils';
 import { ApiContext } from '@/context/api-context';
 import { rate } from '@/config/dao-config';
 import { toast } from 'sonner';
@@ -18,7 +18,7 @@ import Lottie from 'react-lottie';
 import { defaultSuccessOption } from './animation-options';
 import { formatAmount, AE_AMOUNT_FORMATS } from '@aeternity/aepp-sdk';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { deposit } from '@/libs/contract-call';
+import { deposit, mobileDeposit } from '@/libs/contract-call';
 import {
   BALANCE_HISTORY,
   DAOS_KEY,
@@ -28,8 +28,13 @@ import {
   PROPOSAL_HISTORY,
   USER_ACTIVITIES_KEY,
 } from '@/libs/key';
+import { isSafariBrowser } from '@/libs/ae-utils';
+import { ConnectWalletContext } from '@/context/connect-wallet-context';
+import { IConnectWalletContext } from '@/libs/types';
 
 const DepositToken = () => {
+  const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
+  const { address } = user;
   const queryClient: any = useQueryClient();
   const [open, setOpen] = useState<boolean>(false);
   const [aeValue, setAeValue] = useState<number | string>(0);
@@ -37,6 +42,7 @@ const DepositToken = () => {
   const [termsChecked, setTermsChecked] = useState<boolean>(false);
   const [isDeposited, setIsDeposited] = useState<boolean>(true);
   const { getAEPrice } = useContext(ApiContext);
+  const [pending, setPending] = useState<boolean>(false);
 
   const { currentDAO } = useContext(EachDaoContext);
 
@@ -61,6 +67,24 @@ const DepositToken = () => {
     onError: (error: any) => toast.error(error.message),
   });
 
+  const handleDeposit = async () => {
+    if (isMobile() || isSafariBrowser()) {
+      setPending(true);
+      try {
+        await mobileDeposit(
+          { daoContractAddress: currentDAO?.contractAddress, amount },
+          address
+        );
+      } catch (error: any) {
+        toast.error(error.message);
+      } finally {
+        setPending(false);
+      }
+    } else {
+      mutate();
+    }
+  };
+
   return (
     <Dialog onOpenChange={setOpen} open={open}>
       <Button
@@ -73,7 +97,7 @@ const DepositToken = () => {
       </Button>
       <DialogContent className="">
         <DialogHeader>
-          <DialogTitle className="text-[#292929] dark:text-white font-medium py-2">
+          <DialogTitle className="text-[#292929] dark:text-white font-medium py-2 text-left">
             Deposit Funds
           </DialogTitle>
           <DialogDescription className="font-light space-y-3">
@@ -104,9 +128,9 @@ const DepositToken = () => {
             )}
             {!isDeposited && (
               <React.Fragment>
-                <p>Kindly input the amount below.</p>
+                <p className="text-left">Kindly input the amount below.</p>
                 <div className="space-y-4">
-                  <p className="text-white">Token</p>
+                  <p className="text-white text-left">Token</p>
                   <div
                     className={cn(
                       'border border-[#292929] rounded-lg p-2 flex justify-between trans',
@@ -162,7 +186,7 @@ const DepositToken = () => {
                     />
                     <label
                       htmlFor="terms"
-                      className="text-sm font-light leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      className="text-sm font-light leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-left"
                     >
                       By clicking, I agree to sign the{' '}
                       <span className="text-primary underline underline-offset-2">
@@ -177,10 +201,11 @@ const DepositToken = () => {
                       !termsChecked ||
                       Number(aeValue) <= 0 ||
                       isError ||
-                      isPending
+                      isPending ||
+                      pending
                     }
-                    onClick={() => mutate()}
-                    loading={isPending}
+                    onClick={handleDeposit}
+                    loading={isPending || pending}
                     loadingText="Depositing..."
                   >{`Deposit ${Number(aeValue).toFixed(2)} AE`}</Button>
                 </div>

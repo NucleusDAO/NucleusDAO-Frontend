@@ -19,7 +19,7 @@ interface INavbar {
 }
 
 const Navbar = ({ handleShowNav, showNav }: INavbar) => {
-  const { handleConnectWallet, user, isConnecting } =
+  const { handleSearchWallet, user, isConnecting } =
     useContext<any>(ConnectWalletContext);
   const isDesktop = useMediaQuery('(min-width: 768px)');
   const connected: boolean = user.isConnected;
@@ -84,7 +84,7 @@ const Navbar = ({ handleShowNav, showNav }: INavbar) => {
         ) : (
           <div className="flex space-x-2 items-center">
             <Button
-              onClick={handleConnectWallet}
+              onClick={handleSearchWallet}
               loading={isConnecting}
               loadingText="Connecting..."
             >

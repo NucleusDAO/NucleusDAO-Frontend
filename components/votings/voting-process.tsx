@@ -16,7 +16,7 @@ import { toast } from 'sonner';
 import Lottie from 'react-lottie';
 import { defaultSuccessOption } from '../animation-options';
 import { EachDaoContext } from '@/context/each-dao-context';
-import { cn, getStatus } from '@/libs/utils';
+import { cn, getStatus, isMobile } from '@/libs/utils';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   DAOS_KEY,
@@ -27,7 +27,13 @@ import {
   PROPOSAL_KEY,
   USER_ACTIVITIES_KEY,
 } from '@/libs/key';
-import { voteAgainst, voteFor } from '@/libs/contract-call';
+import {
+  mobileVoteAgainst,
+  mobileVoteFor,
+  voteAgainst,
+  voteFor,
+} from '@/libs/contract-call';
+import { isSafariBrowser } from '@/libs/ae-utils';
 
 interface IVotingProcess {
   currentProposal: {
@@ -39,6 +45,7 @@ interface IVotingProcess {
 const VotingProcess = ({ currentProposal }: IVotingProcess) => {
   const queryClient: any = useQueryClient();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [pending, setPending] = useState<boolean>(false);
 
   const { currentDAO } = useContext(EachDaoContext);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
@@ -97,6 +104,26 @@ const VotingProcess = ({ currentProposal }: IVotingProcess) => {
     onError: (error: any) => toast.error(error.message),
   });
 
+  const handleVote = async () => {
+    if (isMobile() || isSafariBrowser()) {
+      const id = Number(currentProposal.id);
+      const address = currentDAO?.contractAddress;
+      const userAddress = user.address;
+      setPending(true);
+      try {
+        selectedOption === 'yes'
+          ? await mobileVoteFor(id, address, userAddress)
+          : await mobileVoteAgainst(id, address, userAddress);
+      } catch (error: any) {
+        toast.error(error.message);
+      } finally {
+        setPending(false);
+      }
+    } else {
+      mutate();
+    }
+  };
+
   const handleDone = async () => {
     setShowModal(false);
     setIsLoading(false);
@@ -148,9 +175,9 @@ const VotingProcess = ({ currentProposal }: IVotingProcess) => {
               className="w-full"
               disabled={!selectedOption || isDisabled || isDisabled}
               onClick={() => {
-                !selectedOption || isDisabled ? null : mutate();
+                !selectedOption || isDisabled ? null : handleVote();
               }}
-              loading={isPending}
+              loading={isPending || pending}
               loadingText="Voting..."
             >
               Vote
