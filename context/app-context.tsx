@@ -17,7 +17,6 @@ import { VIEW_DAO_URL } from '@/config/path';
 import { useQuery } from '@tanstack/react-query';
 import { DAOS_KEY, PROPOSAL_KEY } from '@/libs/key';
 import { getAllProposals, getDAOs } from '@/libs/contract-call';
-import { Button } from '@/components/ui/button';
 import {
   walletDetector,
   BrowserWindowMessageConnection,

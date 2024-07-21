@@ -130,7 +130,7 @@ export const mobileContractInterract = async ({
 
   const domainName = typeof window !== 'undefined' && window.location.origin;
 
-  const baseUrl = `${domainName}/${redirectUrl}/`;
+  const baseUrl = `${domainName}${redirectUrl}/`;
 
   const currentUrl = new URL(baseUrl);
   // reset url
