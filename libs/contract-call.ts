@@ -232,8 +232,6 @@ export const mobileVoteFor = async (
       ? window.location.pathname + window.location.search
       : '';
 
-  console.log(redirectUrl);
-
   const contract = await getBasicDAO(daoContractAddress);
 
   const result = await contract['voteFor'](proposalId, {
