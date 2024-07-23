@@ -73,7 +73,7 @@ export const mobileCreateDAO = async (
   );
   await mobileContractInterract({ redirectUrl: DAO_URL, result });
   localStorage.removeItem('new_dao');
-  toast.success('DAO created successfully');
+  // toast.success('DAO created successfully');
 };
 
 const createProposal = async (payload: ICreateProposal) => {
@@ -108,7 +108,7 @@ export const mobileCreateProposal = async (
   );
   await mobileContractInterract({ redirectUrl: PROPOSALS_URL, result });
   localStorage.removeItem('new_proposal');
-  toast.success('Proposal created successfully');
+  // toast.success('Proposal created successfully');
 };
 
 const getEachDAO = async (id: string) => {
@@ -182,7 +182,7 @@ export const mobileDeposit = async (
     onAccount: createOnAccountObject(userAddress),
   });
   await mobileContractInterract({ redirectUrl, result });
-  toast.success('Deposited successfully!');
+  // toast.success('Deposited successfully!');
 };
 
 const executeProposal = async (
@@ -212,7 +212,7 @@ export const executeMobileProposal = async (
     onAccount: createOnAccountObject(userAddress),
   });
   await mobileContractInterract({ redirectUrl, result });
-  toast.success('Proposal executed successfully!');
+  // toast.success('Proposal executed successfully!');
 };
 
 const voteFor = async (proposalId: number, daoContractAddress: string) => {
@@ -239,7 +239,7 @@ export const mobileVoteFor = async (
     onAccount: createOnAccountObject(userAddress),
   });
   await mobileContractInterract({ redirectUrl, result });
-  toast.success('Proposal voted for successfully!');
+  // toast.success('Proposal voted for successfully!');
 };
 
 const voteAgainst = async (proposalId: number, daoContractAddress: string) => {
@@ -266,7 +266,7 @@ export const mobileVoteAgainst = async (
     onAccount: createOnAccountObject(userAddress),
   });
   await mobileContractInterract({ redirectUrl, result });
-  toast.success('Proposal voted against successfully!');
+  // toast.success('Proposal voted against successfully!');
 };
 
 export {
