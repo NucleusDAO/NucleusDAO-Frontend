@@ -82,7 +82,7 @@ export default function Home() {
 
       <section
         className={cn(
-          'bg-cover bg-no-repeat w-full p-12 lg:p-24 space-y-4 lg:space-y-8',
+          'bg-cover bg-no-repeat w-full p-12 lg:p-24 space-y-4 lg:space-y-8 flex justify-center',
           screenWidth ? 'min-h-[40vh]' : 'min-h-fit lg:min-h-[160vh]'
         )}
         style={{
@@ -90,20 +90,25 @@ export default function Home() {
         }}
         id="about"
       >
-        <div
-          className="border border-[#5E5F62B9] mx-auto lg:mx-0 text-sm bg-gradient-to-r from-[#44444433] to-[#65656533] px-6 py-2 rounded-[20px] w-fit text-[#9050E9]"
-          role="heading"
-        >
-          <h2>About NucleusDAO</h2>
-        </div>
-        <div className="w-full lg:w-[65%] space-y-2 pb-4">
-          <Heading title="Discover NucleusDAO: Revolutionizing Decentralized Governance" />
-          <p className="font-light lg:text-normal text-center lg:text-left text-sm">
-            NucleusDAO embraces true autonomy by empowering communities to
-            create DAOs with unparalleled transparency, user-centric design, and
-            fair decision-making. We prioritize seamless participation and
-            collaboration, ensuring every voice matters in shaping the future.
-          </p>
+        <div className="space-y-8 mx-auto w-[65%]">
+          <div
+            className="border border-[#5E5F62B9] text-center mx-auto text-sm bg-gradient-to-r from-[#44444433] to-[#65656533] px-6 py-2 rounded-[20px] w-fit text-[#9050E9]"
+            role="heading"
+          >
+            <h2>About NucleusDAO</h2>
+          </div>
+          <div className=" space-y-2 pb-4">
+            <Heading
+              title="Discover NucleusDAO: Revolutionizing Decentralized Governance"
+              className="lg:text-center"
+            />
+            <p className="font-light lg:text-normal text-center text-sm">
+              NucleusDAO embraces true autonomy by empowering communities to
+              create DAOs with unparalleled transparency, user-centric design,
+              and fair decision-making. We prioritize seamless participation and
+              collaboration, ensuring every voice matters in shaping the future.
+            </p>
+          </div>
         </div>
 
         {/* <div className="border border-[#656565] py-8 px-6 lg:px-14 rounded-[20px] bg-gradient-to-r from-[#1E1E1E33] to-[#19191933] lg:flex-row flex-col-reverse flex justify-between items-center">

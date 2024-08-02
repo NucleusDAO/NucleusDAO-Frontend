@@ -1,15 +1,12 @@
 import { HOME_URL } from '@/config/path';
 import Link from 'next/link';
-import {
-  BrandLogo,
-  FacebookIcon,
-  InstagramIcon,
-  TwitterIcon,
-} from '@/assets/svgs';
+import { BrandLogo, TwitterIcon } from '@/assets/svgs';
 import Image from 'next/image';
 import LogoIcon from '@/assets/icons/nucleusdao-purple.svg';
 import { navLinks } from '@/config/home-config';
 import { Separator } from './ui/separator';
+import TelegramLogo from '@/assets/icons/telegram-icon.png';
+import MediumLogo from '@/assets/icons/medium-logo.png';
 
 const Footer = () => {
   return (
@@ -32,11 +29,25 @@ const Footer = () => {
             </Link>
           ))}
         </div>
-        <div className="space-x-4 flex items-center">
-          <FacebookIcon />
-          <InstagramIcon />
+        <div className="space-x-3 flex items-center">
           <Link href="https://twitter.com/NucleusDAO" target="_blank">
             <TwitterIcon />
+          </Link>
+          <Link href="https://t.me/nucleusdao" target="_blank">
+            <Image
+              src={TelegramLogo}
+              alt="Telegram logo"
+              width={24}
+              role="button"
+            />
+          </Link>
+          <Link href="https://medium.com/@NucleusDAO" target="_blank">
+            <Image
+              src={MediumLogo}
+              alt="Medium logo"
+              width={36}
+              role="button"
+            />
           </Link>
         </div>
       </div>
