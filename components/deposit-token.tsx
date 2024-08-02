@@ -4,57 +4,100 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import React, { useContext, useState } from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
-import { cn } from '@/libs/utils';
+import { cn, isMobile } from '@/libs/utils';
 import { ApiContext } from '@/context/api-context';
 import { rate } from '@/config/dao-config';
-import { AppContext } from '@/context/app-context';
 import { toast } from 'sonner';
 import { EachDaoContext } from '@/context/each-dao-context';
 import Lottie from 'react-lottie';
 import { defaultSuccessOption } from './animation-options';
+import { formatAmount, AE_AMOUNT_FORMATS } from '@aeternity/aepp-sdk';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { deposit, mobileDeposit } from '@/libs/contract-call';
+import {
+  BALANCE_HISTORY,
+  DAOS_KEY,
+  EACH_DAO_KEY,
+  EACH_PROPOSAL_INFO,
+  MEMBER_HISTORY,
+  PROPOSAL_HISTORY,
+  USER_ACTIVITIES_KEY,
+} from '@/libs/key';
+import { isSafariBrowser } from '@/libs/ae-utils';
+import { ConnectWalletContext } from '@/context/connect-wallet-context';
+import { IConnectWalletContext } from '@/libs/types';
 
 const DepositToken = () => {
+  const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
+  const { address } = user;
+  const queryClient: any = useQueryClient();
   const [open, setOpen] = useState<boolean>(false);
   const [aeValue, setAeValue] = useState<number | string>(0);
   const [usdValue, setUsdValue] = useState<number | string>(0);
   const [termsChecked, setTermsChecked] = useState<boolean>(false);
-  const [isDepositing, setIsDepositing] = useState<boolean>(false);
   const [isDeposited, setIsDeposited] = useState<boolean>(true);
   const { getAEPrice } = useContext(ApiContext);
-  const { deposit } = useContext(AppContext);
+  const [pending, setPending] = useState<boolean>(false);
+
   const { currentDAO } = useContext(EachDaoContext);
 
   const isError = Number.isNaN(usdValue) || Number.isNaN(aeValue);
+  const amount: string = formatAmount(aeValue, {
+    denomination: AE_AMOUNT_FORMATS.AE,
+  });
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: () => deposit(currentDAO?.contractAddress, amount),
+    onSuccess: () => {
+      queryClient.invalidateQueries(DAOS_KEY);
+      queryClient.invalidateQueries(EACH_DAO_KEY);
+      queryClient.invalidateQueries(EACH_PROPOSAL_INFO);
+      queryClient.invalidateQueries(USER_ACTIVITIES_KEY);
+      queryClient.invalidateQueries(BALANCE_HISTORY);
+      queryClient.invalidateQueries(PROPOSAL_HISTORY);
+      queryClient.invalidateQueries(MEMBER_HISTORY);
+      setOpen(true);
+      setIsDeposited(true);
+    },
+    onError: (error: any) => toast.error(error.message),
+  });
 
   const handleDeposit = async () => {
-    setIsDepositing(true);
-    setIsDeposited(false);
-    try {
-      const res = await deposit(currentDAO.contractAddress, aeValue);
-      setAeValue(0);
-      setUsdValue(0);
-    } catch (error: any) {
-      toast.error(error.message);
-    } finally {
-      setIsDepositing(false);
-      setIsDeposited(true);
+    if (isMobile() || isSafariBrowser()) {
+      setPending(true);
+      try {
+        await mobileDeposit(
+          { daoContractAddress: currentDAO?.contractAddress, amount },
+          address
+        );
+      } catch (error: any) {
+        toast.error(error.message);
+      } finally {
+        setPending(false);
+      }
+    } else {
+      mutate();
     }
   };
 
   return (
     <Dialog onOpenChange={setOpen} open={open}>
-      <DialogTrigger asChild onClick={() => setIsDeposited(false)}>
-        <Button>Deposit Token</Button>
-      </DialogTrigger>
+      <Button
+        onClick={() => {
+          setOpen(true);
+          setIsDeposited(false);
+        }}
+      >
+        Deposit Token
+      </Button>
       <DialogContent className="">
         <DialogHeader>
-          <DialogTitle className="text-[#292929] dark:text-white font-medium py-2">
+          <DialogTitle className="text-[#292929] dark:text-white font-medium py-2 text-left">
             Deposit Funds
           </DialogTitle>
           <DialogDescription className="font-light space-y-3">
@@ -68,7 +111,7 @@ const DepositToken = () => {
                 <p className="font-medium dark:text-white pb-2 -mt-2 text-xl text-dark">
                   Fund Deposit Success
                 </p>
-                <p>
+                <p className="px-8">
                   Congratulations! You have successfully deposited a sum of{' '}
                   {aeValue} AE to {currentDAO.name}
                 </p>
@@ -85,9 +128,9 @@ const DepositToken = () => {
             )}
             {!isDeposited && (
               <React.Fragment>
-                <p>Kindly input the amount below.</p>
+                <p className="text-left">Kindly input the amount below.</p>
                 <div className="space-y-4">
-                  <p className="text-white">Token</p>
+                  <p className="text-white text-left">Token</p>
                   <div
                     className={cn(
                       'border border-[#292929] rounded-lg p-2 flex justify-between trans',
@@ -98,8 +141,9 @@ const DepositToken = () => {
                       <Input
                         placeholder="0.00"
                         className="pr-10"
-                        defaultValue={parseFloat(aeValue.toString()).toFixed(2)}
-                        value={parseFloat(aeValue.toString()).toFixed(2)}
+                        type="number"
+                        defaultValue={parseFloat(aeValue.toString())}
+                        value={parseFloat(aeValue.toString())}
                         onChange={({ target }) => {
                           setAeValue(target.value);
                           setUsdValue(
@@ -114,11 +158,12 @@ const DepositToken = () => {
                     <div className="relative w-[40%]">
                       <Input
                         placeholder="0.00"
-                        className=""
+                        className="pr-14"
                         defaultValue={parseFloat(usdValue.toString()).toFixed(
                           2
                         )}
-                        value={parseFloat(usdValue.toString()).toFixed(2)}
+                        type="number"
+                        value={parseFloat(usdValue.toString())}
                         onChange={({ target }) => {
                           setAeValue(
                             Number(target.value) / (getAEPrice?.price || rate)
@@ -141,7 +186,7 @@ const DepositToken = () => {
                     />
                     <label
                       htmlFor="terms"
-                      className="text-sm font-light leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      className="text-sm font-light leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-left"
                     >
                       By clicking, I agree to sign the{' '}
                       <span className="text-primary underline underline-offset-2">
@@ -152,9 +197,15 @@ const DepositToken = () => {
                   </div>
                   <Button
                     className="w-full"
-                    disabled={!termsChecked || Number(aeValue) <= 0 || isError}
+                    disabled={
+                      !termsChecked ||
+                      Number(aeValue) <= 0 ||
+                      isError ||
+                      isPending ||
+                      pending
+                    }
                     onClick={handleDeposit}
-                    loading={isDepositing}
+                    loading={isPending || pending}
                     loadingText="Depositing..."
                   >{`Deposit ${Number(aeValue).toFixed(2)} AE`}</Button>
                 </div>

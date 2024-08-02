@@ -1,4 +1,5 @@
-import { ReactNode } from 'react';
+import { AeSdkMethods } from '@aeternity/aepp-sdk';
+import { Dispatch, ReactNode, SetStateAction } from 'react';
 
 export type WalletInfo = {
   name: string;
@@ -37,6 +38,7 @@ export type ConnectWalletParams = {
     info: WalletInfo;
     getConnection?: () => Promise<any> | any; // Adjust any to the actual return type of getConnection
   };
+  aeSdk: any;
 };
 
 export type HandleWalletFunction = (wallets: { [key: string]: any }) => void;
@@ -48,10 +50,11 @@ export type WalletScanningParams = {
 };
 
 export interface IConnectWalletContext {
-  handleConnectWallet?: () => void;
+  handleSearchWallet?: () => void;
   user: { address: string; isConnected: boolean };
   isConnecting: boolean;
   handleDisconnect?: () => void;
+  aeSdk: AeSdkMethods | null;
 }
 
 export interface IApiContext {
@@ -105,6 +108,7 @@ export interface IProposal {
   proposalType: string;
   description: string;
   daoId: string;
+  proposer: string;
   value: number;
   target: string;
   startTime: number;
@@ -159,16 +163,26 @@ export type ICreateUser = {
 
 export interface IEachProposalView {
   tabs: string[];
-  setCurrentProposal: (arg: IProposal[]) => void;
+  // setCurrentProposal: (arg: IProposal[]) => void;
   currentProposal: {
     wallet: string;
+    target: string;
+    value: number;
     proposalType: string;
+    daoName: string;
+    quorum: number;
     description: string;
     votes: { account: string; support: boolean }[];
     type: string;
+    info: {
+      image: string;
+      name: string;
+      socials: { name: string; url: string }[];
+    };
     status: string;
     totalVote: string;
     id: string;
+    currentMembers: number;
     duration: string;
     startTime: number;
     endTime: number;
@@ -176,4 +190,51 @@ export interface IEachProposalView {
     votesFor: number;
     votesAgainst: number;
   };
+}
+
+export interface ICreateDAOS {
+  name: string;
+  id: string;
+  description: string;
+  image: string;
+  socials: string[];
+  initialMembers: string[];
+  startingBalance: number;
+  votingTime: number;
+  quorum: number;
+}
+
+export interface ICreateProposal {
+  daoContractAddress: string;
+  proposalType: string;
+  description: string;
+  value: number;
+  target: string;
+  info: {
+    name: string;
+    socials: { name: string; url: string }[];
+    image: string;
+  };
+}
+
+type SetPendingType = Dispatch<SetStateAction<boolean>>;
+
+// Define the type for action function
+type ActionType = (payload: any, address: string) => Promise<void>;
+
+// Define the type for mutate function
+type MutateType = (payload: any) => void;
+
+// Define the interface for the function parameters
+export interface IExecuteAction {
+  setPending: SetPendingType;
+  action: ActionType;
+  payload: any;
+  address: string;
+  mutate: MutateType;
+}
+
+export interface IMobileDeposit {
+  daoContractAddress: string;
+  amount: string;
 }

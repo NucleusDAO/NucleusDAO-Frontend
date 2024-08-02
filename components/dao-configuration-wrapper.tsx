@@ -1,6 +1,6 @@
 import { Info } from 'lucide-react';
 import { Button } from './ui/button';
-import { ReactNode, useContext } from 'react';
+import { ReactNode, useContext, useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -9,12 +9,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import Link from 'next/link';
 import { CREATE_PROPOSAL_URL } from '@/config/path';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { IConnectWalletContext } from '@/libs/types';
-import { usePathname, useSearchParams } from 'next/navigation';
-import { removeExistingStorageItem } from '@/libs/utils';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { removeExistingStorageItem, wait } from '@/libs/utils';
 import { EachDaoContext } from '@/context/each-dao-context';
 
 interface IDaoConfigurationWrapper {
@@ -22,16 +21,27 @@ interface IDaoConfigurationWrapper {
 }
 
 const DaoConfigurationWrapper = ({ children }: IDaoConfigurationWrapper) => {
-  const { isMember } = useContext(EachDaoContext);
-  const pathname = usePathname();
+  const router = useRouter();
+  const [isPending, setIsPending] = useState<boolean>(false);
+  const { isMember, currentDAO } = useContext(EachDaoContext);
   const searchParams = useSearchParams();
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { isConnected } = user;
   const currentPage = searchParams.get('q');
-  const urlParts = pathname.split('/'); // Split the URL by "/"
-  const daoId = urlParts[2];
+  const [open, setOpen] = useState(false);
 
-  console.log(isMember, 'isMember');
+  const handlePropose = () => {
+    setIsPending(true);
+    wait().then(() => {
+      removeExistingStorageItem('new_proposal');
+      router.push(
+        `${CREATE_PROPOSAL_URL}?enums=${
+          currentPage === 'Profile' ? '5' : '7'
+        }&ct=${currentDAO.id}`
+      );
+      setIsPending(false);
+    });
+  };
 
   return (
     <div className="space-y-5">
@@ -39,9 +49,16 @@ const DaoConfigurationWrapper = ({ children }: IDaoConfigurationWrapper) => {
         <h2 className="text-dark dark:text-white text-xl font-medium">
           Profile
         </h2>
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
-            {isConnected && <>{isMember && <Button>Edit Settings</Button>}</>}
+            {isConnected && (
+              <>
+                {' '}
+                {isMember && (
+                  <Button onClick={() => setOpen(true)}>Edit Settings</Button>
+                )}
+              </>
+            )}
           </DialogTrigger>
           <DialogContent className="">
             <DialogHeader>
@@ -54,14 +71,14 @@ const DaoConfigurationWrapper = ({ children }: IDaoConfigurationWrapper) => {
               </DialogDescription>
             </DialogHeader>
 
-            <Link
-              href={`${CREATE_PROPOSAL_URL}?enums=${
-                currentPage === 'Profile' ? '5' : '7'
-              }&ct=${daoId}`}
-              onClick={() => removeExistingStorageItem('new_proposal')}
+            <Button
+              className="w-full"
+              onClick={handlePropose}
+              loading={isPending}
+              loadingText="Please wait..."
             >
-              <Button className="w-full">Propose</Button>
-            </Link>
+              Propose
+            </Button>
           </DialogContent>
         </Dialog>
       </div>

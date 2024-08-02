@@ -11,33 +11,42 @@ import {
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
-import {
-  IConnectWalletContext,
-  IEachProposalView,
-  IProposal,
-} from '@/libs/types';
+import { IConnectWalletContext } from '@/libs/types';
 import { toast } from 'sonner';
 import Lottie from 'react-lottie';
 import { defaultSuccessOption } from '../animation-options';
-import { AppContext } from '@/context/app-context';
 import { EachDaoContext } from '@/context/each-dao-context';
-import { cn, getStatus } from '@/libs/utils';
+import { cn, getStatus, isMobile } from '@/libs/utils';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  DAOS_KEY,
+  EACH_DAO_KEY,
+  EACH_DAO_PROPOSAL,
+  EACH_PROPOSAL_INFO,
+  MEMBER_ACTIVIES,
+  PROPOSAL_KEY,
+  USER_ACTIVITIES_KEY,
+} from '@/libs/key';
+import {
+  mobileVoteAgainst,
+  mobileVoteFor,
+  voteAgainst,
+  voteFor,
+} from '@/libs/contract-call';
+import { isSafariBrowser } from '@/libs/ae-utils';
 
 interface IVotingProcess {
   currentProposal: {
     id: string;
     votes: { account: string; support: boolean }[];
   };
-  setCurrentProposal: (arg: IProposal[]) => void;
 }
 
-const VotingProcess = ({
-  currentProposal,
-  setCurrentProposal,
-}: IVotingProcess) => {
+const VotingProcess = ({ currentProposal }: IVotingProcess) => {
+  const queryClient: any = useQueryClient();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { voteFor, voteAgainst, getActivities, setUpdate } =
-    useContext(AppContext);
+  const [pending, setPending] = useState<boolean>(false);
+
   const { currentDAO } = useContext(EachDaoContext);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { isConnected, address } = user;
@@ -56,10 +65,6 @@ const VotingProcess = ({
     useState<string>(defaultSelection);
   const [showModal, setShowModal] = useState<boolean>(false);
   const hasVoted: boolean = !!userVote?.account;
-  const [isVoting, setIsVoting] = useState<boolean>(false);
-  const [eachProposal, setEachProposal] = useState<IEachProposalView | any>(
-    null
-  );
 
   const votingOptions = ['yes', 'no'];
   const isDisabled: boolean =
@@ -77,54 +82,51 @@ const VotingProcess = ({
     }
   };
 
+  const invalidateAllQueries = () => {
+    queryClient.invalidateQueries(DAOS_KEY);
+    queryClient.invalidateQueries(PROPOSAL_KEY);
+    queryClient.invalidateQueries(USER_ACTIVITIES_KEY);
+    queryClient.invalidateQueries(EACH_DAO_KEY);
+    queryClient.invalidateQueries(EACH_DAO_PROPOSAL);
+    queryClient.invalidateQueries(EACH_PROPOSAL_INFO);
+    queryClient.invalidateQueries(MEMBER_ACTIVIES);
+  };
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: () =>
+      selectedOption === 'yes'
+        ? voteFor(Number(currentProposal.id), currentDAO?.contractAddress)
+        : voteAgainst(Number(currentProposal.id), currentDAO?.contractAddress),
+    onSuccess: () => {
+      invalidateAllQueries();
+      setShowModal(true);
+    },
+    onError: (error: any) => toast.error(error.message),
+  });
+
   const handleVote = async () => {
-    if (isDisabled) {
-      null;
-    } else {
-      setIsVoting(true);
+    if (isMobile() || isSafariBrowser()) {
+      const id = Number(currentProposal.id);
+      const address = currentDAO?.contractAddress;
+      const userAddress = user.address;
+      setPending(true);
       try {
-        if (selectedOption === 'yes') {
-          const proposal = await voteFor(
-            Number(currentProposal.id),
-            currentDAO.contractAddress
-          );
-          await setShowModal(true);
-          setEachProposal(proposal);
-        } else {
-          const proposal = await voteAgainst(
-            Number(currentProposal.id),
-            currentDAO.contractAddress
-          );
-          await setShowModal(true);
-          setEachProposal(proposal);
-        }
+        selectedOption === 'yes'
+          ? await mobileVoteFor(id, address, userAddress)
+          : await mobileVoteAgainst(id, address, userAddress);
       } catch (error: any) {
         toast.error(error.message);
       } finally {
-        setIsVoting(false);
+        setPending(false);
       }
+    } else {
+      mutate();
     }
   };
 
-  console.log(eachProposal, '-> eachProposal');
-
   const handleDone = async () => {
-    setIsLoading(true);
-    try {
-      // await getActivities(address)
-      // fetchAllProposals();
-      // fetchDAOs();
-      setUpdate(true);
-      // await getActivities(address);
-      setCurrentProposal({ ...eachProposal, id: Number(eachProposal.id) });
-      setShowModal(false);
-      setIsLoading(false);
-    } catch (error: any) {
-      console.log(error, '-> erros');
-      toast.error(error.message);
-    } finally {
-      setIsLoading(false);
-    }
+    setShowModal(false);
+    setIsLoading(false);
   };
 
   return (
@@ -171,9 +173,11 @@ const VotingProcess = ({
           <Dialog onOpenChange={setShowModal} open={showModal}>
             <Button
               className="w-full"
-              disabled={!selectedOption || isDisabled}
-              onClick={handleVote}
-              loading={isVoting}
+              disabled={!selectedOption || isDisabled || isDisabled}
+              onClick={() => {
+                !selectedOption || isDisabled ? null : handleVote();
+              }}
+              loading={isPending || pending}
               loadingText="Voting..."
             >
               Vote

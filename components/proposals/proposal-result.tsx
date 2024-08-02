@@ -7,14 +7,26 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { formatDate, getTimeDifference, updateGetProposal } from '@/libs/utils';
+import { cn, formatDate, getStatus, isMobile } from '@/libs/utils';
 import { EachDaoContext } from '@/context/each-dao-context';
 import React, { useContext, useState } from 'react';
 import { Button } from '../ui/button';
-import { AppContext } from '@/context/app-context';
 import { toast } from 'sonner';
-import { updateProposalEP } from '@/config/apis';
-import { usePathname } from 'next/navigation';
+import { IConnectWalletContext } from '@/libs/types';
+import { ConnectWalletContext } from '@/context/connect-wallet-context';
+import { useMediaQuery } from '@/hooks/use-media-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { executeMobileProposal, executeProposal } from '@/libs/contract-call';
+import {
+  DAOS_KEY,
+  EACH_DAO_KEY,
+  EACH_DAO_PROPOSAL,
+  EACH_PROPOSAL_INFO,
+  MEMBER_ACTIVIES,
+  PROPOSAL_KEY,
+  USER_ACTIVITIES_KEY,
+} from '@/libs/key';
+import { isSafariBrowser } from '@/libs/ae-utils';
 
 interface IProposalResult {
   currentProposal: {
@@ -26,85 +38,83 @@ interface IProposalResult {
     votesAgainst: number;
     totalVote: string;
     id: string;
+    currentMembers: number;
     status: string;
+    quorum: number;
   };
+  countdownTime: string;
 }
 
-const ProposalResult = ({ currentProposal }: IProposalResult) => {
-  const [isExecuting, setIsExecuting] = useState<boolean>(false);
-  const {
-    duration,
-    startTime,
-    endTime,
-    votesFor,
-    votesAgainst,
-    votes,
-    totalVote,
-  } = currentProposal;
-  const { getEachDAO, getProposals, executeProposal, getUsersActivities } =
-    useContext(AppContext);
-  const {
-    currentDAO,
-    setCurrentDAO,
-    setEachDAOProposal,
-    setMembersActivities,
-  } = useContext(EachDaoContext);
-  const percentageOfVoteFor =
-    votes.length > 0 ? (Number(votesFor) / votes.length) * 100 : 0;
-  const percentageOfVoteAgainst =
-    votes.length > 0 ? (Number(votesAgainst) / votes.length) * 100 : 0;
+const ProposalResult = ({
+  currentProposal,
+  countdownTime,
+}: IProposalResult) => {
+  const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
+  const [pending, setPending] = useState<boolean>(false);
+  const queryClient: any = useQueryClient();
+  const isDesktop = useMediaQuery('(min-width: 768px)');
+  const { startTime, endTime, votesFor, votesAgainst, votes } = currentProposal;
+  const { currentDAO, isMember } = useContext(EachDaoContext);
+  const percentageOfVoteFor: number =
+    votes.length > 0
+      ? (Number(votesFor) / Number(currentProposal.currentMembers)) * 100
+      : 0;
+  const percentageOfVoteAgainst: number =
+    votes.length > 0
+      ? (Number(votesAgainst) / Number(currentProposal.currentMembers)) * 100
+      : 0;
 
-  const pathname = usePathname();
-  const urlParts = pathname.split('/');
-  const proposalId = urlParts[urlParts.length - 1];
-
-  console.log(votes.length, '->');
+  const { mutate, isPending } = useMutation({
+    mutationFn: () =>
+      executeProposal(Number(currentProposal.id), currentDAO?.contractAddress),
+    onSuccess: () => {
+      queryClient.invalidateQueries(DAOS_KEY);
+      queryClient.invalidateQueries(PROPOSAL_KEY);
+      queryClient.invalidateQueries(USER_ACTIVITIES_KEY);
+      queryClient.invalidateQueries(EACH_DAO_KEY);
+      queryClient.invalidateQueries(EACH_DAO_PROPOSAL);
+      queryClient.invalidateQueries(EACH_PROPOSAL_INFO);
+      queryClient.invalidateQueries(MEMBER_ACTIVIES);
+      toast.success('Proposal executed successfully');
+    },
+    onError: (error: any) => toast.error(error.message),
+  });
 
   const handleExecuteProposal = async () => {
-    setIsExecuting(true);
-    try {
-      const proposal = await executeProposal(
-        Number(currentProposal.id),
-        currentDAO.contractAddress
-      );
-      await updateGetProposal({
-        getEachDAO,
-        daoId: currentDAO.id,
-        setCurrentDAO,
-        getProposals,
-        setEachDAOProposal,
-        getUsersActivities,
-        setMembersActivities,
-        proposal,
-      });
-      for (let key in proposal) {
-        if (typeof proposal[key] == 'bigint') {
-          proposal[key] = Number(proposal[key]);
-        }
+    if (isMobile() || isSafariBrowser()) {
+      setPending(true);
+      try {
+        await executeMobileProposal(
+          Number(currentProposal.id),
+          currentDAO?.contractAddress,
+          user.address
+        );
+      } catch (error: any) {
+        toast.error(error.message);
+      } finally {
+        setPending(false);
       }
-      await updateProposalEP(
-        currentDAO.id,
-        Number(currentProposal.id),
-        proposal
-      );
-      toast.success('Proposal executed successfully');
-    } catch (error: any) {
-      toast.error(error.message);
-    } finally {
-      setIsExecuting(false);
+    } else {
+      mutate();
     }
   };
 
   return (
     <div className="space-y-6">
       <div className="rounded-lg dark:bg-[#191919] p-8 space-y-5 bg-white">
-        <div className="flex justify-between border-b dark:border-[#1E1E1E] pb-4 items-center border-[#CCCCCC99]">
+        <div
+          className={cn(
+            'flex justify-between border-b dark:border-[#1E1E1E] pb-4 items-center border-[#CCCCCC99]'
+          )}
+        >
           <h3 className="font-medium text-xl dark:text-white text-dark">
             Result
           </h3>
           <p className="text-sm font-light">
             Approved by:{' '}
-            <span className="dark:text-white text-dark font-medium">{`${percentageOfVoteFor}%`}</span>
+            <span className="dark:text-white text-dark font-medium">{`${percentageOfVoteFor.toFixed(
+              1
+            )}%`}</span>
           </p>
         </div>
         <div className="space-y-3">
@@ -112,7 +122,9 @@ const ProposalResult = ({ currentProposal }: IProposalResult) => {
             <p className="dark:text-white text-dark font-medium text-base">
               Yes
             </p>
-            <p className="text-defaultText font-light text-base">{`${percentageOfVoteFor}%`}</p>
+            <p className="text-defaultText font-light text-base">{`${percentageOfVoteFor.toFixed(
+              1
+            )}%`}</p>
           </div>
           <Slider
             defaultValue={[percentageOfVoteFor]}
@@ -125,7 +137,9 @@ const ProposalResult = ({ currentProposal }: IProposalResult) => {
         <div className="space-y-3">
           <div className="flex justify-between pt-4">
             <p className="text-white font-medium text-base">No</p>
-            <p className="text-defaultText font-light text-base">{`${percentageOfVoteAgainst}%`}</p>
+            <p className="text-defaultText font-light text-base">{`${percentageOfVoteAgainst.toFixed(
+              1
+            )}%`}</p>
           </div>
           <Slider
             defaultValue={[percentageOfVoteAgainst]}
@@ -135,34 +149,39 @@ const ProposalResult = ({ currentProposal }: IProposalResult) => {
             thumbClassName="hidden"
           />
         </div>
-        {currentProposal.status === 'Pending' && (
-          <React.Fragment>
-            {percentageOfVoteFor >= currentDAO.quorum && (
+        {isMember && (
+          <>
+            {getStatus(currentProposal) === 'Pending' && (
               <Button
                 className="w-full mt-1.5"
                 onClick={handleExecuteProposal}
-                loading={isExecuting}
+                loading={isPending || pending}
                 loadingText="Executing..."
               >
                 Excecute Proposal
               </Button>
             )}
-          </React.Fragment>
+          </>
         )}
       </div>
 
       <div className="rounded-lg dark:bg-[#191919] p-8 space-y-3 bg-white">
-        <div className="flex justify-between border-b dark:border-[#1E1E1E] pb-4 items-center border-[#CCCCCC99]">
+        <div
+          className={cn(
+            'flex justify-between border-b dark:border-[#1E1E1E] pb-4 items-center border-[#CCCCCC99]'
+            // isDesktop && 'block'
+          )}
+        >
           <h3 className="font-medium text-xl text-dark dark:text-white">
             Status
           </h3>
           <p className="text-sm font-light flex space-x-2">
             <span>
-              <Clock5 size={18} />
+              <Clock5 size={isDesktop ? 12 : 18} />
             </span>
             <span>Time left:</span>{' '}
             <span className="text-dark dark:text-white font-light">
-              {getTimeDifference(Number(endTime))}
+              {countdownTime}
             </span>
           </p>
         </div>
@@ -198,7 +217,7 @@ const ProposalResult = ({ currentProposal }: IProposalResult) => {
             </TooltipProvider>
           </div>
           <p className="font-light text-sm text-dark dark:text-white">{`${Number(
-            currentDAO.quorum
+            Number(currentProposal.quorum)
           )}%`}</p>
         </div>
       </div>

@@ -1,5 +1,4 @@
 'use client';
-import SearchInput from './ui/search-input';
 import { Button } from './ui/button';
 import { ModeToggle } from './themes/mode-toggle';
 import Image from 'next/image';
@@ -20,12 +19,12 @@ interface INavbar {
 }
 
 const Navbar = ({ handleShowNav, showNav }: INavbar) => {
-  const { handleConnectWallet, user, isConnecting } =
+  const { handleSearchWallet, user, isConnecting } =
     useContext<any>(ConnectWalletContext);
   const isDesktop = useMediaQuery('(min-width: 768px)');
   const connected: boolean = user.isConnected;
   return (
-    <nav className="flex dark:bg-foreground bg-light w-full md:w-[82%] py-4 px-4 md:px-8 justify-between items-center fixed z-[100] max-w-[1500px]">
+    <nav className="flex dark:bg-foreground bg-light w-full md:w-[82%] py-4 px-4 md:px-8 justify-between items-center fixed z-[100] max-w-[1620px]">
       <div className="relative w-[40%] hidden md:flex">
         {/* <SearchInput
           placeholder="Search anything here"
@@ -85,7 +84,7 @@ const Navbar = ({ handleShowNav, showNav }: INavbar) => {
         ) : (
           <div className="flex space-x-2 items-center">
             <Button
-              onClick={handleConnectWallet}
+              onClick={handleSearchWallet}
               loading={isConnecting}
               loadingText="Connecting..."
             >

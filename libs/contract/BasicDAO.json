@@ -103,7 +103,7 @@
           "arguments": [{ "name": "_proposalId", "type": "int" }],
           "name": "executeProposal",
           "payable": false,
-          "returns": { "tuple": [] },
+          "returns": "DAO.proposal",
           "stateful": true
         },
         {
@@ -130,6 +130,7 @@
           { "name": "totalProposals", "type": "int" },
           { "name": "totalVotes", "type": "int" },
           { "name": "members", "type": { "list": ["address"] } },
+          { "name": "createdAt", "type": "int" },
           {
             "name": "activities",
             "type": { "map": ["address", "DAO.userActivities"] }
@@ -156,6 +157,9 @@
               { "name": "votes", "type": { "list": ["DAO.vote"] } },
               { "name": "daoName", "type": "string" },
               { "name": "daoId", "type": "string" },
+              { "name": "daoImage", "type": "string" },
+              { "name": "currentMembers", "type": "int" },
+              { "name": "quorum", "type": "int" },
               { "name": "hasVoted", "type": { "map": ["address", "bool"] } }
             ]
           },
@@ -165,7 +169,7 @@
           "name": "userActivities",
           "typedef": {
             "record": [
-              { "name": "address", "type": "address" },
+              { "name": "account", "type": "address" },
               { "name": "voteCasted", "type": "int" },
               { "name": "proposalsCreated", "type": "int" },
               { "name": "proposalsExecuted", "type": "int" }
@@ -189,6 +193,8 @@
               { "name": "members", "type": { "list": ["address"] } },
               { "name": "totalProposals", "type": "int" },
               { "name": "totalVotes", "type": "int" },
+              { "name": "balance", "type": "int" },
+              { "name": "createdAt", "type": "int" },
               { "name": "activeProposals", "type": "int" }
             ]
           },

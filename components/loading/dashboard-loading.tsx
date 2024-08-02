@@ -2,7 +2,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 const DashboadLoading = () => {
   return (
-    <div className='space-y-8'>
+    <div className="space-y-8">
       <div className="flex items-center justify-between mb-8">
         <Skeleton className="w-[25%] h-11 dark:bg-[#1E1E1E] bg-[#F5F5F5]" />
         <Skeleton className="w-[130px] h-11 dark:bg-[#1E1E1E] bg-[#F5F5F5]" />
@@ -12,7 +12,7 @@ const DashboadLoading = () => {
           .fill(null)
           .map((_, index) => (
             <Skeleton
-              className="w-full h-40 dark:bg-[#1E1E1E] bg-[#F5F5F5]"
+              className="w-full h-20 dark:bg-[#1E1E1E] bg-[#F5F5F5]"
               key={`card-${index}`}
             />
           ))}

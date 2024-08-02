@@ -13,14 +13,14 @@ export const navLinks: { title: string; href: string }[] = [
     title: 'About',
     href: '/#about',
   },
-  // {
-  //   title: 'How it Works',
-  //   href: '/#howItWorks',
-  // },
-  // {
-  //   title: 'Features',
-  //   href: '/#features',
-  // },
+  {
+    title: 'How it Works',
+    href: '/#howItWorks',
+  },
+  {
+    title: 'Features',
+    href: '/#features',
+  },
   {
     title: 'Contact Us',
     href: '/#contactUs',

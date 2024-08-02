@@ -4,23 +4,18 @@ import Background from '@/assets/images/main-bg.png';
 import { Separator } from '@/components/ui/separator';
 import NotFoundComponent from '@/components/not-found-comp';
 import NavComp from '@/components/home-component/nav-comp';
-import { useState } from 'react';
 import { cn } from '@/libs/utils';
 
 export default function NotFound() {
-  const [open, setOpen] = useState<boolean>(false);
   return (
     <main
-      className={cn(
-        'bg-contain bg-no-repeat w-full h-screen flex flex-col',
-        open && 'fixed'
-      )}
+      className={cn('bg-contain bg-no-repeat w-full h-screen flex flex-col')}
       style={{
         background: 'round',
         backgroundImage: `url(${Background.src})`,
       }}
     >
-      <NavComp open={open} setOpen={setOpen} />
+      <NavComp />
       <NotFoundComponent />
 
       <div className="mt-auto px-6 lg:px-24 pb-4">

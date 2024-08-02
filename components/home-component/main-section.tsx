@@ -43,17 +43,17 @@ const MainSection = () => {
   }, []);
   // absolute bottom-0 lg:bottom-0 lg:top-0  opacity-10
   return (
-    <div className="mx-auto w-full lg:w-3/5 text-center space-y-4 lg:mt-14 pt-32 lg:pt-0 relative">
+    <div className="mx-auto w-full lg:w-[60%] text-center space-y-8 lg:mt-14 pt-32 lg:pt-20 relative">
       <div className="w-full min-h-[38px] space-y-4">
         <Heading
           // title={mainContent[contentIndex].title}
           title="Empowering Decentralised Governance"
           className={cn(
-            'px-6 lg:px-24 lg:text-[48px] lg:text-center',
+            'px-6 lg:px-24 text-[28px] lg:text-[48px] lg:text-center font-extrabold',
             contentIndex === 1 && 'px-6 lg:px-10'
           )}
         />
-        <h3 className="font-light text-sm lg:text-[18px] leading-[30px] px-6 lg:px-10">
+        <h3 className="font-light text-sm lg:text-[18px] leading-[30px] px-6 lg:px-20">
           {/* {mainContent[contentIndex].description} */}
           Build a customizable, transparent organization for your community with
           NucleusDAO on the æternity blockchain.
@@ -92,7 +92,7 @@ const MainSection = () => {
           {mainContent[contentIndex].description}
         </h3>
         <React.Fragment>
-          <div className="flex items-center space-x-8 justify-center relative pt-2 main-animate-fade-in-out">
+          <div className="flex items-center space-x-8 justify-center relative pt-2">
             <Link href={'#join'}>
               <Button className="px-6">{mainContent[contentIndex].cta}</Button>
             </Link>

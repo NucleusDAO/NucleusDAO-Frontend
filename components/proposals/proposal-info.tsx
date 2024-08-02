@@ -1,6 +1,6 @@
 import { LinkIcon } from '@/assets/svgs';
 import { EachDaoContext } from '@/context/each-dao-context';
-import { formatDate, getTimeDifference } from '@/libs/utils';
+import { formatDate } from '@/libs/utils';
 import { Clock5 } from 'lucide-react';
 import Link from 'next/link';
 import { useContext } from 'react';
@@ -16,12 +16,14 @@ interface IProposalInfo {
     id: string;
     status: string;
   };
+  countdownTime: string;
 }
 
-const ProposalInfo = ({ currentProposal }: IProposalInfo) => {
+const ProposalInfo = ({ currentProposal, countdownTime }: IProposalInfo) => {
   const { currentDAO } = useContext(EachDaoContext);
-  const { duration, startTime, endTime } = currentProposal;
+  const { startTime, endTime } = currentProposal;
   const domainName = typeof window !== 'undefined' && window.location.origin;
+
   return (
     <div className="rounded-lg dark:bg-[#191919] p-8 space-y-5 bg-white">
       <div className="flex justify-between border-b dark:border-[#1E1E1E] pb-4 items-center border-[#CCCCCC99]">
@@ -60,7 +62,7 @@ const ProposalInfo = ({ currentProposal }: IProposalInfo) => {
             </span>
             <span>Time left:</span>{' '}
             <span className="text-dark dark:text-white font-light">
-              {getTimeDifference(Number(endTime))}
+              {countdownTime}
             </span>
           </p>
         </div>
