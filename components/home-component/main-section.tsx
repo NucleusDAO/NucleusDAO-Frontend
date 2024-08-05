@@ -1,13 +1,12 @@
 'use client';
 import { PlayIcon } from '@/assets/svgs';
 import AEAnimation from '@/assets/animations/ae-animation';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { FlipWords } from '../ui/flip-words';
 import { Button } from '../ui/button';
 
 const MainSection = () => {
-  const [contentIndex, setContentIndex] = useState<number>(0);
   const words = ['Decentralized', 'Future-Driven', 'Potential'];
   const mainContent: { title: string; description: string; cta: string }[] = [
     {
@@ -31,40 +30,21 @@ const MainSection = () => {
     },
   ];
 
-  useEffect(() => {
-    // Set up an interval to change content every 5 seconds
-    const intervalId = setInterval(() => {
-      setContentIndex((prevIndex) => (prevIndex + 1) % mainContent.length);
-    }, 15000);
-
-    // Clear the interval on component unmount
-    return () => clearInterval(intervalId);
-  }, []);
-  // absolute bottom-0 lg:bottom-0 lg:top-0  opacity-10
   return (
     <div className="mx-auto w-full lg:w-[60%] text-center lg:space-y-8 lg:mt-14 pt-32 lg:pt-28 relative">
       <div className="w-full min-h-[38px] space-y-2">
-        {/* <Heading
-          // title={mainContent[contentIndex].title}
-          title="Empowering Decentralised Governance"
-          className={cn(
-            'px-6 lg:px-24 text-[28px] lg:text-[48px] lg:text-center font-bold',
-            contentIndex === 1 && 'px-6 lg:px-10'
-          )}
-        /> */}
-        <h1 className="px-6 lg:px-24 text-[28px] lg:text-[48px] lg:text-center font-bold text-white">
+        <h1 className="px-6 lg:px-24 text-[28px] lg:text-[48px] lg:text-center font-semibold text-white">
           Empowering
           <span>
             <FlipWords
               words={words}
-              className="text-[28px] lg:text-[48px] lg:text-center font-bold"
+              className="text-[28px] lg:text-[48px] lg:text-center font-semibold"
             />
           </span>
           <span>Governance</span>
         </h1>
 
         <h3 className="font-light text-sm lg:text-[18px] lg:leading-[30px] px-6 lg:px-20">
-          {/* {mainContent[contentIndex].description} */}
           Build a customizable, transparent organization for your community with
           NucleusDAO on the æternity blockchain.
         </h3>

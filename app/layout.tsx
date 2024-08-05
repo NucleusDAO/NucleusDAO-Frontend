@@ -58,7 +58,9 @@ export default function RootLayout({
         >
           <Suspense fallback={<Loading />}>
             <ConnectWalletProvider>
-              <TanstackProvider>{children}</TanstackProvider>
+              <TanstackProvider>
+                <div className="">{children}</div>
+              </TanstackProvider>
             </ConnectWalletProvider>
           </Suspense>
           <Sonner richColors duration={2000} />
