@@ -5,6 +5,7 @@ import AELogo from '@/assets/icons/ae-icon.png';
 import Image from 'next/image';
 import Link from 'next/link';
 import LogoIcon from '@/assets/icons/nucleusdao-purple.svg';
+import { Button } from '../ui/button';
 import React, { useState } from 'react';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import Menu from '@/assets/icons/hamburger.png';
@@ -17,7 +18,6 @@ import {
 } from '@/components/ui/sheet';
 
 import NavElement from './nav-elements';
-import { Button } from '../ui/button';
 
 const NavComp = () => {
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
@@ -44,6 +44,9 @@ const NavComp = () => {
           onClick={() => setOpenDrawer(true)}
           className="flex lg:hidden"
         />
+        {/* <button className="before:ease z-[999] relative h-12 w-40 overflow-hidden shadow-2xl before:absolute before:left-0 before:-ml-2 before:h-48 before:w-48 before:origin-top-right before:-translate-x-full before:translate-y-12 before:-rotate-90 before:bg-white bg-primary before:transition-all before:duration-300 hover:text-white hover:shadow-black hover:before:-rotate-180">
+          <span className="relative z-10">Slide hover</span>
+        </button> */}
         <Link href="#" className="lg:flex hidden z-[999]" target="_blank">
           <Button className="lg:w-fit w-full px-8">Join Now</Button>
         </Link>
