@@ -63,26 +63,29 @@ const ProposalCard = ({
         className="dark:bg-gradient-to-r dark:from-[#1E1E1E] dark:via-[#1E1E1E] dark:to-[#252525] rounded-lg cursor-pointer bg-white"
         role="tablist"
       >
-        <div className="flex rounded-l p-4 space-x-5 justify-between w-full">
+        <div className="flex rounded-l py-4 lg:p-4 space-x-5 justify-between w-full">
           <div className="w-[6%] lg:block hidden">
-            <Avatar className="w-8 h-6 rounded-sm">
-              <AvatarImage src={daoImage} className="rounded-sm" />
+            <Avatar className="w-8 h-8 rounded-sm mt-2">
+              <AvatarImage src={daoImage} className="rounded-sm object-cover" />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
 
             <div className="max-h-[300px] w-[1px] bg-[#292929]" />
           </div>
-          <div className="p-2 md:p-0 space-y-6 w-[92%]">
+          <div className="p-2 md:p-0 space-y-2 w-[92%]">
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <div className="space-y-7 w-[100%]">
-                  <div className="flex space-y-2 justify-between items-center w-full">
-                    <div className="space-y-2">
-                      <div className="flex space-x-2">
-                        <Avatar className="w-6 h-6 rounded-full lg:hidden block">
-                          <AvatarImage src={daoImage} className="rounded-sm" />
-                          <AvatarFallback>CN</AvatarFallback>
-                        </Avatar>
+                <div className="space-y-4 w-[100%]">
+                  <div className="flex space-y-2 justify-between items-center w-full space-x-4 lg:space-x-0">
+                    <Avatar className="w-8 h-8 rounded-full lg:hidden block">
+                      <AvatarImage
+                        src={daoImage}
+                        className="rounded-sm object-cover"
+                      />
+                      <AvatarFallback>CN</AvatarFallback>
+                    </Avatar>
+                    <div className="">
+                      <div className="block">
                         <p className="dark:text-white capitalize text-dark font-medium text-sm md:text-normal truncate text-ellipsis overflow-hidden">
                           {daoName}
                         </p>

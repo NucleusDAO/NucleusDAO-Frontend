@@ -106,13 +106,13 @@ const Layout = ({ children }: ILayout) => {
         <div className="space-y-8">
           <div className="space-y-6">
             <div className="lg:flex items-center justify-between">
-              <div className="flex space-x-4 items-center">
+              <div className="flex space-x-4 lg:items-center items-start">
                 <img
                   src={currentDAO?.image}
                   alt={currentDAO?.name}
                   className="rounded-lg object-cover h-[50px] w-[50px]"
                 />
-                <div className="space-y-4">
+                <div className="lg:space-y-1">
                   <h2 className="font-medium text-lg lg:text-2xl text-dark dark:text-white capitalize">
                     {currentDAO?.name}
                   </h2>
