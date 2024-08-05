@@ -7,6 +7,7 @@ import Loading from '@/components/loading';
 import { ThemeProvider } from '@/components/themes/theme.provider';
 import { Toaster as Sonner } from '@/components/ui/sonner';
 import TanstackProvider from '@/context/tanstack-provider';
+import 'aos/dist/aos.css';
 
 const rubik = Rubik({ subsets: ['latin'] });
 

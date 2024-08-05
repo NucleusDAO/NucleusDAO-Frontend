@@ -1,9 +1,9 @@
-import { Heading } from '../headings/heading';
+import { Heading } from '../../nucleusdao-frontend/components/headings/heading';
 import WhyAEBg from '@/assets/images/why-ae-bg.png';
 import WhyAEBg2 from '@/assets/images/why-ae-2-bg.png';
 import WhyAEBg3 from '@/assets/images/why-ae-3-bg.png';
 import WhyAEBg4 from '@/assets/images/why-ae-4-bg.png';
-import { Button } from '../ui/button';
+import { Button } from '../../nucleusdao-frontend/components/ui/button';
 import Link from 'next/link';
 import { DAO_URL } from '@/config/path';
 
@@ -17,13 +17,14 @@ const WhyAeternity = () => {
           backgroundImage: `url(${WhyAEBg.src})`,
           backgroundSize: '100%',
         }}
+        data-aos="zoom-out-down"
       >
         <Heading title="Why Æternity Blockchain?" />
         <p className="lg:text-normal text-sm">
           Advanced Blockchain Technology.
         </p>
         <Button className="px-6 lg:px-10">
-          <Link href={DAO_URL}>Launch your DAO</Link>
+          <Link href={'/#join'}>Launch your DAO</Link>
         </Button>
       </div>
       <div className="w-full lg:w-[60%] space-y-4">
@@ -35,6 +36,7 @@ const WhyAeternity = () => {
               backgroundImage: `url(${WhyAEBg2.src})`,
               backgroundSize: '100%',
             }}
+            data-aos="zoom-out-down"
           >
             <p className="lg:text-[18px] text-white px-8 pb-7">
               Robust Security & User Friendly Open Source
@@ -47,6 +49,7 @@ const WhyAeternity = () => {
               backgroundImage: `url(${WhyAEBg3.src})`,
               backgroundSize: '100%',
             }}
+            data-aos="zoom-out-down"
           >
             <p className="lg:text-[18px] text-white px-12 pb-7">
               Efficient & Low Transaction Fees
@@ -60,6 +63,7 @@ const WhyAeternity = () => {
             backgroundImage: `url(${WhyAEBg4.src})`,
             backgroundSize: '100%',
           }}
+          data-aos="zoom-out-down"
         >
           <p className="text-white lg:text-[24px] pl-8 w-1/2" id="join">
             Decentralized Scalability & Transparent Governance
