@@ -1,11 +1,11 @@
-import { Heading } from '../../nucleusdao-frontend/components/headings/heading';
 import WhyAEBg from '@/assets/images/why-ae-bg.png';
 import WhyAEBg2 from '@/assets/images/why-ae-2-bg.png';
 import WhyAEBg3 from '@/assets/images/why-ae-3-bg.png';
 import WhyAEBg4 from '@/assets/images/why-ae-4-bg.png';
-import { Button } from '../../nucleusdao-frontend/components/ui/button';
 import Link from 'next/link';
 import { DAO_URL } from '@/config/path';
+import { Button } from '../ui/button';
+import { Heading } from '../headings/heading';
 
 const WhyAeternity = () => {
   return (
