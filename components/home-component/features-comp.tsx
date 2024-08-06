@@ -29,6 +29,7 @@ const FeaturesComp = () => {
               bottom: each.bottom || '',
             }}
             onMouseEnter={() => handleMosueEnter(index)}
+            data-aos="zoom-out-down"
           >
             <FeaturesIcon />
             <div className="space-y-1">
@@ -44,6 +45,7 @@ const FeaturesComp = () => {
           src={contentChain[currentIndex].chain}
           alt="Proposal creation chain"
           className="w-[90%] mx-auto lg:mt-24 trans"
+          data-aos="zoom-out-down"
         />
       </div>
       <div
@@ -51,6 +53,7 @@ const FeaturesComp = () => {
           backgroundImage: `url(${content[currentIndex].background.src})`,
         }}
         className="w-[350px] mx-auto lg:h-[400px] h-[300px] bg-contain bg-no-repeat relative mt-2 trans"
+        data-aos="zoom-out-down"
       >
         <div className="absolute bottom-20 px-6 space-y-2">
           {content[currentIndex].heading && (

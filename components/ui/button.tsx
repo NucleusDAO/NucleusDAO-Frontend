@@ -10,7 +10,8 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-primary text-white hover:bg-primary/90 font-light',
+        default:
+          'text-white font-light before:ease relative overflow-hidden bg-primary text-white shadow-2xl transition-all before:absolute before:right-0 before:top-0 before:h-12 before:w-6 before:translate-x-12 before:rotate-6 before:bg-white before:opacity-10 before:duration-700 hover:shadow-primary/50 hover:before:-translate-x-4',
         destructive:
           'bg-destructive text-destructive-foreground hover:bg-destructive/90',
         outline:
@@ -43,16 +44,28 @@ export interface ButtonProps
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, loading, loadingText, asChild = false, ...props }, ref) => {
+  (
+    {
+      className,
+      variant,
+      size,
+      loading,
+      loadingText,
+      asChild = false,
+      ...props
+    },
+    ref
+  ) => {
     const Comp = asChild ? Slot : 'button';
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
+        disabled={loading}
         ref={ref}
         {...props}
       >
         {loading ? (
-          <div className='flex items-center'>
+          <div className="flex items-center">
             <Loader className="mr-2 h-4 w-4 animate-spin" />
             {loadingText}
           </div>

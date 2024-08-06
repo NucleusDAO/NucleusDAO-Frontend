@@ -1,11 +1,11 @@
-import { Heading } from '../headings/heading';
 import WhyAEBg from '@/assets/images/why-ae-bg.png';
 import WhyAEBg2 from '@/assets/images/why-ae-2-bg.png';
 import WhyAEBg3 from '@/assets/images/why-ae-3-bg.png';
 import WhyAEBg4 from '@/assets/images/why-ae-4-bg.png';
-import { Button } from '../ui/button';
 import Link from 'next/link';
 import { DAO_URL } from '@/config/path';
+import { Button } from '../ui/button';
+import { Heading } from '../headings/heading';
 
 const WhyAeternity = () => {
   return (
@@ -17,6 +17,7 @@ const WhyAeternity = () => {
           backgroundImage: `url(${WhyAEBg.src})`,
           backgroundSize: '100%',
         }}
+        data-aos="zoom-out-down"
       >
         <Heading title="Why Æternity Blockchain?" />
         <p className="lg:text-normal text-sm">
@@ -35,6 +36,7 @@ const WhyAeternity = () => {
               backgroundImage: `url(${WhyAEBg2.src})`,
               backgroundSize: '100%',
             }}
+            data-aos="zoom-out-down"
           >
             <p className="lg:text-[18px] text-white px-8 pb-7">
               Robust Security & User Friendly Open Source
@@ -47,6 +49,7 @@ const WhyAeternity = () => {
               backgroundImage: `url(${WhyAEBg3.src})`,
               backgroundSize: '100%',
             }}
+            data-aos="zoom-out-down"
           >
             <p className="lg:text-[18px] text-white px-12 pb-7">
               Efficient & Low Transaction Fees
@@ -60,6 +63,7 @@ const WhyAeternity = () => {
             backgroundImage: `url(${WhyAEBg4.src})`,
             backgroundSize: '100%',
           }}
+          data-aos="zoom-out-down"
         >
           <p className="text-white lg:text-[24px] pl-8 w-1/2" id="join">
             Decentralized Scalability & Transparent Governance

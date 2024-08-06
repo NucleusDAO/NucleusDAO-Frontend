@@ -7,6 +7,7 @@ import Loading from '@/components/loading';
 import { ThemeProvider } from '@/components/themes/theme.provider';
 import { Toaster as Sonner } from '@/components/ui/sonner';
 import TanstackProvider from '@/context/tanstack-provider';
+import 'aos/dist/aos.css';
 
 const rubik = Rubik({ subsets: ['latin'] });
 
@@ -58,13 +59,11 @@ export default function RootLayout({
           <Suspense fallback={<Loading />}>
             <ConnectWalletProvider>
               <TanstackProvider>
-                <div className="flex justify-center mx-auto max-w-[1880px] overflow-x-hidden">
-                  {children}
-                </div>
+                <div className="">{children}</div>
               </TanstackProvider>
             </ConnectWalletProvider>
           </Suspense>
-          <Sonner richColors />
+          <Sonner richColors duration={2000} closeButton />
         </ThemeProvider>
       </body>
     </html>

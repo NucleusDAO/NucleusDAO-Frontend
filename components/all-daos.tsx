@@ -9,7 +9,7 @@ import { useDebouncedCallback } from 'use-debounce';
 import { columns } from './dashboard/columns';
 import DaoCard from './dashboard/dao-cards';
 import ConnectWalletCallToAction from './connect-wallet-cta';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import {
   Popover,
   PopoverContent,
@@ -73,7 +73,7 @@ const AllDaos: any = ({
             <PopoverContent className="dark:text-[#888888] text-dark border dark:border-[#292929] border-[#CCCCCC] w-[150px] py-2 text-sm space-y-3 font-light">
               <div
                 role="button"
-                className="hover:bg-[#1E1E1E] py-2 px-2 rounded-md"
+                className="hover:dark:bg-[#1E1E1E] py-2 px-2 rounded-md"
                 onClick={() => setOpenPopover(false)}
               >
                 Basic DAO
@@ -81,7 +81,7 @@ const AllDaos: any = ({
               <Separator />
               <div
                 role="button"
-                className="hover:bg-[#1E1E1E] py-2 px-2 rounded-md"
+                className="dark:hover:bg-[#1E1E1E] py-2 px-2 rounded-md"
                 onClick={() => {
                   toast.info('Coming soon !');
                   setOpenPopover(false);
@@ -116,7 +116,6 @@ const AllDaos: any = ({
           </div>
         </div>
       </div>
-
       <div className="">
         {showDAO ? (
           <div className="w-full">
@@ -137,11 +136,11 @@ const AllDaos: any = ({
                     </div>
                     <div className="flex items-center justify-center">
                       {currentSearch ? (
-                        <p className="text-center w-2/5">
+                        <p className="text-center lg:w-2/5">
                           The DAO you are looking for could not be found
                         </p>
                       ) : (
-                        <div className="text-center w-2/5">
+                        <div className="text-center lg:w-2/5">
                           <p className="pb-3 font-light text-sm">
                             Begin by setting up governance mechanisms, defining
                             roles and responsibilities, and establishing rules
@@ -157,7 +156,7 @@ const AllDaos: any = ({
                     </div>
                   </div>
                 )}
-                <div className="grid md:grid-cols-2 gap-8">
+                <div className="grid lg:grid-cols-2 gap-8">
                   {dashboardTableData(40).map((data: any) => (
                     <DaoCard key={data.organisation} {...data} />
                   ))}

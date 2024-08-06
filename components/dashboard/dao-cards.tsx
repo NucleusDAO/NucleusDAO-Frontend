@@ -1,7 +1,7 @@
 import { LinkIcon, PeopleIcon, ProposalIcon2 } from '@/assets/svgs';
-import { EachDaoContext } from '@/context/each-dao-context';
+import { capitalizeFirstLetter } from '@/libs/utils';
 import Link from 'next/link';
-import { ReactNode, useContext } from 'react';
+import { ReactNode } from 'react';
 
 export interface IDaoCard {
   organisation: string;
@@ -20,14 +20,13 @@ const DaoCard = ({
   activeMember,
   url,
 }: IDaoCard) => {
-  const { setCurrentDAOId } = useContext(EachDaoContext);
   return (
     <div className="dark:bg-gradient-to-r dark:from-[#1E1E1E] dark:via-[#1E1E1E] dark:to-[#252525] bg-white p-5 rounded-lg space-y-7 max-h-[40vh]">
-      <div className="flex space-x-4 items-center pb-7">
+      <div className="flex space-x-4 items-start lg:items-center pb-4 lg:pb-7">
         <div className="">{orgIcon}</div>
         <div className="space-y-1">
           <Link href={url}>
-            <h3 className="dark:text-white text-dark font-medium text-[22px]">
+            <h3 className="dark:text-white text-dark font-medium text-[22px] capitalize">
               {organisation}
             </h3>
           </Link>
@@ -40,9 +39,11 @@ const DaoCard = ({
         </div>
       </div>
       <Link href={url}>
-        <div className="space-y-7">
-          <div className="text-defaultText">
-            <p className="font-light text-sm">{description}</p>
+        <div className="space-y-4">
+          <div className="text-defaultText h-9 text-ellipsis overflow-hidden">
+            <p className="font-light text-sm multiline-truncate">
+              {capitalizeFirstLetter(description)}
+            </p>
           </div>
           <div className="flex justify-between items-center pt-6 border-t dark:border-[#1E1E1E] border-[#CCCCCC99] text-sm">
             <div className="flex items-center space-x-2">

@@ -67,7 +67,7 @@ const HowItWorks = () => {
         <h2 className="text-white text-[28px] lg:text-[36px] leading-[1.2]">
           The Future of Decentralized Governance
         </h2>
-        <p className="text-[#888888] font-light text-sm">
+        <p className="text-[#888888] font-light text-sm lg:text-base">
           Engage in our governance process by submitting proposals, voting on
           decisions, and contributing to community discussions.
         </p>

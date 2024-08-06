@@ -17,62 +17,120 @@ import { Textarea } from '../ui/textarea';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { REVIEW_PROPOSAL_URL } from '@/config/path';
 import { proposalLists } from '@/config/dao-config';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { SelectFormField } from '@/components/proposals/proposal-form-element';
 import ElementBlock from '../proposals/element-block';
 import { EachProposalType } from '@/config/proposal-config';
 import { AppContext } from '@/context/app-context';
 import { IConnectWalletContext } from '@/libs/types';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
-import { getDaysFromMilliseconds, millisecondsToDays } from '@/libs/utils';
+import { defaultProposal, millisecondsToDays, wait } from '@/libs/utils';
+import { ValidateProposalForm } from '@/libs/validations/validate-create-proposal';
 import { EachDaoContext } from '@/context/each-dao-context';
+import EachDaoLoading from '../loading/each-dao-loading';
 
 const CreateNewProposalForm = () => {
-  const { setNewProposalInfo, newProposalInfo, getEachDAO } =
-    useContext(AppContext);
-  const { currentDAO } = useContext(EachDaoContext);
+  const [routing, setRouting] = useState<boolean>(false);
+  const { setNewProposalInfo, newProposalInfo } = useContext(AppContext);
+  const { currentDAO, isLoading } = useContext(EachDaoContext);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { address } = user;
   const searchParams = useSearchParams();
-  const type: string = searchParams.get('enums') || newProposalInfo.value.type;
-  const daoID = searchParams.get('ct');
+  const type: string =
+    searchParams.get('enums') || newProposalInfo.value.type || '0';
+  const memberType = searchParams.get('type') || '';
+  const daoID: string = searchParams.get('ct') || '';
+  const targetAddress = searchParams.get('address') || '';
   const router = useRouter();
+
   const form = useForm<z.infer<typeof proposalInfoSchema>>({
     resolver: zodResolver(proposalInfoSchema),
     defaultValues: {
       ...newProposalInfo.value,
-      duration: getDaysFromMilliseconds(newProposalInfo.value.duration),
+      duration: millisecondsToDays(Number(currentDAO?.votingTime)),
+      newName: '',
+      targetWallet: targetAddress,
       type,
     },
   });
 
   useEffect(() => {
-    const getDuration = async () => {
-      const dao = await getEachDAO(daoID);
-      console.log(dao.votingTime, '-> dao.votingTime');
-      const duration = millisecondsToDays(Number(dao.votingTime));
-      form.setValue('duration', duration);
-    };
-    getDuration();
-  }, []);
+    if (currentDAO) {
+      form.setValue(
+        'duration',
+        millisecondsToDays(Number(currentDAO.votingTime))
+      );
+    }
+  }, [currentDAO, isLoading, form.getValues('type')]);
+
+  const daoMembers = currentDAO && currentDAO.members;
+
+  const handleReset = (type: string) => {
+    form.setValue('description', '');
+    form.setValue('duration', 0);
+    form.setValue('logo', '');
+    form.setValue('maximum', '0');
+    form.setValue('minimum', 0);
+    form.setValue('newName', '');
+    form.setValue('quorum', 0);
+    form.setValue('socialMedia', [{ type: '', link: '' }]);
+    form.setValue('targetWallet', '');
+    form.setValue('value', '');
+    let updatedData;
+    updatedData = { ...defaultProposal.value, type: type };
+    localStorage.setItem(
+      'new_proposal',
+      JSON.stringify({ value: updatedData })
+    );
+    setNewProposalInfo({ value: updatedData });
+  };
 
   useEffect(() => {
     const subscription = form.watch((value, { name, type }) => {
-      const updatedData = { ...newProposalInfo, value };
-      localStorage.setItem('new_proposal', JSON.stringify(updatedData));
-      setNewProposalInfo(updatedData);
+      let updatedData;
+      // Remove previous selected information
+      if (name === 'type') {
+        updatedData = { ...defaultProposal.value, type: value.type };
+        localStorage.setItem(
+          'new_proposal',
+          JSON.stringify({ value: updatedData })
+        );
+        setNewProposalInfo({ value: updatedData });
+      } else {
+        const updatedData = { ...newProposalInfo, value };
+        localStorage.setItem('new_proposal', JSON.stringify(updatedData));
+        setNewProposalInfo(updatedData);
+      }
     });
     return () => subscription.unsubscribe();
   }, [form.watch]);
 
-  const onSubmit = async (data: any) => {
-    // router.push(`${REVIEW_PROPOSAL_URL}?ct=${daoID}`);
+  const onSubmit = async () => {
+    const currentType = Number(form.getValues('type'));
+
+    if (ValidateProposalForm[currentType]({ form, daoMembers })) {
+      setRouting(true);
+      wait().then(() => {
+        router.push(`${REVIEW_PROPOSAL_URL}?ct=${daoID}&type=${currentType}`);
+        setRouting(false);
+      });
+    }
   };
+
+  if (isLoading) return <EachDaoLoading />;
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <SelectFormField form={form} filterData={proposalLists} />
+      <form className="space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
+        <SelectFormField
+          form={form}
+          handleReset={handleReset}
+          filterData={
+            memberType || type === '9'
+              ? [proposalLists[Number(type)]]
+              : proposalLists.slice(0, proposalLists.length - 1)
+          }
+        />
 
         <FormField
           control={form.control}
@@ -108,7 +166,8 @@ const CreateNewProposalForm = () => {
           <Button
             type="submit"
             className="px-12 w-full md:w-fit"
-            onClick={() => router.push(`${REVIEW_PROPOSAL_URL}?ct=${daoID}`)}
+            loading={routing}
+            loadingText="Please wait..."
           >
             Review
           </Button>

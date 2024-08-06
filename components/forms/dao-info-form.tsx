@@ -18,15 +18,20 @@ import { Textarea } from '../ui/textarea';
 import { MoveLeft, Plus, Trash2 } from 'lucide-react';
 import FormGroup from '../ui/form-group';
 import { useRouter } from 'next/navigation';
-import { DEFINE_MEMBERSHIP_URL } from '@/config/path';
+import { DEFINE_MEMBERSHIP_URL, SELECT_DAO_STYLE_URL } from '@/config/path';
 import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import { AppContext } from '@/context/app-context';
 import { toast } from 'sonner';
+import { wait } from '@/libs/utils';
 
 const DaoInfoForm = () => {
   const { updateNewDaoInfo, newDaoInfo } = useContext(AppContext);
-  const [logoFormData, setLogoFormData] = useState<FormData|null>(null);
-  const [onUploadUrl, setOnUploadUrl] = useState<string>(newDaoInfo.info.logoUrl || '');
+  const [isPending, setIsPending] = useState<boolean>(false);
+  const [isBack, setIsBack] = useState<boolean>(false);
+  const [logoFormData, setLogoFormData] = useState<FormData | null>(null);
+  const [onUploadUrl, setOnUploadUrl] = useState<string>(
+    newDaoInfo.info.logoUrl || ''
+  );
   const router = useRouter();
   const domainName = typeof window !== 'undefined' && window.location.origin;
 
@@ -47,8 +52,16 @@ const DaoInfoForm = () => {
 
   useEffect(() => {
     const subscription = form.watch((value, { name, type }) => {
-      const updatedData = { ...newDaoInfo, info: { ...newDaoInfo.info, ...value, logo: logoFormData, logoUrl: onUploadUrl } }
-      localStorage.setItem('new_dao', JSON.stringify(updatedData));
+      const updatedData = {
+        ...newDaoInfo,
+        info: {
+          ...newDaoInfo.info,
+          ...value,
+          logo: logoFormData,
+          logoUrl: onUploadUrl,
+        },
+      };
+      sessionStorage.setItem('new_dao', JSON.stringify(updatedData));
       updateNewDaoInfo(updatedData);
     });
     return () => subscription.unsubscribe();
@@ -68,10 +81,10 @@ const DaoInfoForm = () => {
     const maxSize: number = 3 * 1024 * 1024;
     const file: any = e.target.files?.[0];
     if (file.size >= maxSize) {
-      toast.error('File is too large. Max size of 3mb')
+      toast.error('File is too large. Max size of 3mb');
     } else {
       setLogoFormData(file);
-  
+
       if (file) {
         const reader = new FileReader();
         reader.onloadend = () => {
@@ -79,17 +92,32 @@ const DaoInfoForm = () => {
           setOnUploadUrl(result);
           form.setValue('logo', file);
           form.setError('logo', { message: '' });
-          const updatedData = { ...newDaoInfo, info: { ...newDaoInfo.info, logo: file, logoUrl: result } }
-          updateNewDaoInfo(updatedData)
-          localStorage.setItem('new_dao', JSON.stringify(updatedData));
+          const updatedData = {
+            ...newDaoInfo,
+            info: { ...newDaoInfo.info, logo: file, logoUrl: result },
+          };
+          updateNewDaoInfo(updatedData);
+          sessionStorage.setItem('new_dao', JSON.stringify(updatedData));
         };
         reader.readAsDataURL(file);
       }
     }
   };
 
+  const handleBack = () => {
+    setIsBack(true);
+    wait().then(() => {
+      router.push(SELECT_DAO_STYLE_URL);
+      setIsBack(false);
+    });
+  };
+
   const onSubmit = async (data: any) => {
-    router.push(DEFINE_MEMBERSHIP_URL);
+    setIsPending(true);
+    wait().then(() => {
+      router.push(DEFINE_MEMBERSHIP_URL);
+      setIsPending(false);
+    });
   };
 
   return (
@@ -231,11 +259,20 @@ const DaoInfoForm = () => {
                         <Input
                           placeholder="https://"
                           {...field}
-                          onInput={() =>
-                            form.setError('socialMedia', { message: '' })
+                          onBlur={() =>
+                            !field.value.startsWith('https://')
+                              ? form.setError(`socialMedia.${index}.link`, {
+                                  type: 'onChange',
+                                  message: 'Ensure to start with https',
+                                })
+                              : form.clearErrors(`socialMedia.${index}.link`)
                           }
                         />
                       </FormControl>
+                      <p className="text-defaultText text-xs font-light">
+                        Ensure to start with{' '}
+                        <span className="text-primary">https://</span>
+                      </p>
                       <FormMessage>
                         {form.formState.errors.socialMedia?.[index]?.root
                           ?.message || ''}
@@ -268,11 +305,17 @@ const DaoInfoForm = () => {
           <Button
             type="button"
             className="dark:bg-[#1E1E1E] bg-light dark:hover:bg-[#262525] hover:bg-light text-[#444444] dark:text-defaultText"
-            onClick={() => router.back()}
+            onClick={handleBack}
+            loading={isBack}
           >
             <MoveLeft size={20} />
           </Button>
-          <Button type="submit" className="px-12">
+          <Button
+            type="submit"
+            className="px-12"
+            loading={isPending}
+            loadingText="Please wait ..."
+          >
             Next
           </Button>
         </div>

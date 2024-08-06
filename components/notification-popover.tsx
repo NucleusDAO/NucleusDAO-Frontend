@@ -4,7 +4,7 @@ import Image from 'next/image';
 import RoundedIcon from '@/assets/icons/roundedIcon.png';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { ApiContext } from '@/context/api-context';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import NotificationLoading from './loading/notification-loading';
 import { formatTimestamp } from '@/libs/utils';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -21,6 +21,7 @@ import { DAO_URL, PROPOSALS_URL } from '@/config/path';
 import { useRouter } from 'next/navigation';
 
 const ViewNotificationPopover = () => {
+  const [open, setOpen] = useState<boolean>(false);
   const router = useRouter();
   const isDesktop = useMediaQuery('(min-width: 768px)');
   const queryClient: any = useQueryClient();
@@ -47,16 +48,14 @@ const ViewNotificationPopover = () => {
     onError: (error: any) => toast.error(error.message),
   });
 
-  console.log(notifications, '-> notifications');
-
   const handleView = async (notification: {
     extra: { daoId: string; proposalId: string };
     id: string;
     read: boolean;
     title: string;
   }) => {
-    if (notification.read) {
-      await mutateSingleNotification(notification.id);
+    if (!notification.read) {
+      mutateSingleNotification(notification.id);
     }
     router.push(
       notification.title === 'New DAO Created'
@@ -65,10 +64,11 @@ const ViewNotificationPopover = () => {
         ? `${PROPOSALS_URL}/${notification.extra.proposalId}?dao=${notification.extra.daoId}`
         : '#'
     );
+    setOpen(false);
   };
 
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <div
           className="dark:bg-[#1E1E1E] bg-white h-11 w-12 justify-center rounded-lg flex items-center relative dark:text-white text-[#444444]"
@@ -83,7 +83,7 @@ const ViewNotificationPopover = () => {
         </div>
       </PopoverTrigger>
       <PopoverContent
-        className="mt-2 md:px-6 pt-3 pb-8 md:w-[430px] dark:bg-gradient-to-r dark:via-[#1E1E1E] dark:from-[#1E1E1E] dark:to-[#252525]"
+        className="mt-8 lg:mt-2 md:px-6 pt-3 pb-8 md:w-[430px] dark:bg-gradient-to-r dark:via-[#1E1E1E] dark:from-[#1E1E1E] dark:to-[#252525]"
         style={{ boxShadow: '0px 4px 10px 0px #00000040' }}
       >
         <div className="flex justify-between items-center text-sm border-b pb-3 dark:border-b-[#292929] border-b-[#CCCCCC99] font-light">
@@ -98,7 +98,7 @@ const ViewNotificationPopover = () => {
               role="button"
               onClick={() => mutate()}
             >
-              <p>Mark All as Read</p>
+              <p>Mark all as Read</p>
               {isPending && <Loader className="mr-2 h-4 w-4 animate-spin" />}
             </div>
           )}
@@ -119,6 +119,7 @@ const ViewNotificationPopover = () => {
                 {notifications.map((notification: any) => (
                   <div
                     key={notification.title}
+                    onClick={() => handleView(notification)}
                     className="flex space-x-3 text-sm space-y-5 justify-start mt-3 hover:dark:bg-[#1E1E1E] hover:bg-[#F5F5F5] hover:cursor-pointer rounded-md px-4 py-1 trans"
                   >
                     <div className="mt-4">

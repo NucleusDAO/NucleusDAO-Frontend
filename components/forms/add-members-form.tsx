@@ -16,13 +16,17 @@ import { Input } from '@/components/ui/input';
 import { defineMembershipSchema } from '@/libs/validations/dao-schema';
 import { MoveLeft, Plus, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { GOVERNANCE_SETTINGS_URL } from '@/config/path';
-import { useContext, useEffect } from 'react';
+import { DAO_INFO_URL, GOVERNANCE_SETTINGS_URL } from '@/config/path';
+import { useContext, useEffect, useState } from 'react';
 import { AppContext } from '@/context/app-context';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { IConnectWalletContext } from '@/libs/types';
+import { wait } from '@/libs/utils';
+import { isAddressValid } from '@aeternity/aepp-sdk';
 
 const AddMemberForm = () => {
+  const [isPending, setIsPending] = useState<boolean>(false);
+  const [isBack, setIsBack] = useState<boolean>(false);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { updateNewDaoInfo, newDaoInfo } = useContext(AppContext);
   const router = useRouter();
@@ -40,15 +44,93 @@ const AddMemberForm = () => {
 
   useEffect(() => {
     const subscription = form.watch((value, { name, type }) => {
-      const updatedData = { ...newDaoInfo, members: value.members };
-      localStorage.setItem('new_dao', JSON.stringify(updatedData));
+      const seenAddresses = new Set();
+      const duplicateAddresses: any = [];
+      const members: any = value.members || [];
+      let hasExternalAddress = false;
+      let updatedData;
+      members.forEach((item: { address: string }, index: number) => {
+        const isTargetAddressValid = isAddressValid(item.address || '');
+        if (seenAddresses.has(item.address)) {
+          duplicateAddresses.push({ index, address: item.address });
+          // Perform operations for duplicate address
+          form.setError(`members.${index}.address`, {
+            type: 'onChange',
+            message: 'You cannot have a duplicate address',
+          });
+          updatedData = {
+            ...newDaoInfo,
+            members: value.members,
+            memberComplete: false,
+          };
+        } else if (item.address === address) {
+          hasExternalAddress = true;
+          form.setError(`members.${index}.address`, {
+            type: 'onChange',
+            message:
+              'Creator address is not allowed. It is automatically added',
+          });
+          updatedData = {
+            ...newDaoInfo,
+            members: value.members,
+            memberComplete: false,
+          };
+        } else if (!isTargetAddressValid) {
+          hasExternalAddress = true;
+          form.setError(`members.${index}.address`, {
+            type: 'onChange',
+            message: 'Valid address is required',
+          });
+          updatedData = {
+            ...newDaoInfo,
+            members: value.members,
+            memberComplete: false,
+          };
+        } else {
+          seenAddresses.add(item.address);
+          form.clearErrors(`members.${index}.address`);
+
+          // Perform operations for non-duplicate address
+          updatedData = {
+            ...newDaoInfo,
+            members: value.members,
+            memberComplete: true,
+          };
+        }
+      });
+      sessionStorage.setItem('new_dao', JSON.stringify(updatedData));
       updateNewDaoInfo(updatedData);
     });
     return () => subscription.unsubscribe();
   }, [form.watch]);
 
+  const handleBack = () => {
+    setIsBack(true);
+    wait().then(() => {
+      router.push(DAO_INFO_URL);
+      setIsBack(false);
+    });
+  };
+
   const onSubmit = async (data: any) => {
-    router.push(GOVERNANCE_SETTINGS_URL);
+    const isEmptyAddress = data.members.some(
+      (item: { address: string }) => item.address === ''
+    );
+    const index = data.members.findIndex(
+      (item: { address: string }) => item.address === ''
+    );
+    if (isEmptyAddress) {
+      form.setError(`members.${index}.address`, {
+        type: 'onChange',
+        message: 'Field should not be empty',
+      });
+    } else {
+      setIsPending(true);
+      wait().then(() => {
+        router.push(GOVERNANCE_SETTINGS_URL);
+        setIsPending(false);
+      });
+    }
   };
   return (
     <Form {...form}>
@@ -79,15 +161,7 @@ const AddMemberForm = () => {
                         <Input
                           placeholder="Enter wallet address"
                           {...field}
-                          onInput={({ target }: any) =>
-                            target.value === address
-                              ? form.setError(`members.${index}.address`, {
-                                  type: 'onChange',
-                                  message:
-                                    'Creator address is not allowed. It is automatically added',
-                                })
-                              : form.clearErrors(`members.${index}.address`)
-                          }
+                          // onBlur={() => handleOnBlur(field, index)}
                         />
                       </FormControl>
                       <FormMessage>
@@ -123,11 +197,17 @@ const AddMemberForm = () => {
           <Button
             type="button"
             className="dark:bg-[#1E1E1E] bg-light dark:hover:bg-[#262525] hover:bg-light text-[#444444] dark:text-defaultText"
-            onClick={() => router.back()}
+            onClick={handleBack}
+            loading={isBack}
           >
             <MoveLeft size={20} />
           </Button>
-          <Button type="submit" className="px-12">
+          <Button
+            type="submit"
+            className="px-12"
+            loading={isPending}
+            loadingText="Please wait..."
+          >
             Next
           </Button>
         </div>
