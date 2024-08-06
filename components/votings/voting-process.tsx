@@ -124,8 +124,6 @@ const VotingProcess = ({ currentProposal }: IVotingProcess) => {
     }
   };
 
-  console.log(eachProposal, '-> eachProposal');
-
   const handleDone = async () => {
     setShowModal(false);
     setIsLoading(false);

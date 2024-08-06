@@ -3,6 +3,7 @@ import { cn } from '@/libs/utils';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ReactNode } from 'react';
+import { helpCenterLinks } from './config';
 
 interface ILayout {
   children: ReactNode;

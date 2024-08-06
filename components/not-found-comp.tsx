@@ -10,7 +10,7 @@ const NotFoundComponent = () => {
   const isDesktop = useMediaQuery('(min-width: 768px)');
   return (
     <React.Fragment>
-      <div className="w-full px-12 lg:px-0 lg:w-1/2 mx-auto my-20 space-y-4 text-center">
+      <div className="w-full px-12 lg:px-0 lg:w-1/2 mx-auto my-36 space-y-4 text-center">
         <h1 className="font-medium text-white text-[40px] text-center mt-20 lg:mt-0">
           404 - Page Not Found.
         </h1>
