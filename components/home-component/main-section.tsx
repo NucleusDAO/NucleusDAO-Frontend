@@ -5,8 +5,13 @@ import React from 'react';
 import Link from 'next/link';
 import { FlipWords } from '../ui/flip-words';
 import { Button } from '../ui/button';
+import Image from 'next/image';
+import { useMediaQuery } from '@/hooks/use-media-query';
+import AELogo from '@/assets/icons/ae-icon.png';
+import { toast } from 'sonner';
 
 const MainSection = () => {
+  const isDesktop = useMediaQuery('(min-width: 1068px)');
   const words = ['Decentralized', 'Future-Driven', 'Potential'];
   const mainContent: { title: string; description: string; cta: string }[] = [
     {
@@ -32,13 +37,27 @@ const MainSection = () => {
 
   return (
     <div className="mx-auto w-full lg:w-[60%] text-center lg:space-y-8 lg:mt-14 pt-32 lg:pt-28 relative">
+      <div
+        className={
+          'bg-gradient-to-t from-[#1E1E1E] to-[#1E1E1E80] absolute lg:h-[52px] h-[40px] w-[40px] xl:w-[52px] top-20 lg:top-28 right-10'
+        }
+      >
+        <div className="bg-gradient-to-r h-full w-full from-primary via-primary flex items-center justify-center to-primary shadow-[inset_0px_0px_6px_6px_rgba(0,0,0,0.3)] animate-fade-in-out">
+          <Image
+            width={isDesktop ? 32 : 22}
+            height={isDesktop ? 32 : 22}
+            src={AELogo}
+            alt="aelogo"
+          />
+        </div>
+      </div>
       <div className="w-full min-h-[38px] space-y-2">
-        <h1 className="px-6 lg:px-24 text-[28px] lg:text-[48px] lg:text-center font-semibold text-white">
+        <h1 className="px-6 lg:px-24 text-[28px] lg:text-[48px] lg:text-center font-medium text-white">
           Empowering
           <span>
             <FlipWords
               words={words}
-              className="text-[28px] lg:text-[48px] lg:text-center font-semibold"
+              className="text-[28px] lg:text-[48px] lg:text-center font-medium"
             />
           </span>
           <span>Governance</span>
@@ -50,8 +69,13 @@ const MainSection = () => {
         </h3>
         <React.Fragment>
           <div className="flex items-center space-x-8 justify-center relative pt-2">
-            <Link href={'#join'}>
-              <Button className="px-6">Join Now</Button>
+            <Link href={'/#join'}>
+              <Button
+                className="px-6"
+                onClick={() => toast.info('Coming soon')}
+              >
+                Join Now
+              </Button>
             </Link>
             <Link href="#howItWorks">
               <div className="flex items-center space-x-2">
