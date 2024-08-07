@@ -25,8 +25,8 @@ const NavComp = () => {
   const isDesktop = useMediaQuery('(min-width: 1068px)');
 
   return (
-    <nav className="px-4 lg:px-16 lg:items-center block lg:flex lg:py-4 justify-between fixed inset-0 items-start z-[40] lg:top-0 backdrop-filter backdrop-blur-md h-fit">
-      <div className="flex justify-between items-center w-full ">
+    <nav className="px-4 lg:px-16 lg:items-center block lg:flex lg:py-4 justify-between fixed inset-0 items-start z-[40] lg:top-0 backdrop-filter backdrop-blur-md h-fit w-full max-w-[1800px] mx-auto">
+      <div className="flex justify-between items-center w-full max-w-[1800px] mx-auto">
         <Link href={HOME_URL} className="flex cursor-pointer z-[1000]">
           <div className="flex space-x-2 items-center">
             <Image id="logo" src={LogoIcon} alt="NucleusDao Logo" width={40} />
