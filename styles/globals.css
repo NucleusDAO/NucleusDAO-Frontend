@@ -106,7 +106,8 @@ input[type="number"]::-webkit-outer-spin-button {
     @apply border-border;
   }
   body {
-    @apply dark:bg-background text-defaultText bg-white;
+    @apply bg-[#0A0A0A] text-defaultText
+    /* @apply dark:bg-background text-defaultText bg-white; */
   }
 }
 

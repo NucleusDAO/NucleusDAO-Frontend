@@ -59,7 +59,7 @@ export default function RootLayout({
           <Suspense fallback={<Loading />}>
             <ConnectWalletProvider>
               <TanstackProvider>
-                <div className="flex justify-center mx-auto max-w-[1880px] overflow-x-hidden">
+                <div className="flex justify-center mx-auto max-w-[1880px] overflow-x-hidden ">
                   {children}
                 </div>
               </TanstackProvider>
