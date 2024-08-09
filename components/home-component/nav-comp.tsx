@@ -7,7 +7,6 @@ import Link from 'next/link';
 import LogoIcon from '@/assets/icons/nucleusdao-purple.svg';
 import { Button } from '../ui/button';
 import React, { useState } from 'react';
-import { useMediaQuery } from '@/hooks/use-media-query';
 import Menu from '@/assets/icons/hamburger.png';
 import {
   Sheet,
@@ -22,7 +21,6 @@ import { toast } from 'sonner';
 
 const NavComp = () => {
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
-  const isDesktop = useMediaQuery('(min-width: 1068px)');
 
   return (
     <nav className="px-4 lg:px-16 lg:items-center block lg:flex lg:py-4 justify-between fixed inset-0 items-start z-[40] lg:top-0 backdrop-filter backdrop-blur-md h-fit w-full max-w-[1800px] mx-auto">
