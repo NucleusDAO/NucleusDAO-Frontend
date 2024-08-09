@@ -1,13 +1,15 @@
 'use client';
-import NavComp from '@/components/home-component/nav-comp';
+
 import Background from '@/assets/images/main-bg.png';
 import { Separator } from '@/components/ui/separator';
 import NotFoundComponent from '@/components/not-found-comp';
+import NavComp from '@/components/home-component/nav-comp';
+import { cn } from '@/libs/utils';
 
 export default function NotFound() {
   return (
     <main
-      className="bg-contain bg-no-repeat w-full h-screen flex flex-col"
+      className={cn('bg-contain bg-no-repeat w-full h-screen flex flex-col')}
       style={{
         background: 'round',
         backgroundImage: `url(${Background.src})`,

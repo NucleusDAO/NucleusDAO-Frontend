@@ -22,7 +22,7 @@ const DaoCard = ({
 }: IDaoCard) => {
   return (
     <div className="dark:bg-gradient-to-r dark:from-[#1E1E1E] dark:via-[#1E1E1E] dark:to-[#252525] bg-white p-5 rounded-lg space-y-7 max-h-[40vh]">
-      <div className="flex space-x-4 items-center pb-7">
+      <div className="flex space-x-4 items-start lg:items-center pb-4 lg:pb-7">
         <div className="">{orgIcon}</div>
         <div className="space-y-1">
           <Link href={url}>
