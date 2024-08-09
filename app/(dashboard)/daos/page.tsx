@@ -70,7 +70,7 @@ const Daos = () => {
           role="heading"
           className="dark:text-white font-medium text-xl text-dark"
         >
-          Explore DAOs
+          Explore All DAOs
         </h1>
         {connected ? (
           <Button
