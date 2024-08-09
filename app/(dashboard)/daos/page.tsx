@@ -42,7 +42,7 @@ const Daos = () => {
           alt="dao logo"
           width={width}
           height={width}
-          className="border border-red w-24 h-16 md:w-10 md:h-10 rounded-md object-cover"
+          className="border border-red w-12 h-12 md:w-10 md:h-10 rounded-md object-cover"
         />
       );
       return dao;
