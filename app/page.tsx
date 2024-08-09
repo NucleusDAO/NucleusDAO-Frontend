@@ -27,8 +27,6 @@ export default function Home() {
   const screenWidth =
     (typeof window !== 'undefined' && window.innerWidth >= 1880) ||
     window.innerWidth >= 912;
-  const currentWidth = typeof window !== 'undefined' && window.innerWidth;
-  console.log(currentWidth, '->');
 
   useEffect(() => {
     AOS.init({ duration: 1500 });
