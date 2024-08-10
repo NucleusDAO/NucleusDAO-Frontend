@@ -77,28 +77,29 @@ const ProposalCard = ({
               <div className="flex items-center justify-between">
                 <div className="space-y-4 w-[100%]">
                   <div className="flex space-y-2 justify-between items-center w-full space-x-4 lg:space-x-0">
-                    <Avatar className="w-8 h-8 rounded-full lg:hidden block">
-                      <AvatarImage
-                        src={daoImage}
-                        className="rounded-sm object-cover"
-                      />
-                      <AvatarFallback>CN</AvatarFallback>
-                    </Avatar>
-                    <div className="">
-                      <div className="block">
+                    <div className="space-y-2 lg:space-y-0">
+                      <Avatar className="w-8 h-8 rounded-sm lg:hidden block">
+                        <AvatarImage
+                          src={daoImage}
+                          className="rounded-sm object-cover"
+                        />
+                        <AvatarFallback>CN</AvatarFallback>
+                      </Avatar>
+                      <div>
                         <p className="dark:text-white capitalize text-dark font-medium text-sm md:text-normal truncate text-ellipsis overflow-hidden">
                           {daoName}
                         </p>
+                        <Link href={url}>
+                          <div className="space-x-1 flex items-center">
+                            <p className="text-xs font-light text-defaultText text-ellipsis overflow-hidden">
+                              {url}
+                            </p>
+                            <LinkIcon className="text-[#DCC5FD] dark:text-[#292D32] lg:flex hidden" />
+                          </div>
+                        </Link>
                       </div>
-                      <Link href={url}>
-                        <div className="space-x-1 flex items-center">
-                          <p className="text-xs font-light text-defaultText">
-                            {url}
-                          </p>
-                          <LinkIcon className="text-[#DCC5FD] dark:text-[#292D32] lg:flex hidden" />
-                        </div>
-                      </Link>
                     </div>
+
                     <div>{EachStatus[status]}</div>
                   </div>
 
