@@ -156,8 +156,8 @@ const AllDaos: any = ({
                     </div>
                   </div>
                 )}
-                <div className="grid lg:grid-cols-2 gap-8">
-                  {dashboardTableData(40).map((data: any) => (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full">
+                  {dashboardTableData(30).map((data: any) => (
                     <DaoCard key={data.organisation} {...data} />
                   ))}
                 </div>

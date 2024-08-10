@@ -26,7 +26,7 @@ const Daos = () => {
   const searchParams = useSearchParams();
   const currentSearch = searchParams.get('q');
 
-  const getDAOsData = (width: number) => {
+  const getDAOsData = () => {
     let allDAO;
     if (currentSearch) {
       allDAO = DAOsData?.filter((item: { organisation: string }) =>
@@ -37,13 +37,15 @@ const Daos = () => {
     }
     return allDAO?.map((dao: any) => {
       dao.orgIcon = (
-        <img
-          src={dao.image}
-          alt="dao logo"
-          width={width}
-          height={width}
-          className="border border-red w-12 h-12 md:w-10 md:h-10 rounded-md object-cover"
-        />
+        <div className="w-8 h-8 lg:w-12 lg:h-12">
+          <img
+            src={dao.image}
+            alt="dao logo"
+            // width={width}
+            // height={width}
+            className="border w-full h-full border-red rounded-md object-cover"
+          />
+        </div>
       );
       return dao;
     });
@@ -70,7 +72,7 @@ const Daos = () => {
           role="heading"
           className="dark:text-white font-medium text-xl text-dark"
         >
-          Explore All DAOs
+          Explore DAOs
         </h1>
         {connected ? (
           <Button
