@@ -59,7 +59,7 @@ export default function Home() {
       <section
         className={cn(
           'bg-cover bg-no-repeat w-full p-12 lg:p-24 space-y-4 lg:space-y-8',
-          screenWidth ? 'min-h-[40vh]' : 'min-h-fit lg:min-h-[160vh]'
+          screenWidth ? 'min-h-[170vh]' : 'min-h-fit lg:min-h-[160vh]'
         )}
         style={{
           backgroundImage: `url(${SectionTwoBackground.src})`,
@@ -87,26 +87,31 @@ export default function Home() {
           </p>
         </div>
 
-        {/* <div className="border border-[#656565] py-8 px-6 lg:px-14 rounded-[20px] bg-gradient-to-r from-[#1E1E1E33] to-[#19191933] lg:flex-row flex-col-reverse flex justify-between items-center">
+        <div className="border border-[#656565] py-8 px-6 lg:px-14 rounded-[20px] bg-gradient-to-r from-[#1E1E1E33] to-[#19191933] lg:flex-row flex-col-reverse flex justify-between items-center">
           <div className="space-y-4 lg:space-y-8 lg:pl-16">
             <h2 className="text-white font-medium text-[24px] lg:text-[28px] w-full xl:w-[60%] mt-4 lg:mt-0">
               Launch your DAO with an Inclusive Builder
             </h2>
 
             <Button className="px-8 h-9" id="features">
-              <Link href={'/#join'}>Launch your DAO</Link>
+              <Link href="https://app.nucleusdao.com/" target="_blank">
+                Launch your DAO
+              </Link>
             </Button>
           </div>
           <Image
             src={NucleusDAOSample}
             alt="Nucleus DAO Template"
-            width={450}
+            width={400}
           />
-        </div> */}
+        </div>
       </section>
 
       <section
-        className={cn('w-full space-y-8', screenWidth ? '' : 'lg:-mt-32')}
+        className={cn(
+          'w-full space-y-8 -mt-56',
+          screenWidth ? '' : 'lg:-mt-32'
+        )}
       >
         <div
           className="border border-[#5E5F62B9] mx-auto bg-gradient-to-r text-sm from-[#44444433] to-[#65656533] px-6 py-2 rounded-[20px] w-fit text-[#9050E9]"

@@ -69,13 +69,8 @@ const MainSection = () => {
         </h3>
         <React.Fragment>
           <div className="flex items-center space-x-8 justify-center relative pt-2">
-            <Link href={'/#join'}>
-              <Button
-                className="px-6"
-                onClick={() => toast.info('Coming soon')}
-              >
-                Join Now
-              </Button>
+            <Link href="https://app.nucleusdao.com/" target="_blank">
+              <Button className="px-6">Join Now</Button>
             </Link>
             <Link href="#howItWorks">
               <div className="flex items-center space-x-2">

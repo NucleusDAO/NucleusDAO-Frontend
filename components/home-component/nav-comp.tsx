@@ -45,28 +45,14 @@ const NavComp = () => {
           onClick={() => setOpenDrawer(true)}
           className="flex lg:hidden"
         />
-        {/* <button className="before:ease z-[999] relative h-12 w-40 overflow-hidden shadow-2xl before:absolute before:left-0 before:-ml-2 before:h-48 before:w-48 before:origin-top-right before:-translate-x-full before:translate-y-12 before:-rotate-90 before:bg-white bg-primary before:transition-all before:duration-300 hover:text-white hover:shadow-black hover:before:-rotate-180">
-          <span className="relative z-10">Slide hover</span>
-        </button> */}
-        <Link href={'/#join'} className="lg:flex hidden z-[999]">
+        <Link
+          href="https://app.nucleusdao.com/"
+          target="_blank"
+          className="lg:flex hidden z-[999]"
+        >
           <Button className="lg:w-fit w-full px-8">Join Now</Button>
         </Link>
       </div>
-
-      {/* <div
-        className={
-          'bg-gradient-to-t from-[#1E1E1E] to-[#1E1E1E80] absolute lg:h-[52px] h-[40px] w-[40px] xl:w-[52px] top-20 lg:top-28 right-[40px] lg:right-[400px]'
-        }
-      >
-        <div className="bg-gradient-to-r h-full w-full from-primary via-primary flex items-center justify-center to-primary shadow-[inset_0px_0px_6px_6px_rgba(0,0,0,0.3)] animate-fade-in-out">
-          <Image
-            width={isDesktop ? 32 : 22}
-            height={isDesktop ? 32 : 22}
-            src={AELogo}
-            alt="aelogo"
-          />
-        </div>
-      </div> */}
 
       <Sheet open={openDrawer} onOpenChange={setOpenDrawer}>
         <SheetContent side="left">
@@ -86,12 +72,12 @@ const NavComp = () => {
             </SheetTitle>
             <SheetDescription className="text-left -mt-10">
               <NavElement setOpenDrawer={setOpenDrawer} />
-              <Link href={'/#join'} className="px-6">
-                <Button
-                  className="mt-4 w-[80%]"
-                  size="sm"
-                  onClick={() => toast.info('Coming soon')}
-                >
+              <Link
+                href="https://app.nucleusdao.com/"
+                target="_blank"
+                className="px-6"
+              >
+                <Button className="mt-4 w-[80%]" size="sm">
                   Join Now
                 </Button>
               </Link>
