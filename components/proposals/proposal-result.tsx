@@ -158,7 +158,7 @@ const ProposalResult = ({
                 loading={isPending || pending}
                 loadingText="Executing..."
               >
-                Excecute Proposal
+                Execute Proposal
               </Button>
             )}
           </>
@@ -211,7 +211,7 @@ const ProposalResult = ({
                   <Info size={16} color="#444444" />
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Add to library</p>
+                  <p>Expected quorum</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>

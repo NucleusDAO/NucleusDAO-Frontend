@@ -21,7 +21,7 @@ const ErrorFetchingComponent = ({
         {description === 'Invocation failed: "Maps: Key does not exist"' ? (
           <p>The DAO could not be found.</p>
         ) : (
-          <p>We cannot connect to the server at www.nucluesDAO.com</p>
+          <p>We cannot connect to the smart contract at the moment</p>
         )}
         <p>{description}</p>
         <p>Try the following help:</p>

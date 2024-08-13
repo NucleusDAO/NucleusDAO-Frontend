@@ -29,11 +29,13 @@
     "@radix-ui/react-tooltip": "^1.0.7",
     "@tanstack/react-query": "^5.34.1",
     "@tanstack/react-table": "^8.15.0",
+    "aos": "^2.3.4",
     "axios": "^1.6.8",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "crypto-js": "^4.2.0",
     "embla-carousel-react": "^8.0.4",
+    "framer-motion": "^11.3.21",
     "lucide-react": "^0.363.0",
     "next": "14.1.4",
     "next-themes": "^0.3.0",
@@ -44,6 +46,7 @@
     "react-lottie": "^1.2.4",
     "react-player": "^2.16.0",
     "recharts": "^2.12.3",
+    "sharp": "^0.33.4",
     "sonner": "^1.4.41",
     "tailwind-merge": "^2.2.2",
     "tailwindcss-animate": "^1.0.7",
@@ -51,6 +54,10 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+<<<<<<< HEAD
+=======
+    "@types/aos": "^3.0.7",
+>>>>>>> cad862b47163ddbbaadc358a4914cf8a23435758
     "@types/crypto-js": "^4.2.2",
     "@types/node": "^20",
     "@types/react": "^18",

@@ -98,7 +98,13 @@ const VotingProcess = ({ currentProposal }: IVotingProcess) => {
         ? voteFor(Number(currentProposal.id), currentDAO?.contractAddress)
         : voteAgainst(Number(currentProposal.id), currentDAO?.contractAddress),
     onSuccess: () => {
-      invalidateAllQueries();
+      queryClient.invalidateQueries(DAOS_KEY);
+      queryClient.invalidateQueries(PROPOSAL_KEY);
+      queryClient.invalidateQueries(USER_ACTIVITIES_KEY);
+      queryClient.invalidateQueries(EACH_DAO_KEY);
+      queryClient.invalidateQueries(EACH_DAO_PROPOSAL);
+      queryClient.invalidateQueries(EACH_PROPOSAL_INFO);
+      queryClient.invalidateQueries(MEMBER_ACTIVIES);
       setShowModal(true);
     },
     onError: (error: any) => toast.error(error.message),

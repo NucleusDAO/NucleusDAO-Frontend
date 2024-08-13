@@ -4,7 +4,6 @@ import React, { ReactNode, createContext, useEffect, useState } from 'react';
 import {
   IN_FRAME,
   MAINNET_NODE_URL,
-  TESTNET_NODE_URL,
   connectWallet,
 } from '@/libs/ae-utils';
 import {
@@ -59,10 +58,7 @@ export const ConnectWalletProvider = ({ children }: IAppProvider) => {
 
   const aeSdk: any = new AeSdkAepp({
     name: 'NucleusDAO',
-    nodes: [
-      { name: 'testnet', instance: new Node(TESTNET_NODE_URL) },
-      { name: 'mainnet', instance: new Node(MAINNET_NODE_URL) },
-    ],
+    nodes: [{ name: 'mainnet', instance: new Node(MAINNET_NODE_URL) }],
     onNetworkChange: async ({ networkId }) => {
       const [{ name }] = (await aeSdk.getNodesInPool()).filter(
         (node: any) => node.nodeNetworkId === networkId
