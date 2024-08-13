@@ -13,7 +13,7 @@ import { toast } from 'sonner';
 import { isMobile } from './utils';
 
 export const nucleusDAOContractAddress =
-  'ct_tty8uyUaw1LCCveugDympVzdWmcJntGG1wbFPiurqYR5m3iss';
+  'ct_yDcPop9r72KvwPAQB61gmYvhZHYogVuAWeheQ5zL8J5cwWPY4';
 
 export const MAINNET_NODE_URL = 'https://mainnet.aeternity.io';
 export const COMPILER_URL = 'https://compiler.aepps.com';
