@@ -17,6 +17,10 @@ import { VIEW_DAO_URL } from '@/config/path';
 import { useQuery } from '@tanstack/react-query';
 import { DAOS_KEY, PROPOSAL_KEY } from '@/libs/key';
 import { getAllProposals, getDAOs } from '@/libs/contract-call';
+import {
+  walletDetector,
+  BrowserWindowMessageConnection,
+} from '@aeternity/aepp-sdk';
 
 export const AppContext = createContext<any>({});
 
@@ -195,6 +199,15 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
       }
     }
     return proposals;
+  };
+
+  const getBal = async () => {
+    console.log('here');
+    const scannerConnection = new BrowserWindowMessageConnection();
+    return await walletDetector(scannerConnection, ({ newWallet, wallets }) => {
+      console.log(wallets);
+      console.log(newWallet);
+    });
   };
 
   const value = {

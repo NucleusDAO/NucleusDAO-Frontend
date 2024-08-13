@@ -136,11 +136,11 @@ const AllDaos: any = ({
                     </div>
                     <div className="flex items-center justify-center">
                       {currentSearch ? (
-                        <p className="text-center w-2/5">
+                        <p className="text-center lg:w-2/5">
                           The DAO you are looking for could not be found
                         </p>
                       ) : (
-                        <div className="text-center w-2/5">
+                        <div className="text-center lg:w-2/5">
                           <p className="pb-3 font-light text-sm">
                             Begin by setting up governance mechanisms, defining
                             roles and responsibilities, and establishing rules
@@ -156,8 +156,8 @@ const AllDaos: any = ({
                     </div>
                   </div>
                 )}
-                <div className="grid lg:grid-cols-2 gap-8">
-                  {dashboardTableData(40).map((data: any) => (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full">
+                  {dashboardTableData(30).map((data: any) => (
                     <DaoCard key={data.organisation} {...data} />
                   ))}
                 </div>

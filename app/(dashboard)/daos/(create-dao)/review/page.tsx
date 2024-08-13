@@ -12,7 +12,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
 } from '@/components/ui/alert-dialog';
-import { DAO_URL } from '@/config/path';
+import { DAO_URL, DASHBOARD_URL } from '@/config/path';
 import { useContext, useState } from 'react';
 import { AppContext } from '@/context/app-context';
 import { uploadFile } from '@/config/apis';
@@ -21,6 +21,7 @@ import {
   convertDays,
   daysToMilliseconds,
   defaultDaoCreation,
+  executeAction,
   wait,
 } from '@/libs/utils';
 import Lottie from 'react-lottie';
@@ -32,14 +33,19 @@ import {
   PROPOSAL_KEY,
   USER_ACTIVITIES_KEY,
 } from '@/libs/key';
-import { createDAO } from '@/libs/contract-call';
+import { createDAO, mobileCreateDAO } from '@/libs/contract-call';
+import { ConnectWalletContext } from '@/context/connect-wallet-context';
+import { IConnectWalletContext } from '@/libs/types';
 
 const ReviewDao = () => {
+  const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
+  const { address } = user;
   const queryClient: any = useQueryClient();
   const router = useRouter();
   const [isRouting, setIsRouting] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
-  const { updateNewDaoInfo, newDaoInfo, fetchDAOs } = useContext(AppContext);
+  const { updateNewDaoInfo, newDaoInfo } = useContext(AppContext);
+  const [pending, setPending] = useState(false);
 
   const { mutate, isPending } = useMutation({
     mutationFn: createDAO,
@@ -58,14 +64,14 @@ const ReviewDao = () => {
 
   const { mutate: mutateUploadImage, isPending: isUploading } = useMutation({
     mutationFn: uploadFile,
-    onSuccess: (response) => {
+    onSuccess: async (response) => {
       const logoURL = response.data.url;
       const name = newDaoInfo.info.daoName;
       const id = newDaoInfo.info.daoName.replace(/\s+/g, '-').toLowerCase();
       const members = newDaoInfo.members.map((m: any) => {
         return m.address;
       });
-      mutate({
+      const payload = {
         name,
         id,
         description: newDaoInfo.info.about,
@@ -77,6 +83,14 @@ const ReviewDao = () => {
         initialMembers: members,
         votingTime: Math.round(daysToMilliseconds(newDaoInfo.duration)),
         quorum: newDaoInfo.quorum,
+      };
+
+      await executeAction({
+        setPending,
+        action: mobileCreateDAO,
+        payload,
+        address,
+        mutate,
       });
     },
     onError: (error: any) => toast.error(error.message),
@@ -130,11 +144,15 @@ const ReviewDao = () => {
         </div>
         <div className="grid grid-cols-2 text-xs md:text-sm md:w-4/6">
           <p className="dark:text-white text-dark">DAO Url</p>
-          <p className="text-defaultText">{newDaoInfo.info.daoUrl}</p>
+          <p className="text-defaultText multiline-truncate-3">
+            {newDaoInfo.info.daoUrl}
+          </p>
         </div>
         <div className="grid grid-cols-2 text-xs md:text-sm md:w-4/6">
           <p className="dark:text-white text-dark">About</p>
-          <p className="text-defaultText w-[200%]">{newDaoInfo.info.about}</p>
+          <p className="text-defaultText w-[200%] multiline-truncate-3">
+            {newDaoInfo.info.about}
+          </p>
         </div>
         <div className="grid grid-cols-2 text-xs md:text-sm md:w-4/6">
           <p className="dark:text-white text-dark">Links</p>
@@ -204,7 +222,7 @@ const ReviewDao = () => {
             type="submit"
             className="px-12"
             onClick={handleCreateDAO}
-            loading={isPending || isUploading}
+            loading={isPending || isUploading || pending}
             loadingText="Creating..."
           >
             Create DAO

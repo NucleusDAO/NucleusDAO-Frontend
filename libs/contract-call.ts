@@ -1,5 +1,8 @@
+import { DAO_URL, PROPOSALS_URL } from '@/config/path';
+import { createOnAccountObject, mobileContractInterract } from './ae-func';
 import { getBasicDAO, getNucleusDAO } from './ae-utils';
-import { ICreateDAOS, ICreateProposal } from './types';
+import { ICreateDAOS, ICreateProposal, IMobileDeposit } from './types';
+import { toast } from 'sonner';
 
 const getDAOs = async () => {
   const contract = await getNucleusDAO();
@@ -47,6 +50,32 @@ const createDAO = async (payload: ICreateDAOS) => {
   return dao;
 };
 
+export const mobileCreateDAO = async (
+  payload: ICreateDAOS,
+  userAddress: string
+) => {
+  const contract = await getNucleusDAO();
+
+  const result = await contract['createDAO'](
+    payload.name,
+    payload.id,
+    payload.description,
+    payload.image,
+    payload.socials,
+    payload.initialMembers,
+    payload.startingBalance,
+    payload.votingTime,
+    payload.quorum,
+    {
+      callStatic: true,
+      onAccount: createOnAccountObject(userAddress),
+    }
+  );
+  await mobileContractInterract({ redirectUrl: DAO_URL, result });
+  localStorage.removeItem('new_dao');
+  // toast.success('DAO created successfully');
+};
+
 const createProposal = async (payload: ICreateProposal) => {
   const contract = await getBasicDAO(payload.daoContractAddress);
   const res = await contract.createProposal(
@@ -58,6 +87,28 @@ const createProposal = async (payload: ICreateProposal) => {
   );
   const proposal = res.decodedResult;
   return proposal;
+};
+
+export const mobileCreateProposal = async (
+  payload: ICreateProposal,
+  userAddress: string
+) => {
+  const contract = await getBasicDAO(payload.daoContractAddress);
+
+  const result = await contract['createProposal'](
+    payload.proposalType,
+    payload.description,
+    payload.value,
+    payload.target,
+    payload.info,
+    {
+      callStatic: true,
+      onAccount: createOnAccountObject(userAddress),
+    }
+  );
+  await mobileContractInterract({ redirectUrl: PROPOSALS_URL, result });
+  localStorage.removeItem('new_proposal');
+  // toast.success('Proposal created successfully');
 };
 
 const getEachDAO = async (id: string) => {
@@ -115,6 +166,25 @@ const deposit = async (daoContractAddress: string, amount: string) => {
   return response;
 };
 
+export const mobileDeposit = async (
+  payload: IMobileDeposit,
+  userAddress: string
+) => {
+  const amount = payload.amount;
+  const redirectUrl =
+    typeof window !== 'undefined' ? window.location.pathname : '';
+
+  const contract = await getBasicDAO(payload.daoContractAddress);
+
+  const result = await contract['deposit']({
+    amount,
+    callStatic: true,
+    onAccount: createOnAccountObject(userAddress),
+  });
+  await mobileContractInterract({ redirectUrl, result });
+  // toast.success('Deposited successfully!');
+};
+
 const executeProposal = async (
   proposalId: number,
   daoContractAddress: string
@@ -125,6 +195,26 @@ const executeProposal = async (
   return result;
 };
 
+export const executeMobileProposal = async (
+  proposalId: number,
+  daoContractAddress: string,
+  userAddress: string
+) => {
+  const redirectUrl =
+    typeof window !== 'undefined'
+      ? window.location.pathname + window.location.search
+      : '';
+
+  const contract = await getBasicDAO(daoContractAddress);
+
+  const result = await contract['executeProposal'](proposalId, {
+    callStatic: true,
+    onAccount: createOnAccountObject(userAddress),
+  });
+  await mobileContractInterract({ redirectUrl, result });
+  // toast.success('Proposal executed successfully!');
+};
+
 const voteFor = async (proposalId: number, daoContractAddress: string) => {
   const contract = await getBasicDAO(daoContractAddress);
   const res = await contract.voteFor(proposalId);
@@ -132,11 +222,51 @@ const voteFor = async (proposalId: number, daoContractAddress: string) => {
   return result;
 };
 
+export const mobileVoteFor = async (
+  proposalId: number,
+  daoContractAddress: string,
+  userAddress: string
+) => {
+  const redirectUrl =
+    typeof window !== 'undefined'
+      ? window.location.pathname + window.location.search
+      : '';
+
+  const contract = await getBasicDAO(daoContractAddress);
+
+  const result = await contract['voteFor'](proposalId, {
+    callStatic: true,
+    onAccount: createOnAccountObject(userAddress),
+  });
+  await mobileContractInterract({ redirectUrl, result });
+  // toast.success('Proposal voted for successfully!');
+};
+
 const voteAgainst = async (proposalId: number, daoContractAddress: string) => {
   const contract = await getBasicDAO(daoContractAddress);
   const res = await contract.voteAgainst(proposalId);
   const result = res.decodedResult;
   return result;
+};
+
+export const mobileVoteAgainst = async (
+  proposalId: number,
+  daoContractAddress: string,
+  userAddress: string
+) => {
+  const redirectUrl =
+    typeof window !== 'undefined'
+      ? window.location.pathname + window.location.search
+      : '';
+
+  const contract = await getBasicDAO(daoContractAddress);
+
+  const result = await contract['voteAgainst'](proposalId, {
+    callStatic: true,
+    onAccount: createOnAccountObject(userAddress),
+  });
+  await mobileContractInterract({ redirectUrl, result });
+  // toast.success('Proposal voted against successfully!');
 };
 
 export {

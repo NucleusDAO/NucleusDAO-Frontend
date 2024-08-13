@@ -17,7 +17,7 @@ interface IConnectWalletPopOver {
 
 const ConnectWalletPopOver = ({ callToAction }: IConnectWalletPopOver) => {
   const isDesktop = useMediaQuery('(min-width: 768px)');
-  const { handleConnectWallet, user, isConnecting, handleDisconnect } =
+  const { handleSearchWallet, user, isConnecting, handleDisconnect } =
     useContext<any>(ConnectWalletContext);
   const connected: boolean = user.isConnected;
 
@@ -59,7 +59,7 @@ const ConnectWalletPopOver = ({ callToAction }: IConnectWalletPopOver) => {
             </>
           ) : (
             <Button
-              onClick={handleConnectWallet}
+              onClick={handleSearchWallet}
               loading={isConnecting}
               loadingText="Connecting..."
             >

@@ -69,22 +69,22 @@ interface IEachStatus {
 
 export const EachStatus: IEachStatus = {
   Active: (
-    <div className="bg-[#0080FF1A] text-[#0080FF] py-1.5 px-4 rounded-lg text-xs font-light">
+    <div className="bg-[#0080FF1A] text-[#0080FF] py-1.5 px-4 rounded-lg text-xs font-light w-fit">
       Active
     </div>
   ),
   Pending: (
-    <div className="bg-[#DCBB0C1A] text-[#DCBB0C] py-1.5 px-4 rounded-lg text-xs font-light">
+    <div className="bg-[#DCBB0C1A] text-[#DCBB0C] py-1.5 px-4 rounded-lg text-xs font-light w-fit">
       Pending
     </div>
   ),
   Failed: (
-    <div className="bg-[#DD38571A] text-[#DD3857] py-1.5 px-4 rounded-lg text-xs font-light">
+    <div className="bg-[#DD38571A] text-[#DD3857] py-1.5 px-4 rounded-lg text-xs font-light w-fit">
       Failed
     </div>
   ),
   Succeeded: (
-    <div className="bg-[#16870E1A] text-[#16870E] py-1.5 px-2 rounded-lg text-xs font-light">
+    <div className="bg-[#16870E1A] text-[#16870E] py-1.5 px-2 rounded-lg text-xs font-light w-fit">
       Succeeded
     </div>
   ),
@@ -92,12 +92,12 @@ export const EachStatus: IEachStatus = {
 
 export const EachStatus2: IEachStatus = {
   Pending: (
-    <div className="bg-[#DCBB0C1A] text-[#DCBB0C] py-1.5 px-4 rounded-lg text-xs font-light">
+    <div className="bg-[#DCBB0C1A] text-[#DCBB0C] py-1.5 px-4 rounded-lg text-xs font-light w-fit">
       Pending
     </div>
   ),
   Failed: (
-    <div className="bg-[#DD38571A] text-[#DD3857] py-1.5 px-4 rounded-lg text-xs font-light">
+    <div className="bg-[#DD38571A] text-[#DD3857] py-1.5 px-4 rounded-lg text-xs font-light w-fit">
       Failed
     </div>
   ),

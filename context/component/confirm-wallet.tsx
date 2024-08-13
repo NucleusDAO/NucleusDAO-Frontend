@@ -13,8 +13,6 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
 import ErrorIcon from '@/assets/icons/error-icon-1.png';
-import { usePathname } from 'next/navigation';
-import { DASHBOARD_URL, HOME_URL } from '@/config/path';
 
 interface IConfirmWalletDialog {
   isScanningWallet: boolean;
@@ -25,48 +23,16 @@ interface IConfirmWalletDialog {
   handleConnect: (arg: any) => void;
   wallets: any[];
   connectionError: { type: string; message: string };
-  handleConnectWallet: any;
+  handleSearchWallet: any;
 }
 
 const ConfirmWalletDialog = ({ ...props }: IConfirmWalletDialog) => {
-  const domainName = typeof window !== 'undefined' && window.location.origin;
-  const dashboardURL = `${domainName}/${DASHBOARD_URL}/`;
-  const pathname = usePathname();
-  const isHome = pathname === HOME_URL;
-  // const handleConnectAgain = () => {
-  //   let addressDeepLink: any;
-  //   if (isHome) {
-  //     addressDeepLink = createDeepLinkUrl({
-  //       type: 'address',
-  //       'x-success': `${
-  //         dashboardURL.split('?')[0]
-  //       }?address={address}&networkId={networkId}`,
-  //       'x-cancel': dashboardURL.split('?')[0],
-  //     });
-  //   } else {
-  //     addressDeepLink = createDeepLinkUrl({
-  //       type: 'address',
-  //       'x-success': `${
-  //         window.location.href.split('?')[0]
-  //       }?address={address}&networkId={networkId}`,
-  //       'x-cancel': window.location.href.split('?')[0],
-  //     });
-  //   }
-  //   if (typeof window !== 'undefined') {
-  //     window.location.replace(addressDeepLink);
-  //   }
-  // };
-
   return (
     <Dialog onOpenChange={props.setOpen} open={props.open}>
       <DialogTrigger asChild></DialogTrigger>
-      <DialogContent
-        className={cn(isHome ? 'bg-[#191919]' : 'dark:bg-[#191919] bg-light')}
-      >
+      <DialogContent className={cn('dark:bg-[#191919] bg-light')}>
         <DialogHeader>
-          <DialogTitle
-            className={cn('font-medium', isHome ? 'text-white' : '')}
-          >
+          <DialogTitle className={cn('font-medium text-white')}>
             {props.connectionError.type === 'denied'
               ? 'Connection Failed'
               : props.connectionError.type === 'timeout'
@@ -76,14 +42,10 @@ const ConfirmWalletDialog = ({ ...props }: IConfirmWalletDialog) => {
           <DialogDescription
             className={cn(
               'font-light my-4 w-full py-4 space-y-3',
-              isHome ? 'text-defaultText' : 'text-dark dark:text-defaultText'
+              'text-dark dark:text-defaultText'
             )}
           >
-            <p
-              className={cn(
-                isHome ? 'text-defaultText' : 'dark:text-defaultText text-dark'
-              )}
-            >
+            <p className={cn('dark:text-defaultText text-dark')}>
               Start by installing the Superhero Wallet browser extension on your
               preferred web browser.
             </p>
@@ -100,7 +62,7 @@ const ConfirmWalletDialog = ({ ...props }: IConfirmWalletDialog) => {
                 {props.wallets.map((wallet) => (
                   <Button
                     className="w-full"
-                    onClick={() => props.handleConnectWallet(wallet)}
+                    onClick={() => props.handleSearchWallet(wallet)}
                   >
                     Try again!
                   </Button>
@@ -109,10 +71,7 @@ const ConfirmWalletDialog = ({ ...props }: IConfirmWalletDialog) => {
             ) : (
               <div
                 className={cn(
-                  'p-2 border rounded-lg w-full bg-white border-white',
-                  isHome
-                    ? 'border-[#292929] bg-[#1E1E1E]'
-                    : 'dark:border-[#292929] dark:bg-[#1E1E1E]'
+                  'p-2 border rounded-lg w-full bg-white border-white dark:border-[#292929] dark:bg-[#1E1E1E]'
                 )}
               >
                 {props.isScanningWallet ? (
@@ -137,10 +96,7 @@ const ConfirmWalletDialog = ({ ...props }: IConfirmWalletDialog) => {
                           </div>
                           <h2
                             className={cn(
-                              'text-[14px] md:text-[18px]',
-                              isHome
-                                ? 'text-white'
-                                : 'dark:text-white text-dark'
+                              'text-[14px] md:text-[18px] dark:text-white text-dark'
                             )}
                           >
                             {wallet.info.name}

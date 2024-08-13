@@ -3,10 +3,8 @@
 import React, { ReactNode, createContext, useEffect, useState } from 'react';
 import {
   IN_FRAME,
-  IS_MOBILE,
   MAINNET_NODE_URL,
   connectWallet,
-  resolveWithTimeout,
 } from '@/libs/ae-utils';
 import {
   BrowserWindowMessageConnection,
@@ -18,6 +16,7 @@ import { usePathname, useSearchParams } from 'next/navigation';
 import { HandleWalletFunction, IConnectWalletContext } from '@/libs/types';
 import { HOME_URL } from '@/config/path';
 import { AeSdkAepp, Node } from '@aeternity/aepp-sdk';
+import { getIsConnected, isMobile } from '@/libs/utils';
 
 export const ConnectWalletContext = createContext<IConnectWalletContext>({
   user: { address: '', isConnected: false },
@@ -36,20 +35,20 @@ interface IUser {
 
 export interface IContext {
   user: IUser;
-  handleConnectWallet: () => any;
+  handleSearchWallet: () => any;
 }
 
 export const ConnectWalletProvider = ({ children }: IAppProvider) => {
   const pathname = usePathname();
-  const defaultUser = { address: '', isConnected: false };
+  const searchParams = useSearchParams();
+  const address = searchParams.get('address') || '';
+  const defaultUser = getIsConnected() || { address: '', isConnected: false };
 
   const [isConnecting, setIsConnecting] = useState<boolean>(false);
   const [user, setUser] = useState<IUser>(defaultUser);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [showDisconnectModal, setShowDisconnectModal] =
     useState<boolean>(false);
-  const searchParams = useSearchParams();
-  const address = searchParams.get('address') || '';
 
   const [wallets, setWallets] = useState<any>([]);
   const [scanningForWallets, setScanningForWallets] = useState<boolean>(false);
@@ -98,11 +97,11 @@ export const ConnectWalletProvider = ({ children }: IAppProvider) => {
 
   const isHome = pathname === HOME_URL;
 
-  const handleConnectWallet = async () => {
+  const handleSearchWallet = async () => {
     setOpenModal(true);
     setConnectionError({ message: '', type: '' });
 
-    if (IS_MOBILE && !IN_FRAME) {
+    if (isMobile() && !IN_FRAME) {
       addDefaultWallet();
     } else {
       setScanningForWallets(true);
@@ -125,8 +124,6 @@ export const ConnectWalletProvider = ({ children }: IAppProvider) => {
         setScanningForWallets(false);
 
         clearTimeout(walletScanningTimeout);
-        stopScan?.();
-        setScanningForWallets(false);
       };
 
       stopScan = walletDetector(scannerConnection, handleWallet);
@@ -137,7 +134,6 @@ export const ConnectWalletProvider = ({ children }: IAppProvider) => {
     if (isConnecting) return;
     setIsConnecting(true);
     setConnectingTo(walletObj.info.id);
-    let watchUntilTruly: any = null;
 
     await connectWallet({
       setConnectingToWallet,
@@ -175,7 +171,7 @@ export const ConnectWalletProvider = ({ children }: IAppProvider) => {
   };
 
   const value = {
-    handleConnectWallet,
+    handleSearchWallet,
     user,
     isConnecting,
     handleDisconnect,
@@ -194,7 +190,7 @@ export const ConnectWalletProvider = ({ children }: IAppProvider) => {
             open={openModal}
             setOpen={setOpenModal}
             handleConnect={handleConnect}
-            handleConnectWallet={handleConnectWallet}
+            handleSearchWallet={handleSearchWallet}
             wallets={wallets}
             connectionError={connectionError}
           />

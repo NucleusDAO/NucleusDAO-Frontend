@@ -106,13 +106,13 @@ const Layout = ({ children }: ILayout) => {
         <div className="space-y-8">
           <div className="space-y-6">
             <div className="lg:flex items-center justify-between">
-              <div className="flex space-x-4 items-center">
+              <div className="flex space-x-4 lg:items-center items-start">
                 <img
                   src={currentDAO?.image}
                   alt={currentDAO?.name}
                   className="rounded-lg object-cover h-[50px] w-[50px]"
                 />
-                <div className="space-y-4">
+                <div className="lg:space-y-1">
                   <h2 className="font-medium text-lg lg:text-2xl text-dark dark:text-white capitalize">
                     {currentDAO?.name}
                   </h2>
@@ -138,7 +138,7 @@ const Layout = ({ children }: ILayout) => {
                   </DialogTrigger>
                   <DialogContent className="dark:bg-gradient-to-r dark:from-[#1E1E1E] dark:via-[#1E1E1E]">
                     <DialogHeader>
-                      <DialogTitle className="text-white font-medium py-3">
+                      <DialogTitle className="dark:text-white font-medium py-3 ">
                         Join DAO
                       </DialogTitle>
                       <DialogDescription className="font-light py-2">

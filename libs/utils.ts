@@ -1,8 +1,9 @@
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { IProposal } from './types';
-import { IDAO } from '@/context/each-dao-context';
+import { IExecuteAction, IProposal } from './types';
 import { rate } from '@/config/dao-config';
+import { isSafariBrowser } from './ae-utils';
+import { toast } from 'sonner';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -172,8 +173,12 @@ export function daysToMilliseconds(days: number) {
 }
 
 export function millisecondsToDays(milliseconds: number) {
-  const millisecondsInADay = 1000 * 60 * 60 * 24;
-  return milliseconds / millisecondsInADay;
+  if (milliseconds) {
+    const millisecondsInADay = 1000 * 60 * 60 * 24;
+    return milliseconds / millisecondsInADay;
+  } else {
+    return 0;
+  }
 }
 
 export function getDaysFromMilliseconds(days: number): number {
@@ -207,21 +212,52 @@ export function getDuration(startTime: number, endTime: number) {
   return `${days}d ${hours}h ${minutes}m`;
 }
 
-export const activities: { title: string; color: string; url: string }[] = [
+export const activities: {
+  title: string;
+  color: string;
+  url: string;
+  options: { title: string; instruction: string[] };
+}[] = [
   {
     title: 'Proposal',
     color: 'bg-[#444444]',
-    url: 'https://www.youtube.com/watch?v=LXb3EKWsInQ',
+    options: {
+      title: 'Create a Proposal:',
+      instruction: [
+        "Go to your DAO's dashboard",
+        "Select 'Create Proposal'",
+        'Choose a predefined proposal template or create a custom one',
+        "Fill in the details and hit 'Submit.'",
+      ],
+    },
+    url: '',
   },
   {
     title: 'DAO',
     color: 'bg-[#25B81B]',
-    url: 'https://www.youtube.com/watch?v=LXb3EKWsInQ',
+    options: {
+      title: 'Create a DAO:',
+      instruction: [
+        'Go to your personal dashboard',
+        "Click 'Create DAO'.",
+        'Customize the governance settings and provide required DAO details.',
+        "Hit 'Create' to finalize the DAO creation.",
+      ],
+    },
+    url: '',
   },
   {
     title: 'Vote',
     color: 'bg-[#DCBB0C]',
-    url: 'https://www.youtube.com/watch?v=LXb3EKWsInQ',
+    options: {
+      title: 'Vote on a Proposal:',
+      instruction: [
+        'Ensure you are a member of the DAO with the proposal.',
+        'Access the proposal and cast your vote.',
+        "You're all set",
+      ],
+    },
+    url: '',
   },
 ];
 
@@ -349,3 +385,44 @@ export const convertCurrency = (amount: number, price: number) => {
   const usdValue: number = aeFloat * Number(price || rate);
   return { ae: aeFloat, usd: usdValue.toFixed(5) };
 };
+
+export function isMobile() {
+  const regex =
+    /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
+  return regex.test(navigator.userAgent);
+}
+
+function isObjectEmpty<T extends object>(obj: T): boolean {
+  return Object.keys(obj).length === 0;
+}
+
+export function getIsConnected() {
+  if (typeof window !== 'undefined') {
+    const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+    if (isObjectEmpty(currentUser) || !isMobile() || !isSafariBrowser()) {
+      return null;
+    }
+    return currentUser;
+  }
+}
+
+export async function executeAction({
+  setPending,
+  action,
+  payload,
+  address,
+  mutate,
+}: IExecuteAction) {
+  if (isMobile() || isSafariBrowser()) {
+    setPending(true);
+    try {
+      await action(payload, address);
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      setPending(false);
+    }
+  } else {
+    mutate(payload);
+  }
+}

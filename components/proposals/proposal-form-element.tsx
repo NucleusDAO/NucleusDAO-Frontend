@@ -239,7 +239,8 @@ const QuorumFormField = ({
               <div className="border dark:border-[#292929] flex items-center justify-between rounded-lg py-1 px-5 w-[50%] border-[#CCCCCC99]">
                 <div
                   className={cn(
-                    'dark:bg-[#1E1E1E] rounded-lg py-2 px-2 dark:hover:bg-[#2a2a2a] trans bg-[#D2D2D2]'
+                    'dark:bg-[#1E1E1E] rounded-lg py-2 px-2 dark:hover:bg-[#2a2a2a] trans bg-[#D2D2D2]',
+                    isDisabled && 'cursor-not-allowed'
                   )}
                   role="button"
                   onClick={() => {
@@ -269,7 +270,10 @@ const QuorumFormField = ({
                   }
                 />
                 <div
-                  className="dark:bg-[#1E1E1E] rounded-lg py-2 px-2 dark:hover:bg-[#2a2a2a] trans bg-[#D2D2D2]"
+                  className={cn(
+                    'dark:bg-[#1E1E1E] rounded-lg py-2 px-2 dark:hover:bg-[#2a2a2a] trans bg-[#D2D2D2]',
+                    isDisabled && 'cursor-not-allowed'
+                  )}
                   role="button"
                   onClick={() =>
                     !isDisabled ? handlePlus('quorum', form) : null

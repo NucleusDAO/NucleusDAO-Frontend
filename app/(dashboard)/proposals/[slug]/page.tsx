@@ -7,7 +7,7 @@ import { EachDaoContext } from '@/context/each-dao-context';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { getProposalDetails } from '@/libs/contract-call';
 import { EACH_PROPOSAL_INFO } from '@/libs/key';
-import { cn } from '@/libs/utils';
+import { capitalizeFirstLetter, cn } from '@/libs/utils';
 import { useQuery } from '@tanstack/react-query';
 import { MoveLeft } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -95,16 +95,16 @@ const EachProposal = () => {
 
       <div className="flex space-x-3 justify-start">
         <Avatar>
-          <AvatarImage src={currentDAO.image} />
+          <AvatarImage src={currentDAO.image} className="object-cover" />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
 
         <div className="">
-          <h1 className="dark:text-white text-dark font-medium text-[36px] lg:text-[18px]">
+          <h1 className="dark:text-white text-dark font-medium text-[36px] lg:text-[18px] capitalize">
             {currentDAO && currentDAO?.name}
           </h1>
           <p className="text-sm lg:text-normal font-light leading-[30px]">
-            {currentDAO && currentDAO?.description}
+            {currentDAO && capitalizeFirstLetter(currentDAO?.description)}
           </p>
         </div>
       </div>
