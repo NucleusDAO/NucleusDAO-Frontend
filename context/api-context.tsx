@@ -19,7 +19,6 @@ import { ReactNode, createContext, useContext } from 'react';
 import { ConnectWalletContext } from './connect-wallet-context';
 import { IConnectWalletContext, ICreateUser } from '@/libs/types';
 import { toast } from 'sonner';
-import { AppContext } from './app-context';
 import { EachDaoContext } from './each-dao-context';
 
 export const ApiContext = createContext<any>({});
@@ -34,13 +33,6 @@ export const ApiContextProvider = ({ children }: IApiProvider) => {
   const {
     user: { address },
   } = useContext<IConnectWalletContext>(ConnectWalletContext);
-  // const { getActivities } = useContext(AppContext);
-
-  // useEffect(() => {
-  //   if (address) {
-  //     getActivities(address);
-  //   }
-  // }, [address]);
 
   const {
     data: getAEPrice,
@@ -61,7 +53,6 @@ export const ApiContextProvider = ({ children }: IApiProvider) => {
     queryKey: [EACH_USER],
     queryFn: () => getUser(address),
     enabled: !!address,
-    retry: false,
   });
 
   const {
@@ -92,7 +83,7 @@ export const ApiContextProvider = ({ children }: IApiProvider) => {
       : (payload: ICreateUser) => createUser(payload),
     onSuccess: (response: any) => {
       queryClient.invalidateQueries({ queryKey: [EACH_USER] });
-      toast.success(response.message || 'User profile updated successfully.');
+      toast.success('User profile updated successfully.');
     },
     onError: (error: any) =>
       toast.error(error.response.data.message || 'Email has been in use'),

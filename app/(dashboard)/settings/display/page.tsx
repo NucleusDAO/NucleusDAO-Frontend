@@ -25,9 +25,9 @@ const Display = () => {
   const form = useForm<z.infer<typeof editDisplay>>({
     resolver: zodResolver(editDisplay),
     defaultValues: {
-      light: eachUser.theme === 'light',
-      dark: eachUser.theme === 'dark',
-      system_: eachUser.theme === 'system',
+      light: eachUser?.theme === 'light',
+      dark: eachUser?.theme === 'dark',
+      system_: eachUser?.theme === 'system',
     },
   });
 
