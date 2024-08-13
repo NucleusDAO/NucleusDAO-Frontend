@@ -5,7 +5,6 @@ import {
   IN_FRAME,
   IS_MOBILE,
   MAINNET_NODE_URL,
-  TESTNET_NODE_URL,
   connectWallet,
   resolveWithTimeout,
 } from '@/libs/ae-utils';
@@ -60,10 +59,7 @@ export const ConnectWalletProvider = ({ children }: IAppProvider) => {
 
   const aeSdk: any = new AeSdkAepp({
     name: 'NucleusDAO',
-    nodes: [
-      { name: 'testnet', instance: new Node(TESTNET_NODE_URL) },
-      { name: 'mainnet', instance: new Node(MAINNET_NODE_URL) },
-    ],
+    nodes: [{ name: 'mainnet', instance: new Node(MAINNET_NODE_URL) }],
     onNetworkChange: async ({ networkId }) => {
       const [{ name }] = (await aeSdk.getNodesInPool()).filter(
         (node: any) => node.nodeNetworkId === networkId

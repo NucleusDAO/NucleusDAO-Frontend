@@ -13,9 +13,8 @@ import { DASHBOARD_URL } from '@/config/path';
 import { toast } from 'sonner';
 
 const nucleusDAOContractAddress =
-  'ct_tty8uyUaw1LCCveugDympVzdWmcJntGG1wbFPiurqYR5m3iss';
+  'ct_yDcPop9r72KvwPAQB61gmYvhZHYogVuAWeheQ5zL8J5cwWPY4';
 
-export const TESTNET_NODE_URL = 'https://testnet.aeternity.io';
 export const MAINNET_NODE_URL = 'https://mainnet.aeternity.io';
 export const COMPILER_URL = 'https://compiler.aepps.com';
 
@@ -59,10 +58,7 @@ export const createDeepLinkUrl = ({
 
 let aeSdks: any = new AeSdkAepp({
   name: 'NucleusDAO',
-  nodes: [
-    { name: 'testnet', instance: new Node(TESTNET_NODE_URL) },
-    { name: 'mainnet', instance: new Node(MAINNET_NODE_URL) },
-  ],
+  nodes: [{ name: 'mainnet', instance: new Node(MAINNET_NODE_URL) }],
   onNetworkChange: async ({ networkId }) => {
     const [{ name }] = (await aeSdks.getNodesInPool()).filter(
       (node: any) => node.nodeNetworkId === networkId
