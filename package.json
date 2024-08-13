@@ -54,10 +54,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-<<<<<<< HEAD
-=======
     "@types/aos": "^3.0.7",
->>>>>>> cad862b47163ddbbaadc358a4914cf8a23435758
     "@types/crypto-js": "^4.2.2",
     "@types/node": "^20",
     "@types/react": "^18",
