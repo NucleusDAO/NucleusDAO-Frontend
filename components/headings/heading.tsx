@@ -11,13 +11,13 @@ export const Heading = ({
 }) => (
   <h1
     className={cn(
-      'text-white text-[32px] lg:text-[40px] text-center lg:text-left font-medium leading-[1.3]',
+      'text-white text-[28px] lg:text-[40px] text-center lg:text-left font-medium leading-[1.3]',
       className
     )}
     style={style}
-    data-aos="fade-up"
-    data-aos-duration="500"
-    data-aos-easing="linear"
+    // data-aos="fade-up"
+    // data-aos-duration="500"
+    // data-aos-easing="linear"
   >
     {title}
   </h1>

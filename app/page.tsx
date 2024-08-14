@@ -29,9 +29,9 @@ export default function Home() {
     window.innerWidth >= 912;
   const currentWidth = typeof window !== 'undefined' && window.innerWidth;
 
-  useEffect(() => {
-    AOS.init({ duration: 1500 });
-  }, []);
+  // useEffect(() => {
+  //   AOS.init({ duration: 1500 });
+  // }, []);
   return (
     <div className={cn('min-h-screen bg-[#0A0A0A]')}>
       <main
@@ -59,7 +59,7 @@ export default function Home() {
       <section
         className={cn(
           'bg-cover bg-no-repeat w-full p-12 lg:p-24 space-y-4 lg:space-y-8',
-          screenWidth ? 'min-h-[170vh]' : 'min-h-fit lg:min-h-[160vh]'
+          screenWidth ? 'min-h-[170vh]' : 'min-h-fit lg:min-h-[10vh]'
         )}
         style={{
           backgroundImage: `url(${SectionTwoBackground.src})`,
@@ -76,9 +76,9 @@ export default function Home() {
           <Heading title="Discover NucleusDAO: Revolutionizing Decentralized Governance" />
           <p
             className="font-light lg:text-base text-center lg:text-left text-sm"
-            data-aos="fade-up"
-            data-aos-easing="linear"
-            data-aos-duration="500"
+            // data-aos="fade-up"
+            // data-aos-easing="linear"
+            // data-aos-duration="500"
           >
             NucleusDAO embraces true autonomy by empowering communities to
             create DAOs with unparalleled transparency, user-centric design, and
@@ -88,7 +88,7 @@ export default function Home() {
         </div>
 
         <div className="border border-[#656565] py-8 px-6 lg:px-14 rounded-[20px] bg-gradient-to-r from-[#1E1E1E33] to-[#19191933] lg:flex-row flex-col-reverse flex justify-between items-center">
-          <div className="space-y-4 lg:space-y-8 lg:pl-16">
+          <div className="space-y-4 lg:space-y-8 text-center lg:text-left">
             <h2 className="text-white font-medium text-[24px] lg:text-[28px] w-full xl:w-[60%] mt-4 lg:mt-0">
               Launch your DAO with an Inclusive Builder
             </h2>
@@ -109,7 +109,7 @@ export default function Home() {
 
       <section
         className={cn(
-          'w-full space-y-8 -mt-56',
+          'w-full space-y-8 lg:-mt-56',
           screenWidth ? '' : 'lg:-mt-32'
         )}
       >
@@ -126,9 +126,9 @@ export default function Home() {
           />
           <p
             className="font-light text-sm lg:text-base"
-            data-aos="fade-up"
-            data-aos-easing="linear"
-            data-aos-duration="500"
+            // data-aos="fade-up"
+            // data-aos-easing="linear"
+            // data-aos-duration="500"
           >
             NucleusDAO offers a range of innovative features designed to
             facilitate seamless collaboration and decision-making.
@@ -161,9 +161,9 @@ export default function Home() {
           />
           <p
             className="font-light text-sm lg:text-base"
-            data-aos="fade-up"
-            data-aos-easing="linear"
-            data-aos-duration="500"
+            // data-aos="fade-up"
+            // data-aos-easing="linear"
+            // data-aos-duration="500"
           >
             Discover how NucleusDAO simplifies decentralized governance through
             our intuitive step-by-step guide. Watch short animations to see how
