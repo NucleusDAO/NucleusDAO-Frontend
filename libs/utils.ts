@@ -137,6 +137,18 @@ export const defaultDaoCreation = {
   quorum: 50,
 };
 
+function hasQuorum(
+  supporters: { account: string; support: boolean }[],
+  totalMembers: number,
+  quorumPercentage: number
+): boolean {
+  const requiredQuorum = Math.ceil((quorumPercentage / 100) * totalMembers);
+
+  const supportCount = supporters.filter((member) => member.support).length;
+
+  return supportCount >= requiredQuorum;
+}
+
 export const getStatus = (_proposal: IProposal | any) => {
   if (_proposal.isExecuted) {
     return 'Succeeded';
@@ -146,7 +158,12 @@ export const getStatus = (_proposal: IProposal | any) => {
   } else {
     if (
       _proposal.votesFor > _proposal.votesAgainst &&
-      new Date(Number(_proposal.endTime)).valueOf() <= Date.now().valueOf()
+      new Date(Number(_proposal.endTime)).valueOf() <= Date.now().valueOf() &&
+      hasQuorum(
+        _proposal.votes,
+        Number(_proposal.currentMembers),
+        Number(_proposal.quorum)
+      )
     ) {
       return 'Pending';
     } else {
@@ -314,7 +331,8 @@ export function convertDays(days: number) {
 
 export function getTimeDifference(
   timestamp: string | number,
-  setCountdownString: (arg: string) => void
+  setCountdownString: (arg: string) => void,
+  refetchData?: any
 ): any {
   const intervalId = setInterval(() => {
     const currentTime = Date.now();
@@ -324,6 +342,7 @@ export function getTimeDifference(
     if (timeDifference <= 0) {
       clearInterval(intervalId);
       setCountdownString('voting time has ended!');
+      refetchData && refetchData();
       return;
     }
 

@@ -53,6 +53,7 @@ export const EachDaoContextProvider = ({ children }: IAppProvider) => {
     queryKey: [EACH_DAO_KEY, daoId],
     queryFn: () => getEachDAO(daoId),
     enabled: !!daoId,
+    refetchOnWindowFocus: true,
   });
 
   const isMember = currentDAO?.members?.includes(user.address);
@@ -62,10 +63,12 @@ export const EachDaoContextProvider = ({ children }: IAppProvider) => {
     isLoading: isProposalLoading,
     isError: isProposalError,
     error: proposalError,
+    refetch: refetchProposals,
   } = useQuery({
     queryKey: [EACH_DAO_PROPOSAL, daoId, currentDAO?.contractAddress],
     queryFn: () => getProposals(currentDAO?.contractAddress),
     enabled: !!currentDAO?.contractAddress,
+    refetchOnWindowFocus: true,
   });
 
   const eachDAOProposal =
@@ -93,6 +96,7 @@ export const EachDaoContextProvider = ({ children }: IAppProvider) => {
     queryKey: [MEMBER_ACTIVIES, daoId, currentDAO?.contractAddress],
     queryFn: () => getAllUsersActivities(currentDAO?.contractAddress),
     enabled: !!currentDAO?.contractAddress,
+    refetchOnWindowFocus: true,
   });
 
   const value = {
@@ -110,7 +114,7 @@ export const EachDaoContextProvider = ({ children }: IAppProvider) => {
 
     error,
     isError,
-
+    refetchProposals,
     setMemberHistory,
     memberHistory,
     proposalHistory,

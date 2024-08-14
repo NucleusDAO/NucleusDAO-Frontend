@@ -190,6 +190,7 @@ export interface IEachProposalView {
     votesFor: number;
     votesAgainst: number;
   };
+  refetchData?: () => void;
 }
 
 export interface ICreateDAOS {

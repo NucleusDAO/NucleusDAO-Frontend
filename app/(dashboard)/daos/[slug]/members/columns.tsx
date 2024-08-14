@@ -16,6 +16,7 @@ import { IConnectWalletContext } from '@/libs/types';
 import { removeExistingStorageItem } from '@/libs/utils';
 import { EachDaoContext } from '@/context/each-dao-context';
 import { useRouter } from 'next/navigation';
+import { Trash2 } from 'lucide-react';
 
 const columns: {
   accessorKey: string;
@@ -31,13 +32,18 @@ const columns: {
   },
   {
     accessorKey: 'proposalsCreated',
-    header: 'Proposals',
+    header: 'Proposals Created',
     key: 'proposals',
   },
   {
-    accessorKey: 'votesCasted',
-    header: 'Votes',
-    key: 'votes',
+    accessorKey: 'proposalsExecuted',
+    header: 'Proposals Executed',
+    key: 'proposalsExecuted',
+  },
+  {
+    accessorKey: 'voteCasted',
+    header: 'Votes Casted',
+    key: 'voteCasted',
   },
   {
     accessorKey: 'action',
@@ -77,10 +83,12 @@ export const ActionCell = ({ row }: any) => {
         <Dialog>
           <DialogTrigger asChild>
             <Button
-              className="bg-[#1E1E1E] hover:bg-[#262626] text-white"
+              className="bg-[#1E1E1E] hover:bg-[#262626] text-white rounded-full"
               size="sm"
+              variant="destructive"
             >
-              Delete
+              <Trash2 size={18} strokeWidth={1} />
+              {/* Delete */}
             </Button>
           </DialogTrigger>
           <DialogContent className="dark:bg-[#191919] bg-light">

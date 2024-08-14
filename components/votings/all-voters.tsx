@@ -1,9 +1,10 @@
 'use client';
-import RoundedIcon from '@/assets/icons/roundedIcon.png';
 import Image from 'next/image';
 import { Button } from '../ui/button';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import EmptyDAO from '@/assets/icons/empty-icon.png';
+import { ConnectWalletContext } from '@/context/connect-wallet-context';
+import { IConnectWalletContext } from '@/libs/types';
 
 interface IAllVoters {
   voters: { account: string; support: boolean }[];
@@ -11,6 +12,8 @@ interface IAllVoters {
 
 const AllVoters = ({ voters }: IAllVoters) => {
   const [list, setList] = useState<number>(3);
+  const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
+
   return (
     <div className="space-y-4">
       <div className="flex justify-between font-light text-defaultText border-b dark:border-[#1E1E1E] pb-4 border-[#CCCCCC99]">
@@ -24,9 +27,17 @@ const AllVoters = ({ voters }: IAllVoters) => {
             .map((voter: { account: string; support: boolean }) => (
               <div className="flex justify-between" key={voter.account}>
                 <div className="flex space-x-3 items-center">
-                  <Image src={RoundedIcon} alt="logo" width={20} height={20} />
+                  <img
+                    src={`https://avatars.z52da5wt.xyz/${voter.account}`}
+                    alt="logo"
+                    width={20}
+                    height={20}
+                  />
                   <p className="text-sm dark:text-white text-dark">
-                    {`${voter?.account?.slice(0, 20)}...`}
+                    {`${voter?.account?.slice(0, 20)}...`}{' '}
+                    {user.address === voter.account && (
+                      <span className="text-primary text-sm">(You)</span>
+                    )}
                   </p>
                 </div>
                 <p className="dark:text-white text-dark">

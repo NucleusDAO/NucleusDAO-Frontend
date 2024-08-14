@@ -83,10 +83,10 @@ const ViewNotificationPopover = () => {
         </div>
       </PopoverTrigger>
       <PopoverContent
-        className="mt-8 lg:mt-2 md:px-6 pt-3 pb-8 md:w-[430px] dark:bg-gradient-to-r dark:via-[#1E1E1E] dark:from-[#1E1E1E] dark:to-[#252525]"
+        className="mt-8 lg:mt-2 pt-3 pb-8 md:w-[430px] dark:bg-gradient-to-r dark:via-[#1E1E1E] dark:from-[#1E1E1E] dark:to-[#252525]"
         style={{ boxShadow: '0px 4px 10px 0px #00000040' }}
       >
-        <div className="flex justify-between items-center text-sm border-b pb-3 dark:border-b-[#292929] border-b-[#CCCCCC99] font-light">
+        <div className="flex justify-between items-center text-sm border-b py-3 dark:border-b-[#292929] border-b-[#CCCCCC99] font-light">
           <p className="font-medium dark:text-[#F5F5F5] text-dark">
             Notifications
           </p>
@@ -120,7 +120,7 @@ const ViewNotificationPopover = () => {
                   <div
                     key={notification.title}
                     onClick={() => handleView(notification)}
-                    className="flex space-x-3 text-sm space-y-5 justify-start mt-3 hover:dark:bg-[#1E1E1E] hover:bg-[#F5F5F5] hover:cursor-pointer rounded-md px-4 py-1 trans"
+                    className="flex space-x-3 text-sm space-y-3 justify-start mt-3 hover:dark:bg-[#1E1E1E] hover:bg-[#F5F5F5] hover:cursor-pointer rounded-md px-4 py-1 trans"
                   >
                     <div className="mt-4">
                       <Image

@@ -21,10 +21,12 @@ const EachFilterTab = ({
   proposalData,
   search,
   filter,
+  refetchData,
 }: {
   proposalData: any[];
   search?: string;
   filter?: string;
+  refetchData: any;
 }) => {
   const [openPopover, setOpenPopover] = useState<boolean>(false);
   const searchParams = useSearchParams();
@@ -161,7 +163,11 @@ const EachFilterTab = ({
             )}
             <div className="grid lg:grid-cols-2 grid-cols-1 gap-4 lg:gap-7">
               {proposalData?.map((proposal) => (
-                <ProposalCard key={proposal.status} {...proposal} />
+                <ProposalCard
+                  key={proposal.status}
+                  {...proposal}
+                  refetchData={refetchData}
+                />
               ))}
             </div>
           </>

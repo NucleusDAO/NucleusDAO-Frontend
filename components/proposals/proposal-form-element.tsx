@@ -51,7 +51,7 @@ const SelectFormField = ({
       name="type"
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Title</FormLabel>
+          <FormLabel>Proposal Type</FormLabel>
           <Select
             onValueChange={(value) => {
               field.onChange(value);

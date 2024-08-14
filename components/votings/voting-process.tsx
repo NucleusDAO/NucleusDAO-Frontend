@@ -82,16 +82,6 @@ const VotingProcess = ({ currentProposal }: IVotingProcess) => {
     }
   };
 
-  const invalidateAllQueries = () => {
-    queryClient.invalidateQueries(DAOS_KEY);
-    queryClient.invalidateQueries(PROPOSAL_KEY);
-    queryClient.invalidateQueries(USER_ACTIVITIES_KEY);
-    queryClient.invalidateQueries(EACH_DAO_KEY);
-    queryClient.invalidateQueries(EACH_DAO_PROPOSAL);
-    queryClient.invalidateQueries(EACH_PROPOSAL_INFO);
-    queryClient.invalidateQueries(MEMBER_ACTIVIES);
-  };
-
   const { mutate, isPending } = useMutation({
     mutationFn: () =>
       selectedOption === 'yes'
@@ -139,8 +129,8 @@ const VotingProcess = ({ currentProposal }: IVotingProcess) => {
     <div>
       {hasVoted && (
         <p className="dark:text-white text-dark">
-          You have casted your vote. The result will be shown if the proposal
-          reach its quorum
+          You have casted your vote. The result will be shown when the proposal
+          ends
         </p>
       )}
       {!hasVoted && (
@@ -199,8 +189,8 @@ const VotingProcess = ({ currentProposal }: IVotingProcess) => {
                   <p className="-mt-2">Vote Casted</p>
                 </DialogTitle>
                 <DialogDescription className="py-2 text-center">
-                  You have casted your vote. The result will be shown if the
-                  proposal reaches its quorum
+                  You have casted your vote. The result will be shown when the
+                  proposal ends
                 </DialogDescription>
               </DialogHeader>
               <Button

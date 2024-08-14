@@ -26,7 +26,11 @@ interface IEachTabView {
   [key: string]: ReactNode;
 }
 
-const EachProposalView = ({ tabs, currentProposal }: IEachProposalView) => {
+const EachProposalView = ({
+  tabs,
+  currentProposal,
+  refetchData,
+}: IEachProposalView) => {
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { address, isConnected } = user;
   const { isMember } = useContext(EachDaoContext);
@@ -45,8 +49,10 @@ const EachProposalView = ({ tabs, currentProposal }: IEachProposalView) => {
   const [countdownTime, setCountdownTime] = useState<string>('');
 
   useEffect(() => {
-    getTimeDifference(currentProposal.endTime, setCountdownTime);
+    getTimeDifference(currentProposal.endTime, setCountdownTime, refetchData);
   }, [currentProposal.endTime]);
+
+  console.log(currentProposal.endTime);
 
   const tabViews: IEachTabView = {
     Result: (

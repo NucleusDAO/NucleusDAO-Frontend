@@ -7,8 +7,13 @@ import { useSearchParams } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
 
 const EachDaoProposals = () => {
-  const { eachDAOProposal, isProposalLoading, isProposalError, proposalError } =
-    useContext(EachDaoContext);
+  const {
+    eachDAOProposal,
+    isProposalLoading,
+    isProposalError,
+    proposalError,
+    refetchProposals,
+  } = useContext(EachDaoContext);
   const searchParams = useSearchParams();
   const [proposals, setProposals] = useState(eachDAOProposal);
   const search = searchParams.get('search') || '';
@@ -40,7 +45,12 @@ const EachDaoProposals = () => {
 
   return (
     <div className="-mt-4">
-      <EachFilterTab proposalData={proposals} search={search} filter={filter} />
+      <EachFilterTab
+        proposalData={proposals}
+        search={search}
+        filter={filter}
+        refetchData={refetchProposals}
+      />
     </div>
   );
 };

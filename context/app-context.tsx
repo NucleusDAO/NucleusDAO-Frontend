@@ -58,7 +58,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
   } = useQuery({
     queryKey: [DAOS_KEY],
     queryFn: getDAOs,
-    retry: false,
+    refetchOnWindowFocus: true,
   });
 
   const DAOsData =
@@ -82,10 +82,11 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     data: allProposals,
     isLoading: isLoadingProposal,
     isError: isProposalError,
+    refetch: refetchingProposal,
   } = useQuery({
     queryFn: getAllProposals,
     queryKey: [PROPOSAL_KEY],
-    retry: false,
+    refetchOnWindowFocus: true,
   });
 
   const proposals =
@@ -222,7 +223,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     isDaoError,
     updateNewDaoInfo,
     newDaoInfo,
-
+    refetchingProposal,
     getUsersActivities,
 
     newProposalInfo,

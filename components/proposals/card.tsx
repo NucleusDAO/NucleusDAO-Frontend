@@ -29,6 +29,7 @@ interface IProposalCard {
   daoImage: string;
   daoName: string;
   organisation: string;
+  refetchData: any;
 }
 
 const ProposalCard = ({
@@ -42,6 +43,7 @@ const ProposalCard = ({
   endTime,
   daoName,
   daoImage,
+  refetchData,
 }: IProposalCard) => {
   const [countdownString, setCountdownString] = useState<string>('');
   const pathname = usePathname();
@@ -49,7 +51,7 @@ const ProposalCard = ({
   const domainName = typeof window !== 'undefined' && window.location.origin;
   const url = `${domainName}/daos/${daoId}`;
   useEffect(() => {
-    getTimeDifference(endTime, setCountdownString);
+    getTimeDifference(endTime, setCountdownString, refetchData);
   }, [endTime]);
 
   return (

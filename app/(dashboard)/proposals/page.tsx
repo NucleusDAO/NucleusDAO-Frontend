@@ -10,7 +10,7 @@ import ErrorFetchingComponent from '@/components/error-fetching-comp';
 import { AppContext } from '@/context/app-context';
 
 const Proposals = () => {
-  const { isLoadingProposal, proposals, isProposalError } =
+  const { isLoadingProposal, proposals, isProposalError, refetchingProposal } =
     useContext(AppContext);
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -78,7 +78,7 @@ const Proposals = () => {
         value={currentTab}
         onValueChange={(value) => handleFilter(value)}
       >
-        <TabsList className="w-full justify-start space-x-6 border-b-2 dark:border-b-[#292929] border-[#CCCCCC99]">
+        <TabsList className="w-full justify-start space-x-6 border-b-2 dark:border-b-[#292929] border-[#CCCCCC99] overflow-x-auto">
           {tabs.map((tab) => (
             <TabsTrigger key={tab.value} value={tab.value} className="w-fit">
               {tab.title}
@@ -95,6 +95,7 @@ const Proposals = () => {
                 proposalData={allProposal}
                 search={search}
                 filter={filter}
+                refetchData={refetchingProposal}
               />
             </TabsContent>
           ))}

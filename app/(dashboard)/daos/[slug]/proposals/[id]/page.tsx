@@ -21,7 +21,12 @@ const EachProposal = () => {
   const currentTab: string = searchParams.get('q') || tabs[0];
   const proposalId = urlParts[4];
 
-  const { data: currentProposal, isLoading } = useQuery({
+  const {
+    data: currentProposal,
+    isLoading,
+    isFetchedAfterMount,
+    refetch,
+  } = useQuery({
     queryKey: [EACH_PROPOSAL_INFO, currentDAO?.contractAddress, proposalId],
     queryFn: () => getProposalDetails(currentDAO?.contractAddress, proposalId),
     enabled: !!proposalId,
@@ -58,10 +63,14 @@ const EachProposal = () => {
           ))}
         </div>
       </div>
-      {isLoading ? (
+      {!isFetchedAfterMount ? (
         <EachDaoLoading />
       ) : (
-        <EachProposalView tabs={tabs} currentProposal={currentProposal} />
+        <EachProposalView
+          tabs={tabs}
+          currentProposal={currentProposal}
+          refetchData={() => refetch()}
+        />
       )}
     </div>
   );
