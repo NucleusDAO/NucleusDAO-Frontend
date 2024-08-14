@@ -71,7 +71,7 @@ const ProposalCard = ({
               <div className="flex items-center justify-between">
                 <div className="space-y-4 w-[100%]">
                   <div className="lg:flex space-y-4 lg:space-y-2 justify-between items-center w-full lg:space-x-0">
-                    <div className="space-y-2 lg:space-y-0 flex space-x-2 items-center">
+                    <div className="flex space-x-2 items-center">
                       <Avatar className="w-8 h-8 rounded-sm block">
                         <AvatarImage
                           src={daoImage}
