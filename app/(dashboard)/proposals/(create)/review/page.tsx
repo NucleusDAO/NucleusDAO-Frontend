@@ -171,7 +171,7 @@ const ReviewProposal = () => {
           Proposal Information
         </h1>
         <div className="grid grid-cols-12 text-sm">
-          <p className="dark:text-white text-dark col-span-4">Title</p>
+          <p className="dark:text-white text-dark col-span-4">Proposal Type</p>
           <p className="dark:text-[#888888] text-dark col-span-8">
             {proposalLists[Number(value.type)].title}
           </p>
