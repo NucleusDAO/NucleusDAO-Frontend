@@ -27,7 +27,6 @@ export default function Home() {
   const screenWidth =
     (typeof window !== 'undefined' && window.innerWidth >= 1880) ||
     window.innerWidth >= 912;
-  const currentWidth = typeof window !== 'undefined' && window.innerWidth;
 
   // useEffect(() => {
   //   AOS.init({ duration: 1500 });
@@ -36,7 +35,7 @@ export default function Home() {
     <div className={cn('min-h-screen bg-[#0A0A0A]')}>
       <main
         className={cn(
-          'bg-contain bg-no-repeat',
+          'bg-contain bg-no-repeat xl:min-h-[30vh]',
           screenWidth ? 'min-h-[40vh]' : 'w-full min-h-[0vh] lg:min-h-[105vh]'
         )}
         style={{
@@ -58,8 +57,10 @@ export default function Home() {
 
       <section
         className={cn(
-          'bg-cover bg-no-repeat w-full p-12 lg:p-24 space-y-4 lg:space-y-8',
-          screenWidth ? 'min-h-[170vh]' : 'min-h-fit lg:min-h-[10vh]'
+          'bg-cover bg-no-repeat w-full p-12 lg:p-24 space-y-4 lg:space-y-8 lg:h-[30%]'
+          // screenWidth
+          //   ? 'lg:min-h-[170vh] 2xl:min-h-[45vh]'
+          //   : 'min-h-fit lg:min-h-[10vh]'
         )}
         style={{
           backgroundImage: `url(${SectionTwoBackground.src})`,
@@ -109,7 +110,7 @@ export default function Home() {
 
       <section
         className={cn(
-          'w-full space-y-8 lg:-mt-56',
+          'w-full space-y-8 lg:-mt-[25%] 2xl:-mt-[30%]',
           screenWidth ? '' : 'lg:-mt-32'
         )}
       >
@@ -179,7 +180,7 @@ export default function Home() {
           background: 'round',
           backgroundImage: `url(${SectionFourBackground.src})`,
         }}
-        className="px-6 lg:px-24 bg-contain bg-no-repeat w-full py-8 lg:py-20 space-y-16"
+        className="px-6 lg:px-24 bg-contain bg-no-repeat w-full py-4 lg:py-20 space-y-16"
       >
         <div className="space-y-4 lg:space-y-8 w-full lg:w-[65%]">
           <div
@@ -195,7 +196,7 @@ export default function Home() {
       </section>
 
       <section
-        className="space-y-8 pt-24 lg:pt-0 mb-28 lg:mt-16 flex-grow px-10 lg:px-0"
+        className="space-y-8 pt-4 lg:pt-0 lg:mb-28 lg:mt-16 flex-grow px-10 lg:px-0"
         id="contactUs"
       >
         <div
