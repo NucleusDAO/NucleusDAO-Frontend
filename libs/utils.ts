@@ -342,7 +342,6 @@ export function getTimeDifference(
     if (timeDifference <= 0) {
       clearInterval(intervalId);
       setCountdownString('voting time has ended!');
-      refetchData && refetchData();
       return;
     }
 
