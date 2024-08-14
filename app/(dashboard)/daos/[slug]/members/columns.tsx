@@ -17,6 +17,7 @@ import { removeExistingStorageItem } from '@/libs/utils';
 import { EachDaoContext } from '@/context/each-dao-context';
 import { useRouter } from 'next/navigation';
 import { Trash2 } from 'lucide-react';
+import { useMediaQuery } from '@/hooks/use-media-query';
 
 const columns: {
   accessorKey: string;
@@ -33,17 +34,26 @@ const columns: {
   {
     accessorKey: 'proposalsCreated',
     header: 'Proposals Created',
-    key: 'proposals',
+    key: 'proposalsCreated',
+    cell: ({ row }: any) => (
+      <p className="text-center">{row.original.proposalsCreated}</p>
+    ),
   },
   {
     accessorKey: 'proposalsExecuted',
     header: 'Proposals Executed',
     key: 'proposalsExecuted',
+    cell: ({ row }: any) => (
+      <p className="text-center">{row.original.proposalsExecuted}</p>
+    ),
   },
   {
     accessorKey: 'voteCasted',
     header: 'Votes Casted',
     key: 'voteCasted',
+    cell: ({ row }: any) => (
+      <p className="text-center">{row.original.voteCasted}</p>
+    ),
   },
   {
     accessorKey: 'action',
@@ -57,6 +67,7 @@ export { columns };
 
 export const WalletAddressCell = ({ row }: any) => {
   const { account } = row.original;
+  const isDesktop = useMediaQuery('(min-width: 768px)');
   return (
     <div className="flex space-x-2 items-center w-[25vw]">
       <img
@@ -65,7 +76,11 @@ export const WalletAddressCell = ({ row }: any) => {
         className="rounded-full h-6 w-6"
       />
 
-      <p>{account.slice(0, 14) + '...' + account.slice(-8)}</p>
+      <p>
+        {account.slice(0, isDesktop ? 14 : 5) +
+          '...' +
+          account.slice(isDesktop ? -8 : -2)}
+      </p>
     </div>
   );
 };
@@ -78,7 +93,7 @@ export const ActionCell = ({ row }: any) => {
   const { account } = row.original;
 
   return (
-    <>
+    <div className="text-center">
       {isConnected && isMember ? (
         <Dialog>
           <DialogTrigger asChild>
@@ -88,7 +103,6 @@ export const ActionCell = ({ row }: any) => {
               variant="destructive"
             >
               <Trash2 size={18} strokeWidth={1} />
-              {/* Delete */}
             </Button>
           </DialogTrigger>
           <DialogContent className="dark:bg-[#191919] bg-light">
@@ -117,6 +131,6 @@ export const ActionCell = ({ row }: any) => {
       ) : (
         '-'
       )}
-    </>
+    </div>
   );
 };
