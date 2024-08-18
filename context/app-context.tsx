@@ -25,6 +25,7 @@ import {
 export const AppContext = createContext<any>({});
 
 export const AppContextProvider = ({ children }: IAppProvider) => {
+  const [network, setNetwork] = useState('mainnet');
   const [newDaoInfo, setNewDaoInfo] = useState<InewDaoInfo>(defaultDaoCreation);
   const [newProposalInfo, setNewProposalInfo] =
     useState<INewProposal>(defaultProposal);
@@ -56,7 +57,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     isPending: daoLoading,
     isError: isDaoError,
   } = useQuery({
-    queryKey: [DAOS_KEY],
+    queryKey: [DAOS_KEY, network],
     queryFn: getDAOs,
     refetchOnWindowFocus: true,
   });
@@ -85,7 +86,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     refetch: refetchingProposal,
   } = useQuery({
     queryFn: getAllProposals,
-    queryKey: [PROPOSAL_KEY],
+    queryKey: [PROPOSAL_KEY, network],
     refetchOnWindowFocus: true,
   });
 
@@ -231,6 +232,8 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
 
     getAUserActivitiesAcrossDAOs,
     isUserMemberOfDAO,
+    network,
+    setNetwork,
   };
 
   return (

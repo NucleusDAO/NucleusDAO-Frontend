@@ -8,10 +8,12 @@ import Link from 'next/link';
 import { DASHBOARD_URL } from '@/config/path';
 import { BrandLogo } from '@/assets/svgs';
 import { useMediaQuery } from '@/hooks/use-media-query';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import ConnectWalletPopOver from './connect-popover';
 import ViewNotificationPopover from './notification-popover';
+import { switchNetwork } from '@/libs/ae-utils';
+import { AppContext } from '@/context/app-context';
 
 interface INavbar {
   handleShowNav: (arg: any) => void;
@@ -21,11 +23,28 @@ interface INavbar {
 const Navbar = ({ handleShowNav, showNav }: INavbar) => {
   const { handleSearchWallet, user, isConnecting } =
     useContext<any>(ConnectWalletContext);
+  const { setNetwork, network } = useContext(AppContext);
   const isDesktop = useMediaQuery('(min-width: 768px)');
   const connected: boolean = user.isConnected;
+
+  async function handleNetworkSwitch(network: 'mainnet' | 'testnet') {
+    const success = await switchNetwork('testnet');
+    if (success) {
+      setNetwork('testnet');
+      console.log('Switched to testnet successfully.');
+    } else {
+      console.log('Failed to switch to testnet.');
+    }
+  }
+
+  useEffect(() => {
+    console.log(network, '- > network navbar');
+  }, [network]);
+
   return (
     <nav className="flex dark:bg-foreground bg-light w-full md:w-[82%] py-4 px-4 md:px-8 justify-between items-center fixed z-[100] max-w-[1620px]">
       <div className="relative w-[40%] hidden md:flex">
+        {/* <Button onClick={handleNetworkSwitch}>Switch</Button> */}
         {/* <SearchInput
           placeholder="Search anything here"
           classNames="pl-10"

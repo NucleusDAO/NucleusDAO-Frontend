@@ -12,9 +12,15 @@ import basicDAOAci from './contract/BasicDAO.json';
 import { toast } from 'sonner';
 import { isMobile } from './utils';
 
-export const nucleusDAOContractAddress =
+export let nucleusDAOContractAddress =
   'ct_yDcPop9r72KvwPAQB61gmYvhZHYogVuAWeheQ5zL8J5cwWPY4';
 
+const CONTRACT_ADDRESSES = {
+  mainnet: 'ct_yDcPop9r72KvwPAQB61gmYvhZHYogVuAWeheQ5zL8J5cwWPY4',
+  testnet: 'ct_ZyNy92LTo3XfemdVm3GHSUSa9RKY7oAAS5pB38MCkSWuWRmu4', // Replace with your actual testnet address
+};
+
+export const TESTNET_NODE_URL = 'https://testnet.aeternity.io';
 export const MAINNET_NODE_URL = 'https://mainnet.aeternity.io';
 export const COMPILER_URL = 'https://compiler.aepps.com';
 
@@ -58,7 +64,10 @@ export const createDeepLinkUrl = ({
 
 export let aeSdks: any = new AeSdkAepp({
   name: 'NucleusDAO',
-  nodes: [{ name: 'mainnet', instance: new Node(MAINNET_NODE_URL) }],
+  nodes: [
+    { name: 'mainnet', instance: new Node(MAINNET_NODE_URL) },
+    { name: 'testnet', instance: new Node(TESTNET_NODE_URL) }, // Add the testnet node
+  ],
   onNetworkChange: async ({ networkId }) => {
     const [{ name }] = (await aeSdks.getNodesInPool()).filter(
       (node: any) => node.nodeNetworkId === networkId
@@ -74,6 +83,49 @@ export let aeSdks: any = new AeSdkAepp({
     localStorage.removeItem('user');
   },
 });
+
+// export function switchNetwork(network: 'mainnet' | 'testnet') {
+//   aeSdks.selectNode(network);
+//   nucleusDAOContractAddress = CONTRACT_ADDRESSES[network];
+// }
+
+export async function switchNetwork(network: 'mainnet' | 'testnet') {
+  try {
+    console.log(`Attempting to switch to ${network}...`);
+
+    // Select the node (network) to switch to
+    aeSdks.selectNode(network);
+
+    const currentNetworkId = aeSdks.selectedNodeName;
+    // const currentNetworkId = aeSdks.networkId;
+    console.log(aeSdks, '- aeSdks ');
+    console.log(currentNetworkId, 'currebnt');
+
+    // Wait a short moment to ensure the switch takes effect
+    await new Promise((resolve) => setTimeout(resolve, 200));
+
+    // Get the current active node's network ID
+    const nodes = await aeSdks.getNodesInPool();
+    console.log('Nodes in pool:', nodes);
+
+    const currentNode = nodes.find(
+      (node: any) => node.name === currentNetworkId
+    );
+    console.log('Current selected node:', currentNode);
+
+    if (currentNode?.name === network) {
+      nucleusDAOContractAddress = CONTRACT_ADDRESSES[network];
+      console.log(`Successfully switched to ${network}`);
+      return true; // Indicate success
+    } else {
+      console.error(`Failed to switch to ${network}`);
+      return false; // Indicate failure
+    }
+  } catch (error: any) {
+    console.error(`Error switching network: ${error.message}`);
+    return false; // Indicate failure
+  }
+}
 
 export const IN_FRAME =
   typeof window !== 'undefined' && window.parent !== window;

@@ -4,6 +4,7 @@ import React, { ReactNode, createContext, useEffect, useState } from 'react';
 import {
   IN_FRAME,
   MAINNET_NODE_URL,
+  TESTNET_NODE_URL,
   connectWallet,
 } from '@/libs/ae-utils';
 import {
@@ -39,6 +40,7 @@ export interface IContext {
 }
 
 export const ConnectWalletProvider = ({ children }: IAppProvider) => {
+  // const [network, setNetwork] = useState('mainnet');
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const address = searchParams.get('address') || '';
@@ -58,7 +60,10 @@ export const ConnectWalletProvider = ({ children }: IAppProvider) => {
 
   const aeSdk: any = new AeSdkAepp({
     name: 'NucleusDAO',
-    nodes: [{ name: 'mainnet', instance: new Node(MAINNET_NODE_URL) }],
+    nodes: [
+      { name: 'mainnet', instance: new Node(MAINNET_NODE_URL) },
+      { name: 'testnet', instance: new Node(TESTNET_NODE_URL) },
+    ],
     onNetworkChange: async ({ networkId }) => {
       const [{ name }] = (await aeSdk.getNodesInPool()).filter(
         (node: any) => node.nodeNetworkId === networkId
@@ -177,6 +182,8 @@ export const ConnectWalletProvider = ({ children }: IAppProvider) => {
     handleDisconnect,
     setUser,
     aeSdk,
+    // setNetwork,
+    // network,
   };
 
   return (

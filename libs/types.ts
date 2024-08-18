@@ -55,6 +55,7 @@ export interface IConnectWalletContext {
   isConnecting: boolean;
   handleDisconnect?: () => void;
   aeSdk: AeSdkMethods | null;
+  network?: string;
 }
 
 export interface IApiContext {
