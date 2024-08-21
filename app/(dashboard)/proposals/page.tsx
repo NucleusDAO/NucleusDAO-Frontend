@@ -10,12 +10,11 @@ import ErrorFetchingComponent from '@/components/error-fetching-comp';
 import { AppContext } from '@/context/app-context';
 
 const Proposals = () => {
-  const { isLoadingProposal, proposals, isProposalError, refetchingProposal } =
-    useContext(AppContext);
+  const { isLoadingProposal, proposals, isProposalError, refetchingProposal } = useContext(AppContext);
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { replace } = useRouter();
-  const [allProposal, setAllProposal] = useState<IProposal[]>([]);
+  const [allProposal, setAllProposal] = useState<IProposal[]>(proposals);
   const search = searchParams.get('search') || '';
   const filter = searchParams.get('filter') || '';
 
@@ -27,8 +26,7 @@ const Proposals = () => {
     { value: 'Failed', title: 'Failed' },
   ];
 
-  const currentTab: string =
-    searchParams.get('q') || searchParams.get('filter') || tabs[0].value;
+  const currentTab: string = searchParams.get('q') || searchParams.get('filter') || tabs[0].value;
 
   const handleFilter = useDebouncedCallback((filterBy: string) => {
     const params = new URLSearchParams(searchParams);
@@ -40,23 +38,21 @@ const Proposals = () => {
     replace(`${pathname}?${params.toString()}`);
   }, 200);
 
+  console.log(proposals, '-proposals');
+
   useEffect(() => {
     if (search) {
       setAllProposal(
-        proposals?.filter((item: { wallet: string; type: string }) =>
-          item?.type?.toLocaleLowerCase()?.includes(search.toLowerCase())
-        )
+        proposals?.filter((item: { wallet: string; type: string; refinedType: string }) => item?.refinedType?.toLowerCase()?.includes(search.toLowerCase()))
       );
     } else if (filter) {
-      setAllProposal(
-        proposals?.filter((item: { status: string }) =>
-          item?.status?.toLowerCase().includes(filter.toLowerCase())
-        )
-      );
+      setAllProposal(proposals?.filter((item: { status: string }) => item?.status?.toLowerCase().includes(filter.toLowerCase())));
     } else {
       setAllProposal(proposals);
     }
   }, [search, filter, isLoadingProposal]);
+
+  console.log(allProposal, 'all props');
 
   if (isLoadingProposal) return <DashboadLoading />;
   if (isProposalError) return <ErrorFetchingComponent />;
@@ -64,20 +60,12 @@ const Proposals = () => {
   return (
     <div className="space-y-8 min-h-[80vh]">
       <div className="justify-between items-center flex">
-        <h1
-          role="heading"
-          className="dark:text-white font-medium text-xl text-dark"
-        >
+        <h1 role="heading" className="dark:text-white font-medium text-xl text-dark">
           Proposals
         </h1>
       </div>
 
-      <Tabs
-        defaultValue={currentTab}
-        className="w-full"
-        value={currentTab}
-        onValueChange={(value) => handleFilter(value)}
-      >
+      <Tabs defaultValue={currentTab} className="w-full" value={currentTab} onValueChange={(value) => handleFilter(value)}>
         <TabsList className="w-full justify-start space-x-6 border-b-2 dark:border-b-[#292929] border-[#CCCCCC99] overflow-x-auto">
           {tabs.map((tab) => (
             <TabsTrigger key={tab.value} value={tab.value} className="w-fit">
@@ -87,16 +75,8 @@ const Proposals = () => {
         </TabsList>
         <>
           {tabs.map((tab) => (
-            <TabsContent
-              value={tab.value}
-              className="text-[#777777] text-sm font-light"
-            >
-              <EachFilterTab
-                proposalData={allProposal}
-                search={search}
-                filter={filter}
-                refetchData={refetchingProposal}
-              />
+            <TabsContent value={tab.value} className="text-[#777777] text-sm font-light" key={tab.title + tab.value}>
+              <EachFilterTab proposalData={allProposal} search={search} filter={filter} refetchData={refetchingProposal} />
             </TabsContent>
           ))}
         </>

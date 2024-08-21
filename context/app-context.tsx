@@ -21,6 +21,7 @@ import {
   walletDetector,
   BrowserWindowMessageConnection,
 } from '@aeternity/aepp-sdk';
+import { proposalLists } from '@/config/dao-config';
 
 export const AppContext = createContext<any>({});
 
@@ -100,6 +101,10 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
         duration: getDuration(proposal.startTime, proposal.endTime),
         totalVote: `${proposal.votesFor + proposal.votesAgainst}`,
         organisation: proposal.daoName,
+        refinedType:
+          proposalLists.find(
+            (each: { type: string }) => each.type === proposal.proposalType
+          )?.title || '',
         proposer:
           proposal.proposer.slice(0, 6) + '...' + proposal.proposer.slice(-4),
       };

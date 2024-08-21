@@ -32,7 +32,7 @@ const columns = (getAEPrice: {
     cell: ({ row }: any) => (
       <p>
         {row.original.amount}
-        <span className="text-xs">AE</span>
+        <span className="text-xs"> AE</span>
       </p>
     ),
   },
@@ -42,10 +42,8 @@ const columns = (getAEPrice: {
     key: 'amount',
     cell: ({ row }: any) => (
       <p>
-        {(
-          Number(row.original.amount) * Number(getAEPrice?.price || rate)
-        ).toFixed(2)}
-        <span className="text-xs">USD</span>
+        {(Number(row.original.amount) * Number(getAEPrice?.price || rate)).toFixed(2)}
+        <span className="text-xs"> USD</span>
       </p>
     ),
   },
@@ -53,33 +51,19 @@ const columns = (getAEPrice: {
     accessorKey: 'sender',
     header: 'Sender',
     key: 'sender',
-    cell: ({ row }: any) => (
-      <p>
-        {row.original.sender.slice(0, 6) +
-          '...' +
-          row.original.sender.slice(-4)}
-      </p>
-    ),
+    cell: ({ row }: any) => <p>{row.original.sender.slice(0, 6) + '...' + row.original.sender.slice(-4)}</p>,
   },
   {
     accessorKey: 'receiver',
     header: 'Receiver',
     key: 'receiver',
-    cell: ({ row }: any) => (
-      <p>
-        {row.original.receiver.slice(0, 6) +
-          '...' +
-          row.original.receiver.slice(-4)}
-      </p>
-    ),
+    cell: ({ row }: any) => <p>{row.original.receiver.slice(0, 6) + '...' + row.original.receiver.slice(-4)}</p>,
   },
   {
     accessorKey: 'date',
     header: 'Date',
     key: 'date',
-    cell: ({ row }: { row: { original: { date: string } } }) => (
-      <p>{formatISODate(row.original.date)}</p>
-    ),
+    cell: ({ row }: { row: { original: { date: string } } }) => <p>{formatISODate(row.original.date)}</p>,
   },
   {
     accessorKey: 'status',
@@ -95,17 +79,8 @@ export const TransactionTypeCell = ({ row }: any) => {
   const { logo, transactionType } = row.original;
   return (
     <div className="flex space-x-2 items-center">
-      <div
-        className={cn(
-          'rounded-md p-1.5',
-          transactionType === 'Deposit' ? 'bg-[#C9FDC5]' : 'bg-[#FDC5D0]'
-        )}
-      >
-        {transactionType === 'Deposit' ? (
-          <ImportIcon />
-        ) : (
-          <ArrowUpFromLine size={16} color="#A0132D" />
-        )}
+      <div className={cn('rounded-md p-1.5', transactionType === 'Deposit' ? 'bg-[#C9FDC5]' : 'bg-[#FDC5D0]')}>
+        {transactionType === 'Deposit' ? <ImportIcon /> : <ArrowUpFromLine size={16} color="#A0132D" />}
       </div>
       <p>{transactionType}</p>
     </div>

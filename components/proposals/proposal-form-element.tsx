@@ -1,30 +1,13 @@
 'use client';
 import { Checkbox } from '@/components/ui/checkbox';
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import FormGroup from '@/components/ui/form-group';
 import { Input, InputProps as OriginalInputProps } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { rate } from '@/config/dao-config';
 import { ApiContext } from '@/context/api-context';
 import { AppContext } from '@/context/app-context';
-import {
-  cn,
-  handleChangeFormNumberInput,
-  handleMinus,
-  handlePlus,
-} from '@/libs/utils';
+import { cn, handleChangeFormNumberInput, handleMinus, handlePlus } from '@/libs/utils';
 import { Loader, Minus, Plus, Trash2 } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { ChangeEvent, useContext, useState } from 'react';
@@ -37,11 +20,7 @@ interface ISelectFormField {
   handleReset: (arg: string) => void;
 }
 
-const SelectFormField = ({
-  form,
-  filterData,
-  handleReset,
-}: ISelectFormField) => {
+const SelectFormField = ({ form, filterData, handleReset }: ISelectFormField) => {
   const searchParams = useSearchParams();
   const type: string = searchParams.get('enums') || '';
 
@@ -63,10 +42,7 @@ const SelectFormField = ({
           >
             <FormControl>
               <SelectTrigger>
-                <SelectValue
-                  placeholder="Choose title"
-                  className="dark:text-white placeholder:text-[#444444] text-dark"
-                />
+                <SelectValue placeholder="Choose title" className="dark:text-white placeholder:text-[#444444] text-dark" />
               </SelectTrigger>
             </FormControl>
             <SelectContent>
@@ -93,14 +69,7 @@ interface TextFormFieldProps extends InputProps {
   type?: string;
 }
 
-const TextFormField: React.FC<TextFormFieldProps> = ({
-  form,
-  name,
-  label,
-  placeholder,
-  type,
-  ...props
-}) => {
+const TextFormField: React.FC<TextFormFieldProps> = ({ form, name, label, placeholder, type, ...props }) => {
   return (
     <FormField
       control={form.control}
@@ -109,12 +78,7 @@ const TextFormField: React.FC<TextFormFieldProps> = ({
         <FormItem>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            <Input
-              placeholder={placeholder}
-              type={type || 'text'}
-              {...field}
-              {...props}
-            />
+            <Input placeholder={placeholder} type={type || 'text'} {...field} {...props} />
           </FormControl>
           <FormMessage />
         </FormItem>
@@ -145,21 +109,13 @@ const EquivalentValueFormField = ({ form }: { form: any }) => {
           <FormLabel>Value (AE)</FormLabel>
           <FormControl>
             <FormGroup>
-              <Input
-                placeholder="value"
-                type="number"
-                {...field}
-                onBlur={() => handleBlur(field)}
-              />
+              <Input placeholder="value" type="number" {...field} onBlur={() => handleBlur(field)} />
 
               {loadingAePrice ? (
                 <Loader className="mr-2 h-4 w-4 animate-spin" />
               ) : (
                 <p className="text-xs font-light text-[#888888] absolute right-4">
-                  {field.value
-                    ? Number(field.value) * (getAEPrice?.price || rate)
-                    : 0}{' '}
-                  <span className="text-[10px]">USD</span>
+                  {field.value ? Number(field.value) * (getAEPrice?.price || rate) : 0} <span className="text-[10px]">USD</span>
                 </p>
               )}
             </FormGroup>
@@ -184,9 +140,7 @@ const ProposalDurationFormField = ({ form }: { form: any }) => {
             <FormGroup className="lg:space-x-6 space-x-3">
               <div className="border dark:border-[#292929] flex items-center justify-between rounded-lg py-1 px-5 w-[80%] lg:w-[50%] border-[#CCCCCC99]">
                 <div
-                  className={cn(
-                    'dark:bg-[#1E1E1E] rounded-lg py-2 px-2 dark:hover:bg-[#2a2a2a] trans bg-[#D2D2D2] hover:bg-[#D2D2D2] cursor-not-allowed'
-                  )}
+                  className={cn('dark:bg-[#1E1E1E] rounded-lg py-2 px-2 dark:hover:bg-[#2a2a2a] trans bg-[#D2D2D2] hover:bg-[#D2D2D2] cursor-not-allowed')}
                   role="button"
                   onClick={() => null}
                 >
@@ -196,14 +150,12 @@ const ProposalDurationFormField = ({ form }: { form: any }) => {
                   placeholder="value"
                   type="number"
                   className="border-none dark:bg-[#191919] w-[50%] lg:w-fit text-center bg-white"
-                  readOnly
+                  disabled
                   {...field}
                   onChange={() => null}
                 />
                 <div
-                  className={cn(
-                    'dark:bg-[#1E1E1E] rounded-lg py-2 px-2 dark:hover:bg-[#2a2a2a] trans hover:bg-[#D2D2D2] bg-[#D2D2D2] cursor-not-allowed'
-                  )}
+                  className={cn('dark:bg-[#1E1E1E] rounded-lg py-2 px-2 dark:hover:bg-[#2a2a2a] trans hover:bg-[#D2D2D2] bg-[#D2D2D2] cursor-not-allowed')}
                   role="button"
                   onClick={() => null}
                 >
@@ -220,13 +172,7 @@ const ProposalDurationFormField = ({ form }: { form: any }) => {
   );
 };
 
-const QuorumFormField = ({
-  form,
-  isDisabled,
-}: {
-  form: any;
-  isDisabled?: boolean;
-}) => {
+const QuorumFormField = ({ form, isDisabled }: { form: any; isDisabled?: boolean }) => {
   return (
     <FormField
       control={form.control}
@@ -238,17 +184,10 @@ const QuorumFormField = ({
             <FormGroup className="lg:space-x-6 lg:flex block space-y-2 lg:space-y-0">
               <div className="border dark:border-[#292929] flex items-center justify-between rounded-lg py-1 px-5 w-[50%] border-[#CCCCCC99]">
                 <div
-                  className={cn(
-                    'dark:bg-[#1E1E1E] rounded-lg py-2 px-2 dark:hover:bg-[#2a2a2a] trans bg-[#D2D2D2]',
-                    isDisabled && 'cursor-not-allowed'
-                  )}
+                  className={cn('dark:bg-[#1E1E1E] rounded-lg py-2 px-2 dark:hover:bg-[#2a2a2a] trans bg-[#D2D2D2]', isDisabled && 'cursor-not-allowed')}
                   role="button"
                   onClick={() => {
-                    !isDisabled
-                      ? field.value === 1
-                        ? null
-                        : handleMinus('quorum', form)
-                      : null;
+                    !isDisabled ? (field.value === 1 ? null : handleMinus('quorum', form)) : null;
                   }}
                 >
                   <Minus size={18} />
@@ -257,41 +196,21 @@ const QuorumFormField = ({
                   placeholder="value"
                   type="number"
                   className="border-none dark:bg-[#191919] w-[50%] lg:w-fit text-center bg-white"
-                  readOnly={isDisabled}
+                  disabled={isDisabled}
                   {...field}
-                  onChange={({ target }) =>
-                    !isDisabled
-                      ? handleChangeFormNumberInput(
-                          'quorum',
-                          target.value,
-                          form
-                        )
-                      : null
-                  }
+                  onChange={({ target }) => (!isDisabled ? handleChangeFormNumberInput('quorum', target.value, form) : null)}
                 />
                 <div
-                  className={cn(
-                    'dark:bg-[#1E1E1E] rounded-lg py-2 px-2 dark:hover:bg-[#2a2a2a] trans bg-[#D2D2D2]',
-                    isDisabled && 'cursor-not-allowed'
-                  )}
+                  className={cn('dark:bg-[#1E1E1E] rounded-lg py-2 px-2 dark:hover:bg-[#2a2a2a] trans bg-[#D2D2D2]', isDisabled && 'cursor-not-allowed')}
                   role="button"
-                  onClick={() =>
-                    !isDisabled ? handlePlus('quorum', form) : null
-                  }
+                  onClick={() => (!isDisabled ? handlePlus('quorum', form) : null)}
                 >
                   <Plus size={18} />
                 </div>
               </div>
               <div className="flex space-x-3">
-                <Checkbox
-                  id="proposalCheck"
-                  className="rounded-full border-[#5BE950] data-[state=checked]:bg-[#5BE950]"
-                  checked={field.value >= 50}
-                />
-                <label
-                  htmlFor="proposalCheck"
-                  className="dark:text-[#FFF] text-xs md:text-sm text-dark"
-                >
+                <Checkbox id="proposalCheck" className="rounded-full border-[#5BE950] data-[state=checked]:bg-[#5BE950]" checked={field.value >= 50} />
+                <label htmlFor="proposalCheck" className="dark:text-[#FFF] text-xs md:text-sm text-dark">
                   Proposal will be approved by many
                 </label>
               </div>
@@ -306,9 +225,7 @@ const QuorumFormField = ({
 
 const UploadFileFormField = ({ form }: { form: any }) => {
   const { setNewProposalInfo, newProposalInfo } = useContext(AppContext);
-  const [onUploadUrl, setOnUploadUrl] = useState<string>(
-    newProposalInfo.value.logo || ''
-  );
+  const [onUploadUrl, setOnUploadUrl] = useState<string>(newProposalInfo.value.logo || '');
 
   const handleUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     const maxSize: number = 3 * 1024 * 1024;
@@ -344,20 +261,13 @@ const UploadFileFormField = ({ form }: { form: any }) => {
         <FormItem>
           <FormLabel>
             Logo <span className="text-[#DD3857]">*</span>
-            <span className="text-[#888888] text-sm">
-              {' '}
-              JPG, PNG, or SVG of not more than 3MB.
-            </span>
+            <span className="text-[#888888] text-sm"> JPG, PNG, or SVG of not more than 3MB.</span>
           </FormLabel>
           <FormControl>
             <FormGroup>
               {onUploadUrl && (
                 <div className="flex space-x-2 items-end">
-                  <img
-                    src={onUploadUrl}
-                    alt="logo"
-                    className="rounded-lg h-[50px] w-[50px] object-cover"
-                  />
+                  <img src={onUploadUrl} alt="logo" className="rounded-lg h-[50px] w-[50px] object-cover" />
                   <p className="text-[10px]">Change</p>
                 </div>
               )}
@@ -392,18 +302,14 @@ const UpdateSocialsFormField = ({ form }: { form: any }) => {
   return (
     <div className="space-y-4">
       <h2 className="font-medium text-dark dark:text-white">
-        Social Links{' '}
-        <span className="text-[#888888] font-light">(Optional)</span>
+        Social Links <span className="text-[#888888] font-light">(Optional)</span>
       </h2>
       <div className="grid grid-cols-2 gap-6">
         <div className="font text-dark dark:text-white text-sm">Type</div>
         <div className="font text-dark dark:text-white text-sm">Link</div>
       </div>
       {fields.map((social: any, index) => (
-        <div
-          className="flex items-center w-full space-x-4 justify-between"
-          key={social.id}
-        >
+        <div className="flex items-center w-full space-x-4 justify-between" key={social.id}>
           <div className="grid grid-cols-2 gap-6 w-[95%]">
             <FormField
               control={form.control}
@@ -411,10 +317,7 @@ const UpdateSocialsFormField = ({ form }: { form: any }) => {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input
-                      placeholder="Website, Twitter, Instagram"
-                      {...field}
-                    />
+                    <Input placeholder="Website, Twitter, Instagram" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -434,8 +337,7 @@ const UpdateSocialsFormField = ({ form }: { form: any }) => {
                 )}
               />
               <p className="text-xs font-light text-defaultText">
-                Please ensure to start with{' '}
-                <span className="text-primary">https://</span>
+                Please ensure to start with <span className="text-primary">https://</span>
               </p>
             </div>
           </div>
@@ -458,12 +360,4 @@ const UpdateSocialsFormField = ({ form }: { form: any }) => {
   );
 };
 
-export {
-  SelectFormField,
-  TextFormField,
-  EquivalentValueFormField,
-  ProposalDurationFormField,
-  QuorumFormField,
-  UploadFileFormField,
-  UpdateSocialsFormField,
-};
+export { SelectFormField, TextFormField, EquivalentValueFormField, ProposalDurationFormField, QuorumFormField, UploadFileFormField, UpdateSocialsFormField };

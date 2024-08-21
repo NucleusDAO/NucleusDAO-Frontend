@@ -4,14 +4,7 @@ import { useFieldArray, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { Button } from '@/components/ui/button';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { daoInfoSchema } from '@/libs/validations/dao-schema';
 import { Textarea } from '../ui/textarea';
@@ -29,9 +22,7 @@ const DaoInfoForm = () => {
   const [isPending, setIsPending] = useState<boolean>(false);
   const [isBack, setIsBack] = useState<boolean>(false);
   const [logoFormData, setLogoFormData] = useState<FormData | null>(null);
-  const [onUploadUrl, setOnUploadUrl] = useState<string>(
-    newDaoInfo.info.logoUrl || ''
-  );
+  const [onUploadUrl, setOnUploadUrl] = useState<string>(newDaoInfo.info.logoUrl || '');
   const router = useRouter();
   const domainName = typeof window !== 'undefined' && window.location.origin;
 
@@ -146,7 +137,7 @@ const DaoInfoForm = () => {
             <FormItem>
               <FormLabel>Dao URL (auto filled)</FormLabel>
               <FormControl>
-                <Input placeholder="dao.ae" {...field} readOnly />
+                <Input placeholder="dao.ae" {...field} disabled />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -160,20 +151,13 @@ const DaoInfoForm = () => {
             <FormItem>
               <FormLabel>
                 Logo <span className="text-[#DD3857]">*</span>
-                <span className="text-[#888888] text-sm">
-                  {' '}
-                  JPG, PNG, or SVG of not more than 3MB.
-                </span>
+                <span className="text-[#888888] text-sm"> JPG, PNG, or SVG of not more than 3MB.</span>
               </FormLabel>
               <FormControl>
                 <FormGroup>
                   {onUploadUrl && (
                     <div className="flex space-x-2 items-end">
-                      <img
-                        src={onUploadUrl}
-                        alt="logo"
-                        className="rounded-lg h-[50px] w-[50px] object-cover"
-                      />
+                      <img src={onUploadUrl} alt="logo" className="rounded-lg h-[50px] w-[50px] object-cover" />
                       <p className="text-[10px]">Change</p>
                     </div>
                   )}
@@ -216,18 +200,14 @@ const DaoInfoForm = () => {
 
         <div className="space-y-4">
           <h2 className="font-medium text-dark dark:text-white">
-            Social Links{' '}
-            <span className="text-[#888888] font-light">(Optional)</span>
+            Social Links <span className="text-[#888888] font-light">(Optional)</span>
           </h2>
           <div className="grid grid-cols-2 gap-6">
             <div className="font text-dark dark:text-white text-sm">Type</div>
             <div className="font text-dark dark:text-white text-sm">Link</div>
           </div>
           {fields.map((social: any, index) => (
-            <div
-              className="flex items-center w-full space-x-4 justify-between"
-              key={social.id}
-            >
+            <div className="flex items-center w-full space-x-4 justify-between" key={social.id}>
               <div className="grid grid-cols-2 gap-6 w-[95%]">
                 <FormField
                   control={form.control}
@@ -235,18 +215,9 @@ const DaoInfoForm = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <Input
-                          placeholder="Website, Twitter, Instagram"
-                          onInput={() =>
-                            form.setError('socialMedia', { message: '' })
-                          }
-                          {...field}
-                        />
+                        <Input placeholder="Website, Twitter, Instagram" onInput={() => form.setError('socialMedia', { message: '' })} {...field} />
                       </FormControl>
-                      <FormMessage>
-                        {form.formState.errors.socialMedia?.[index]?.root
-                          ?.message || ''}
-                      </FormMessage>
+                      <FormMessage>{form.formState.errors.socialMedia?.[index]?.root?.message || ''}</FormMessage>
                     </FormItem>
                   )}
                 />
@@ -270,23 +241,15 @@ const DaoInfoForm = () => {
                         />
                       </FormControl>
                       <p className="text-defaultText text-xs font-light">
-                        Ensure to start with{' '}
-                        <span className="text-primary">https://</span>
+                        Ensure to start with <span className="text-primary">https://</span>
                       </p>
-                      <FormMessage>
-                        {form.formState.errors.socialMedia?.[index]?.root
-                          ?.message || ''}
-                      </FormMessage>
+                      <FormMessage>{form.formState.errors.socialMedia?.[index]?.root?.message || ''}</FormMessage>
                     </FormItem>
                   )}
                 />
               </div>
               {fields.length > 1 && (
-                <div
-                  className="w-[3%]"
-                  role="button"
-                  onClick={() => remove(index)}
-                >
+                <div className="w-[3%]" role="button" onClick={() => remove(index)}>
                   <Trash2 color="#F998A9" size={20} />
                 </div>
               )}
@@ -310,12 +273,7 @@ const DaoInfoForm = () => {
           >
             <MoveLeft size={20} />
           </Button>
-          <Button
-            type="submit"
-            className="px-12"
-            loading={isPending}
-            loadingText="Please wait ..."
-          >
+          <Button type="submit" className="px-12" loading={isPending} loadingText="Please wait ...">
             Next
           </Button>
         </div>

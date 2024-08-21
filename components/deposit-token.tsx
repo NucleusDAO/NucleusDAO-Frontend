@@ -1,10 +1,4 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import React, { useContext, useState } from 'react';
@@ -19,18 +13,11 @@ import { defaultSuccessOption } from './animation-options';
 import { formatAmount, AE_AMOUNT_FORMATS } from '@aeternity/aepp-sdk';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { deposit, mobileDeposit } from '@/libs/contract-call';
-import {
-  BALANCE_HISTORY,
-  DAOS_KEY,
-  EACH_DAO_KEY,
-  EACH_PROPOSAL_INFO,
-  MEMBER_HISTORY,
-  PROPOSAL_HISTORY,
-  USER_ACTIVITIES_KEY,
-} from '@/libs/key';
+import { BALANCE_HISTORY, DAOS_KEY, EACH_DAO_KEY, EACH_PROPOSAL_INFO, MEMBER_HISTORY, PROPOSAL_HISTORY, USER_ACTIVITIES_KEY } from '@/libs/key';
 import { isSafariBrowser } from '@/libs/ae-utils';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
 import { IConnectWalletContext } from '@/libs/types';
+import Link from 'next/link';
 
 const DepositToken = () => {
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
@@ -71,10 +58,7 @@ const DepositToken = () => {
     if (isMobile() || isSafariBrowser()) {
       setPending(true);
       try {
-        await mobileDeposit(
-          { daoContractAddress: currentDAO?.contractAddress, amount },
-          address
-        );
+        await mobileDeposit({ daoContractAddress: currentDAO?.contractAddress, amount }, address);
       } catch (error: any) {
         toast.error(error.message);
       } finally {
@@ -97,23 +81,14 @@ const DepositToken = () => {
       </Button>
       <DialogContent className="">
         <DialogHeader>
-          <DialogTitle className="text-[#292929] dark:text-white font-medium py-2 text-left">
-            Deposit Funds
-          </DialogTitle>
+          <DialogTitle className="text-[#292929] dark:text-white font-medium py-2 text-left">Deposit Funds</DialogTitle>
           <DialogDescription className="font-light space-y-3">
             {isDeposited && (
               <div className="text-center">
-                <Lottie
-                  options={defaultSuccessOption}
-                  height={150}
-                  width={150}
-                />
-                <p className="font-medium dark:text-white pb-2 -mt-2 text-xl text-dark">
-                  Fund Deposit Success
-                </p>
+                <Lottie options={defaultSuccessOption} height={150} width={150} />
+                <p className="font-medium dark:text-white pb-2 -mt-2 text-xl text-dark">Fund Deposit Success</p>
                 <p className="px-8">
-                  Congratulations! You have successfully deposited a sum of{' '}
-                  {aeValue} AE to {currentDAO.name}
+                  Congratulations! You have successfully deposited a sum of {aeValue} AE to {currentDAO.name}
                 </p>
                 <Button
                   className="px-16 mt-4"
@@ -131,12 +106,7 @@ const DepositToken = () => {
                 <p className="text-left">Kindly input the amount below.</p>
                 <div className="space-y-4">
                   <p className="text-white text-left">Token</p>
-                  <div
-                    className={cn(
-                      'border border-[#292929] rounded-lg p-2 flex justify-between trans',
-                      isError && 'border-destructive'
-                    )}
-                  >
+                  <div className={cn('border border-[#292929] rounded-lg p-2 flex justify-between trans', isError && 'border-destructive')}>
                     <div className="relative w-[40%]">
                       <Input
                         placeholder="0.00"
@@ -146,64 +116,39 @@ const DepositToken = () => {
                         value={parseFloat(aeValue.toString())}
                         onChange={({ target }) => {
                           setAeValue(target.value);
-                          setUsdValue(
-                            Number(target.value) * (getAEPrice?.price || rate)
-                          );
+                          setUsdValue(Number(target.value) * (getAEPrice?.price || rate));
                         }}
                       />
-                      <p className="dark:text-white right-4 text-dark absolute top-[27%] font-medium">
-                        AE
-                      </p>
+                      <p className="dark:text-white right-4 text-dark absolute top-[27%] font-medium">AE</p>
                     </div>
                     <div className="relative w-[40%]">
                       <Input
                         placeholder="0.00"
                         className="pr-14"
-                        defaultValue={parseFloat(usdValue.toString()).toFixed(
-                          2
-                        )}
+                        defaultValue={parseFloat(usdValue.toString()).toFixed(2)}
                         type="number"
                         value={parseFloat(usdValue.toString())}
                         onChange={({ target }) => {
-                          setAeValue(
-                            Number(target.value) / (getAEPrice?.price || rate)
-                          );
+                          setAeValue(Number(target.value) / (getAEPrice?.price || rate));
                           setUsdValue(target.value);
                         }}
                       />
-                      <p className="dark:text-white right-4 text-dark absolute top-[27%] font-medium">
-                        USD
-                      </p>
+                      <p className="dark:text-white right-4 text-dark absolute top-[27%] font-medium">USD</p>
                     </div>
                   </div>
                   <div className="flex items-center space-x-2 pt-3">
-                    <Checkbox
-                      id="terms"
-                      checked={termsChecked}
-                      onCheckedChange={(value: boolean) =>
-                        setTermsChecked(value)
-                      }
-                    />
-                    <label
-                      htmlFor="terms"
-                      className="text-sm font-light leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-left"
-                    >
+                    <Checkbox id="terms" checked={termsChecked} onCheckedChange={(value: boolean) => setTermsChecked(value)} />
+                    <label htmlFor="terms" className="text-sm font-light leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-left">
                       By clicking, I agree to sign the{' '}
-                      <span className="text-primary underline underline-offset-2">
-                        superhero contract
-                      </span>{' '}
+                      <Link href={`https://aescan.io/accounts/${currentDAO?.domain ?? currentDAO?.account}`} target="_blank">
+                        <span className="text-primary underline underline-offset-2">superhero contract</span>{' '}
+                      </Link>
                       to send funds.
                     </label>
                   </div>
                   <Button
                     className="w-full"
-                    disabled={
-                      !termsChecked ||
-                      Number(aeValue) <= 0 ||
-                      isError ||
-                      isPending ||
-                      pending
-                    }
+                    disabled={!termsChecked || Number(aeValue) <= 0 || isError || isPending || pending}
                     onClick={handleDeposit}
                     loading={isPending || pending}
                     loadingText="Depositing..."
