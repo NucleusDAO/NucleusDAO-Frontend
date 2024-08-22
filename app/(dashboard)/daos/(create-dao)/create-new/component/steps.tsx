@@ -1,11 +1,5 @@
 'use client';
-import {
-  DAO_INFO_URL,
-  DEFINE_MEMBERSHIP_URL,
-  GOVERNANCE_SETTINGS_URL,
-  REVIEW_DAO_URL,
-  SELECT_DAO_STYLE_URL,
-} from '@/config/path';
+import { DAO_INFO_URL, DEFINE_MEMBERSHIP_URL, GOVERNANCE_SETTINGS_URL, SELECT_DAO_STYLE_URL } from '@/config/path';
 import { AppContext } from '@/context/app-context';
 import { cn, validateDaoInfo, validateMembership } from '@/libs/utils';
 import { Check } from 'lucide-react';
@@ -39,16 +33,12 @@ const Steps = () => {
       title: 'Define Membership',
       url: DEFINE_MEMBERSHIP_URL,
       disabled: !newDaoInfo.style || validateDaoInfo(newDaoInfo),
-      completed:
-        validateMembership(newDaoInfo.members) && newDaoInfo.memberComplete,
+      completed: validateMembership(newDaoInfo.members) && newDaoInfo.memberComplete,
     },
     {
       title: 'Governance Settings',
       url: GOVERNANCE_SETTINGS_URL,
-      disabled:
-        !newDaoInfo.style ||
-        validateDaoInfo(newDaoInfo) ||
-        !validateMembership(newDaoInfo.members),
+      disabled: !newDaoInfo.style || validateDaoInfo(newDaoInfo) || !validateMembership(newDaoInfo.members),
       completed: newDaoInfo.duration > 0 && newDaoInfo.quorum > 0,
     },
   ];
@@ -59,36 +49,25 @@ const Steps = () => {
         const isActive = step.completed;
         return (
           <Link href={step.disabled ? '#' : step.url} key={step.title}>
-            <div
-              className={cn('flex space-x-3 py-1 md:py-4 items-center text-sm')}
-              role="button"
-            >
+            <div className={cn('flex space-x-3 py-1 md:py-4 items-center text-sm')} role="button">
               <div className="w-fit relative">
                 <div
                   className={cn(
                     'rounded-full flex items-center justify-center w-8 h-8 dark:text-[#292929] text-[#CCCCCC] border dark:border-[#292929] border-[#CCCCCC] trans',
-                    (pathname.startsWith(step.url) || step.completed) &&
-                      'border dark:border-primary border-primary text-primary',
+                    (pathname.startsWith(step.url) || step.completed) && 'border dark:border-primary border-primary text-primary',
                     isActive && 'bg-primary'
                   )}
                 >
                   {isActive ? <Check color="#FFF" size={16} /> : index + 1}
                 </div>
                 {index !== steps.length - 1 && (
-                  <div
-                    className={cn(
-                      'h-8 w-[1px] md:block hidden bg-[#CCCCCC] dark:bg-[#444444] absolute left-4',
-                      isActive && 'bg-primary'
-                    )}
-                  />
+                  <div className={cn('h-8 w-[1px] md:block hidden bg-[#CCCCCC] dark:bg-[#444444] absolute left-4', isActive && 'bg-primary')} />
                 )}
               </div>
               <p
                 className={cn(
                   'trans text-sm',
-                  pathname.startsWith(step.url) || step.completed
-                    ? 'dark:text-white text-[#292929]'
-                    : 'dark:text-[#444444] text-[#CCCCCC]'
+                  pathname.startsWith(step.url) || step.completed ? 'dark:text-white text-[#292929]' : 'dark:text-[#444444] text-[#CCCCCC]'
                 )}
               >
                 {step.title}

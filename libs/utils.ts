@@ -4,15 +4,13 @@ import { IExecuteAction, IProposal } from './types';
 import { rate } from '@/config/dao-config';
 import { isSafariBrowser } from './ae-utils';
 import { toast } from 'sonner';
+import { isAddressValid } from '@aeternity/aepp-sdk';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const handleChangeNumberInput = (
-  value: string,
-  setState: (arg: string) => void
-) => {
+export const handleChangeNumberInput = (value: string, setState: (arg: string) => void) => {
   if (value.startsWith('0')) {
     setState('');
   } else {
@@ -32,11 +30,7 @@ export const handlePlus = (fieldName: string, form: any) => {
   form.setValue(fieldName, Number(initialValue) + 1);
 };
 
-export const handleChangeFormNumberInput = (
-  fieldName: string,
-  value: string,
-  form: any
-) => {
+export const handleChangeFormNumberInput = (fieldName: string, value: string, form: any) => {
   form.clearErrors(fieldName);
   if (value.startsWith('0' || 0)) {
     form.setValue(fieldName, value[1] === '0' ? 1 : value[1]);
@@ -45,11 +39,7 @@ export const handleChangeFormNumberInput = (
   }
 };
 
-export const handleChangeFormDecimalInput = (
-  fieldName: string,
-  value: string,
-  form: any
-) => {
+export const handleChangeFormDecimalInput = (fieldName: string, value: string, form: any) => {
   form.clearErrors(fieldName);
   if (/^0\.\d+$/.test(value)) {
     form.setValue(fieldName, parseFloat(value));
@@ -61,23 +51,14 @@ export const handleChangeFormDecimalInput = (
   }
 };
 
-export const encodeURI = (
-  originalURI: string,
-  keyValuePairs: string,
-  otherKeyPairs?: string
-) => {
+export const encodeURI = (originalURI: string, keyValuePairs: string, otherKeyPairs?: string) => {
   // Convert key-value pairs to a query string
   const queryString = Object.entries(keyValuePairs)
-    .map(
-      ([key, value]) =>
-        `${encodeURIComponent(key)}=${encodeURIComponent(value)}`
-    )
+    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
     .join('&');
 
   // Combine the base URL and the query string
-  const fullUrl = `${originalURI}/${encodeURIComponent(keyValuePairs)}${
-    otherKeyPairs ? `/${otherKeyPairs}` : ''
-  }`;
+  const fullUrl = `${originalURI}/${encodeURIComponent(keyValuePairs)}${otherKeyPairs ? `/${otherKeyPairs}` : ''}`;
 
   // Replace %20 and spaces with +, make the string lowercase
   const modifiedUrl = fullUrl.replace(/(%20|\s)/g, '-');
@@ -85,10 +66,8 @@ export const encodeURI = (
   return modifiedUrl;
 };
 
-export const validateMembership: any = (
-  membershipArray: { address: string }[]
-) => {
-  return !membershipArray.some((item) => item.address === '');
+export const validateMembership: any = (membershipArray: { address: string }[]) => {
+  return !membershipArray.some((item) => item.address === '' || !isAddressValid(item.address));
 };
 
 export const validateDaoInfo = (obj: any) => {
@@ -109,10 +88,7 @@ export const validateDaoInfo = (obj: any) => {
 
   // Validate the 'socialMedia' key
   if (obj.info.socialMedia) {
-    if (
-      !Array.isArray(obj.info.socialMedia) ||
-      obj.info.socialMedia.length === 0
-    ) {
+    if (!Array.isArray(obj.info.socialMedia) || obj.info.socialMedia.length === 0) {
       // 'socialMedia' is not an array or it's an empty array
       return true;
     }
@@ -137,11 +113,7 @@ export const defaultDaoCreation = {
   quorum: 50,
 };
 
-function hasQuorum(
-  supporters: { account: string; support: boolean }[],
-  totalMembers: number,
-  quorumPercentage: number
-): boolean {
+function hasQuorum(supporters: { account: string; support: boolean }[], totalMembers: number, quorumPercentage: number): boolean {
   const requiredQuorum = Math.ceil((quorumPercentage / 100) * totalMembers);
 
   const supportCount = supporters.filter((member) => member.support).length;
@@ -159,11 +131,7 @@ export const getStatus = (_proposal: IProposal | any) => {
     if (
       _proposal.votesFor > _proposal.votesAgainst &&
       new Date(Number(_proposal.endTime)).valueOf() <= Date.now().valueOf() &&
-      hasQuorum(
-        _proposal.votes,
-        Number(_proposal.currentMembers),
-        Number(_proposal.quorum)
-      )
+      hasQuorum(_proposal.votes, Number(_proposal.currentMembers), Number(_proposal.quorum))
     ) {
       return 'Pending';
     } else {
@@ -268,11 +236,7 @@ export const activities: {
     color: 'bg-[#DCBB0C]',
     options: {
       title: 'Vote on a Proposal:',
-      instruction: [
-        'Ensure you are a member of the DAO with the proposal.',
-        'Access the proposal and cast your vote.',
-        "You're all set",
-      ],
+      instruction: ['Ensure you are a member of the DAO with the proposal.', 'Access the proposal and cast your vote.', "You're all set"],
     },
     url: '',
   },
@@ -300,8 +264,7 @@ export function addDaysToCurrentDateAndFormat(days: number) {
 }
 
 export const removeExistingStorageItem = (key: string) => {
-  const existingInfo =
-    typeof window !== 'undefined' && localStorage.getItem(key);
+  const existingInfo = typeof window !== 'undefined' && localStorage.getItem(key);
   if (existingInfo) {
     localStorage.removeItem(key);
   }
@@ -329,11 +292,7 @@ export function convertDays(days: number) {
   }
 }
 
-export function getTimeDifference(
-  timestamp: string | number,
-  setCountdownString: (arg: string) => void,
-  refetchData?: any
-): any {
+export function getTimeDifference(timestamp: string | number, setCountdownString: (arg: string) => void, refetchData?: any): any {
   const intervalId = setInterval(() => {
     const currentTime = Date.now();
     let timeDifference = Number(timestamp) - currentTime;
@@ -347,12 +306,8 @@ export function getTimeDifference(
 
     // Calculate time components
     const daysLeft = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-    const hoursLeft = Math.floor(
-      (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-    );
-    const minutesLeft = Math.floor(
-      (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
-    );
+    const hoursLeft = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutesLeft = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
     const secondsLeft = Math.floor((timeDifference % (1000 * 60)) / 1000);
 
     // Format the countdown string
@@ -405,8 +360,7 @@ export const convertCurrency = (amount: number, price: number) => {
 };
 
 export function isMobile() {
-  const regex =
-    /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
+  const regex = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
   return regex.test(navigator.userAgent);
 }
 
@@ -424,13 +378,7 @@ export function getIsConnected() {
   }
 }
 
-export async function executeAction({
-  setPending,
-  action,
-  payload,
-  address,
-  mutate,
-}: IExecuteAction) {
+export async function executeAction({ setPending, action, payload, address, mutate }: IExecuteAction) {
   if (isMobile() || isSafariBrowser()) {
     setPending(true);
     try {
