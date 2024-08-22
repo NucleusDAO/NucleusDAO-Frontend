@@ -91,18 +91,34 @@ function defineMembershipSchema(userAddress: string) {
   });
 
   const membershipSchema = z.object({
-    members: z.array(member).refine((data: any) => {
-      for (const [index, item] of data.entries()) {
-        if (item.address === '' || /^\s+$/.test(item.address)) {
+    members: z.array(member).refine((members) => {
+      const seenAddresses = new Set<string>();
+
+      members.forEach((item, index) => {
+        const { address } = item;
+
+        if (address === ('' as any) || /^\s+$/.test(address)) {
           throw new z.ZodError([
             {
               code: 'custom',
-              path: ['members', index], // Pass the index here
+              path: ['members', index],
               message: 'Member address is required',
             },
           ]);
         }
-      }
+
+        if (seenAddresses.has(address)) {
+          throw new z.ZodError([
+            {
+              code: 'custom',
+              path: ['members', index],
+              message: 'Duplicate address detected',
+            },
+          ]);
+        }
+
+        seenAddresses.add(address);
+      });
 
       return true;
     }),
