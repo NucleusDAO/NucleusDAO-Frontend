@@ -55,7 +55,6 @@ export { columns };
 export const WalletAddressCell = ({ row }: any) => {
   const { account } = row.original;
   const isDesktop = useMediaQuery('(min-width: 768px)');
-  console.log(lowercaseFirstTwoLetters(account));
 
   return (
     <div className="flex space-x-2 items-center w-[25vw]">
