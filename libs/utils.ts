@@ -392,3 +392,13 @@ export async function executeAction({ setPending, action, payload, address, muta
     mutate(payload);
   }
 }
+
+export function lowercaseFirstTwoLetters(str: string) {
+  if (str.length < 2) {
+    // If the string is less than 2 characters, just return it in lowercase
+    return str.toLowerCase();
+  }
+
+  // Convert the first two letters to lowercase and concatenate with the rest of the string
+  return str.slice(0, 2).toLowerCase() + str.slice(2);
+}
