@@ -22,7 +22,7 @@ const Dashboard = () => {
   const {
     user: { address, isConnected },
   } = useContext<IConnectWalletContext>(ConnectWalletContext);
-  const { DAOsData, daoLoading, isDaoError } = useContext(AppContext);
+  const { DAOsData, daoLoading, isDaoError, refetchDao } = useContext(AppContext);
   const searchParams = useSearchParams();
   const currentSearch = searchParams.get('q');
   let userDAO: any[] = [];
@@ -33,24 +33,14 @@ const Dashboard = () => {
     individualDAOs = DAOsData?.filter((dao: any) => {
       if (dao.members.includes(address)) {
         dao.orgIcon = (
-          <img
-            src={dao.image}
-            alt="dao logo"
-            width={width}
-            height={width}
-            className="border border-red w-8 h-8 md:w-10 md:h-10 rounded-md object-cover"
-          />
+          <img src={dao.image} alt="dao logo" width={width} height={width} className="border border-red w-8 h-8 md:w-10 md:h-10 rounded-md object-cover" />
         );
         return dao;
       }
     });
     userDAO = individualDAOs;
     if (currentSearch) {
-      return individualDAOs.filter((item: { organisation: string }) =>
-        item?.organisation
-          ?.toLocaleLowerCase()
-          .includes(currentSearch.toLowerCase())
-      );
+      return individualDAOs.filter((item: { organisation: string }) => item?.organisation?.toLocaleLowerCase().includes(currentSearch.toLowerCase()));
     } else {
       return individualDAOs;
     }
@@ -79,16 +69,13 @@ const Dashboard = () => {
   };
 
   if (daoLoading || isLoading) return <DashboadLoading />;
-  if (isDaoError) return <ErrorFetchingComponent />;
+  if (isDaoError) return <ErrorFetchingComponent handleRefetch={refetchDao} />;
   if (isError) return toast.error(error.message);
 
   return (
     <div className="space-y-8 min-h-[80vh]">
       <div className="flex justify-between items-center">
-        <h1
-          role="heading"
-          className="dark:text-white text-[#292929] font-medium text-xl"
-        >
+        <h1 role="heading" className="dark:text-white text-[#292929] font-medium text-xl">
           Global Feed
         </h1>
         {isConnected ? (
@@ -98,30 +85,19 @@ const Dashboard = () => {
             </Button>
           </Link>
         ) : (
-          <Button
-            onClick={() => toast.error('Please connect your wallet first!')}
-          >
+          <Button onClick={() => toast.error('Please connect your wallet first!')}>
             <Plus className="mr-2 h-4 w-4" /> Create DAO
           </Button>
         )}
       </div>
 
       <div className="gap-6 md:grid-cols-3 grid">
-        {dashboardFeedsData(
-          isConnected,
-          getUserTotalDao(),
-          totalProposals,
-          totalVotes
-        ).map((feed) => (
+        {dashboardFeedsData(isConnected, getUserTotalDao(), totalProposals, totalVotes).map((feed) => (
           <Cards key={feed.title} {...feed} />
         ))}
       </div>
 
-      <AllDaos
-        dashboardTableData={getDAOsData}
-        connectWalletDescription="Connect your wallet to be able to see your dashboard"
-        showDAO={isConnected}
-      />
+      <AllDaos dashboardTableData={getDAOsData} connectWalletDescription="Connect your wallet to be able to see your dashboard" showDAO={isConnected} />
     </div>
   );
 };

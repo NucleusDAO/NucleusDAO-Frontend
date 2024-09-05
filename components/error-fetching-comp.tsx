@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { cn } from '@/libs/utils';
 import { DAO_URL } from '@/config/path';
 
-const ErrorFetchingComponent = ({ className, description }: { className?: string; description?: string }) => {
+const ErrorFetchingComponent = ({ className, description, handleRefetch }: { className?: string; description?: string; handleRefetch?: () => void }) => {
   const router = useRouter();
   return (
     <div className={cn('min-h-[80vh] w-full p-8', className)}>
@@ -33,7 +33,13 @@ const ErrorFetchingComponent = ({ className, description }: { className?: string
             Go home!
           </Button>
         ) : (
-          <Button className="" onClick={() => router.refresh()}>
+          <Button
+            className=""
+            onClick={() => {
+              router.refresh();
+              handleRefetch && handleRefetch();
+            }}
+          >
             Try again!
           </Button>
         )}

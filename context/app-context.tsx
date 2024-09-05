@@ -41,6 +41,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     data,
     isPending: daoLoading,
     isError: isDaoError,
+    refetch: refetchDao,
   } = useQuery({
     queryKey: [DAOS_KEY, network],
     queryFn: getDAOs,
