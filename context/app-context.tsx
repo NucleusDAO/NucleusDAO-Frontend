@@ -1,40 +1,25 @@
 import { createContext, useEffect, useState } from 'react';
 import { ConnectWalletProvider } from './connect-wallet-context';
 import { getNucleusDAO, getBasicDAO } from '@/libs/ae-utils';
-import {
-  IAppProvider,
-  INewProposal,
-  IProposal,
-  InewDaoInfo,
-} from '@/libs/types';
-import {
-  defaultDaoCreation,
-  defaultProposal,
-  getDuration,
-  getStatus,
-} from '@/libs/utils';
+import { IAppProvider, INewProposal, IProposal, InewDaoInfo } from '@/libs/types';
+import { defaultDaoCreation, defaultProposal, getDuration, getStatus } from '@/libs/utils';
 import { VIEW_DAO_URL } from '@/config/path';
 import { useQuery } from '@tanstack/react-query';
 import { DAOS_KEY, PROPOSAL_KEY } from '@/libs/key';
 import { getAllProposals, getDAOs } from '@/libs/contract-call';
-import {
-  walletDetector,
-  BrowserWindowMessageConnection,
-} from '@aeternity/aepp-sdk';
+import { walletDetector, BrowserWindowMessageConnection } from '@aeternity/aepp-sdk';
 import { proposalLists } from '@/config/dao-config';
 
 export const AppContext = createContext<any>({});
 
 export const AppContextProvider = ({ children }: IAppProvider) => {
+  const [network, setNetwork] = useState('mainnet');
   const [newDaoInfo, setNewDaoInfo] = useState<InewDaoInfo>(defaultDaoCreation);
-  const [newProposalInfo, setNewProposalInfo] =
-    useState<INewProposal>(defaultProposal);
+  const [newProposalInfo, setNewProposalInfo] = useState<INewProposal>(defaultProposal);
 
-  const getNewDaoInfo =
-    typeof window !== 'undefined' && sessionStorage.getItem('new_dao');
+  const getNewDaoInfo = typeof window !== 'undefined' && sessionStorage.getItem('new_dao');
 
-  const getNewProposalInfo =
-    typeof window !== 'undefined' && localStorage.getItem('new_proposal');
+  const getNewProposalInfo = typeof window !== 'undefined' && localStorage.getItem('new_proposal');
 
   useEffect(() => {
     if (getNewDaoInfo) {
@@ -56,8 +41,9 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     data,
     isPending: daoLoading,
     isError: isDaoError,
+    refetch: refetchDao,
   } = useQuery({
-    queryKey: [DAOS_KEY],
+    queryKey: [DAOS_KEY, network],
     queryFn: getDAOs,
     refetchOnWindowFocus: true,
   });
@@ -73,9 +59,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
         description: dao.description,
         members: dao.members,
         votes: dao.totalVotes,
-        url: encodeURI(
-          window.location.origin + VIEW_DAO_URL + '/' + dao.id + '/dashboard'
-        ),
+        url: encodeURI(window.location.origin + VIEW_DAO_URL + '/' + dao.id + '/dashboard'),
       };
     });
 
@@ -86,7 +70,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     refetch: refetchingProposal,
   } = useQuery({
     queryFn: getAllProposals,
-    queryKey: [PROPOSAL_KEY],
+    queryKey: [PROPOSAL_KEY, network],
     refetchOnWindowFocus: true,
   });
 
@@ -101,12 +85,8 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
         duration: getDuration(proposal.startTime, proposal.endTime),
         totalVote: `${proposal.votesFor + proposal.votesAgainst}`,
         organisation: proposal.daoName,
-        refinedType:
-          proposalLists.find(
-            (each: { type: string }) => each.type === proposal.proposalType
-          )?.title || '',
-        proposer:
-          proposal.proposer.slice(0, 6) + '...' + proposal.proposer.slice(-4),
+        refinedType: proposalLists.find((each: { type: string }) => each.type === proposal.proposalType)?.title || '',
+        proposer: proposal.proposer.slice(0, 6) + '...' + proposal.proposer.slice(-4),
       };
     });
 
@@ -122,17 +102,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     quorum: number
   ) => {
     const contract = await getNucleusDAO();
-    const res = await contract.createDAO(
-      name,
-      id,
-      description,
-      image,
-      socials,
-      initialMembers,
-      startingBalance,
-      votingTime,
-      quorum
-    );
+    const res = await contract.createDAO(name, id, description, image, socials, initialMembers, startingBalance, votingTime, quorum);
     const dao = res.decodedResult;
     return dao;
   };
@@ -150,21 +120,12 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     }
   ) => {
     const contract = await getBasicDAO(daoContractAddress);
-    const res = await contract.createProposal(
-      proposalType,
-      description,
-      value,
-      target,
-      info
-    );
+    const res = await contract.createProposal(proposalType, description, value, target, info);
     const proposal = res.decodedResult;
     return proposal;
   };
 
-  const isUserMemberOfDAO = async (
-    daoContractAddress: string,
-    userAddress: string
-  ) => {
+  const isUserMemberOfDAO = async (daoContractAddress: string, userAddress: string) => {
     const contract = await getBasicDAO(daoContractAddress);
     const res = await contract.isMember(userAddress);
     return res.decodedResult;
@@ -208,7 +169,6 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
   };
 
   const getBal = async () => {
-    console.log('here');
     const scannerConnection = new BrowserWindowMessageConnection();
     return await walletDetector(scannerConnection, ({ newWallet, wallets }) => {
       console.log(wallets);
@@ -236,6 +196,8 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
 
     getAUserActivitiesAcrossDAOs,
     isUserMemberOfDAO,
+    network,
+    setNetwork,
   };
 
   return (

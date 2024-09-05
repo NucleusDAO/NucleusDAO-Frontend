@@ -38,8 +38,6 @@ const Proposals = () => {
     replace(`${pathname}?${params.toString()}`);
   }, 200);
 
-  console.log(proposals, '-proposals');
-
   useEffect(() => {
     if (search) {
       setAllProposal(
@@ -52,10 +50,8 @@ const Proposals = () => {
     }
   }, [search, filter, isLoadingProposal]);
 
-  console.log(allProposal, 'all props');
-
   if (isLoadingProposal) return <DashboadLoading />;
-  if (isProposalError) return <ErrorFetchingComponent />;
+  if (isProposalError) return <ErrorFetchingComponent handleRefetch={refetchingProposal} />;
 
   return (
     <div className="space-y-8 min-h-[80vh]">

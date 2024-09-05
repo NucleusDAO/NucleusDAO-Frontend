@@ -3,23 +3,17 @@ import {
   createUser,
   fetchTransactionHistory,
   getNotifications,
-  getProposals,
   getUser,
   updateUser,
 } from '@/config/apis';
-import {
-  AE_PRICE_KEY,
-  BALANCE_HISTORY,
-  EACH_USER,
-  NOTIFICATIONS,
-  PROPOSALS,
-} from '@/libs/key';
+import { AE_PRICE_KEY, EACH_USER, NOTIFICATIONS } from '@/libs/key';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ReactNode, createContext, useContext } from 'react';
 import { ConnectWalletContext } from './connect-wallet-context';
 import { IConnectWalletContext, ICreateUser } from '@/libs/types';
 import { toast } from 'sonner';
 import { EachDaoContext } from './each-dao-context';
+import { AppContext } from './app-context';
 
 export const ApiContext = createContext<any>({});
 
@@ -28,6 +22,7 @@ interface IApiProvider {
 }
 
 export const ApiContextProvider = ({ children }: IApiProvider) => {
+  const { network } = useContext(AppContext);
   const { currentDAO } = useContext(EachDaoContext);
   const queryClient: any = useQueryClient();
   const {
@@ -40,7 +35,7 @@ export const ApiContextProvider = ({ children }: IApiProvider) => {
     error: aePriceErrorMessage,
     isLoading: loadingAePrice,
   } = useQuery({
-    queryKey: [AE_PRICE_KEY],
+    queryKey: [AE_PRICE_KEY, network],
     queryFn: aePrice,
   });
 
@@ -50,7 +45,7 @@ export const ApiContextProvider = ({ children }: IApiProvider) => {
     error: eachUserErrorMessage,
     isLoading: isLoadingEachUser,
   } = useQuery({
-    queryKey: [EACH_USER],
+    queryKey: [EACH_USER, network],
     queryFn: () => getUser(address),
     enabled: !!address,
   });
@@ -61,7 +56,7 @@ export const ApiContextProvider = ({ children }: IApiProvider) => {
     error: transactionHistoryError,
     isLoading: isLoadingTransactionHistory,
   } = useQuery({
-    queryKey: [EACH_USER, currentDAO?.id],
+    queryKey: [EACH_USER, currentDAO?.id, network],
     queryFn: () => fetchTransactionHistory(currentDAO?.id),
     enabled: !!currentDAO?.id,
   });
@@ -72,7 +67,7 @@ export const ApiContextProvider = ({ children }: IApiProvider) => {
     error: notificationErrorMessage,
     isLoading: isLoadingNotification,
   } = useQuery({
-    queryKey: [NOTIFICATIONS],
+    queryKey: [NOTIFICATIONS, network],
     queryFn: () => getNotifications(address),
     enabled: !!address && !!eachUser,
   });

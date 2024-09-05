@@ -4,14 +4,7 @@ import DataTable from '@/components/data-table';
 import { Button } from '@/components/ui/button';
 import { columns } from './columns';
 
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { CREATE_PROPOSAL_URL } from '@/config/path';
 import { useContext, useState } from 'react';
 import { ConnectWalletContext } from '@/context/connect-wallet-context';
@@ -31,13 +24,7 @@ interface IData {
 const EachDaoMembers = () => {
   const router = useRouter();
   const pathname = usePathname();
-  const {
-    membersActivities,
-    isMember,
-    currentDAO,
-    memberError,
-    memberLoading,
-  } = useContext(EachDaoContext);
+  const { membersActivities, isMember, currentDAO, memberError, memberLoading } = useContext(EachDaoContext);
   const { user } = useContext<IConnectWalletContext>(ConnectWalletContext);
   const { isConnected } = user;
   const [isPending, setIsPending] = useState<boolean>(false);
@@ -51,38 +38,24 @@ const EachDaoMembers = () => {
     });
   };
 
-  console.log(membersActivities);
-
   if (memberLoading) return <EachDaoLoading />;
   if (memberError) return <ErrorFetchingComponent />;
 
   return (
     <div className="space-y-4 dark:bg-gradient-to-r dark:from-[#1E1E1E] dark:via-[#1E1E1E] dark:to-[#252525] p-4 rounded-lg bg-white">
       <div className="flex justify-between items-center">
-        <h1 className="dark:text-white text-dark font-medium text-xl">
-          Members
-        </h1>
+        <h1 className="dark:text-white text-dark font-medium text-xl">Members</h1>
         <Dialog>
-          <DialogTrigger asChild>
-            {isConnected && isMember && <Button>Add Member</Button>}
-          </DialogTrigger>
+          <DialogTrigger asChild>{isConnected && isMember && <Button>Add Member</Button>}</DialogTrigger>
           <DialogContent className="dark:bg-gradient-to-r dark:from-[#1E1E1E] dark:via-[#1E1E1E]">
             <DialogHeader>
-              <DialogTitle className="text-white font-medium py-3">
-                Add Member
-              </DialogTitle>
+              <DialogTitle className="text-white font-medium py-3">Add Member</DialogTitle>
               <DialogDescription className="font-light py-2">
-                You have to make a proposal before you can add members to the
-                DAO. Do you want to make a proposal now?
+                You have to make a proposal before you can add members to the DAO. Do you want to make a proposal now?
               </DialogDescription>
             </DialogHeader>
 
-            <Button
-              className="w-full"
-              onClick={handlePropose}
-              loading={isPending}
-              loadingText="Please wait..."
-            >
+            <Button className="w-full" onClick={handlePropose} loading={isPending} loadingText="Please wait...">
               Propose
             </Button>
           </DialogContent>

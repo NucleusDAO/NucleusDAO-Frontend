@@ -68,55 +68,6 @@ export const createOnAccountObject = (address: string) => ({
   signTransaction: () => null,
 });
 
-export const contractInterract = async (payload: any, userAddress: string) => {
-  const contract = await aeSdk.initializeContract({
-    aci: basicDAOAci,
-    address: payload.daoContractAddress,
-  });
-
-  const result = await contract['createProposal'](
-    payload.proposalType,
-    payload.description,
-    payload.value,
-    payload.target,
-    payload.info,
-    {
-      callStatic: true,
-      onAccount: createOnAccountObject(userAddress),
-    }
-  );
-
-  const encodedTx = result.rawTx;
-
-  const domainName = typeof window !== 'undefined' && window.location.origin;
-  // const dashboardURL = `${domainName}/${DASHBOARD_URL}/`;
-  const baseUrl = `${domainName}/${PROPOSALS_URL}/`;
-
-  const currentUrl = new URL(baseUrl);
-  // reset url
-  currentUrl.searchParams.delete('transaction');
-  currentUrl.searchParams.delete('transaction-status');
-
-  // append transaction parameter for success case
-  const successUrl = new URL(currentUrl.href);
-
-  successUrl.searchParams.set('transaction', '{transaction}');
-
-  // append transaction parameter for failed case
-  const cancelUrl = new URL(currentUrl.href);
-  cancelUrl.searchParams.set('transaction-status', 'cancelled');
-
-  return createDeepLinkUrl2({
-    type: 'sign-transaction',
-    transaction: encodedTx,
-    networkId: 'ae_uat',
-    broadcast: true,
-    // decode these urls because they will be encoded again
-    'x-success': decodeURI(successUrl.href),
-    'x-cancel': decodeURI(cancelUrl.href),
-  });
-};
-
 interface IMobileInterract {
   redirectUrl: string;
   result: any;

@@ -32,7 +32,7 @@ const ConfirmWalletDialog = ({ ...props }: IConfirmWalletDialog) => {
       <DialogTrigger asChild></DialogTrigger>
       <DialogContent className={cn('dark:bg-[#191919] bg-light')}>
         <DialogHeader>
-          <DialogTitle className={cn('font-medium text-white')}>
+          <DialogTitle className={cn('font-medium dark:text-white text-dark')}>
             {props.connectionError.type === 'denied'
               ? 'Connection Failed'
               : props.connectionError.type === 'timeout'
