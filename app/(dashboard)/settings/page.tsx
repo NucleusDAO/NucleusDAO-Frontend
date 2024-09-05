@@ -5,14 +5,7 @@ import { z } from 'zod';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import DefaultImage from '@/assets/icons/roundedIcon.png';
 import { Button } from '@/components/ui/button';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { editProfile } from '@/libs/validations/dao-schema';
 import { Textarea } from '@/components/ui/textarea';
@@ -32,9 +25,7 @@ const Profile = () => {
 
   const { eachUser, isMutatingUsers, mutateUsers } = useContext(ApiContext);
 
-  const [profileImage, setProfileImage] = useState(
-    eachUser?.profilePicture || DefaultImage.src
-  );
+  const [profileImage, setProfileImage] = useState(eachUser?.profilePicture || DefaultImage.src);
   const [isImageUpload, setIsImageUpload] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof editProfile>>({
@@ -89,10 +80,7 @@ const Profile = () => {
 
   return (
     <div className="space-y-6">
-      <h2
-        className="text-dark dark:text-white font-medium text-xl"
-        role="heading"
-      >
+      <h2 className="text-dark dark:text-white font-medium text-xl" role="heading">
         My Profile
       </h2>
       <Form {...form}>
@@ -106,15 +94,8 @@ const Profile = () => {
                   <FormLabel></FormLabel>
                   <FormControl>
                     <FormGroup>
-                      <img
-                        src={profileImage}
-                        alt="logo"
-                        className="rounded-full object-cover border w-[60px] h-[60px] relative"
-                      />
-                      <p
-                        className="text-[10px] absolute top-16 left-2"
-                        role="button"
-                      >
+                      <img src={profileImage} alt="logo" className="rounded-full object-cover border w-[60px] h-[60px] relative" />
+                      <p className="text-[10px] absolute top-16 left-2" role="button">
                         Change
                       </p>
                       <Input
@@ -131,13 +112,8 @@ const Profile = () => {
             />
 
             <div className="space-y-2">
-              <p className="text-sm text-dark dark:text-white font-medium">
-                {eachUser?.username || `${address.slice(0, 15)}...`}
-              </p>
-              <CopyToClipboard
-                text={address}
-                onCopy={() => toast.info('Address copied to clipboard!')}
-              >
+              <p className="text-sm text-dark dark:text-white font-medium">{eachUser?.username || `${address.slice(0, 15)}...`}</p>
+              <CopyToClipboard text={address} onCopy={() => toast.info('Address copied to clipboard!')}>
                 <div className="border border-[#444444] text-[#888888] p-2 rounded-lg flex space-x-2 text-sm">
                   <p>{address.slice(0, 15)}...</p>{' '}
                 </div>
@@ -165,11 +141,7 @@ const Profile = () => {
               <FormItem>
                 <FormLabel>Email Address</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="Enter email address"
-                    {...field}
-                    type="email"
-                  />
+                  <Input placeholder="Enter email address" {...field} type="email" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -200,7 +172,7 @@ const Profile = () => {
               className="px-12"
               loading={isMutatingUsers || imageUploading}
               loadingText="Updating..."
-              disabled={!form.formState.isDirty}
+              disabled={!form.formState.isDirty || !isImageUpload}
             >
               Update
             </Button>

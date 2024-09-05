@@ -1,10 +1,4 @@
-import {
-  walletDetector,
-  BrowserWindowMessageConnection,
-  RpcRejectedByUserError,
-  AeSdkAepp,
-  Node,
-} from '@aeternity/aepp-sdk';
+import { walletDetector, BrowserWindowMessageConnection, RpcRejectedByUserError, AeSdkAepp, Node } from '@aeternity/aepp-sdk';
 import { ConnectWalletParams, WalletConnection } from './types';
 
 import nucleusDAOAci from './contract/NucleusDAO.json';
@@ -12,12 +6,11 @@ import basicDAOAci from './contract/BasicDAO.json';
 import { toast } from 'sonner';
 import { isMobile } from './utils';
 
-export let nucleusDAOContractAddress =
-  'ct_yDcPop9r72KvwPAQB61gmYvhZHYogVuAWeheQ5zL8J5cwWPY4';
+export let nucleusDAOContractAddress = process.env.NEXT_PUBLIC_MAINNET_WALLET;
 
 const CONTRACT_ADDRESSES = {
-  mainnet: 'ct_yDcPop9r72KvwPAQB61gmYvhZHYogVuAWeheQ5zL8J5cwWPY4',
-  testnet: 'ct_ZyNy92LTo3XfemdVm3GHSUSa9RKY7oAAS5pB38MCkSWuWRmu4', // Replace with your actual testnet address
+  mainnet: process.env.NEXT_PUBLIC_MAINNET_WALLET,
+  testnet: process.env.NEXT_PUBLIC_TESTNET_WALLET, // Replace with your actual testnet address
 };
 
 export const TESTNET_NODE_URL = 'https://testnet.aeternity.io';
@@ -27,13 +20,10 @@ export const COMPILER_URL = 'https://compiler.aepps.com';
 export const detectWallets = async () => {
   const connection = new BrowserWindowMessageConnection();
   return new Promise<WalletConnection>((resolve, reject) => {
-    const stopDetection = walletDetector(
-      connection,
-      async ({ newWallet }: any) => {
-        stopDetection();
-        resolve(newWallet.getConnection());
-      }
-    );
+    const stopDetection = walletDetector(connection, async ({ newWallet }: any) => {
+      stopDetection();
+      resolve(newWallet.getConnection());
+    });
   });
 };
 
@@ -43,11 +33,7 @@ interface DeepLinkParams {
   [key: string]: string | undefined; // Allow any additional parameters as strings
 }
 
-export const createDeepLinkUrl = ({
-  type,
-  callbackUrl,
-  ...params
-}: DeepLinkParams): URL => {
+export const createDeepLinkUrl = ({ type, callbackUrl, ...params }: DeepLinkParams): URL => {
   const url = new URL(`${process.env.NEXT_PUBLIC_WALLET_URL}/${type}`);
 
   if (callbackUrl) {
@@ -69,9 +55,7 @@ export let aeSdks: any = new AeSdkAepp({
     { name: 'testnet', instance: new Node(TESTNET_NODE_URL) }, // Add the testnet node
   ],
   onNetworkChange: async ({ networkId }) => {
-    const [{ name }] = (await aeSdks.getNodesInPool()).filter(
-      (node: any) => node.nodeNetworkId === networkId
-    );
+    const [{ name }] = (await aeSdks.getNodesInPool()).filter((node: any) => node.nodeNetworkId === networkId);
     aeSdks.selectNode(name);
   },
   onAddressChange: ({ current }: any) => {
@@ -84,56 +68,35 @@ export let aeSdks: any = new AeSdkAepp({
   },
 });
 
-// export function switchNetwork(network: 'mainnet' | 'testnet') {
-//   aeSdks.selectNode(network);
-//   nucleusDAOContractAddress = CONTRACT_ADDRESSES[network];
-// }
-
 export async function switchNetwork(network: 'mainnet' | 'testnet') {
   try {
-    console.log(`Attempting to switch to ${network}...`);
-
     // Select the node (network) to switch to
     aeSdks.selectNode(network);
 
     const currentNetworkId = aeSdks.selectedNodeName;
-    // const currentNetworkId = aeSdks.networkId;
-    console.log(aeSdks, '- aeSdks ');
-    console.log(currentNetworkId, 'currebnt');
 
     // Wait a short moment to ensure the switch takes effect
     await new Promise((resolve) => setTimeout(resolve, 200));
 
     // Get the current active node's network ID
     const nodes = await aeSdks.getNodesInPool();
-    console.log('Nodes in pool:', nodes);
 
-    const currentNode = nodes.find(
-      (node: any) => node.name === currentNetworkId
-    );
-    console.log('Current selected node:', currentNode);
+    const currentNode = nodes.find((node: any) => node.name === currentNetworkId);
 
     if (currentNode?.name === network) {
       nucleusDAOContractAddress = CONTRACT_ADDRESSES[network];
-      console.log(`Successfully switched to ${network}`);
       return true; // Indicate success
     } else {
-      console.error(`Failed to switch to ${network}`);
       return false; // Indicate failure
     }
   } catch (error: any) {
-    console.error(`Error switching network: ${error.message}`);
     return false; // Indicate failure
   }
 }
 
-export const IN_FRAME =
-  typeof window !== 'undefined' && window.parent !== window;
-export const IS_MOBILE =
-  typeof window !== 'undefined' && window.navigator.userAgent.includes('Mobi');
-export const isSafariBrowser = () =>
-  navigator.userAgent.includes('Safari') &&
-  !navigator.userAgent.includes('Chrome');
+export const IN_FRAME = typeof window !== 'undefined' && window.parent !== window;
+export const IS_MOBILE = typeof window !== 'undefined' && window.navigator.userAgent.includes('Mobi');
+export const isSafariBrowser = () => navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome');
 
 export const resolveWithTimeout = (timeout: number, callback: any) =>
   Promise.race([
@@ -167,9 +130,7 @@ export const connectWallet = async ({
     const baseURL = window.location.href;
     addressDeepLink = createDeepLinkUrl({
       type: 'address',
-      'x-success': `${
-        baseURL.split('?')[0]
-      }?address={address}&networkId={networkId}`,
+      'x-success': `${baseURL.split('?')[0]}?address={address}&networkId={networkId}`,
       'x-cancel': baseURL.split('?')[0],
     });
 
@@ -177,10 +138,7 @@ export const connectWallet = async ({
   } else {
     try {
       await resolveWithTimeout(30000, async () => {
-        const webWalletTimeout =
-          IS_MOBILE || isMobile()
-            ? 0
-            : setTimeout(() => setEnableIFrameWallet(true), 15000);
+        const webWalletTimeout = IS_MOBILE || isMobile() ? 0 : setTimeout(() => setEnableIFrameWallet(true), 15000);
 
         let resolve: any = null;
         let rejected = (e: any) => {
@@ -190,9 +148,7 @@ export const connectWallet = async ({
 
         const connectWallet = async (wallet: any) => {
           try {
-            const { networkId } = await aeSdk.connectToWallet(
-              wallet.getConnection()
-            );
+            const { networkId } = await aeSdk.connectToWallet(wallet.getConnection());
             const ret = await aeSdk.subscribeAddress('subscribe', 'connected');
             const {
               address: { current },
@@ -225,9 +181,7 @@ export const connectWallet = async ({
           await connectWallet(walletObj);
         } else {
           const handleWallet = async ({ wallets }: any) => {
-            const detectedWalletObject = Object.values(wallets).find(
-              (wallet: any) => wallet.info.name === walletObj.info.name
-            );
+            const detectedWalletObject = Object.values(wallets).find((wallet: any) => wallet.info.name === walletObj.info.name);
             if (!detectedWalletObject) return;
             clearInterval(webWalletTimeout);
             await connectWallet(detectedWalletObject);
@@ -245,8 +199,7 @@ export const connectWallet = async ({
       if (walletObj.info.name === 'Superhero') {
         setConnectionError({
           type: 'denied',
-          message:
-            'Login with your wallet has failed. Please make sure that you are logged into your wallet.',
+          message: 'Login with your wallet has failed. Please make sure that you are logged into your wallet.',
         });
       } else {
         setConnectionError({

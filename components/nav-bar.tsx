@@ -14,6 +14,7 @@ import ConnectWalletPopOver from './connect-popover';
 import ViewNotificationPopover from './notification-popover';
 import { switchNetwork } from '@/libs/ae-utils';
 import { AppContext } from '@/context/app-context';
+import { toast } from 'sonner';
 
 interface INavbar {
   handleShowNav: (arg: any) => void;
@@ -21,35 +22,13 @@ interface INavbar {
 }
 
 const Navbar = ({ handleShowNav, showNav }: INavbar) => {
-  const { handleSearchWallet, user, isConnecting } =
-    useContext<any>(ConnectWalletContext);
-  const { setNetwork, network } = useContext(AppContext);
+  const { handleSearchWallet, user, isConnecting } = useContext<any>(ConnectWalletContext);
   const isDesktop = useMediaQuery('(min-width: 768px)');
   const connected: boolean = user.isConnected;
 
-  async function handleNetworkSwitch(network: 'mainnet' | 'testnet') {
-    const success = await switchNetwork('testnet');
-    if (success) {
-      setNetwork('testnet');
-      console.log('Switched to testnet successfully.');
-    } else {
-      console.log('Failed to switch to testnet.');
-    }
-  }
-
-  useEffect(() => {
-    console.log(network, '- > network navbar');
-  }, [network]);
-
   return (
     <nav className="flex dark:bg-foreground bg-light w-full md:w-[82%] py-4 px-4 md:px-8 justify-between items-center fixed z-[100] max-w-[1620px]">
-      <div className="relative w-[40%] hidden md:flex">
-        {/* <Button onClick={handleNetworkSwitch}>Switch</Button> */}
-        {/* <SearchInput
-          placeholder="Search anything here"
-          classNames="pl-10"
-        /> */}
-      </div>
+      <div className="relative w-[40%] hidden md:flex"></div>
       <div className="flex space-x-3 items-center w-full md:w-fit justify-between lg:justify-between">
         <Link href={DASHBOARD_URL} className="flex md:hidden">
           <div className="flex space-x-2 items-center">
@@ -87,14 +66,8 @@ const Navbar = ({ handleShowNav, showNav }: INavbar) => {
                   className="dark:bg-gradient-to-r dark:from-[#1E1E1E] dark:via-[#1E1E1E] dark:to-[#252525] w-[280px] hidden bg-white h-11 justify-center rounded-lg md:flex items-center relative dark:text-[#888888] p-3 text-[12px] space-x-3 text-dark"
                   role="button"
                 >
-                  <img
-                    src={`https://avatars.z52da5wt.xyz/${user.address}`}
-                    alt="logo"
-                    width={28}
-                  />
-                  <p className="overflow-hidden text-ellipsis">
-                    {user.address}
-                  </p>
+                  <img src={`https://avatars.z52da5wt.xyz/${user.address}`} alt="logo" width={28} />
+                  <p className="overflow-hidden text-ellipsis">{user.address}</p>
                   <ChevronDown size={20} />
                 </div>
               }
@@ -102,11 +75,7 @@ const Navbar = ({ handleShowNav, showNav }: INavbar) => {
           </div>
         ) : (
           <div className="flex space-x-2 items-center">
-            <Button
-              onClick={handleSearchWallet}
-              loading={isConnecting}
-              loadingText="Connecting..."
-            >
+            <Button onClick={handleSearchWallet} loading={isConnecting} loadingText="Connecting...">
               Connect Wallet
             </Button>
             <div

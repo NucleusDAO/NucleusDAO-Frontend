@@ -135,7 +135,7 @@ const EachFilterTab = ({
 
         {(currentView === 'grid' || currentView !== 'list') && (
           <>
-            {proposalData?.length === 0 && (
+            {proposalData?.length === 0 ? (
               <div className="h-[40vh] w-full space-y-2">
                 <div className="text-center mx-auto pt-10">
                   <Lottie
@@ -145,31 +145,26 @@ const EachFilterTab = ({
                   />
                 </div>
                 <div className="flex items-center justify-center">
-                  {search || filter ? (
-                    <p className="text-center w-2/5">
-                      Proposal could not be found
+                  <div className="text-center lg:w-2/5">
+                    <p className="pb-3 font-light">
+                      {search || 'filter'
+                        ? 'Proposal could not be found'
+                        : 'Engage with the community, address any questions or concerns, and monitor the progress of the proposal as it moves through the decision-making process.'}
                     </p>
-                  ) : (
-                    <div className="text-center lg:w-2/5">
-                      <p className="pb-3 font-light">
-                        Engage with the community, address any questions or
-                        concerns, and monitor the progress of the proposal as it
-                        moves through the decision-making process.
-                      </p>
-                    </div>
-                  )}
+                  </div>
                 </div>
               </div>
+            ) : (
+              <div className="grid lg:grid-cols-2 grid-cols-1 gap-4 lg:gap-7">
+                {proposalData?.map((proposal) => (
+                  <ProposalCard
+                    key={proposal.startTime}
+                    {...proposal}
+                    refetchData={refetchData}
+                  />
+                ))}
+              </div>
             )}
-            <div className="grid lg:grid-cols-2 grid-cols-1 gap-4 lg:gap-7">
-              {proposalData?.map((proposal) => (
-                <ProposalCard
-                  key={proposal.status}
-                  {...proposal}
-                  refetchData={refetchData}
-                />
-              ))}
-            </div>
           </>
         )}
       </div>

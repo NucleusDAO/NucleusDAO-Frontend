@@ -1,16 +1,12 @@
 'use client';
 import { ReactNode, createContext, useContext, useState } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { getDuration, getStatus } from '@/libs/utils';
+import { getDuration, getStatus, lowercaseFirstTwoLetters } from '@/libs/utils';
 import { IConnectWalletContext, IProposal } from '@/libs/types';
 import { ConnectWalletContext } from './connect-wallet-context';
 import { useQuery } from '@tanstack/react-query';
 import { EACH_DAO_KEY, EACH_DAO_PROPOSAL, MEMBER_ACTIVIES } from '@/libs/key';
-import {
-  getAllUsersActivities,
-  getEachDAO,
-  getProposals,
-} from '@/libs/contract-call';
+import { getAllUsersActivities, getEachDAO, getProposals } from '@/libs/contract-call';
 import { PROPOSALS_URL } from '@/config/path';
 
 export const EachDaoContext = createContext<any>({});
@@ -78,12 +74,11 @@ export const EachDaoContextProvider = ({ children }: IAppProvider) => {
         ...proposal,
         type: proposal.proposalType,
         status: getStatus(proposal),
-        wallet: proposal.target.slice(0, 6) + '...' + proposal.target.slice(-4),
+        wallet: lowercaseFirstTwoLetters(proposal.target.slice(0, 6) + '...' + proposal.target.slice(-4)),
         duration: getDuration(proposal.startTime, proposal.endTime),
         totalVote: `${proposal.votesFor + proposal.votesAgainst}`,
         organisation: currentDAO.name,
-        proposer:
-          proposal.proposer.slice(0, 6) + '...' + proposal.proposer.slice(-4),
+        proposer: proposal.proposer.slice(0, 6) + '...' + proposal.proposer.slice(-4),
         id: Number(proposal.id).toString(),
       };
     });
@@ -123,7 +118,5 @@ export const EachDaoContextProvider = ({ children }: IAppProvider) => {
     setFundsHistory,
   };
 
-  return (
-    <EachDaoContext.Provider value={value}>{children}</EachDaoContext.Provider>
-  );
+  return <EachDaoContext.Provider value={value}>{children}</EachDaoContext.Provider>;
 };

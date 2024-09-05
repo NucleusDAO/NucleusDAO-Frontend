@@ -1,3 +1,4 @@
+import { isAddressValid } from '@aeternity/aepp-sdk';
 import { z } from 'zod';
 
 // Define schema for individual social media object
@@ -6,23 +7,13 @@ const socialMediaSchema = z.object({
   link: z.string(),
 });
 
-const member = z.object({
-  address: z
-    .string()
-    .min(51, { message: 'Address must be at least 51 characters long' })
-    .max(52, { message: 'Input must be at most 52 characters long' }),
-});
-
 const joinCommunitySchema = z.object({
   email: z.string().email({ message: 'Enter a valid email' }),
 });
 
 const daoInfoSchema = z
   .object({
-    daoName: z
-      .string()
-      .min(2, { message: 'Must be 2 or more characters long' })
-      .max(50, { message: 'Must be 50 or fewer characters long' }),
+    daoName: z.string().min(2, { message: 'Must be 2 or more characters long' }).max(50, { message: 'Must be 50 or fewer characters long' }),
     daoUrl: z.string(),
     // .max(51, { message: 'Must be 51 or fewer characters long' }),
     logo: z.any(),
@@ -38,9 +29,7 @@ const daoInfoSchema = z
     };
     for (const key of Object.keys(messages)) {
       if (!data[key as keyof typeof messages]) {
-        throw new z.ZodError([
-          { code: 'custom', path: [key], message: messages[key] },
-        ]);
+        throw new z.ZodError([{ code: 'custom', path: [key], message: messages[key] }]);
       }
     }
     // Validate each social media entry
@@ -67,23 +56,15 @@ const editDaoInfoLinksSchema = z.object({
 });
 
 const editDaoInfoSchema = z.object({
-  daoName: z
-    .string()
-    .min(2, { message: 'Must be 2 or more characters long' })
-    .max(50, { message: 'Must be 50 or fewer characters long' }),
+  daoName: z.string().min(2, { message: 'Must be 2 or more characters long' }).max(50, { message: 'Must be 50 or fewer characters long' }),
   logo: z.string(),
   description: z.string(),
   duration: z.number(),
   quorum: z.number(),
 });
 
-// .min(1, { message: 'Value is required' })
-
 const proposalInfoSchema = z.object({
-  type: z
-    .string()
-    .min(1, { message: 'Proposal type is required' })
-    .default('0'),
+  type: z.string().min(1, { message: 'Proposal type is required' }).default('0'),
   description: z.string().min(2, { message: 'Description must not be empty' }),
   newName: z.string().optional(),
   logo: z.any().optional(),
@@ -96,23 +77,55 @@ const proposalInfoSchema = z.object({
   socialMedia: z.array(socialMediaSchema).optional(),
 });
 
-const defineMembershipSchema = z.object({
-  members: z.array(member).refine((data: any) => {
-    for (const [index, item] of data.entries()) {
-      if (item.address === '' || /^\s+$/.test(item.address)) {
-        throw new z.ZodError([
-          {
-            code: 'custom',
-            path: ['members', index], // Pass the index here
-            message: 'Member address is required',
-          },
-        ]);
-      }
-    }
+function defineMembershipSchema(userAddress: string) {
+  const member = z.object({
+    address: z
+      .string()
+      .min(1, { message: 'Address is required' })
+      .refine((address) => isAddressValid(address), {
+        message: 'Invalid address',
+      })
+      .refine((address) => address !== userAddress, {
+        message: 'Address cannot be your own user address',
+      }),
+  });
 
-    return true;
-  }),
-});
+  const membershipSchema = z.object({
+    members: z.array(member).refine((members) => {
+      const seenAddresses = new Set<string>();
+
+      members.forEach((item, index) => {
+        const { address } = item;
+
+        if (address === ('' as any) || /^\s+$/.test(address)) {
+          throw new z.ZodError([
+            {
+              code: 'custom',
+              path: ['members', index],
+              message: 'Member address is required',
+            },
+          ]);
+        }
+
+        if (seenAddresses.has(address)) {
+          throw new z.ZodError([
+            {
+              code: 'custom',
+              path: ['members', index],
+              message: 'Duplicate address detected',
+            },
+          ]);
+        }
+
+        seenAddresses.add(address);
+      });
+
+      return true;
+    }),
+  });
+
+  return membershipSchema;
+}
 
 const editProfile = z.object({
   username: z.string(),
