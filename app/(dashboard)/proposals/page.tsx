@@ -10,7 +10,7 @@ import ErrorFetchingComponent from '@/components/error-fetching-comp';
 import { AppContext } from '@/context/app-context';
 
 const Proposals = () => {
-  const { isLoadingProposal, proposals, isProposalError, refetchingProposal } = useContext(AppContext);
+  const { isLoadingProposal, proposals, isProposalError, refetchingProposal, proposalError } = useContext(AppContext);
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { replace } = useRouter();
@@ -51,7 +51,7 @@ const Proposals = () => {
   }, [search, filter, isLoadingProposal]);
 
   if (isLoadingProposal) return <DashboadLoading />;
-  if (isProposalError) return <ErrorFetchingComponent handleRefetch={refetchingProposal} />;
+  if (isProposalError) return <ErrorFetchingComponent handleRefetch={refetchingProposal} title={proposalError.message || ''} />;
 
   return (
     <div className="space-y-8 min-h-[80vh]">

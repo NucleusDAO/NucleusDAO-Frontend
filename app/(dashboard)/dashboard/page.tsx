@@ -22,7 +22,7 @@ const Dashboard = () => {
   const {
     user: { address, isConnected },
   } = useContext<IConnectWalletContext>(ConnectWalletContext);
-  const { DAOsData, daoLoading, isDaoError, refetchDao } = useContext(AppContext);
+  const { DAOsData, daoLoading, isDaoError, refetchDao, daoError } = useContext(AppContext);
   const searchParams = useSearchParams();
   const currentSearch = searchParams.get('q');
   let userDAO: any[] = [];
@@ -69,8 +69,8 @@ const Dashboard = () => {
   };
 
   if (daoLoading || isLoading) return <DashboadLoading />;
-  if (isDaoError) return <ErrorFetchingComponent handleRefetch={refetchDao} />;
-  if (isError) return toast.error(error.message);
+  if (isDaoError) return <ErrorFetchingComponent handleRefetch={refetchDao} title={daoError?.message || ''} />;
+  if (isError) return <ErrorFetchingComponent title={error?.message || ''} />;
 
   return (
     <div className="space-y-8 min-h-[80vh]">

@@ -42,6 +42,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     isPending: daoLoading,
     isError: isDaoError,
     refetch: refetchDao,
+    error: daoError,
   } = useQuery({
     queryKey: [DAOS_KEY, network],
     queryFn: getDAOs,
@@ -68,6 +69,7 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     isLoading: isLoadingProposal,
     isError: isProposalError,
     refetch: refetchingProposal,
+    error: proposalError,
   } = useQuery({
     queryFn: getAllProposals,
     queryKey: [PROPOSAL_KEY, network],
@@ -198,6 +200,8 @@ export const AppContextProvider = ({ children }: IAppProvider) => {
     isUserMemberOfDAO,
     network,
     setNetwork,
+    daoError,
+    proposalError,
   };
 
   return (

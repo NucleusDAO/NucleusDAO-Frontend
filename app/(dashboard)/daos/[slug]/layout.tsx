@@ -4,7 +4,6 @@ import { CREATE_PROPOSAL_URL } from '@/config/path';
 import { ExternalLink, Globe, MoveLeft, Plus } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import React, { ReactNode, useContext, useState } from 'react';
-import { CopyIcon } from '@/assets/svgs';
 import { eachDaoViews } from '@/config/dao-config';
 import { capitalizeFirstLetter, cn, encodeURI, removeExistingStorageItem, wait } from '@/libs/utils';
 import EachDaoLoading from '@/components/loading/each-dao-loading';
@@ -57,7 +56,7 @@ const Layout = ({ children }: ILayout) => {
   }
 
   if (isLoading) return <EachDaoLoading />;
-  if (isError) return <ErrorFetchingComponent description={error.message} />;
+  if (isError) return <ErrorFetchingComponent description={error.message} title={error?.message || ''} />;
 
   return (
     <div>
