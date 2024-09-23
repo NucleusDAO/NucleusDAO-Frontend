@@ -36,8 +36,6 @@ const ConnectWalletPopOver = ({ callToAction }: IConnectWalletPopOver) => {
     }
   }
 
-  console.log(network);
-
   return (
     <Popover>
       <PopoverTrigger asChild>{callToAction}</PopoverTrigger>

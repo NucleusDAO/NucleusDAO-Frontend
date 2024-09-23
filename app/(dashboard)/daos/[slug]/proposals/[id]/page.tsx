@@ -46,14 +46,11 @@ const EachProposal = () => {
   return (
     <div>
       <div className="flex items-center justify-between border-b border-[#292929] pb-4">
-        <h2 className="text-white font-medium text-xl">Proposal</h2>
+        <h2 className="dark:text-white text-dark font-medium text-xl">Proposal</h2>
         <div className="flex space-x-3 bg-[#191919] rounded-lg p-2 items-center text-sm">
           {tabs.map((tab) => (
             <div
-              className={cn(
-                'p-2 px-4',
-                currentTab === tab && 'text-primary rounded-lg bg-[#1E1E1E]'
-              )}
+              className={cn('p-2 px-4', currentTab === tab && 'text-primary rounded-lg dark:bg-[#1E1E1E] bg-slate-200')}
               key={tab}
               onClick={() => handleSwitch(tab)}
               role="button"
@@ -63,15 +60,7 @@ const EachProposal = () => {
           ))}
         </div>
       </div>
-      {!isFetchedAfterMount ? (
-        <EachDaoLoading />
-      ) : (
-        <EachProposalView
-          tabs={tabs}
-          currentProposal={currentProposal}
-          refetchData={() => refetch()}
-        />
-      )}
+      {!isFetchedAfterMount ? <EachDaoLoading /> : <EachProposalView tabs={tabs} currentProposal={currentProposal} refetchData={() => refetch()} />}
     </div>
   );
 };
