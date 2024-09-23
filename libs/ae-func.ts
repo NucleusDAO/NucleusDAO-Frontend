@@ -2,9 +2,10 @@ import { Node, AeSdk, MemoryAccount } from '@aeternity/aepp-sdk';
 
 import nucleusDAOAci from './contract/NucleusDAO.json';
 import basicDAOAci from './contract/BasicDAO.json';
-import { PROPOSALS_URL } from '@/config/path';
 import CryptoJS from 'crypto-js';
 import { nucleusDAOContractAddress } from './ae-utils';
+
+const network = (typeof window !== 'undefined' && localStorage.getItem('network')) || 'mainnet';
 
 export const TESTNET_NODE_URL = 'https://testnet.aeternity.io';
 export const MAINNET_NODE_URL = 'https://mainnet.aeternity.io';
@@ -16,11 +17,7 @@ interface DeepLinkParams {
   [key: string]: string | undefined; // Allow any additional parameters as strings
 }
 
-export const createDeepLinkUrl = ({
-  type,
-  callbackUrl,
-  ...params
-}: DeepLinkParams): URL => {
+export const createDeepLinkUrl = ({ type, callbackUrl, ...params }: DeepLinkParams): URL => {
   const url = new URL(`${process.env.NEXT_PUBLIC_WALLET_URL}/${type}`);
 
   if (callbackUrl) {
@@ -40,12 +37,15 @@ const generateKey: any = () => {
   return secretKey;
 };
 
-const node = new Node('https://testnet.aeternity.io'); // ideally host your own node
+const node = new Node(network === 'mainnet' ? MAINNET_NODE_URL : TESTNET_NODE_URL); // ideally host your own node
 const account = new MemoryAccount(generateKey());
 const newUserAccount = MemoryAccount.generate();
 
 const aeSdk: any = new AeSdk({
-  nodes: [{ name: 'testnet', instance: node }],
+  nodes: [
+    { name: 'mainnet', instance: new Node(MAINNET_NODE_URL) },
+    { name: 'testnet', instance: new Node(TESTNET_NODE_URL) },
+  ],
   accounts: [account, newUserAccount],
   // onCompiler: compiler, // remove if step #2 skipped
 });
@@ -73,10 +73,7 @@ interface IMobileInterract {
   result: any;
 }
 
-export const mobileContractInterract = async ({
-  redirectUrl,
-  result,
-}: IMobileInterract) => {
+export const mobileContractInterract = async ({ redirectUrl, result }: IMobileInterract) => {
   const encodedTx = await result.rawTx;
 
   const domainName = typeof window !== 'undefined' && window.location.origin;
@@ -100,7 +97,7 @@ export const mobileContractInterract = async ({
   const response = await createDeepLinkUrl2({
     type: 'sign-transaction',
     transaction: encodedTx,
-    networkId: 'ae_uat',
+    networkId: network === 'mainnet' ? 'ae_mainnet' : 'ae_uat',
     broadcast: true,
     // decode these urls because they will be encoded again
     'x-success': decodeURI(successUrl.href),

@@ -159,7 +159,6 @@ export const connectWallet = async ({
             const user = { address: currentAccountAddress, isConnected: true };
             setUser(user);
             aeSdks = aeSdk;
-            // localStorage.setItem('user', JSON.stringify(user));
             resolve?.(currentAccountAddress);
             setOpenModal(false);
           } catch (e: any) {
