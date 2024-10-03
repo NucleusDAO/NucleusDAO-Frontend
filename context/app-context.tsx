@@ -13,7 +13,8 @@ import { proposalLists } from '@/config/dao-config';
 export const AppContext = createContext<any>({});
 
 export const AppContextProvider = ({ children }: IAppProvider) => {
-  const [network, setNetwork] = useState('mainnet');
+  const currentNetwork = (typeof window !== 'undefined' && localStorage.getItem('network')) || 'mainnet';
+  const [network, setNetwork] = useState(currentNetwork);
   const [newDaoInfo, setNewDaoInfo] = useState<InewDaoInfo>(defaultDaoCreation);
   const [newProposalInfo, setNewProposalInfo] = useState<INewProposal>(defaultProposal);
 
