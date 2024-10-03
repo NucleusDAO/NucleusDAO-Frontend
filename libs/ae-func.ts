@@ -1,9 +1,9 @@
-import { Node, AeSdk, MemoryAccount } from '@aeternity/aepp-sdk';
+import { Node, AeSdk, MemoryAccount, AeSdkAepp } from '@aeternity/aepp-sdk';
 
 import nucleusDAOAci from './contract/NucleusDAO.json';
 import basicDAOAci from './contract/BasicDAO.json';
 import CryptoJS from 'crypto-js';
-import { nucleusDAOContractAddress } from './ae-utils';
+import { aeSdks, nucleusDAOContractAddress } from './ae-utils';
 
 const network = (typeof window !== 'undefined' && localStorage.getItem('network')) || 'mainnet';
 
@@ -41,14 +41,31 @@ const node = new Node(network === 'mainnet' ? MAINNET_NODE_URL : TESTNET_NODE_UR
 const account = new MemoryAccount(generateKey());
 const newUserAccount = MemoryAccount.generate();
 
-const aeSdk: any = new AeSdk({
-  nodes: [
-    { name: 'mainnet', instance: new Node(MAINNET_NODE_URL) },
-    { name: 'testnet', instance: new Node(TESTNET_NODE_URL) },
-  ],
-  accounts: [account, newUserAccount],
-  // onCompiler: compiler, // remove if step #2 skipped
-});
+// let aeSdk: any = new AeSdkAepp({
+//   name: 'NucleusDAO',
+//   nodes: [
+//     { name: 'mainnet', instance: new Node(MAINNET_NODE_URL) },
+//     { name: 'testnet', instance: new Node(TESTNET_NODE_URL) }, // Add the testnet node
+//   ],
+//   onNetworkChange: async ({ networkId }) => {
+//     const [{ name }] = (await aeSdk.getNodesInPool()).filter((node: any) => node.nodeNetworkId === networkId);
+//     aeSdk.selectNode(name);
+//   },
+//   onAddressChange: ({ current }: any) => {
+//     const currentAccountAddress = Object.keys(current)[0];
+//     const user = { address: currentAccountAddress, isConnected: true };
+//     localStorage.setItem('user', JSON.stringify(user));
+//   },
+//   onDisconnect: () => {
+//     localStorage.removeItem('user');
+//   },
+// });
+
+// const aeSdk: any = new AeSdk({
+//   nodes: network === 'mainnet' ? { name: 'mainnet', instance: new Node(MAINNET_NODE_URL) } : { name: 'testnet', instance: new Node(TESTNET_NODE_URL) },
+//   accounts: [account, newUserAccount],
+//   // onCompiler: compiler, // remove if step #2 skipped
+// });
 
 const createDeepLinkUrl2 = async ({ type, callbackUrl, ...params }: any) => {
   const url = new URL(`${process.env.NEXT_PUBLIC_WALLET_URL}/${type}`);
@@ -109,7 +126,7 @@ export const mobileContractInterract = async ({ redirectUrl, result }: IMobileIn
 };
 
 export const getNucleusDAO = async () => {
-  const contract = await aeSdk.initializeContract({
+  const contract = await aeSdks.initializeContract({
     aci: nucleusDAOAci,
     address: nucleusDAOContractAddress,
   });
@@ -117,7 +134,7 @@ export const getNucleusDAO = async () => {
 };
 
 export const getBasicDAO = async (DAOAddress: string) => {
-  return await aeSdk.initializeContract({
+  return await aeSdks.initializeContract({
     aci: basicDAOAci,
     address: DAOAddress,
   });

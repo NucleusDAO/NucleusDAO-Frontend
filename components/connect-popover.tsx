@@ -27,6 +27,7 @@ const ConnectWalletPopOver = ({ callToAction }: IConnectWalletPopOver) => {
     const success = await switchNetwork(network);
     if (success) {
       setNetwork(network);
+      localStorage.setItem('network', network);
 
       toast.info(`Switched to ${network} successfully.`, { description: 'Please switch your network on your Superhero wallet', duration: Infinity });
       setIsSwitching(false);
