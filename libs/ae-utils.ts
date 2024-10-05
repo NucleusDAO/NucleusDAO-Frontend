@@ -211,14 +211,21 @@ export const connectWallet = async ({
 };
 
 export const getNucleusDAO = async () => {
+  const getNetwork = localStorage.getItem('network');
+  const network = getNetwork === 'testnet' ? 'testnet' : 'mainnet';
+  const address = getNetwork === 'testnet' ? process.env.NEXT_PUBLIC_TESTNET_WALLET : process.env.NEXT_PUBLIC_MAINNET_WALLET;
+  await aeSdks.selectNode(network);
   const contract = await aeSdks.initializeContract({
     aci: nucleusDAOAci,
-    address: nucleusDAOContractAddress,
+    address,
   });
   return contract;
 };
 
 export const getBasicDAO = async (DAOAddress: string) => {
+  const getNetwork = localStorage.getItem('network');
+  const network = getNetwork === 'testnet' ? 'testnet' : 'mainnet';
+  await aeSdks.selectNode(network);
   return await aeSdks.initializeContract({
     aci: basicDAOAci,
     address: DAOAddress,
